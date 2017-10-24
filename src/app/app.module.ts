@@ -6,8 +6,8 @@ import { StatusBar } from '@ionic-native/status-bar';
 
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireAuthModule } from 'angularfire2/auth'
-import { fireBaseConfig } from '../config';
-import { AuthProvider } from '../providers'
+import { fireBaseConfig } from '../configs';
+import { AuthProvider, DatabaseProvider } from '../providers'
 
 import { MyApp } from './app.component';
 import { LoginPage } from '../pages/login/login';
@@ -32,7 +32,8 @@ import { LoginPage } from '../pages/login/login';
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    AuthProvider
+    AuthProvider,
+    DatabaseProvider
   ]
 })
 export class AppModule {}

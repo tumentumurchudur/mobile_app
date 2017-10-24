@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController } from 'ionic-angular';
 import { User } from '../../interfaces';
-import { AuthProvider } from '../../providers'
+import { AuthProvider, DatabaseProvider } from '../../providers'
 
 @IonicPage({
   name: 'LoginPage'
@@ -18,12 +18,14 @@ export class LoginPage {
 
   constructor(
     private _auth: AuthProvider,
+    private _db: DatabaseProvider,
     public navCtrl: NavController
   ) { }
 
   private onLoginClick(user: User) {
     this._auth.loginWithEmail(user).subscribe(data => {
-      this.navCtrl.push('HomePage');
+      // this.navCtrl.push('HomePage');
+      this._db.getOrg();
     }, error => {
       alert('Login failed');
     });
