@@ -2,11 +2,11 @@ import { ActionReducerMap } from "@ngrx/store";
 import { IUser } from '../../interfaces';
 import * as UserActions from '../actions';
 
-export interface State {
+export interface AppState {
     users: IUser[];
 }
 
-export const reducers: ActionReducerMap<State> = {
+export const reducers: ActionReducerMap<AppState> = {
     users: userReducer
 };
 

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { User } from '../interfaces';
+import { IUser } from '../interfaces';
 import { Observable } from "rxjs/Observable";
 import { fireBaseConfig, databasePaths } from '../configs';
 import firebase from 'firebase';
@@ -19,11 +19,18 @@ export class DatabaseProvider {
         this._usersRef = this._db.ref(databasePaths.usersPath);
     }
 
-    public getOrg() {
-        const uid = '4f2jsiyTLTauwoxcX78tPC7ObEE3';
+    public getOrgPath(uid: string) {
+        const guid = '4f2jsiyTLTauwoxcX78tPC7ObEE3';
 
-        this._usersRef.child(uid).on('value', (snapshot) => {
-            console.log(snapshot.val());
+        this._usersRef.child(guid).on('value', (snapshot) => {
+					const { orgs = null} = snapshot.val();
+					const vals = [];
+
+					if (orgs && !Array.isArray(orgs)) {
+						orgs = [orgs]
+					}
+
+					console.log(orgs[0].path);
         });
     }
 }

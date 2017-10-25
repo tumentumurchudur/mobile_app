@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from 'angularfire2/auth'; //Add FirebaseApp
-import { User } from '../interfaces';
+import { IUser } from '../interfaces';
 import { Observable } from "rxjs/Observable";
 
 @Injectable()
@@ -9,7 +9,7 @@ export class AuthProvider {
       private _af: AngularFireAuth
   ) { }
 
-  public loginWithEmail(user: User) {
+  public loginWithEmail(user: IUser) {
     return Observable.create(observer => {
         this._af.auth.signInWithEmailAndPassword(user.email, user.password).then((authData) => {
           observer.next(authData);
@@ -19,7 +19,7 @@ export class AuthProvider {
     });
   }
 
-  public registerUser(user: User) {
+  public registerUser(user: IUser) {
     return Observable.create(observer => {
       this._af.auth.createUserWithEmailAndPassword(user.email, user.password).then(authData => {
         observer.next(authData);

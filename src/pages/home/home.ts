@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
-import { NavController, IonicPage } from 'ionic-angular';
+import { Component, OnInit } from '@angular/core';
+import { NavController, NavParams, IonicPage } from 'ionic-angular';
+import { IUser } from '../../interfaces';
+import { DatabaseProvider } from '../../providers';
 
 @IonicPage({
   name: 'HomePage'
@@ -8,10 +10,19 @@ import { NavController, IonicPage } from 'ionic-angular';
   selector: 'page-home',
   templateUrl: 'home.html'
 })
-export class HomePage {
+export class HomePage implements OnInit {
+  private _user: IUser;
 
-  constructor(public navCtrl: NavController) {
+  constructor(
+    private _db: DatabaseProvider,
+    private navCtrl: NavController,
+    private navParams: NavParams
+  ) {
+      this._user = navParams.get('user');
+  }
 
+  ngOnInit() {
+    this._db.getOrgPath(this._user.uid);
   }
 
 }

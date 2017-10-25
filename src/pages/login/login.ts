@@ -1,7 +1,11 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController } from 'ionic-angular';
+
 import { IUser } from '../../interfaces';
-import { AuthProvider, DatabaseProvider } from '../../providers'
+import { AuthProvider } from '../../providers'
+import { Store } from '@ngrx/store';
+import { AppState } from '../../store/reducers';
+import { UserLoggedIn } from '../../store/actions';
 
 @IonicPage({
   name: 'LoginPage'
@@ -17,17 +21,18 @@ export class LoginPage {
   };
 
   constructor(
+    private _store: Store<AppState>,
     private _auth: AuthProvider,
-    private _db: DatabaseProvider,
     public navCtrl: NavController
   ) { }
 
   private onLoginClick(user: IUser) {
     this._auth.loginWithEmail(user).subscribe(data => {
-      // this.navCtrl.push('HomePage');
-      this._db.getOrg();
+      this._store.dispatch(new UserLoggedIn(user));
+
+      this.navCtrl.push('HomePage', { user });
     }, error => {
-      alert('Login failed');
+      console.log('Login failed');
     });
   }
 
