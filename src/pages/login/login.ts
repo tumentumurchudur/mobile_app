@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController } from 'ionic-angular';
-import { User } from '../../interfaces';
+import { IUser } from '../../interfaces';
 import { AuthProvider, DatabaseProvider } from '../../providers'
 
 @IonicPage({
@@ -11,7 +11,7 @@ import { AuthProvider, DatabaseProvider } from '../../providers'
   templateUrl: 'login.html',
 })
 export class LoginPage {
-  private _user: User = {
+  private _user: IUser = {
     email: null,
     password: null
   };
@@ -22,7 +22,7 @@ export class LoginPage {
     public navCtrl: NavController
   ) { }
 
-  private onLoginClick(user: User) {
+  private onLoginClick(user: IUser) {
     this._auth.loginWithEmail(user).subscribe(data => {
       // this.navCtrl.push('HomePage');
       this._db.getOrg();

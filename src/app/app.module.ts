@@ -9,6 +9,9 @@ import { AngularFireAuthModule } from 'angularfire2/auth'
 import { fireBaseConfig } from '../configs';
 import { AuthProvider, DatabaseProvider } from '../providers'
 
+import {StoreModule} from "@ngrx/store";
+import {reducers} from '../store/reducers';
+
 import { MyApp } from './app.component';
 import { LoginPage } from '../pages/login/login';
 
@@ -20,6 +23,7 @@ import { LoginPage } from '../pages/login/login';
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
+    StoreModule.forRoot(reducers),
     AngularFireModule.initializeApp(fireBaseConfig),
     AngularFireAuthModule
   ],
