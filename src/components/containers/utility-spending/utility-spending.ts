@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../store/reducers';
 import { Observable } from "rxjs/Observable";
@@ -10,6 +10,7 @@ import { IUser } from '../../../interfaces';
   templateUrl: 'utility-spending.html'
 })
 export class UtilitySpendingComponent implements OnDestroy, OnInit {
+  @Input() user: IUser | null = null;
 
   private _users: IUser[] = [];
   private _subscriptions: Subscription[] = [];

@@ -17,7 +17,8 @@ import { UserLoggedIn } from '../../store/actions';
 export class LoginPage {
   private _user: IUser = {
     email: null,
-    password: null
+    password: null,
+    uid: null
   };
 
   constructor(
@@ -27,10 +28,10 @@ export class LoginPage {
   ) { }
 
   private onLoginClick(user: IUser) {
-    this._auth.loginWithEmail(user).subscribe(data => {
-      this._store.dispatch(new UserLoggedIn(user));
+    this._auth.loginWithEmail(user).subscribe(userInfo => {
+      this._store.dispatch(new UserLoggedIn(userInfo));
 
-      this.navCtrl.push('HomePage', { user });
+      this.navCtrl.push('HomePage', { user: userInfo });
     }, error => {
       console.log('Login failed');
     });

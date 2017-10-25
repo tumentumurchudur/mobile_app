@@ -12,6 +12,7 @@ import { DatabaseProvider } from '../../providers';
 })
 export class HomePage implements OnInit {
   private _user: IUser;
+  private _orgPath: string;
 
   constructor(
     private _db: DatabaseProvider,
@@ -22,7 +23,13 @@ export class HomePage implements OnInit {
   }
 
   ngOnInit() {
-    this._db.getOrgPath(this._user.uid);
+    this._db.getOrgPath(this._user.uid).then(path => {
+      this._orgPath = path;
+    });
+  }
+
+  get user(): IUser {
+    return this._user;
   }
 
 }

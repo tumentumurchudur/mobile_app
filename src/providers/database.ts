@@ -6,31 +6,32 @@ import firebase from 'firebase';
 
 @Injectable()
 export class DatabaseProvider {
-    private _db: firebase.database.Database;
-    private _usersRef: firebase.database.Reference;
+  private _db: firebase.database.Database;
+  private _usersRef: firebase.database.Reference;
 
-    constructor() {
-        if (!firebase.apps.length) {
-            firebase.initializeApp(fireBaseConfig);
-        }
-
-        this._db = firebase.database();
-
-        this._usersRef = this._db.ref(databasePaths.usersPath);
+  constructor() {
+    if (!firebase.apps.length) {
+        firebase.initializeApp(fireBaseConfig);
     }
 
-    public getOrgPath(uid: string) {
-        const guid = '4f2jsiyTLTauwoxcX78tPC7ObEE3';
+    this._db = firebase.database();
 
-        this._usersRef.child(guid).on('value', (snapshot) => {
-					const { orgs = null} = snapshot.val();
-					const vals = [];
+    this._usersRef = this._db.ref(databasePaths.usersPath);
+  }
 
-					if (orgs && !Array.isArray(orgs)) {
-						orgs = [orgs]
-					}
+  public getOrgPath(uid: string): Promise<string> {
+    return this._usersRef.child(uid).once('value').then(snapshot => {
+      let orgObj;
+      const { orgs = null} = snapshot.val();
 
-					console.log(orgs[0].path);
-        });
-    }
+      if (orgs && !Array.isArray(orgs)) {
+        orgObj = orgs;
+      }
+      orgObj = orgs[0];
+
+      return Promise.resolve(orgObj.path.toString());
+    }).catch(err => {
+      return Promise.reject(err.message);
+    });
+  }
 }

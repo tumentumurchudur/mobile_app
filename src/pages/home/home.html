@@ -8,5 +8,6 @@
 
 <ion-content padding>
   <p>{{ _user.email }}</p>
-  <utility-spending></utility-spending>
+  <div>{{ _orgPath }}</div>
+  <utility-spending [user]="user"></utility-spending>
 </ion-content>
