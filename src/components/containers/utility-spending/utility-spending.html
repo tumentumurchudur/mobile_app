@@ -1,8 +1,14 @@
 <div>
-  {{ _users[0].email }}
   <div>ui:</div>
   {{ user.email }}
   {{ user.uid }}
   <div>path:</div>
   {{ _orgPath }}
+  <div>meter</div>
+  <div *ngFor="let meter of _meters">
+    {{ meter._gas.Gas._billing_start || "N/A" }}
+    {{ meter._gas.Gas._meter_id || "N/A" }}
+    {{ meter._gas.Gas._plan || "N/A" }}
+    {{ meter._gas.Gas._provider || "N/A" }}
+  </div>
 </div>

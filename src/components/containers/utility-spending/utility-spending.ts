@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../../../store/reducers';
 import { Observable } from "rxjs/Observable";
 import { Subscription } from 'rxjs/Subscription';
-import { IUser } from '../../../interfaces';
+import { IUser, IMeter } from '../../../interfaces';
 import { DatabaseProvider } from '../../../providers';
 
 @Component({
@@ -16,6 +16,7 @@ export class UtilitySpendingComponent implements OnDestroy, OnInit {
   private _users: IUser[] = [];
   private _subscriptions: Subscription[] = [];
   private _orgPath: string = '';
+  private _meters: IMeter[] = [];
 
   constructor(
     private _store: Store<AppState>,
@@ -25,8 +26,14 @@ export class UtilitySpendingComponent implements OnDestroy, OnInit {
   ngOnInit() {
     this._subscriptions.push(this._subscribeToUserDataChange());
 
-    this._db.getOrgPath(this.user.uid).then(path => {
+    this._db.getOrgPathForUser(this.user.uid)
+    .switchMap(path => {
       this._orgPath = path;
+
+      return this._db.getMetersForOrg(path);
+    }).subscribe(meter => {
+      console.log(meter);
+      this._meters = [meter];
     });
   }
 
