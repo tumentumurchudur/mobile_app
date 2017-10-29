@@ -1,1 +1,2 @@
-export { User } from './user';
+export { IUser } from './user';
+export { IMeter } from './meter';

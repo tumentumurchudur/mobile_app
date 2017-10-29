@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { NavController, IonicPage } from 'ionic-angular';
+import { NavParams, IonicPage } from 'ionic-angular';
+import { IUser } from '../../interfaces';
 
 @IonicPage({
   name: 'HomePage'
@@ -9,9 +10,14 @@ import { NavController, IonicPage } from 'ionic-angular';
   templateUrl: 'home.html'
 })
 export class HomePage {
+  private _user: IUser;
 
-  constructor(public navCtrl: NavController) {
+  constructor(private navParams: NavParams) {
+    this._user = navParams.get('user');
+  }
 
+  get user(): IUser {
+    return this._user;
   }
 
 }
