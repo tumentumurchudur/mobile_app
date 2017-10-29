@@ -9,6 +9,7 @@ export class DatabaseProvider {
   private _db: firebase.database.Database;
   private _usersRef: firebase.database.Reference;
   private _orgsRef: firebase.database.Reference;
+  private _readsRef: firebase.database.Reference;
 
   constructor() {
     if (!firebase.apps.length) {
@@ -19,6 +20,7 @@ export class DatabaseProvider {
 
     this._usersRef = this._db.ref(databasePaths.usersPath);
     this._orgsRef = this._db.ref(databasePaths.orgsPath);
+    this._readsRef = this._db.ref(databasePaths.readsPath);
   }
 
   public getOrgPathForUser(uid: string): Observable<string> {
@@ -40,15 +42,55 @@ export class DatabaseProvider {
     });
   }
 
-  public getMetersForOrg(orgPath: string): Observable<IMeter> {
-    return Observable.create(observer => {
-      return this._orgsRef.child(orgPath).once('value').then(snapshot => {
-        const { Building1 = null } = snapshot.val();
+  public getMetersForOrg(orgPath: string): Observable<IMeter[]> {
+    let meters: IMeter[] = [];
 
-        observer.next(Building1 ? Building1._meters : null);
+    return Observable.create(observer => {
+      return this._orgsRef.child(orgPath).once("value").then(snapshot => {
+        snapshot.forEach(childSnapshot => {
+          const building = childSnapshot.val();
+          const buildingMeters = building._meters;
+
+          if (building && buildingMeters) {
+            const { _gas = null, _power = null, _solar = null, _water = null } = buildingMeters;
+
+            const gasMeters = _gas ? this._getMeter(_gas) : [];
+            const powerMeters = _power ? this._getMeter(_power) : [];
+            const solarMeters = _solar ? this._getMeter(_solar) : [];
+            const waterMeters = _water ? this._getMeter(_water) : [];
+
+            meters = [].concat(gasMeters, powerMeters, solarMeters, waterMeters);
+          }
+        });
+
+        observer.next(meters);
       }, error => {
         observer.error(error);
       });
     });
+  }
+
+  public getReadsForMeter(meterGuid: string): Observable<any[]> {
+    return Observable.create(observer => {
+      return this._readsRef.child(meterGuid).child("reads").once("value").then(snapshot => {
+        const data = snapshot.val();
+        const reads = Object.keys(data).map(key => {
+          return { date: key, total: data[key].total };
+        });
+
+        observer.next(reads);
+        }, error => {
+          observer.error(error);
+        });
+    });
+  }
+
+  private _getMeter(meter): IMeter[] {
+    const meters = [];
+
+    for (let key of Object.keys(meter)) {
+      meters.push(Object.assign({}, meter[key], { _name: key }));
+    }
+    return meters;
   }
 }

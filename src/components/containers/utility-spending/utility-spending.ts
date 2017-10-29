@@ -1,7 +1,10 @@
 import { Component, OnDestroy, OnInit, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../store/reducers';
+
 import { Observable } from "rxjs/Observable";
+import 'rxjs/add/observable/combineLatest';
+
 import { Subscription } from 'rxjs/Subscription';
 import { IUser, IMeter } from '../../../interfaces';
 import { DatabaseProvider } from '../../../providers';
@@ -15,7 +18,6 @@ export class UtilitySpendingComponent implements OnDestroy, OnInit {
 
   private _users: IUser[] = [];
   private _subscriptions: Subscription[] = [];
-  private _orgPath: string = '';
   private _meters: IMeter[] = [];
 
   constructor(
@@ -27,13 +29,22 @@ export class UtilitySpendingComponent implements OnDestroy, OnInit {
     this._subscriptions.push(this._subscribeToUserDataChange());
 
     this._db.getOrgPathForUser(this.user.uid)
-    .switchMap(path => {
-      this._orgPath = path;
-
+    .switchMap((path: string) => {
       return this._db.getMetersForOrg(path);
-    }).subscribe(meter => {
-      console.log(meter);
-      this._meters = [meter];
+    })
+    .switchMap((meters: IMeter[]) => {
+      this._meters = meters;
+
+      return Observable.combineLatest(
+        ...this._meters.map(meter => this._db.getReadsForMeter(meter._guid))
+      );
+    })
+    .subscribe((reads: any[]) => {
+      this._meters.forEach((meter, index) => {
+        meter._reads = reads[index];
+      });
+
+      // TODO: dispatch an action to populate the store.
     });
   }
 

@@ -1,1 +1,1 @@
-export { reducers, userReducer, AppState } from './login-reducer';
+export { reducers, userReducer, AppState } from './reducers';
