@@ -45,6 +45,8 @@ export class UtilitySpendingComponent implements OnDestroy, OnInit {
       });
 
       // TODO: dispatch an action to populate the store.
+    }, (error: Error) => {
+      console.log("Error has occurred while getting data from firebase.", error.message);
     });
   }
 
