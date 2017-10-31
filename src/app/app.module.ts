@@ -1,4 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+// import { NgxChartsModule } from '@swimlane/ngx-charts';
+
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -29,7 +32,9 @@ import { LoginPage } from '../pages/login/login';
     StoreModule.forRoot(reducers),
     EffectsModule.forRoot([MainEffects]),
     AngularFireModule.initializeApp(fireBaseConfig),
-    AngularFireAuthModule
+    AngularFireAuthModule,
+    BrowserAnimationsModule,
+    // NgxChartsModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
