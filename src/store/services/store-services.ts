@@ -5,7 +5,6 @@ import { LoadMeters } from "../actions";
 
 @Injectable()
 export class StoreServices {
-
 	constructor(
 		private _store: Store<AppState>
 	) { }

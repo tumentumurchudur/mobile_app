@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
+import firebase from 'firebase';
+
+import { fireBaseConfig, databasePaths } from '../configs';
 import { IUser, IMeter } from '../interfaces';
+
 import { Observable } from "rxjs/Observable";
 import "rxjs/add/observable/combineLatest";
-import { fireBaseConfig, databasePaths } from '../configs';
-import firebase from 'firebase';
 
 @Injectable()
 export class DatabaseProvider {
@@ -72,15 +74,14 @@ export class DatabaseProvider {
   }
 
   public getReadsForMeters(meters: IMeter[]): Observable<IMeter[]> {
-    return Observable.combineLatest(
+    return Observable
+    .combineLatest(
       ...meters.map(meter => this._getReadsForMeter(meter._guid))
     )
     .map(values => {
-      meters.forEach((meter, index) => {
-        meter["_reads"] = values[index];
+      return meters.map((meter, index) => {
+        return { ...meter, _reads: values[index] }
       });
-
-      return meters;
     });
   }
 

@@ -12,9 +12,9 @@ import { IUser, IMeter } from '../../../interfaces';
   templateUrl: 'utility-spending.html'
 })
 export class UtilitySpendingComponent implements OnInit {
-  @Input() user: IUser | null = null;
+  @Input() user: IUser | null;
 
-  private _meters: Observable<IMeter[]>;
+  private _meters: Observable<IMeter[] | null>;
 
   constructor(
     private _store: Store<AppState>,

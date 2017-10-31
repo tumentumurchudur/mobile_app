@@ -3,4 +3,8 @@
     {{ meter._name }}
     {{ meter._reads ? meter._reads.length : 0 }}
   </div>
+
+  <div *ngIf="!meters || meters.length === 0">
+    Please wait while loading...
+  </div>
 </div>
