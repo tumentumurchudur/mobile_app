@@ -16,8 +16,8 @@ import { UserLoggedIn } from '../../store/actions';
 })
 export class LoginPage {
   private _user: IUser = {
-    email: null,
-    password: null,
+    email: "james@james.com",
+    password: "james123",
     uid: null
   };
 

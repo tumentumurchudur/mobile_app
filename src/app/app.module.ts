@@ -13,6 +13,7 @@ import { StoreModule } from "@ngrx/store";
 import { reducers } from '../store/reducers';
 import { EffectsModule } from '@ngrx/effects';
 import { MainEffects } from '../store/effects';
+import { StoreServices } from "../store/services";
 
 import { MyApp } from './app.component';
 import { LoginPage } from '../pages/login/login';
@@ -40,7 +41,8 @@ import { LoginPage } from '../pages/login/login';
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     AuthProvider,
-    DatabaseProvider
+    DatabaseProvider,
+    StoreServices
   ]
 })
 export class AppModule {}

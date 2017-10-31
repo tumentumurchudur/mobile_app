@@ -12,12 +12,10 @@ import { IUser } from '../../interfaces';
 export class HomePage {
   private _user: IUser;
 
-  constructor(private navParams: NavParams) {
+  constructor(
+    private navParams: NavParams
+  ) {
     this._user = navParams.get('user');
-  }
-
-  get user(): IUser {
-    return this._user;
   }
 
 }
