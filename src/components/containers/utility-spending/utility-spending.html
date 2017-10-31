@@ -1,6 +1,10 @@
-<div>
-  <div *ngFor="let meter of _meters">
+<div *ngIf="_meters | async; let meters">
+  <div *ngFor="let meter of meters">
     {{ meter._name }}
     {{ meter._reads ? meter._reads.length : 0 }}
+  </div>
+
+  <div *ngIf="!meters || meters.length === 0">
+    Please wait while loading...
   </div>
 </div>

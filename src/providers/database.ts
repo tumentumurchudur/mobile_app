@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
-import { IUser, IMeter } from '../interfaces';
-import { Observable } from "rxjs/Observable";
-import { fireBaseConfig, databasePaths } from '../configs';
 import firebase from 'firebase';
+
+import { fireBaseConfig, databasePaths } from '../configs';
+import { IUser, IMeter } from '../interfaces';
+
+import { Observable } from "rxjs/Observable";
+import "rxjs/add/observable/combineLatest";
 
 @Injectable()
 export class DatabaseProvider {
@@ -70,7 +73,19 @@ export class DatabaseProvider {
     });
   }
 
-  public getReadsForMeter(meterGuid: string): Observable<any[]> {
+  public getReadsForMeters(meters: IMeter[]): Observable<IMeter[]> {
+    return Observable
+    .combineLatest(
+      ...meters.map(meter => this._getReadsForMeter(meter._guid))
+    )
+    .map(values => {
+      return meters.map((meter, index) => {
+        return { ...meter, _reads: values[index] }
+      });
+    });
+  }
+
+  private _getReadsForMeter(meterGuid: string): Observable<any[]> {
     return Observable.create(observer => {
       return this._readsRef.child(meterGuid).child("reads").once("value").then(snapshot => {
         const data = snapshot.val();
