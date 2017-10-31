@@ -4,8 +4,9 @@ import { Action } from "@ngrx/store";
 
 import { Observable } from 'rxjs/rx';
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/mergeMap';
 
-import { LOAD_METERS, AddMeters } from "../actions";
+import { LOAD_METERS, AddMeters, CalcMeters } from "../actions";
 import { DatabaseProvider } from '../../providers';
 import { IMeter } from '../../interfaces';
 
@@ -24,8 +25,14 @@ export class MainEffects {
       return this._db.getReadsForMeters(meters);
     })
     .map((reads: IMeter[]) => {
-      return new AddMeters(reads);
+      return new CalcMeters(reads);
     });
+    // .mergeMap((reads: IMeter[]) => {
+    //   return [
+    //     new AddMeters(reads),
+    //     new CalcMeters(reads)
+    //   ];
+    // });
 
   constructor(
     private readonly _actions$: Actions,

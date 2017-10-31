@@ -1,14 +1,16 @@
 <div *ngIf="_meters | async; let meters">
   <div *ngFor="let meter of meters">
     {{ meter._name }}
+    {{ meter._type }}
     {{ meter._reads ? meter._reads.length : 0 }}
+    {{ meter._usage }} - {{ meter._goal }}
   </div>
 
   <div *ngIf="!meters || meters.length === 0">
     Please wait while loading...
   </div>
 
-  <div style="margin: 0 auto; width:100%">
+  <div *ngIf="meters && meters.length">
     <gauge-chart></gauge-chart>
   </div>
 </div>

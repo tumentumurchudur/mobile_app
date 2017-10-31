@@ -57,10 +57,10 @@ export class DatabaseProvider {
           if (building && buildingMeters) {
             const { _gas = null, _power = null, _solar = null, _water = null } = buildingMeters;
 
-            const gasMeters = _gas ? this._getMeter(_gas) : [];
-            const powerMeters = _power ? this._getMeter(_power) : [];
-            const solarMeters = _solar ? this._getMeter(_solar) : [];
-            const waterMeters = _water ? this._getMeter(_water) : [];
+            const gasMeters = _gas ? this._getMeterProps(_gas, "gas") : [];
+            const powerMeters = _power ? this._getMeterProps(_power, "power") : [];
+            const solarMeters = _solar ? this._getMeterProps(_solar, "solar") : [];
+            const waterMeters = _water ? this._getMeterProps(_water, "water") : [];
 
             meters = [].concat(gasMeters, powerMeters, solarMeters, waterMeters);
           }
@@ -100,12 +100,13 @@ export class DatabaseProvider {
     });
   }
 
-  private _getMeter(meter): IMeter[] {
-    const meters = [];
+  private _getMeterProps(meter: any, type: string): IMeter[] {
+    const props = [];
 
     for (let key of Object.keys(meter)) {
-      meters.push(Object.assign({}, meter[key], { _name: key }));
+      props.push(Object.assign({}, meter[key], { _name: key, _utilityType: type }));
     }
-    return meters;
+    return props;
   }
+
 }
