@@ -20,6 +20,7 @@ export function meterReducer(state = [], action) {
 		case ActionTypes.CALC_METERS:
 			const meters: IMeter[] = action.payload;
 
+			// Calculates consumption data from meter._reads array.
 			meters.forEach(meter => {
 				const reads = meter._reads;
 				const calcData = [];

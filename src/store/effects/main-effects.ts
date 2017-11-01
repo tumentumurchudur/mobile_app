@@ -24,15 +24,13 @@ export class MainEffects {
     .switchMap((meters: IMeter[]) => {
       return this._db.getReadsForMeters(meters);
     })
+    .switchMap((meters: IMeter[]) => {
+      return this._db.getProviderForMeters(meters);
+    })
     .map((reads: IMeter[]) => {
+      console.log("reads", reads);
       return new CalcMeters(reads);
-    });
-    // .mergeMap((reads: IMeter[]) => {
-    //   return [
-    //     new AddMeters(reads),
-    //     new CalcMeters(reads)
-    //   ];
-    // });
+    })
 
   constructor(
     private readonly _actions$: Actions,

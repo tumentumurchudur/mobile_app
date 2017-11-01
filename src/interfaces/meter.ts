@@ -1,3 +1,5 @@
+import { ISeason } from "./season";
+
 export interface IMeter {
   _name: string,
   _billing_start: number | null,
@@ -11,5 +13,9 @@ export interface IMeter {
   _ncmpEffGuid: string,
   _reads: any[],
   _usage: number,
-  _utilityType: string
+  _utilityType: string,
+  _tiers: Map<number, number>,
+  _facilityFee: number,
+  _summer: ISeason,
+  _winter: ISeason
 }
