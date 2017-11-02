@@ -28,42 +28,55 @@ export class DatabaseProvider {
     this._providersRef = this._db.ref(databasePaths.providers);
   }
 
+  /**
+   * Gets org path string from uid.
+   *
+   * @param {string} uid
+   * @returns {Observable<string>}
+   * @memberof DatabaseProvider
+   */
   public getOrgPathForUser(uid: string): Observable<string> {
     return Observable.create(observer => {
-      return this._usersRef.child(uid).once('value').then(snapshot => {
-        let orgObj;
-        const { orgs = null} = snapshot.val();
+      return this._usersRef.child(uid).once("value").then(snapshot => {
+        const { orgs = null } = snapshot.val();
 
         if (orgs && !Array.isArray(orgs)) {
-          orgObj = orgs;
+          observer.next(orgs.path);
         } else {
-          orgObj = orgs[0];
+          observer.next(orgs[0].path);
         }
-
-        observer.next(orgObj.path || null);
-        }, error => {
-          observer.error(error);
-        });
+      }, error => {
+        observer.error(error);
+      });
     });
   }
 
+  /**
+   * Gets all meters associated with the given org path and
+   * returns the meters as an array.
+   *
+   * @param {string} orgPath
+   * @returns {Observable<IMeter[]>}
+   * @memberof DatabaseProvider
+   */
   public getMetersForOrg(orgPath: string): Observable<IMeter[]> {
-    let meters: IMeter[] = [];
-
     return Observable.create(observer => {
       return this._orgsRef.child(orgPath).once("value").then(snapshot => {
-        snapshot.forEach(childSnapshot => {
-          const building = childSnapshot.val();
-          const buildingMeters = building._meters;
+        let meters: IMeter[] = [];
 
-          if (building && buildingMeters) {
-            const { _gas = null, _power = null, _solar = null, _water = null } = buildingMeters;
+        snapshot.forEach(child => {
+          const building = child.val();
+          const metersInBuilding = building._meters;
 
-            const gasMeters = _gas ? this._getMeterProps(_gas, "gas") : [];
-            const powerMeters = _power ? this._getMeterProps(_power, "power") : [];
-            const solarMeters = _solar ? this._getMeterProps(_solar, "solar") : [];
-            const waterMeters = _water ? this._getMeterProps(_water, "water") : [];
+          if (building && metersInBuilding) {
+            const { _gas = null, _power = null, _solar = null, _water = null } = metersInBuilding;
 
+            const gasMeters = _gas ? this._getMeters(_gas, "gas") : [];
+            const powerMeters = _power ? this._getMeters(_power, "power") : [];
+            const solarMeters = _solar ? this._getMeters(_solar, "solar") : [];
+            const waterMeters = _water ? this._getMeters(_water, "water") : [];
+
+            // Flattens meters arrays into a single array.
             meters = [].concat(gasMeters, powerMeters, solarMeters, waterMeters);
           }
         });
@@ -75,26 +88,47 @@ export class DatabaseProvider {
     });
   }
 
+  /**
+   * Gets reads data for each meter in the meters array and
+   * adds _reads property that have the reads data.
+   *
+   * Example: meters: [{ _name, _billingStart, ... }, {...}]
+   * returns meters: [{ _name, _billingStart, _reads: [...] }, {..., _reads: [...]}]
+   *
+   * @param {IMeter[]} meters
+   * @returns {Observable<IMeter[]>}
+   * @memberof DatabaseProvider
+   */
   public getReadsForMeters(meters: IMeter[]): Observable<IMeter[]> {
     return Observable
       .combineLatest(
+        // sends request for reads for each meter using meter guid.
         ...meters.map(meter => this._getReadsForMeter(meter._guid, meter._billing_start))
       )
-      .map(values => {
+      .map((allMeterData: IMeter[][]) => {
+        // Adds property _reads and assigns the reads for each meter in the passed meters array.
         return meters.map((meter, index) => {
-          return { ...meter, _reads: values[index] }
+          return { ...meter, _reads: allMeterData[index] }
         });
       });
   }
 
-  public getProviderForMeters(meters: IMeter[]): Observable<any[]> {
+  /**
+   * Gets provider data for each meter in the meters array.
+   * Adds data for _summer, _facilityFee and _winter as properties.
+   *
+   * @param {IMeter[]} meters
+   * @returns {Observable<IMeter[]>}
+   * @memberof DatabaseProvider
+   */
+  public getProviderForMeters(meters: IMeter[]): Observable<IMeter[]> {
     return Observable
       .combineLatest(
         ...meters.map(meter => this._getProviderForMeter(meter._provider))
       )
-      .map(values => {
-        return values.map((value, index) => {
-          const { plans = null } = value;
+      .map(providers => {
+        return providers.map((provider, index) => {
+          const { plans = null } = provider;
           const residential = plans ? plans.Residential : null;
           const facilityFee = residential ? residential.facility_fee : null;
           const rateSchedules = residential ? residential.rate_schedules : null;
@@ -109,23 +143,40 @@ export class DatabaseProvider {
       });
   }
 
+  /**
+   * Gets provider data for the given provider path.
+   *
+   * @private
+   * @param {string} providerPath
+   * @returns {Observable<any>}
+   * @memberof DatabaseProvider
+   */
   private _getProviderForMeter(providerPath: string): Observable<any> {
     return Observable.create(observer => {
       return this._providersRef.child(providerPath).once("value").then(snapshot => {
-        const data = snapshot.val();
+        const providerData = snapshot.val();
 
-        observer.next(data);
+        observer.next(providerData);
         }, error => {
           observer.error(error);
         });
     });
   }
 
-  private _getReadsForMeter(meterGuid: string, billingStart: number): Observable<any[]> {
+  /**
+   * Gets all reads for the given meter using meter guid and billing start date.
+   *
+   * @private
+   * @param {string} meterGuid
+   * @param {number} billingStart
+   * @returns {Observable<IMeter[]>}
+   * @memberof DatabaseProvider
+   */
+  private _getReadsForMeter(meterGuid: string, billingStart: number): Observable<IMeter[]> {
     const today = new Date();
-    const compDate = new Date(today.getFullYear(), today.getMonth(), billingStart);
-    const prevDate = new Date(today.getFullYear(), today.getMonth() - 1, billingStart);
-    const billingStartDate = compDate < today ? compDate : prevDate;
+    const refDate = new Date(today.getFullYear(), today.getMonth(), billingStart);
+    const prevBillingStartDate = new Date(today.getFullYear(), today.getMonth() - 1, billingStart);
+    const billingStartDate = refDate < today ? refDate : prevBillingStartDate;
 
     const startAt = billingStartDate.getTime().toString();
     const endAt = today.getTime().toString();
@@ -151,13 +202,22 @@ export class DatabaseProvider {
     });
   }
 
-  private _getMeterProps(meter: any, type: string): IMeter[] {
-    const props = [];
-
-    for (let key of Object.keys(meter)) {
-      props.push(Object.assign({}, meter[key], { _name: key, _utilityType: type }));
-    }
-    return props;
+  /**
+   * Iterates over meterObject containing meters and
+   * puts the meters into an array and returns the array.
+   *
+   * Example: { MeterY: IMeter, MeterZ: IMeter, ... }
+   *
+   * @private
+   * @param {*} meterObject
+   * @param {string} meterType
+   * @returns {IMeter[]}
+   * @memberof DatabaseProvider
+   */
+  private _getMeters(meterObject: any, meterType: string): IMeter[] {
+    return Object.keys(meterObject).map(key => {
+      return Object.assign({}, meterObject[key], { _name: key, _utilityType: meterType });
+    });
   }
 
 }

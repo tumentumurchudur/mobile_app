@@ -12,14 +12,20 @@ import { IMeter } from '../../interfaces';
 
 @Injectable()
 export class MainEffects {
-
+  /**
+   * Handles effects to load data for given user using
+   * database services.
+   *
+   * @memberof MainEffects
+   */
   @Effect() public loadMetersData = this._actions$
     .ofType(LOAD_METERS)
-    .switchMap((action: any) => {
-      return this._db.getOrgPathForUser(action.payload);
+    .map((action: any) => action.payload)
+    .switchMap(uid => {
+      return this._db.getOrgPathForUser(uid);
     })
-    .switchMap((path: string) => {
-      return this._db.getMetersForOrg(path);
+    .switchMap((orgPath: string) => {
+      return this._db.getMetersForOrg(orgPath);
     })
     .switchMap((meters: IMeter[]) => {
       return this._db.getReadsForMeters(meters);
@@ -27,15 +33,19 @@ export class MainEffects {
     .switchMap((meters: IMeter[]) => {
       return this._db.getProviderForMeters(meters);
     })
-    .flatMap((reads: IMeter[]) => {
-      console.log("reads", reads);
+    .flatMap((meters: IMeter[]) => {
       return [
-        new CalcMeters(reads),
-        new CalcMeterGoal(reads)
+        new CalcMeters(meters),
+        new CalcMeterGoal(meters)
       ];
     });
 
-
+  /**
+   * Creates an instance of MainEffects.
+   * @param {Actions} _actions$
+   * @param {DatabaseProvider} _db
+   * @memberof MainEffects
+   */
   constructor(
     private readonly _actions$: Actions,
     private readonly _db: DatabaseProvider
