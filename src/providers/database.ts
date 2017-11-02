@@ -78,7 +78,7 @@ export class DatabaseProvider {
   public getReadsForMeters(meters: IMeter[]): Observable<IMeter[]> {
     return Observable
       .combineLatest(
-        ...meters.map(meter => this._getReadsForMeter(meter._guid))
+        ...meters.map(meter => this._getReadsForMeter(meter._guid, meter._billing_start))
       )
       .map(values => {
         return meters.map((meter, index) => {
@@ -121,15 +121,30 @@ export class DatabaseProvider {
     });
   }
 
-  private _getReadsForMeter(meterGuid: string): Observable<any[]> {
-    return Observable.create(observer => {
-      return this._readsRef.child(meterGuid).child("reads").once("value").then(snapshot => {
-        const data = snapshot.val();
-        const reads = Object.keys(data).map(key => {
-          return { date: key, total: data[key].total };
-        });
+  private _getReadsForMeter(meterGuid: string, billingStart: number): Observable<any[]> {
+    const today = new Date();
+    const compDate = new Date(today.getFullYear(), today.getMonth(), billingStart);
+    const prevDate = new Date(today.getFullYear(), today.getMonth() - 1, billingStart);
+    const billingStartDate = compDate < today ? compDate : prevDate;
 
-        observer.next(reads);
+    const startAt = billingStartDate.getTime().toString();
+    const endAt = today.getTime().toString();
+
+    return Observable.create(observer => {
+      return this._readsRef
+        .child(meterGuid)
+        .child("reads")
+        .orderByKey()
+        .startAt(startAt)
+        .endAt(endAt)
+        .once("value")
+        .then(snapshot => {
+          const data = snapshot.val();
+          const reads = Object.keys(data).map(key => {
+            return { date: key, total: data[key].total };
+          });
+
+          observer.next(reads);
         }, error => {
           observer.error(error);
         });

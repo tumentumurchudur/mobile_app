@@ -6,7 +6,7 @@ import { Observable } from 'rxjs/rx';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/mergeMap';
 
-import { LOAD_METERS, AddMeters, CalcMeters } from "../actions";
+import { LOAD_METERS, AddMeters, CalcMeters, CalcMeterGoal } from "../actions";
 import { DatabaseProvider } from '../../providers';
 import { IMeter } from '../../interfaces';
 
@@ -27,10 +27,14 @@ export class MainEffects {
     .switchMap((meters: IMeter[]) => {
       return this._db.getProviderForMeters(meters);
     })
-    .map((reads: IMeter[]) => {
+    .flatMap((reads: IMeter[]) => {
       console.log("reads", reads);
-      return new CalcMeters(reads);
-    })
+      return [
+        new CalcMeters(reads),
+        new CalcMeterGoal(reads)
+      ];
+    });
+
 
   constructor(
     private readonly _actions$: Actions,

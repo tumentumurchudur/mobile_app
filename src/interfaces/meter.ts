@@ -14,8 +14,9 @@ export interface IMeter {
   _reads: any[],
   _usage: number,
   _utilityType: string,
-  _tiers: Map<number, number>,
+  _tiers: any,
   _facilityFee: number,
   _summer: ISeason,
-  _winter: ISeason
+  _winter: ISeason,
+  _actualUsageCost: number
 }

@@ -1,16 +1,10 @@
 <div *ngIf="_meters | async; let meters">
   <div *ngFor="let meter of meters">
     <div>{{ meter._name }}</div>
-    <div>{{ meter._type }}</div>
     <div>{{ meter._reads ? meter._reads.length : 0 }}</div>
-    <div>{{ meter._usage }} - {{ meter._goal }}</div>
-
-    <div *ngIf="meter._summer">
-      {{ meter._summer.start_date }} - {{ meter._summer.end_date }}
-    </div>
-    <div *ngIf="meter._winter">
-      {{ meter._winter.start_date }} - {{ meter._winter.end_date }}
-    </div>
+    <div>Usage: {{ meter._usage }}</div>
+    <div>Calculated: {{ meter._actualUsageCost }} => {{ meter._goal }}</div>
+    <hr/>
   </div>
 
   <div *ngIf="!meters || meters.length === 0">
