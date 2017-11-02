@@ -56,6 +56,7 @@ export function meterReducer(state = [], action) {
 				} else {
 					usage = meters[i]._usage;
 				}
+				meters[i]._actualUsageCost = 0;
 
 				if (tiers) {
 					const rate = [];
@@ -70,17 +71,20 @@ export function meterReducer(state = [], action) {
 						});
 					}
 
-					while(next < rate.length) {
-					  if(usage > rate[next].tier) {
-						total += (rate[next].tier - rate[curr].tier) * rate[curr].rate
-					  } else {
-						total += (usage - rate[curr].tier) * rate[curr].rate
-					  }
-					  curr++;
-					  next++;
+					while(next <= rate.length-1) {
+						if(usage >= rate[next].tier) {
+							total += (rate[next].tier - rate[curr].tier) * rate[curr].rate
+						} else if(usage < rate[next].tier) {
+							total += (usage - rate[curr].tier) * rate[curr].rate
+							break
+						}
+						if(next === rate.length - 1 && usage > rate[next].tier) {
+							total += (usage - rate[next].tier) * rate[next].rate
+						}
+						curr++
+						next++
 					}
-					meters[i]._actualUsageCost = total + meters[i]._facilityFee;
-					console.log("usage =>", usage, total, tiers);
+					meters[i]._actualUsageCost = total > 0 ? total / 100 : 0; // + meters[i]._facilityFee;
 				}
 			}
 			console.log("new state", meters);

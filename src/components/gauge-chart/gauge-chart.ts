@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'gauge-chart',
@@ -6,20 +6,11 @@ import { Component } from '@angular/core';
 })
 export class GaugeChartComponent {
   private view: any[] = [360, 360];
-  private data: any[];
 
-  constructor() {
-    this.data = [
-      {
-        "name": "Germany",
-        "value": 8940000
-      },
-      {
-        "name": "USA",
-        "value": 5000000
-      }
-    ];
-  }
+  @Input() data: any[];
+  @Input() units: string = "test";
+  @Input() min: number = 0;
+  @Input() max: number = 100;
 
   colorScheme = {
     domain: ['#5AA454', '#A10A28', '#C7B42C']

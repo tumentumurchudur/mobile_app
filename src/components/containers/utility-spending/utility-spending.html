@@ -1,17 +1,23 @@
 <div *ngIf="_meters | async; let meters">
   <div *ngFor="let meter of meters">
-    <div>{{ meter._name }}</div>
-    <div>{{ meter._reads ? meter._reads.length : 0 }}</div>
+    <div>Name: {{ meter._name }}</div>
+    <div># of reads: {{ meter._reads ? meter._reads.length : 0 }}</div>
     <div>Usage: {{ meter._usage }}</div>
     <div>Calculated: {{ meter._actualUsageCost }} => {{ meter._goal }}</div>
+
+    <gauge-chart
+      [data]="[
+        { name: 'Goal', value: meter._goal },
+        { name: 'Usage', value: meter._actualUsageCost }
+      ]"
+      [min]="0"
+      [max]="meter._goal"
+      [units]="Usage"
+    ></gauge-chart>
     <hr/>
   </div>
 
   <div *ngIf="!meters || meters.length === 0">
     Please wait while loading...
-  </div>
-
-  <div *ngIf="meters && meters.length">
-    <gauge-chart></gauge-chart>
   </div>
 </div>
