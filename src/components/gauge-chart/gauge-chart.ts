@@ -11,6 +11,7 @@ export class GaugeChartComponent {
   @Input() units: string = "test";
   @Input() min: number = 0;
   @Input() max: number = 100;
+  @Input() textValue: 0;
 
   colorScheme = {
     domain: ['#5AA454', '#A10A28', '#C7B42C']

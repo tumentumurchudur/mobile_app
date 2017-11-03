@@ -6,7 +6,7 @@ import { Observable } from 'rxjs/rx';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/mergeMap';
 
-import { LOAD_METERS, AddMeters, CalcMeters, CalcMeterGoal } from "../actions";
+import { LOAD_METERS, AddMeters } from "../actions";
 import { DatabaseProvider } from '../../providers';
 import { IMeter } from '../../interfaces';
 
@@ -36,17 +36,15 @@ export class MainEffects {
       return this._db.getProviderForMeters(meters);
     })
     .flatMap((meters: IMeter[]) => {
-      const metersUsage = this._helper.calcUsage(meters);
-      const metersGoal = this._helper.calcGoal(meters);
+      // Sets sum of reads diffs to _usage property.
+      this._helper.calcUsageDiffs(meters);
+
+      // Sets actual usage cost to _actualUsageCost property.
+      this._helper.calcUsageCost(meters);
 
       return [
-        new AddMeters(metersGoal)
+        new AddMeters(meters)
       ];
-
-      // return [
-      //   new CalcMeters(meters),
-      //   new CalcMeterGoal(meters)
-      // ];
     });
 
   /**

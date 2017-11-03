@@ -4,7 +4,17 @@ import { convertConfigs } from "../configs";
 
 @Injectable()
 export class CostHelper {
-  public calcUsage(meters: IMeter[]) {
+	/**
+	 * Adds up daily usage number from _reads array.
+	 *
+	 * Example: { _reads: { date: 10/1/17 , total: 8425 }, { date: 10/2/17, total: 8449 }}
+	 * the usage is 8449 - 8425 = 24 between 10/1 and 10/2.
+	 *
+	 * @param {IMeter[]} meters
+	 * @returns
+	 * @memberof CostHelper
+	 */
+	public calcUsageDiffs(meters: IMeter[]) {
 		// Calculates consumption data from meter._reads array.
 		meters.forEach(meter => {
 			const reads = meter._reads;
@@ -12,9 +22,9 @@ export class CostHelper {
 
 			for(let i = reads.length - 1; i >= 0; i--) {
 				if (i - 1 >= 0) {
-					calcData.push(
-						reads[i].total - reads[i-1].total
-					);
+					const diff = reads[i].total - reads[i-1].total;
+
+					calcData.push(diff);
 				}
 			}
 			meter._usage = calcData.reduce((a,b) => a + b);
@@ -23,7 +33,14 @@ export class CostHelper {
 		return meters;
 	}
 
-	public calcGoal(meters: IMeter[]) {
+	/**
+	 * Calculates the actual cost from usage number.
+	 *
+	 * @param {IMeter[]} meters
+	 * @returns
+	 * @memberof CostHelper
+	 */
+	public calcUsageCost(meters: IMeter[]) {
 		for(let i = 0; i <= meters.length - 1; i++) {
 			const today = new Date();
 			const summer = meters[i]._summer;

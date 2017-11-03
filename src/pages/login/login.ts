@@ -5,7 +5,6 @@ import { IUser } from '../../interfaces';
 import { AuthProvider } from '../../providers'
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store/reducers';
-import { UserLoggedIn } from '../../store/actions';
 
 @IonicPage({
   name: 'LoginPage'
@@ -29,8 +28,6 @@ export class LoginPage {
 
   private onLoginClick(user: IUser) {
     this._auth.loginWithEmail(user).subscribe(userData => {
-      this._store.dispatch(new UserLoggedIn(userData));
-
       this.navCtrl.push('HomePage', { user: userData });
     }, error => {
       console.log('Login failed');
