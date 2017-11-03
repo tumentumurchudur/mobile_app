@@ -10,6 +10,8 @@ import { LOAD_METERS, AddMeters, CalcMeters, CalcMeterGoal } from "../actions";
 import { DatabaseProvider } from '../../providers';
 import { IMeter } from '../../interfaces';
 
+import { CostHelper } from "../../helpers";
+
 @Injectable()
 export class MainEffects {
   /**
@@ -34,10 +36,17 @@ export class MainEffects {
       return this._db.getProviderForMeters(meters);
     })
     .flatMap((meters: IMeter[]) => {
+      const metersUsage = this._helper.calcUsage(meters);
+      const metersGoal = this._helper.calcGoal(meters);
+
       return [
-        new CalcMeters(meters),
-        new CalcMeterGoal(meters)
+        new AddMeters(metersGoal)
       ];
+
+      // return [
+      //   new CalcMeters(meters),
+      //   new CalcMeterGoal(meters)
+      // ];
     });
 
   /**
@@ -48,7 +57,8 @@ export class MainEffects {
    */
   constructor(
     private readonly _actions$: Actions,
-    private readonly _db: DatabaseProvider
+    private readonly _db: DatabaseProvider,
+    private readonly _helper: CostHelper
   ) { }
 
 }

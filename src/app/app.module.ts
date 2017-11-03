@@ -16,6 +16,7 @@ import { reducers } from '../store/reducers';
 import { EffectsModule } from '@ngrx/effects';
 import { MainEffects } from '../store/effects';
 import { StoreServices } from "../store/services";
+import { CostHelper } from "../helpers";
 
 import { MyApp } from './app.component';
 import { LoginPage } from '../pages/login/login';
@@ -45,7 +46,8 @@ import { LoginPage } from '../pages/login/login';
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     AuthProvider,
     DatabaseProvider,
-    StoreServices
+    StoreServices,
+    CostHelper
   ]
 })
 export class AppModule {}

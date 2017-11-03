@@ -1,16 +1,14 @@
 import { ActionReducerMap } from "@ngrx/store";
-import { IUser, IMeter } from '../../interfaces';
+import { IMeter } from '../../interfaces';
 import * as ActionTypes from '../actions';
 import { convertConfigs } from "../../configs";
 
 export interface AppState {
-    users: IUser[];
-    meters: IMeter[];
+  meters: IMeter[];
 }
 
 export const reducers: ActionReducerMap<AppState> = {
-    users: userReducer,
-    meters: meterReducer
+  meters: meterReducer
 };
 
 export function meterReducer(state = [], action) {
@@ -92,16 +90,5 @@ export function meterReducer(state = [], action) {
 		}
 		default:
 			return state;
-	}
-}
-
-export function userReducer(state = [], action) {
-	switch (action.type) {
-			case ActionTypes.LOGGED_IN:
-					return [...state, Object.assign({}, action.payload)];
-			case ActionTypes.LOGGED_OUT:
-					return [];
-			default:
-					return state;
 	}
 }
