@@ -8,7 +8,8 @@ export const fireBaseConfig = {
 }
 
 export const databasePaths = {
-    usersPath: "users",
-    orgsPath: "orgs",
-    readsPath: "reads"
+    users: "users",
+    orgs: "orgs",
+    reads: "reads",
+    providers: "providers"
 }

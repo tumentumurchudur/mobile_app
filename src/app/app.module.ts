@@ -1,4 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -14,6 +16,7 @@ import { reducers } from '../store/reducers';
 import { EffectsModule } from '@ngrx/effects';
 import { MainEffects } from '../store/effects';
 import { StoreServices } from "../store/services";
+import { CostHelper } from "../helpers";
 
 import { MyApp } from './app.component';
 import { LoginPage } from '../pages/login/login';
@@ -29,7 +32,8 @@ import { LoginPage } from '../pages/login/login';
     StoreModule.forRoot(reducers),
     EffectsModule.forRoot([MainEffects]),
     AngularFireModule.initializeApp(fireBaseConfig),
-    AngularFireAuthModule
+    AngularFireAuthModule,
+    BrowserAnimationsModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -42,7 +46,8 @@ import { LoginPage } from '../pages/login/login';
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     AuthProvider,
     DatabaseProvider,
-    StoreServices
+    StoreServices,
+    CostHelper
   ]
 })
 export class AppModule {}

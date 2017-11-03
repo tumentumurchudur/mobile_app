@@ -1,19 +1,8 @@
 import { Action } from '@ngrx/store';
-import { IUser, IMeter } from '../../interfaces';
+import { IMeter } from '../../interfaces';
 
-export const LOGGED_IN: string = 'LOGGED_IN';
-export const LOGGED_OUT: string = 'LOGGED_OUT';
 export const LOAD_METERS: string = "LOAD_METERS"
 export const ADD_METERS: string = "ADD_METERS";
-
-export class UserLoggedIn implements Action {
-	public readonly type = LOGGED_IN;
-	public payload: IUser | null;
-
-	constructor(private _payload: IUser) {
-			this.payload = _payload;
-	}
-}
 
 export class LoadMeters implements Action {
 	public readonly type = LOAD_METERS;
@@ -34,4 +23,4 @@ export class AddMeters implements Action {
 }
 
 
-export type Actions = UserLoggedIn | LoadMeters;
+export type Actions = AddMeters | LoadMeters;
