@@ -193,7 +193,7 @@ export class DatabaseProvider {
           const data = snapshot.val();
           let reads = [];
 
-          if (data && data.length) {
+          if (data) {
             reads = Object.keys(data).map(key => {
               return { date: key, total: data[key].total };
             });

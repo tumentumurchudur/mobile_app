@@ -15,8 +15,8 @@ import { AppState } from '../../store/reducers';
 })
 export class LoginPage {
   private _user: IUser = {
-    email: "james@james.com",
-    password: "james123",
+    email: "james@james.com", // "spark@vutiliti.com",
+    password: "james123", //"spark123",
     uid: null
   };
 
