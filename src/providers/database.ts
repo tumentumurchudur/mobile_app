@@ -191,9 +191,13 @@ export class DatabaseProvider {
         .once("value")
         .then(snapshot => {
           const data = snapshot.val();
-          const reads = Object.keys(data).map(key => {
-            return { date: key, total: data[key].total };
-          });
+          let reads = [];
+
+          if (data && data.length) {
+            reads = Object.keys(data).map(key => {
+              return { date: key, total: data[key].total };
+            });
+          }
 
           observer.next(reads);
         }, error => {

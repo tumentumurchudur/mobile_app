@@ -27,7 +27,7 @@ export class CostHelper {
 					calcData.push(diff);
 				}
 			}
-			meter._usage = calcData.reduce((a,b) => a + b);
+			meter._usage = calcData.length ? calcData.reduce((a,b) => a + b) : 0;
 		});
 
 		return meters;
