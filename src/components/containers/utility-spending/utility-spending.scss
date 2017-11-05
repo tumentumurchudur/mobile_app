@@ -1,3 +1,22 @@
 utility-spending {
+	.meter-name {
+		font-size: 22px;
+	}
 
+  .spending-goal {
+		text-align: center;
+		font-size: 18px;
+		opacity: .7;
+		margin-bottom: 20px
+	}
+
+	.actual-cost {
+		text-align: center;
+		font-size: 48px;
+	}
+
+	.line {
+		border-bottom: 1px solid gray;
+		margin-bottom: 20px;
+	}
 }

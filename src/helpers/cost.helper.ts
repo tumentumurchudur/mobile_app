@@ -50,15 +50,38 @@ export class CostHelper {
 			const isSummer = startDate && endDate ? today >= startDate && today < endDate : false;
 			const tiers = isSummer && summer ? summer.tiers : (winter ? winter.tiers : null);
 			let usage = 0;
+			let unit = "";
 
-			if (meters[i]._utilityType === "gas") {
+			// Finds # of days it has been since billing start date.
+			const refDate = new Date(today.getFullYear(), today.getMonth(), meters[i]._billing_start);
+			const prevBillingStartDate = new Date(today.getFullYear(), today.getMonth() - 1, meters[i]._billing_start);
+			const billingStartDate = refDate < today ? refDate : prevBillingStartDate;
+
+			// # of days since billing start date
+			meters[i]._billing_since_start = this._findDiffDays(billingStartDate, today);
+			// # of days in billing cycle.
+			meters[i]._billing_total = this._findDiffDays(prevBillingStartDate, refDate);
+			//-------------------------------------------------------------
+
+			const utilityType = meters[i]._utilityType;
+
+			if (utilityType === "gas") {
 				usage = meters[i]._usage / convertConfigs.ccfToDth;
-			} else if (meters[i]._utilityType === "water") {
+				unit = "dTh";
+			} else if (utilityType === "water") {
 				usage = meters[i]._usage / convertConfigs.galToCcf;
-			} else {
+				unit = "gal";
+			} else if (utilityType === "power" || utilityType === "solar") {
+				usage = meters[i]._usage;
+				unit = "kWh";
+			}
+			else {
+				unit = "N/A";
 				usage = meters[i]._usage;
 			}
+
 			meters[i]._actualUsageCost = 0;
+			meters[i]._utilityUnit = unit;
 
 			if (tiers) {
 				const rate = [];
@@ -90,6 +113,21 @@ export class CostHelper {
 			}
 		}
 		return meters;
+	}
+
+	/**
+	 * Finds # of days between start and end dates.
+	 *
+	 * @private
+	 * @param {Date} startDate
+	 * @param {Date} endDate
+	 * @returns {number}
+	 * @memberof CostHelper
+	 */
+	private _findDiffDays(startDate: Date, endDate: Date): number {
+		const timeDiff = Math.abs(startDate.getTime() - endDate.getTime());
+
+		return Math.floor(timeDiff / (1000 * 3600 * 24));
 	}
 
 }
