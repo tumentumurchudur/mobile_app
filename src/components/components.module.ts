@@ -4,17 +4,17 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 import { UtilitySpendingComponent } from './containers/utility-spending/utility-spending';
 import { GaugeChartComponent } from "./gauge-chart/gauge-chart";
-import { ArchChartComponent } from './arch-chart/arch-chart';
+import { ArcTweenChartComponent } from './arc-tween-chart/arc-tween-chart';
 @NgModule({
 	declarations: [
 		UtilitySpendingComponent,
 		GaugeChartComponent,
-		ArchChartComponent
+    	ArcTweenChartComponent
 	],
 	imports: [CommonModule, NgxChartsModule],
 	exports: [
 		UtilitySpendingComponent,
-		ArchChartComponent
+    ArcTweenChartComponent
 	]
 })
 export class ComponentsModule {}

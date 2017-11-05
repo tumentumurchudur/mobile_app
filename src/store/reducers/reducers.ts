@@ -14,7 +14,7 @@ export const reducers: ActionReducerMap<AppState> = {
 export function meterReducer(state = [], action) {
 	switch (action.type) {
 		case ActionTypes.ADD_METERS:
-			return [...state, ...action.payload];
+			return [...action.payload];
 		default:
 			return state;
 	}

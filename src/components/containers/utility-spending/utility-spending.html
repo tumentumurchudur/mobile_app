@@ -2,21 +2,17 @@
   <div *ngFor="let meter of meters">
     <div>Name: {{ meter._name }}</div>
     <div># of reads: {{ meter._reads ? meter._reads.length : 0 }}</div>
-    <div>Meter guid: {{ meter._guid }}</div>
     <div>Usage: {{ meter._usage }}</div>
-    <div>Calculated: {{ meter._actualUsageCost }} => {{ meter._goal }}</div>
+    <div>Usage cost as of today: {{ meter._actualUsageCost | number: '.1-2' }}</div>
+    <div>Goal: {{ meter._goal }}</div>
 
     <div *ngIf="meter._actualUsageCost > 0">
-      <gauge-chart
-        [data]="[
-          { name: 'Goal', value: meter._goal },
-          { name: 'Usage', value: meter._actualUsageCost }
-        ]"
-        [min]="0"
-        [max]="meter._goal"
-        [units]="Usage"
-        [textValue]="meter._usage"
-      ></gauge-chart>
+      <arc-tween-chart
+        [outerArcValue]="meter._goal / meter._billing_total * meter._billing_since_start"
+        [innerArcValue]="meter._actualUsageCost"
+        [totalValue]="meter._goal"
+        [middleText]="meter._actualUsageCost | number: '.1-2'"
+      ></arc-tween-chart>
     </div>
     <hr/>
   </div>
