@@ -16,6 +16,7 @@ export interface IMeter {
   _reads: any[],
   _usage: number,
   _utilityType: string,
+  _utilityUnit: string,
   _tiers: any,
   _facilityFee: number,
   _summer: ISeason,

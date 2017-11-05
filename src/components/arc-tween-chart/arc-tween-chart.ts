@@ -9,14 +9,17 @@ export class ArcTweenChartComponent implements OnInit {
   @Input() outerArcValue: number | null;
   @Input() innerArcValue: number | null;
   @Input() totalValue: number | null;
-  @Input() colors: string[] = ["green", "red"];
-  @Input() middleText: string | null;
+
+  // Specify background, outer and inner arc colors respectively.
+  @Input() colors: string[] = ["#ddd", "green", "red"];
+  @Input() middleValue: string | null;
+  @Input() middleLabel: string | null;
+  @Input() innerRingThickness: number = 8;
+  @Input() outerRingThickness: number = 25;
 
   private element: any;
   private diameter: number = 250;
-  private margin: any = { left: 20, right: 40, top: 10, bottom: 10 };
-  private innerRingThickness: number = 8;
-  private outerRingThickness: number = 25;
+  private margin: any = { left: 20, right: 20, top: 10, bottom: 10 };
 
   constructor(element: ElementRef) {
     this.element = element.nativeElement;
@@ -55,37 +58,36 @@ export class ArcTweenChartComponent implements OnInit {
     // Add the background arc, from 0 to 100% (τ).
     const background = vis.append("path")
       .datum({ endAngle: τ })
-      .style("fill", "#ddd")
+      .style("fill", this.colors[0] || "#ddd")
       .attr("d", arc);
 
     // Add the foreground arc.
     const outerValue = this.outerArcValue / this.totalValue;
     const outerArcPath = vis.append("path")
       .datum({ endAngle: 0 })
-      .style("fill", this.colors[0] || "orange")
+      .style("fill", this.colors[1] || "orange")
       .attr("d", arc)
       .transition()
       .delay(500)
-      .duration(500)
+      .duration(1000)
       .call(arcTween, outerValue * τ, arc);
 
     // Calculates the inner arc value.
     const innerValue = this.innerArcValue / this.totalValue;
     const innerArcPath = vis.append("path")
       .datum({ endAngle: 0 })
-      .style("fill", this.colors[1] || "red")
+      .style("fill", this.colors[2] || "red")
       .attr("d", innerArc)
       .transition()
       .delay(1000)
-      .duration(750)
+      .duration(1000)
       .call(arcTween, innerValue * τ, innerArc);
 
     // Creates a tween on the specified transition's "d" attribute, transitioning
     // any selected arcs from their current angle to the specified new angle.
     function arcTween(transition, newAngle, arc) {
       transition.attrTween("d", (d) => {
-
-        var interpolate = d3.interpolate(d.endAngle, newAngle);
+        const interpolate = d3.interpolate(d.endAngle, newAngle);
 
         return function(t) {
           d.endAngle = interpolate(t);

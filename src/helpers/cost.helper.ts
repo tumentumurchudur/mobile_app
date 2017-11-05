@@ -50,6 +50,7 @@ export class CostHelper {
 			const isSummer = startDate && endDate ? today >= startDate && today < endDate : false;
 			const tiers = isSummer && summer ? summer.tiers : (winter ? winter.tiers : null);
 			let usage = 0;
+			let unit = "";
 
 			// Finds # of days it has been since billing start date.
 			const refDate = new Date(today.getFullYear(), today.getMonth(), meters[i]._billing_start);
@@ -62,14 +63,25 @@ export class CostHelper {
 			meters[i]._billing_total = this._findDiffDays(prevBillingStartDate, refDate);
 			//-------------------------------------------------------------
 
-			if (meters[i]._utilityType === "gas") {
+			const utilityType = meters[i]._utilityType;
+
+			if (utilityType === "gas") {
 				usage = meters[i]._usage / convertConfigs.ccfToDth;
-			} else if (meters[i]._utilityType === "water") {
+				unit = "dTh";
+			} else if (utilityType === "water") {
 				usage = meters[i]._usage / convertConfigs.galToCcf;
-			} else {
+				unit = "gal";
+			} else if (utilityType === "power" || utilityType === "solar") {
+				usage = meters[i]._usage;
+				unit = "kWh";
+			}
+			else {
+				unit = "N/A";
 				usage = meters[i]._usage;
 			}
+
 			meters[i]._actualUsageCost = 0;
+			meters[i]._utilityUnit = unit;
 
 			if (tiers) {
 				const rate = [];

@@ -1,20 +1,25 @@
 <div *ngIf="_meters | async; let meters">
   <div *ngFor="let meter of meters">
-    <div>Name: {{ meter._name }}</div>
+    <div class="meter-name">{{ meter._name }}</div>
     <div># of reads: {{ meter._reads ? meter._reads.length : 0 }}</div>
-    <div>Usage: {{ meter._usage }}</div>
-    <div>Usage cost as of today: {{ meter._actualUsageCost | number: '.1-2' }}</div>
-    <div>Goal: {{ meter._goal }}</div>
 
     <div *ngIf="meter._actualUsageCost > 0">
       <arc-tween-chart
         [outerArcValue]="meter._goal / meter._billing_total * meter._billing_since_start"
         [innerArcValue]="meter._actualUsageCost"
         [totalValue]="meter._goal"
-        [middleText]="meter._actualUsageCost | number: '.1-2'"
+        [middleValue]="meter._usage / 1000 | number: '.1-2'"
+        [middleLabel]="meter._utilityUnit"
       ></arc-tween-chart>
+
+      <div class="actual-cost">
+          {{ meter._actualUsageCost | currency:'USD':true:'1.2-2' }}
+      </div>
+      <div class="spending-goal">
+        Spending goal of {{ meter._goal | currency:'USD':true:'1.2-2' }}
+      </div>
     </div>
-    <hr/>
+    <div class="line"></div>
   </div>
 
   <div *ngIf="!meters || meters.length === 0">
