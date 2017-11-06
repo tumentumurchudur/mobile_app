@@ -41,7 +41,6 @@ export class MainEffects {
 
       // Sets actual usage cost to _actualUsageCost property.
       this._helper.calcUsageCost(meters);
-      console.log(meters);
       return [
         new AddMeters(meters)
       ];

@@ -28,7 +28,6 @@
     "@ngrx/core": "^1.2.0",
     "@ngrx/effects": "4.0.5",
     "@ngrx/store": "^4.0.3",
-    "@swimlane/ngx-charts": "^6.1.0",
     "angularfire2": "^5.0.0-rc.3",
     "d3": "^4.11.0",
     "firebase": "^4.6.0",

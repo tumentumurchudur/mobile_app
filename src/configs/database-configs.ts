@@ -1,15 +1,15 @@
 export const fireBaseConfig = {
-    apiKey: "AIzaSyARnfo80rPEQQgZjMBGuwekYTve9nsBA08",
-    authDomain: "vutiliti-platform.firebaseapp.com",
-    databaseURL: "https://vutiliti-platform.firebaseio.com",
-    projectId: "firebase-vutiliti-platform",
-    storageBucket: "firebase-vutiliti-platform.appspot.com",
-    messagingSenderId: "153277340240"
+	apiKey: "AIzaSyARnfo80rPEQQgZjMBGuwekYTve9nsBA08",
+	authDomain: "vutiliti-platform.firebaseapp.com",
+	databaseURL: "https://vutiliti-platform.firebaseio.com",
+	projectId: "firebase-vutiliti-platform",
+	storageBucket: "firebase-vutiliti-platform.appspot.com",
+	messagingSenderId: "153277340240"
 }
 
 export const databasePaths = {
-    users: "users",
-    orgs: "orgs",
-    reads: "reads",
-    providers: "providers"
+	users: "users",
+	orgs: "orgs",
+	reads: "reads",
+	providers: "providers"
 }

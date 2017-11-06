@@ -1,3 +1,5 @@
+@import "../../../styles/variables";
+
 utility-spending {
 	.meter-name {
 		font-size: 22px;
@@ -11,6 +13,7 @@ utility-spending {
 	}
 
 	.actual-cost {
+		color: $dusty-gray;
 		text-align: center;
 		font-size: 48px;
 	}
