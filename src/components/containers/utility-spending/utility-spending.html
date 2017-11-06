@@ -5,15 +5,19 @@
 
     <div *ngIf="meter._actualUsageCost > 0">
       <arc-tween-chart
-        [outerArcValue]="meter._goal / meter._billing_total * meter._billing_since_start"
+        [outerArcValue]="_getDailyGoalCost(meter)"
         [innerArcValue]="meter._actualUsageCost"
         [totalValue]="meter._goal"
         [middleValue]="meter._usage / 1000 | number: '.1-2'"
-        [middleLabel]="meter._utilityUnit"
+        [middleLabel]="_getUnit(meter)"
+        [colors]="_getColors(meter)"
       ></arc-tween-chart>
 
-      <div class="actual-cost">
-          {{ meter._actualUsageCost | currency:'USD':true:'1.2-2' }}
+      <div
+        class="actual-cost"
+        [ngStyle]="{ 'color': meter._actualUsageCost > _getDailyGoalCost(meter) ? '#C22A17' : '#969696' }"
+      >
+        {{ meter._actualUsageCost | currency:'USD':true:'1.2-2' }}
       </div>
       <div class="spending-goal">
         Spending goal of {{ meter._goal | currency:'USD':true:'1.2-2' }}

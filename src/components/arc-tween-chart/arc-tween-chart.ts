@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ElementRef } from '@angular/core';
 import * as d3 from 'd3';
 
 @Component({
