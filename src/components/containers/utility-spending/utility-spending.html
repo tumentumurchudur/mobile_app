@@ -1,32 +1,37 @@
 <div *ngIf="_meters | async; let meters">
   <div *ngFor="let meter of meters">
-    <div class="meter-name">{{ meter._name }}</div>
-    <div># of reads: {{ meter._reads ? meter._reads.length : 0 }}</div>
-
-    <div *ngIf="meter._actualUsageCost > 0">
-      <arc-tween-chart
-        [outerArcValue]="_getDailyGoalCost(meter)"
-        [innerArcValue]="meter._actualUsageCost"
-        [totalValue]="meter._goal"
-        [middleValue]="meter._usage / 1000 | number: '.1-2'"
-        [middleLabel]="_getUnit(meter)"
-        [colors]="_getColors(meter)"
-      ></arc-tween-chart>
-
-      <div
-        class="actual-cost"
-        [ngStyle]="{ 'color': meter._actualUsageCost > _getDailyGoalCost(meter) ? '#C22A17' : '#969696' }"
-      >
-        {{ meter._actualUsageCost | currency:'USD':true:'1.2-2' }}
+    <ion-card class="chart-card layout vertical">
+      <div class="header">
+        <div [class.status]="_isBehindGoal(meter)"></div>
+        <img class="exclamation-icon" src="assets/exclamation.svg">
+        <div class="meter-name">{{ meter._name }}</div>
+        <div># of reads: {{ meter._reads ? meter._reads.length : 0 }}</div>
       </div>
-      <div class="spending-goal">
-        Spending goal of {{ meter._goal | currency:'USD':true:'1.2-2' }}
+
+      <div *ngIf="meter._actualUsageCost > 0">
+        <arc-tween-chart
+          [outerArcValue]="meter._actualUsageCost"
+          [innerArcValue]="_getDailyGoalCost(meter)"
+          [totalValue]="meter._goal"
+          [middleValue]="meter._usage / 1000 | number: '.1-2'"
+          [middleLabel]="_getUnit(meter)"
+          [colors]="_getColors(meter)"
+        ></arc-tween-chart>
+
+        <div
+          class="actual-cost"
+          [ngStyle]="{ 'color': meter._actualUsageCost > _getDailyGoalCost(meter) ? '#C22A17' : '#969696' }"
+        >
+          {{ meter._actualUsageCost | currency:'USD':true:'1.2-2' }}
+        </div>
+
+        <div class="spending-goal">
+          Spending goal of {{ meter._goal | currency:'USD':true:'1.2-2' }}
+        </div>
       </div>
-    </div>
-    <div class="line"></div>
+    </ion-card>
   </div>
-
-  <div *ngIf="!meters || meters.length === 0">
+  <div padding *ngIf="!meters || meters.length === 0">
     Please wait while loading...
   </div>
 </div>
