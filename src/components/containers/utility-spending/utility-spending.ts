@@ -40,4 +40,8 @@ export class UtilitySpendingComponent implements OnInit {
     return meter._goal / meter._billing_total * meter._billing_since_start;
   }
 
+  private _isBehindGoal(meter: IMeter) {
+    return meter._actualUsageCost > this._getDailyGoalCost(meter);
+  }
+
 }

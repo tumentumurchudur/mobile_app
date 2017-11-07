@@ -35,15 +35,15 @@ export class MainEffects {
     .switchMap((meters: IMeter[]) => {
       return this._db.getProviderForMeters(meters);
     })
-    .flatMap((meters: IMeter[]) => {
+    .map((meters: IMeter[]) => {
       // Sets sum of reads diffs to _usage property.
       this._helper.calcUsageDiffs(meters);
 
       // Sets actual usage cost to _actualUsageCost property.
       this._helper.calcUsageCost(meters);
-      return [
-        new AddMeters(meters)
-      ];
+
+      // Dispatch action to update the store.
+      return new AddMeters(meters);
     });
 
   /**

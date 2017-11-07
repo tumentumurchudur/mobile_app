@@ -16,10 +16,15 @@ export class ArcTweenChartComponent implements OnInit {
   @Input() middleLabel: string | null;
   @Input() innerRingThickness: number = 8;
   @Input() outerRingThickness: number = 25;
+  @Input() diameter: number = 250;
 
   private element: any;
-  private diameter: number = 250;
+
+  //these are all *relative* units, which will scale to fill the SVG.
   private margin: any = { left: 20, right: 20, top: 10, bottom: 10 };
+
+  private viewBoxWidth = this.margin.left + this.diameter + this.margin.right;
+  private viewBoxHeight = this.margin.top + this.diameter + this.margin.bottom;
 
   constructor(element: ElementRef) {
     this.element = element.nativeElement;
@@ -30,12 +35,8 @@ export class ArcTweenChartComponent implements OnInit {
   }
 
   draw() {
-    //these are all *relative* units, which will scale to fill the SVG.
-    const viewBoxWidth = this.margin.left + this.diameter + this.margin.right;
-    const viewBoxHeight = this.margin.top + this.diameter + this.margin.bottom;
-
     const svg = d3.select(this.element).select("svg")
-      .attr("viewBox", "0 0 " + viewBoxWidth + " " + viewBoxHeight);
+      .attr("viewBox", "0 0 " + this.viewBoxWidth + " " + this.viewBoxHeight);
 
     const vis = d3.select(this.element).select("svg").select("g")
       .attr("transform", "translate(" + (this.margin.left + this.diameter / 2) + ","
