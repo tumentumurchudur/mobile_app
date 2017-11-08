@@ -1,8 +1,10 @@
+<button ion-button full (click)="reloadClick()">Reload</button>
+
 <div *ngIf="_meters | async; let meters">
   <div *ngFor="let meter of meters">
     <ion-card class="chart-card layout vertical">
       <div class="header">
-        <div [class.status]="_isBehindGoal(meter)"></div>
+        <div [class.status]="_isUsageCostBehindGoal(meter)"></div>
         <img class="exclamation-icon" src="assets/exclamation.svg">
         <div class="meter-name">{{ meter._name }}</div>
         <div># of reads: {{ meter._reads ? meter._reads.length : 0 }}</div>
@@ -16,21 +18,23 @@
           [middleValue]="meter._usage / 1000 | number: '.1-2'"
           [middleLabel]="_getUnit(meter)"
           [colors]="_getColors(meter)"
+          [image]="_getImage(meter)"
         ></arc-tween-chart>
 
         <div
           class="actual-cost"
-          [ngStyle]="{ 'color': meter._actualUsageCost > _getDailyGoalCost(meter) ? '#C22A17' : '#969696' }"
+          [ngStyle]="{ 'color': _isUsageCostBehindGoal(meter) ? '#C22A17' : '#969696' }"
         >
-          {{ meter._actualUsageCost | currency:'USD':true:'1.2-2' }}
+          {{ meter._actualUsageCost | currency: 'USD': true:'1.2-2' }}
         </div>
 
         <div class="spending-goal">
-          Spending goal of {{ meter._goal | currency:'USD':true:'1.2-2' }}
+          Spending goal of {{ meter._goal | currency:'USD': true:'1.2-2' }}
         </div>
       </div>
     </ion-card>
   </div>
+
   <div padding *ngIf="!meters || meters.length === 0">
     Please wait while loading...
   </div>
