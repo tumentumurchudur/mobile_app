@@ -1,4 +1,4 @@
-import { ISeason } from "./season";
+import { ITier } from "./tier";
 
 export interface IMeter {
   _name: string,
@@ -19,7 +19,7 @@ export interface IMeter {
   _utilityUnit: string,
   _tiers: any,
   _facilityFee: number,
-  _summer: ISeason,
-  _winter: ISeason,
+  _summer: ITier,
+  _winter: ITier,
   _actualUsageCost: number
 }

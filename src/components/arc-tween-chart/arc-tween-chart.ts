@@ -17,6 +17,7 @@ export class ArcTweenChartComponent implements OnInit {
   @Input() innerRingThickness: number = 8;
   @Input() outerRingThickness: number = 25;
   @Input() diameter: number = 250;
+  @Input() image: string = ";"
 
   private element: any;
 
@@ -50,8 +51,8 @@ export class ArcTweenChartComponent implements OnInit {
 
     // Inner arc
     const innerArc = d3.arc()
-      .outerRadius(this.diameter / 3)
-      .innerRadius(this.diameter / 3 - this.innerRingThickness)
+      .outerRadius(this.diameter / 2 - this.outerRingThickness)
+      .innerRadius(this.diameter / 2 - this.outerRingThickness - this.innerRingThickness)
       .startAngle(0);
 
     const τ = 2 * Math.PI;

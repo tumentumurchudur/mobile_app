@@ -29,19 +29,33 @@ export class UtilitySpendingComponent implements OnInit {
   }
 
   private _getColors(meter: IMeter): string[] {
-    return chartConfigs.filter(config => config.name === meter._utilityType)[0].color;
+    const meterConfig = chartConfigs.filter(config => config.name === meter._utilityType)[0] || null;
+
+    return meterConfig ? meterConfig.color : [];
   }
 
   private _getUnit(meter: IMeter): string {
-    return chartConfigs.filter(config => config.name === meter._utilityType)[0].unit;
+    const meterConfig = chartConfigs.filter(config => config.name === meter._utilityType)[0] || null;
+
+    return meterConfig ? meterConfig.unit : "";
+  }
+
+  private _getImage(meter: IMeter) {
+    const meterConfig = chartConfigs.filter(config => config.name === meter._utilityType)[0] || null;
+
+    return meterConfig ? meterConfig.imgSrc : "";
   }
 
   private _getDailyGoalCost(meter: IMeter) {
     return meter._goal / meter._billing_total * meter._billing_since_start;
   }
 
-  private _isBehindGoal(meter: IMeter) {
+  private _isUsageCostBehindGoal(meter: IMeter) {
     return meter._actualUsageCost > this._getDailyGoalCost(meter);
+  }
+
+  private reloadClick() {
+    this._storeServices.loadMeters(this.user.uid);
   }
 
 }

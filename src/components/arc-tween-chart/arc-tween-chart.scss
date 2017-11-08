@@ -3,4 +3,15 @@ arc-tween-chart {
 		fill: orange;
 		font-size: 18px;
 	}
+
+	.chart-container {
+		position: relative;
+
+		img {
+			position: absolute;
+			width: 60px;
+			top: 20%;
+			left: 41%;
+		}
+	}
 }

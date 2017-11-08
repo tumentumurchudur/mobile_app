@@ -2,13 +2,13 @@ import { Injectable } from '@angular/core';
 import { Effect, Actions } from "@ngrx/effects";
 import { Action } from "@ngrx/store";
 
-import { Observable } from 'rxjs/rx';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/mergeMap';
+import { Observable } from "rxjs/rx";
+import "rxjs/add/operator/map";
+import "rxjs/add/operator/switchMap";
 
 import { LOAD_METERS, AddMeters } from "../actions";
-import { DatabaseProvider } from '../../providers';
-import { IMeter } from '../../interfaces';
+import { DatabaseProvider } from "../../providers";
+import { IMeter } from "../../interfaces";
 
 import { CostHelper } from "../../helpers";
 
