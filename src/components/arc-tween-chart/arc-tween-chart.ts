@@ -12,12 +12,13 @@ export class ArcTweenChartComponent implements OnInit {
 
   // Specify background, outer and inner arc colors respectively.
   @Input() colors: string[] = ["#ddd", "green", "red"];
-  @Input() middleValue: string | null;
-  @Input() middleLabel: string | null;
+  @Input() centerValue: string | null;
+  @Input() centerLabel: string | null;
   @Input() innerRingThickness: number = 8;
   @Input() outerRingThickness: number = 25;
   @Input() diameter: number = 250;
-  @Input() image: string = ";"
+  @Input() image: string = "";
+  @Input() gapBetweenArcs = 3;
 
   private element: any;
 
@@ -31,6 +32,14 @@ export class ArcTweenChartComponent implements OnInit {
     this.element = element.nativeElement;
   }
 
+  /**
+   * Life cycle hook.
+   * Initialize the component after Angular first displays
+   * the data-bound properties and sets the directive/component's input properties.
+   * Called once, after the first ngOnChanges()
+   *
+   * @memberof ArcTweenChartComponent
+   */
   ngOnInit() {
     this.draw();
   }
@@ -51,8 +60,8 @@ export class ArcTweenChartComponent implements OnInit {
 
     // Inner arc
     const innerArc = d3.arc()
-      .outerRadius(this.diameter / 2 - this.outerRingThickness)
-      .innerRadius(this.diameter / 2 - this.outerRingThickness - this.innerRingThickness)
+      .outerRadius(this.diameter / 2 - this.outerRingThickness - this.gapBetweenArcs)
+      .innerRadius(this.diameter / 2 - this.outerRingThickness - this.innerRingThickness - this.gapBetweenArcs)
       .startAngle(0);
 
     const τ = 2 * Math.PI;

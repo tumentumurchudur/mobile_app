@@ -15,8 +15,8 @@
           [outerArcValue]="meter._actualUsageCost"
           [innerArcValue]="_getDailyGoalCost(meter)"
           [totalValue]="meter._goal"
-          [middleValue]="meter._usage / 1000 | number: '.1-2'"
-          [middleLabel]="_getUnit(meter)"
+          [centerValue]="meter._usage / 1000 | number: '.1-2'"
+          [centerLabel]="_getUnit(meter)"
           [colors]="_getColors(meter)"
           [image]="_getImage(meter)"
         ></arc-tween-chart>
