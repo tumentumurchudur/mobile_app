@@ -26,38 +26,35 @@ export class LoginPage {
     public navCtrl: NavController
   ) { }
 
-  private onLoginClick(user: IUser) {
+  private _onLoginClick(user: IUser) {
     this._auth.loginWithEmail(user).subscribe(userData => {
-      console.log('onLoginClick():: userData', userData);
       this.navCtrl.push('HomePage', { user: userData });
     }, error => {
       console.log('Login failed', error);
     });
   }
 
-  private onFacebookCLick() {
+  private _onFacebookClick() {
     this._auth.loginWithFacebook().subscribe(userData => {
-      console.log('onFacebookClick():: userData', userData);
       this.navCtrl.push('HomePage', { user: userData });
     }, error => {
       console.log('Login failed', error);
     })
   }
 
-  private onGoogleCLick() {
+  private _onGoogleClick() {
     this._auth.loginWithGoogle().subscribe(userData => {
-      console.log('onGoogleClick():: userData', userData);
       this.navCtrl.push('HomePage', { user: userData });
     }, error => {
       console.log('Login failed because', error);
     })
   }
 
-  private onSignUpClick(): void {
+  private _onSignUpClick(): void {
     this.navCtrl.push('SignUpPage');
   }
 
-  private onResetPasswordClick(): void {
+  private _onResetPasswordClick(): void {
     this.navCtrl.push('ResetPasswordPage');
   }
 }

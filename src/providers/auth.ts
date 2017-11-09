@@ -1,19 +1,27 @@
-import { Injectable } from '@angular/core';
-import { AngularFireAuth } from 'angularfire2/auth'; //Add FirebaseApp
-import { IUser } from '../interfaces';
+import { Injectable } from "@angular/core";
+import { AngularFireAuth } from "angularfire2/auth"; //Add FirebaseApp
+import { IUser } from "../interfaces";
+import { googleConfig } from "../configs/social-configs";
 import { Observable } from "rxjs/Observable";
-import firebase from 'firebase';
-import { Facebook } from '@ionic-native/facebook';
-import { GooglePlus } from '@ionic-native/google-plus';
+import firebase from "firebase";
+import { Facebook } from "@ionic-native/facebook";
+import { GooglePlus } from "@ionic-native/google-plus";
+
 
 
 @Injectable()
 export class AuthProvider {
+  private _googleClientId : string;
+
   constructor(
       private _af: AngularFireAuth,
-      private facebook: Facebook,
-      private googleplus: GooglePlus
-  ) { }
+      private _facebook: Facebook,
+      private _googleplus: GooglePlus
+  ) {
+
+    this._googleClientId = googleConfig.webClientId;
+
+  }
 
   public loginWithEmail(user: IUser): Observable<IUser> {
     return Observable.create(observer => {
@@ -37,16 +45,16 @@ export class AuthProvider {
 
   public loginWithGoogle(): Observable<IUser> {
     return Observable.create(observer => {
-      this.googleplus.login({
-        'webClientId': '664713118536-hughg731mofacehql9kbqu09pjbeheui.apps.googleusercontent.com',
-        'offline': true
-      }).then( (response) => {
+      this._googleplus.login({
+        "webClientId": this._googleClientId,
+        "offline": true
+      }).then((response) => {
         const googleCredential = firebase.auth.GoogleAuthProvider.credential(response.idToken);
+
         firebase.auth().signInWithCredential(googleCredential).then((authData) => {
           observer.next(authData);
         });
       }).catch((error) => {
-          console.log("error from google", error);
         observer.error(error);
       });
     });
@@ -54,8 +62,9 @@ export class AuthProvider {
 
   public loginWithFacebook(): Observable<IUser> {
     return Observable.create(observer => {
-      this.facebook.login(['email']).then( (response) => {
+      this._facebook.login(["email"]).then((response) => {
         const facebookCredential = firebase.auth.FacebookAuthProvider.credential(response.authResponse.accessToken);
+
         this._af.auth.signInWithCredential(facebookCredential).then((authData) => {
           observer.next(authData);
         });
