@@ -30,7 +30,7 @@ export class LoginPage {
     this._auth.loginWithEmail(user).subscribe(userData => {
       this.navCtrl.push('HomePage', { user: userData });
     }, error => {
-      console.log('Login failed', error);
+      console.log('Login failed');
     });
   }
 
@@ -38,7 +38,7 @@ export class LoginPage {
     this._auth.loginWithFacebook().subscribe(userData => {
       this.navCtrl.push('HomePage', { user: userData });
     }, error => {
-      console.log('Login failed', error);
+      console.log('Login failed');
     })
   }
 
@@ -46,7 +46,7 @@ export class LoginPage {
     this._auth.loginWithGoogle().subscribe(userData => {
       this.navCtrl.push('HomePage', { user: userData });
     }, error => {
-      console.log('Login failed because', error);
+      console.log('Login failed because');
     })
   }
 
