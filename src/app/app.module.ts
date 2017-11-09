@@ -12,7 +12,7 @@ import { fireBaseConfig } from '../configs';
 import { AuthProvider, DatabaseProvider } from '../providers'
 
 import { StoreModule } from "@ngrx/store";
-import { reducers } from '../store/reducers';
+import { reducers, metaReducers } from '../store/reducers';
 import { EffectsModule } from '@ngrx/effects';
 import { IonicStorageModule } from '@ionic/storage'
 import { MainEffects } from '../store/effects';
@@ -30,7 +30,7 @@ import { LoginPage } from '../pages/login/login';
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
-    StoreModule.forRoot(reducers),
+    StoreModule.forRoot(reducers, { metaReducers }),
     EffectsModule.forRoot([MainEffects]),
     IonicStorageModule.forRoot(),
     AngularFireModule.initializeApp(fireBaseConfig),
