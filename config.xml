@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="io.ionic.starter" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>MyApp</name>
-    <description>An awesome Ionic/Cordova app.</description>
-    <author email="hi@ionicframework" href="http://ionicframework.com/">Ionic Framework Team</author>
+<widget id="com.vutiliti.mobile" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>Vutiliti</name>
+    <description>Real-time utility data.</description>
+    <author email="james@vutiliti.com" href="https://vutiliti.com/">Vutiliti Team</author>
     <content src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
@@ -87,4 +87,9 @@
         <variable name="APP_ID" value="166896350309728" />
         <variable name="APP_NAME" value="vutiliti" />
     </plugin>
+    <plugin name="cordova-plugin-statusbar" spec="^2.2.3" />
+    <plugin name="cordova-plugin-googleplus" spec="git+https://github.com/EddyVerbruggen/cordova-plugin-googleplus.git">
+        <variable name="REVERSED_CLIENT_ID" value="com.googleusercontent.apps.664713118536-q2649h2j3qqkgekblfk0udqigcuep7ua" />
+    </plugin>
+    <allow-navigation href="http://10.10.10.233:8100" />
 </widget>

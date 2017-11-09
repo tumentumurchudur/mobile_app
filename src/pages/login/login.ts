@@ -30,12 +30,26 @@ export class LoginPage {
     this._auth.loginWithEmail(user).subscribe(userData => {
       this.navCtrl.push('HomePage', { user: userData });
     }, error => {
-      console.log('Login failed');
+      console.log('Login failed', error);
     });
   }
 
   private onFacebookCLick() {
-    this._auth.loginWithFacebook().subscribe()
+    this._auth.loginWithFacebook().subscribe(userData => {
+      console.log('onFacebookClick():: userData', userData);
+      this.navCtrl.push('HomePage', { user: userData });
+    }, error => {
+      console.log('Login failed', error);
+    })
+  }
+
+  private onGoogleCLick() {
+    this._auth.loginWithGoogle().subscribe(userData => {
+      console.log('onGoogleClick():: userData', userData);
+      this.navCtrl.push('HomePage', { user: userData });
+    }, error => {
+      console.log('Login failed because', error);
+    })
   }
 
   private onSignUpClick(): void {

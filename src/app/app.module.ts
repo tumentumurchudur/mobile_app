@@ -10,7 +10,8 @@ import { AngularFireModule } from 'angularfire2';
 import { AngularFireAuthModule } from 'angularfire2/auth'
 import { fireBaseConfig } from '../configs';
 import { AuthProvider, DatabaseProvider } from '../providers'
-import {Facebook} from '@ionic-native/facebook';
+import { Facebook } from '@ionic-native/facebook';
+import { GooglePlus } from '@ionic-native/google-plus';
 
 
 import { StoreModule } from "@ngrx/store";
@@ -42,9 +43,10 @@ import { MyApp } from './app.component';
   providers: [
     StatusBar,
     SplashScreen,
-    Facebook,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     AuthProvider,
+    Facebook,
+    GooglePlus,
     DatabaseProvider,
     StoreServices,
     CostHelper
