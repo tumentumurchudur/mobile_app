@@ -13,7 +13,6 @@ import { AuthProvider, DatabaseProvider } from '../providers'
 import { Facebook } from '@ionic-native/facebook';
 import { GooglePlus } from '@ionic-native/google-plus';
 
-
 import { StoreModule } from "@ngrx/store";
 import { reducers } from '../store/reducers';
 import { EffectsModule } from '@ngrx/effects';
