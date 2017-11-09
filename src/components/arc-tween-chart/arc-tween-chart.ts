@@ -14,8 +14,8 @@ export class ArcTweenChartComponent implements OnInit {
   @Input() colors: string[] = ["#ddd", "green", "red"];
   @Input() centerValue: string | null;
   @Input() centerLabel: string | null;
-  @Input() innerRingThickness: number = 8;
-  @Input() outerRingThickness: number = 25;
+  @Input() innerRingThickness: number = 6;
+  @Input() outerRingThickness: number = 22;
   @Input() diameter: number = 250;
   @Input() image: string = "";
   @Input() gapBetweenArcs = 3;
