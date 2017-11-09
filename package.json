@@ -24,11 +24,12 @@
     "@ionic-native/core": "4.3.2",
     "@ionic-native/splash-screen": "4.3.2",
     "@ionic-native/status-bar": "4.3.2",
-    "@ionic/storage": "2.0.1",
+    "@ionic/storage": "^2.0.1",
     "@ngrx/core": "^1.2.0",
     "@ngrx/effects": "4.0.5",
     "@ngrx/store": "^4.0.3",
     "angularfire2": "^5.0.0-rc.3",
+    "cordova-sqlite-storage": "^2.1.1",
     "d3": "^4.11.0",
     "firebase": "^4.6.0",
     "ionic-angular": "3.7.1",
@@ -41,5 +42,10 @@
     "@ionic/app-scripts": "3.0.1",
     "typescript": "2.3.4"
   },
-  "description": "An Ionic project"
+  "description": "An Ionic project",
+  "cordova": {
+    "plugins": {
+      "cordova-sqlite-storage": {}
+    }
+  }
 }

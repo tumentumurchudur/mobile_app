@@ -14,6 +14,7 @@ import { AuthProvider, DatabaseProvider } from '../providers'
 import { StoreModule } from "@ngrx/store";
 import { reducers } from '../store/reducers';
 import { EffectsModule } from '@ngrx/effects';
+import { IonicStorageModule } from '@ionic/storage'
 import { MainEffects } from '../store/effects';
 import { StoreServices } from "../store/services";
 import { CostHelper } from "../helpers";
@@ -31,6 +32,7 @@ import { LoginPage } from '../pages/login/login';
     IonicModule.forRoot(MyApp),
     StoreModule.forRoot(reducers),
     EffectsModule.forRoot([MainEffects]),
+    IonicStorageModule.forRoot(),
     AngularFireModule.initializeApp(fireBaseConfig),
     AngularFireAuthModule,
     BrowserAnimationsModule
