@@ -40,8 +40,6 @@ export class DatabaseProvider {
       return this._usersRef.child(uid).once("value").then(snapshot => {
         const { orgs = null } = snapshot.val();
 
-
-
         if (orgs && !Array.isArray(orgs)) {
           observer.next(orgs.path);
         } else {
