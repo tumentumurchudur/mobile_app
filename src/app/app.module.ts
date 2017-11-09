@@ -10,6 +10,8 @@ import { AngularFireModule } from 'angularfire2';
 import { AngularFireAuthModule } from 'angularfire2/auth'
 import { fireBaseConfig } from '../configs';
 import { AuthProvider, DatabaseProvider } from '../providers'
+import {Facebook} from '@ionic-native/facebook';
+
 
 import { StoreModule } from "@ngrx/store";
 import { reducers } from '../store/reducers';
@@ -19,12 +21,10 @@ import { StoreServices } from "../store/services";
 import { CostHelper } from "../helpers";
 
 import { MyApp } from './app.component';
-import { LoginPage } from '../pages/login/login';
 
 @NgModule({
   declarations: [
-    MyApp,
-    LoginPage
+    MyApp
   ],
   imports: [
     BrowserModule,
@@ -37,12 +37,12 @@ import { LoginPage } from '../pages/login/login';
   ],
   bootstrap: [IonicApp],
   entryComponents: [
-    MyApp,
-    LoginPage
+    MyApp
   ],
   providers: [
     StatusBar,
     SplashScreen,
+    Facebook,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     AuthProvider,
     DatabaseProvider,

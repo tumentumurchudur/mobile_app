@@ -34,6 +34,10 @@ export class LoginPage {
     });
   }
 
+  private onFacebookCLick() {
+    this._auth.loginWithFacebook().subscribe()
+  }
+
   private onSignUpClick(): void {
     this.navCtrl.push('SignUpPage');
   }
