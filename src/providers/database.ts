@@ -40,6 +40,9 @@ export class DatabaseProvider {
       return this._usersRef.child(uid).once("value").then(snapshot => {
         const { orgs = null } = snapshot.val();
 
+        console.log('Orgs', orgs);
+
+
         if (orgs && !Array.isArray(orgs)) {
           observer.next(orgs.path);
         } else {
@@ -81,6 +84,7 @@ export class DatabaseProvider {
           }
         });
 
+        console.log('Meters', meters);
         observer.next(meters);
       }, error => {
         observer.error(error);

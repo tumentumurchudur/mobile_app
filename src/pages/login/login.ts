@@ -28,6 +28,7 @@ export class LoginPage {
 
   private onLoginClick(user: IUser) {
     this._auth.loginWithEmail(user).subscribe(userData => {
+      console.log('onLoginClick():: userData', userData);
       this.navCtrl.push('HomePage', { user: userData });
     }, error => {
       console.log('Login failed', error);
