@@ -1,17 +1,17 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController } from 'ionic-angular';
+import { Component } from "@angular/core";
+import { IonicPage, NavController } from "ionic-angular";
 
-import { IUser } from '../../interfaces';
-import { AuthProvider } from '../../providers'
-import { Store } from '@ngrx/store';
-import { AppState } from '../../store/reducers';
+import { IUser } from "../../interfaces";
+import { AuthProvider } from "../../providers"
+import { Store } from "@ngrx/store";
+import { AppState } from "../../store/reducers";
 
 @IonicPage({
-  name: 'LoginPage'
+  name: "LoginPage"
 })
 @Component({
-  selector: 'page-login',
-  templateUrl: 'login.html',
+  selector: "page-login",
+  templateUrl: "login.html",
 })
 export class LoginPage {
   private _user: IUser = {
@@ -26,19 +26,35 @@ export class LoginPage {
     public navCtrl: NavController
   ) { }
 
-  private onLoginClick(user: IUser) {
+  private _onLoginClick(user: IUser): void {
     this._auth.loginWithEmail(user).subscribe(userData => {
-      this.navCtrl.push('HomePage', { user: userData });
-    }, error => {
-      console.log('Login failed');
+      this.navCtrl.push("HomePage", { user: userData });
+    }, (error) => {
+      console.log("Login failed");
     });
   }
 
-  private onSignUpClick(): void {
-    this.navCtrl.push('SignUpPage');
+  private _onFacebookClick(): void {
+    this._auth.loginWithFacebook().subscribe(userData => {
+      this.navCtrl.push("HomePage", { user: userData });
+    }, (error) => {
+      console.log("Login failed");
+    })
   }
 
-  private onResetPasswordClick(): void {
-    this.navCtrl.push('ResetPasswordPage');
+  private _onGoogleClick(): void {
+    this._auth.loginWithGoogle().subscribe(userData => {
+      this.navCtrl.push("HomePage", { user: userData });
+    }, (error) => {
+      console.log("Login failed");
+    })
+  }
+
+  private _onSignUpClick(): void {
+    this.navCtrl.push("SignUpPage");
+  }
+
+  private _onResetPasswordClick(): void {
+    this.navCtrl.push("ResetPasswordPage");
   }
 }

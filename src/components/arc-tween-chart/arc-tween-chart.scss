@@ -9,9 +9,12 @@ arc-tween-chart {
 
 		img {
 			position: absolute;
-			width: 60px;
-			top: 20%;
-			left: 41%;
+			width: 15vw;
+      margin: auto;
+			top: 0;
+			left: 0;
+      right: 0;
+      bottom: 15%;
 		}
 	}
 }
