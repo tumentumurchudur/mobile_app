@@ -10,6 +10,10 @@ export interface AppState {
 	meters: IMeter[];
 }
 
+/**
+ * When not in production, it is initialized with a meta reducer that prevents state from being mutated.
+ * When mutation occurs, an exception will be thrown.
+ */
 export const metaReducers: MetaReducer<AppState>[] = !environment.production ? [storeFreeze] : [];
 
 export const reducers: ActionReducerMap<AppState> = {

@@ -42,6 +42,7 @@ export class MainEffects {
     .map((values: any[]) => {
       const [meters = [], uid] = values;
 
+      // Load data from API.
       if (!meters.length) {
         return new LoadFromDb(uid);
       }
