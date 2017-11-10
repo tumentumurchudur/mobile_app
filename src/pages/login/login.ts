@@ -29,24 +29,24 @@ export class LoginPage {
   private _onLoginClick(user: IUser) {
     this._auth.loginWithEmail(user).subscribe(userData => {
       this.navCtrl.push('HomePage', { user: userData });
-    }, error => {
-      console.log('Login failed');
+    }, (error) => {
+      console.log("Login failed");
     });
   }
 
-  private _onFacebookClick() {
+  private _onFacebookClick(): void {
     this._auth.loginWithFacebook().subscribe(userData => {
       this.navCtrl.push('HomePage', { user: userData });
-    }, error => {
-      console.log('Login failed');
+    }, (error) => {
+      console.log("Login failed");
     })
   }
 
-  private _onGoogleClick() {
+  private _onGoogleClick(): void {
     this._auth.loginWithGoogle().subscribe(userData => {
       this.navCtrl.push('HomePage', { user: userData });
-    }, error => {
-      console.log('Login failed because');
+    }, (error) => {
+      console.log("Login failed");
     })
   }
 
