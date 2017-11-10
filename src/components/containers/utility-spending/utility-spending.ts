@@ -3,6 +3,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../store/reducers';
 import { StoreServices } from "../../../store/services";
+import { Storage } from "@ionic/storage";
 
 import { Observable } from "rxjs/Observable";
 import { IUser, IMeter } from '../../../interfaces';
@@ -19,7 +20,8 @@ export class UtilitySpendingComponent implements OnInit {
 
   constructor(
     private _store: Store<AppState>,
-    private _storeServices: StoreServices
+    private _storeServices: StoreServices,
+    private readonly _storage: Storage
   ) {
     this._meters = this._store.select(state => state.meters);
   }
