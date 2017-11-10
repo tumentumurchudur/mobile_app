@@ -26,7 +26,7 @@ export class LoginPage {
     public navCtrl: NavController
   ) { }
 
-  private _onLoginClick(user: IUser) {
+  private _onLoginClick(user: IUser): void {
     this._auth.loginWithEmail(user).subscribe(userData => {
       this.navCtrl.push('HomePage', { user: userData });
     }, (error) => {

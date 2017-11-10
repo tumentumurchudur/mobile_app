@@ -11,15 +11,12 @@ import { GooglePlus } from "@ionic-native/google-plus";
 
 @Injectable()
 export class AuthProvider {
-  private _googleClientId : string;
 
   constructor(
       private _af: AngularFireAuth,
       private _facebook: Facebook,
       private _googleplus: GooglePlus
   ) {
-
-    this._googleClientId = googleConfig.webClientId;
 
   }
 
@@ -46,7 +43,7 @@ export class AuthProvider {
   public loginWithGoogle(): Observable<IUser> {
     return Observable.create(observer => {
       this._googleplus.login({
-        "webClientId": this._googleClientId,
+        "webClientId": googleConfig.webClientId,
         "offline": true
       }).then((response) => {
         const googleCredential = firebase.auth.GoogleAuthProvider.credential(response.idToken);
