@@ -23,11 +23,7 @@ const defaultState = (() => {
 export function meterReducer(state = defaultState, action) {
 	switch (action.type) {
 		case ActionTypes.ADD_METERS:
-			console.log("add meters", action.payload);
 			return [...action.payload];
-		// case ActionTypes.LOAD_METERS:
-		// 	console.log("load meters", action.payload);
-		// 	return [...action.payload];
 		default:
 			return state;
 	}
@@ -36,7 +32,7 @@ export function meterReducer(state = defaultState, action) {
 export function metaReducedMeterReducer(state, action) {
 	const newState = meterReducer(state, action);
 
-	// TODO: Save new state to local storage here.
+	// TODO: We can do other stuff here such as logging, etc.
 
 	return newState;
 }
