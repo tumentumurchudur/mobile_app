@@ -25,7 +25,8 @@ export class MainEffects {
    *
    * @memberof MainEffects
    */
-  @Effect() public checkCacheAndThenLoadData = this._actions$
+  @Effect()
+  public checkCacheAndThenLoadData = this._actions$
     .ofType(LOAD_METERS)
     .map((action: any) => action.payload)
     .switchMap((uid: string) => {
@@ -56,7 +57,8 @@ export class MainEffects {
    *
    * @memberof MainEffects
    */
-  @Effect() public loadMetersDataFromDb = this._actions$
+  @Effect()
+  public loadMetersDataFromDb = this._actions$
     .ofType(LOAD_FROM_DB)
     .map((action: any) => action.payload)
     .switchMap((uid: string) => {
