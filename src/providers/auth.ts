@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { AngularFireAuth } from "angularfire2/auth"; //Add FirebaseApp
 import { IUser } from "../interfaces";
-import { googleConfig } from "../configs/social-configs";
+import { googleConfig } from "../configs";
 import { Observable } from "rxjs/Observable";
 import firebase from "firebase";
 import { Facebook } from "@ionic-native/facebook";
