@@ -1,17 +1,17 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController } from 'ionic-angular';
+import { Component } from "@angular/core";
+import { IonicPage, NavController } from "ionic-angular";
 
-import { IUser } from '../../interfaces';
-import { AuthProvider } from '../../providers'
-import { Store } from '@ngrx/store';
-import { AppState } from '../../store/reducers';
+import { IUser } from "../../interfaces";
+import { AuthProvider } from "../../providers"
+import { Store } from "@ngrx/store";
+import { AppState } from "../../store/reducers";
 
 @IonicPage({
-  name: 'LoginPage'
+  name: "LoginPage"
 })
 @Component({
-  selector: 'page-login',
-  templateUrl: 'login.html',
+  selector: "page-login",
+  templateUrl: "login.html",
 })
 export class LoginPage {
   private _user: IUser = {
@@ -28,7 +28,7 @@ export class LoginPage {
 
   private _onLoginClick(user: IUser): void {
     this._auth.loginWithEmail(user).subscribe(userData => {
-      this.navCtrl.push('HomePage', { user: userData });
+      this.navCtrl.push("HomePage", { user: userData });
     }, (error) => {
       console.log("Login failed");
     });
@@ -36,7 +36,7 @@ export class LoginPage {
 
   private _onFacebookClick(): void {
     this._auth.loginWithFacebook().subscribe(userData => {
-      this.navCtrl.push('HomePage', { user: userData });
+      this.navCtrl.push("HomePage", { user: userData });
     }, (error) => {
       console.log("Login failed");
     })
@@ -44,17 +44,17 @@ export class LoginPage {
 
   private _onGoogleClick(): void {
     this._auth.loginWithGoogle().subscribe(userData => {
-      this.navCtrl.push('HomePage', { user: userData });
+      this.navCtrl.push("HomePage", { user: userData });
     }, (error) => {
       console.log("Login failed");
     })
   }
 
   private _onSignUpClick(): void {
-    this.navCtrl.push('SignUpPage');
+    this.navCtrl.push("SignUpPage");
   }
 
   private _onResetPasswordClick(): void {
-    this.navCtrl.push('ResetPasswordPage');
+    this.navCtrl.push("ResetPasswordPage");
   }
 }
