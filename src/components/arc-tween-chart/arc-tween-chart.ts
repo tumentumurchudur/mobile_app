@@ -65,7 +65,7 @@ export class ArcTweenChartComponent implements OnInit {
    * @type {number}
    * @memberof ArcTweenChartComponent
    */
-  @Input() innerRingThickness: number = 8;
+  @Input() innerRingThickness: number = 6;
 
   /**
    * Thickness of outer arc in pixels.
@@ -73,7 +73,7 @@ export class ArcTweenChartComponent implements OnInit {
    * @type {number}
    * @memberof ArcTweenChartComponent
    */
-  @Input() outerRingThickness: number = 25;
+  @Input() outerRingThickness: number = 22;
 
   /**
    * Diameter of the outer arc.

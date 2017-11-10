@@ -15,7 +15,9 @@
     <ion-input type="password" [(ngModel)]="_user.password"></ion-input>
   </ion-item>
 
-  <button ion-button full (click)="onLoginClick(_user)">Login</button>
-  <button ion-button full (click)="onSignUpClick()">Sign Up</button>
-  <button ion-button full (click)="onResetPasswordClick()">Reset Password</button>
+  <button ion-button full (click)="_onLoginClick(_user)">Login</button>
+  <button ion-button full (click)="_onFacebookClick()">Facebook Login</button>
+  <button ion-button full (click)="_onGoogleClick()">Google Login</button>
+  <button ion-button full (click)="_onSignUpClick()">Sign Up</button>
+  <button ion-button full (click)="_onResetPasswordClick()">Reset Password</button>
 </ion-content>
