@@ -6,19 +6,105 @@ import * as d3 from 'd3';
   templateUrl: 'arc-tween-chart.html'
 })
 export class ArcTweenChartComponent implements OnInit {
+  /**
+   * Outer arc value.
+   *
+   * @type {(number | null)}
+   * @memberof ArcTweenChartComponent
+   */
   @Input() outerArcValue: number | null;
+
+  /**
+   * Inner arc value.
+   *
+   * @type {(number | null)}
+   * @memberof ArcTweenChartComponent
+   */
   @Input() innerArcValue: number | null;
+
+  /**
+   * Both outer and inner arc values are calculated as
+   * percentages of this total value.
+   *
+   * For example: inner arc value = 15, outer arc value = 25 and total = 60
+   * calc inner arc = 15 / 60 = .25 (25%) and calc outer arc = 25 / 60 = .42(42%) respectively.
+   *
+   *
+   * @type {(number | null)}
+   * @memberof ArcTweenChartComponent
+   */
   @Input() totalValue: number | null;
 
-  // Specify background, outer and inner arc colors respectively.
+  /**
+   * Specify background, outer and inner arc colors respectively.
+   *
+   * @type {string[]}
+   * @memberof ArcTweenChartComponent
+   */
   @Input() colors: string[] = ["#ddd", "green", "red"];
+
+  /**
+   * Center value.
+   *
+   * @type {(string | null)}
+   * @memberof ArcTweenChartComponent
+   */
   @Input() centerValue: string | null;
+
+  /**
+   * Center label which comes after the value.
+   *
+   * @type {(string | null)}
+   * @memberof ArcTweenChartComponent
+   */
   @Input() centerLabel: string | null;
+
+  /**
+   * Thickness of inner arc in pixels.
+   *
+   * @type {number}
+   * @memberof ArcTweenChartComponent
+   */
   @Input() innerRingThickness: number = 6;
+
+  /**
+   * Thickness of outer arc in pixels.
+   *
+   * @type {number}
+   * @memberof ArcTweenChartComponent
+   */
   @Input() outerRingThickness: number = 22;
+
+  /**
+   * Diameter of the outer arc.
+   *
+   * @type {number}
+   * @memberof ArcTweenChartComponent
+   */
   @Input() diameter: number = 250;
+
+  /**
+   * Image src.
+   *
+   * @type {string}
+   * @memberof ArcTweenChartComponent
+   */
   @Input() image: string = "";
+
+  /**
+   * Space between the arcs in pixels.
+   *
+   * @memberof ArcTweenChartComponent
+   */
   @Input() gapBetweenArcs = 3;
+
+  /**
+   * Specify whether chart is animated or not.
+   *
+   * @type {boolean}
+   * @memberof ArcTweenChartComponent
+   */
+  @Input() animate: boolean = true;
 
   private element: any;
 
@@ -44,6 +130,11 @@ export class ArcTweenChartComponent implements OnInit {
     this.draw();
   }
 
+  /**
+   * Renders chart to the DOM.
+   *
+   * @memberof ArcTweenChartComponent
+   */
   draw() {
     const svg = d3.select(this.element).select("svg")
       .attr("viewBox", "0 0 " + this.viewBoxWidth + " " + this.viewBoxHeight);
@@ -74,25 +165,39 @@ export class ArcTweenChartComponent implements OnInit {
 
     // Add the foreground arc.
     const outerValue = this.outerArcValue / this.totalValue;
-    const outerArcPath = vis.append("path")
-      .datum({ endAngle: 0 })
-      .style("fill", this.colors[1] || "orange")
-      .attr("d", arc)
-      .transition()
-      .delay(500)
-      .duration(1000)
-      .call(arcTween, outerValue * τ, arc);
-
-    // Calculates the inner arc value.
     const innerValue = this.innerArcValue / this.totalValue;
-    const innerArcPath = vis.append("path")
-      .datum({ endAngle: 0 })
-      .style("fill", this.colors[2] || "red")
-      .attr("d", innerArc)
-      .transition()
-      .delay(1000)
-      .duration(1000)
-      .call(arcTween, innerValue * τ, innerArc);
+    let outerArcPath: any;
+    let innerArcPath: any;
+
+    if (this.animate) {
+      outerArcPath = vis.append("path")
+        .datum({ endAngle: 0 })
+        .style("fill", this.colors[1] || "orange")
+        .attr("d", arc)
+        .transition()
+        .delay(100)
+        .duration(1000)
+        .call(arcTween, outerValue * τ, arc);
+
+      innerArcPath = vis.append("path")
+        .datum({ endAngle: 0 })
+        .style("fill", this.colors[2] || "red")
+        .attr("d", innerArc)
+        .transition()
+        .delay(500)
+        .duration(1000)
+        .call(arcTween, innerValue * τ, innerArc);
+    } else {
+      outerArcPath = vis.append("path")
+        .datum({ endAngle: outerValue * τ })
+        .style("fill", this.colors[1] || "orange")
+        .attr("d", arc);
+
+      innerArcPath = vis.append("path")
+        .datum({ endAngle: innerValue * τ })
+        .style("fill", this.colors[2] || "red")
+        .attr("d", innerArc);
+    }
 
     // Creates a tween on the specified transition's "d" attribute, transitioning
     // any selected arcs from their current angle to the specified new angle.

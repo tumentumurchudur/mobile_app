@@ -14,9 +14,10 @@ import { Facebook } from "@ionic-native/facebook";
 import { GooglePlus } from "@ionic-native/google-plus";
 
 import { StoreModule } from "@ngrx/store";
-import { reducers } from "../store/reducers";
-import { EffectsModule } from "@ngrx/effects";
-import { MainEffects } from "../store/effects";
+import { reducers, metaReducers } from '../store/reducers';
+import { EffectsModule } from '@ngrx/effects';
+import { IonicStorageModule } from '@ionic/storage'
+import { MainEffects } from '../store/effects';
 import { StoreServices } from "../store/services";
 import { CostHelper } from "../helpers";
 
@@ -29,8 +30,9 @@ import { MyApp } from "./app.component";
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
-    StoreModule.forRoot(reducers),
+    StoreModule.forRoot(reducers, { metaReducers }),
     EffectsModule.forRoot([MainEffects]),
+    IonicStorageModule.forRoot(),
     AngularFireModule.initializeApp(fireBaseConfig),
     AngularFireAuthModule,
     BrowserAnimationsModule
