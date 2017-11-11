@@ -25,6 +25,12 @@ utility-spending {
     }
 	}
 
+	.chart-card {
+		margin: 0;
+		margin-bottom: 12px;
+		width: calc(100% - 12px);
+	}
+
 	.meter-name {
 		font-size: 22px;
 	}

@@ -1,6 +1,7 @@
 export interface IUser {
   //TODO: Add other useful optional parameters like photoURL, displayName ect.
-  email: string,
-  password: string,
-  uid: string
+  email: string | null,
+  password: string | null,
+  uid: string | null,
+  orgPath?: string | null
 }

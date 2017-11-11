@@ -11,7 +11,8 @@ import "rxjs/add/observable/fromPromise";
 
 import { LOAD_METERS, LOAD_FROM_DB, AddMeters, LoadFromDb } from "../actions";
 import { DatabaseProvider } from "../../providers";
-import { IMeter } from "../../interfaces";
+import { IMeter, IUser } from "../../interfaces";
+import { StoreServices } from "../../store/services";
 
 import { CostHelper } from "../../helpers";
 
@@ -29,23 +30,23 @@ export class MainEffects {
   public checkCacheAndThenLoadData = this._actions$
     .ofType(LOAD_METERS)
     .map((action: any) => action.payload)
-    .switchMap((uid: string) => {
+    .switchMap((user: IUser) => {
       return Observable.combineLatest(
         Observable.fromPromise(
           // Check if meter data is stored locally by uid as key.
-          this._storage.get(uid).then(meters => {
+          this._storage.get(user.uid).then(meters => {
             return meters && meters.length ? meters : [];
           })
         ),
-        Observable.of(uid)
+        Observable.of(user)
       );
     })
     .map((values: any[]) => {
-      const [meters = [], uid] = values;
+      const [meters = [], user] = values;
 
       // Load data from API.
       if (!meters.length) {
-        return new LoadFromDb(uid);
+        return new LoadFromDb(user);
       }
       return new AddMeters(meters);
     });
@@ -61,38 +62,43 @@ export class MainEffects {
   public loadMetersDataFromDb = this._actions$
     .ofType(LOAD_FROM_DB)
     .map((action: any) => action.payload)
-    .switchMap((uid: string) => {
+    .switchMap((user: IUser) => {
+
+      // Send request for org path if it is not already in the store.
       return Observable.combineLatest([
-        this._db.getOrgPathForUser(uid),
-        Observable.of(uid)
+        user.orgPath ? Observable.of(user.orgPath) : this._db.getOrgPathForUser(user.uid),
+        Observable.of(user)
       ]);
     })
     .switchMap((values: any[]) => {
-      const [orgPath, uid] = values;
+      const [orgPath, user] = values;
+
+      // Update the user in the store once orgPath is available.
+      this._storeServices.updateUser({ orgPath } as IUser);
 
       return Observable.combineLatest([
         this._db.getMetersForOrg(orgPath),
-        Observable.of(uid)
+        Observable.of(user)
       ]);
     })
     .switchMap((values: any[]) => {
-      const [meters, uid] = values;
+      const [meters, user] = values;
 
       return Observable.combineLatest([
         this._db.getReadsForMeters(meters),
-        Observable.of(uid)
+        Observable.of(user)
       ]);
     })
     .switchMap((values: any[]) => {
-      const [meters, uid] = values;
+      const [meters, user] = values;
 
       return Observable.combineLatest([
         this._db.getProviderForMeters(meters),
-        Observable.of(uid)
+        Observable.of(user)
       ]);
     })
     .map((values: any[]) => {
-      const [meters, uid] = values;
+      const [meters, user] = values;
 
       // Sets sum of reads diffs to _usage property.
       this._helper.calcUsageDiffs(meters);
@@ -101,7 +107,7 @@ export class MainEffects {
       this._helper.calcUsageCost(meters);
 
       // Store meter data locally by uid as key.
-      this._storage.set(uid, meters);
+      this._storage.set(user.uid, meters);
 
       // Dispatch action to update the store.
       return new AddMeters(meters);
@@ -117,7 +123,8 @@ export class MainEffects {
     private readonly _actions$: Actions,
     private readonly _db: DatabaseProvider,
     private readonly _helper: CostHelper,
-    private readonly _storage: Storage
+    private readonly _storage: Storage,
+    private readonly _storeServices: StoreServices
   ) { }
 
 }

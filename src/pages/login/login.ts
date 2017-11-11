@@ -3,8 +3,7 @@ import { IonicPage, NavController } from "ionic-angular";
 
 import { IUser } from "../../interfaces";
 import { AuthProvider } from "../../providers"
-import { Store } from "@ngrx/store";
-import { AppState } from "../../store/reducers";
+import { StoreServices } from "../../store/services";
 
 @IonicPage({
   name: "LoginPage"
@@ -21,16 +20,26 @@ export class LoginPage {
   };
 
   constructor(
-    private _store: Store<AppState>,
+    private _storeServices: StoreServices,
     private _auth: AuthProvider,
     public navCtrl: NavController
   ) { }
 
   private _onLoginClick(user: IUser): void {
     this._auth.loginWithEmail(user).subscribe(userData => {
-      this.navCtrl.push("HomePage", { user: userData });
+      const user: IUser = {
+        email: userData.email,
+        uid: userData.uid,
+        password: null,
+        orgPath: null
+      };
+
+      // Update the store with current user.
+      this._storeServices.addUser(user);
+
+      this.navCtrl.push("HomePage");
     }, (error) => {
-      console.log("Login failed");
+      console.log("Login failed:", error);
     });
   }
 
@@ -38,7 +47,7 @@ export class LoginPage {
     this._auth.loginWithFacebook().subscribe(userData => {
       this.navCtrl.push("HomePage", { user: userData });
     }, (error) => {
-      console.log("Login failed");
+      console.log("Login failed:", error);
     })
   }
 
@@ -46,7 +55,7 @@ export class LoginPage {
     this._auth.loginWithGoogle().subscribe(userData => {
       this.navCtrl.push("HomePage", { user: userData });
     }, (error) => {
-      console.log("Login failed");
+      console.log("Login failed:", error);
     })
   }
 
