@@ -16,6 +16,13 @@ export class UtilitySpendingComponent implements OnInit {
   @Input() user: IUser | null;
 
   private _meters: Observable<IMeter[] | null>;
+  private _navigationItems = {
+    ARC_CHART: "arc-chart",
+    LINE_CHART: "line-chart",
+    COMPARISON: "comparison",
+    EDIT: "edit"
+  };
+  private _currentNavigationItems: any[] = [];
 
   constructor(
     private _store: Store<AppState>,
@@ -26,6 +33,9 @@ export class UtilitySpendingComponent implements OnInit {
 
   ngOnInit() {
     this._storeServices.loadMeters(this.user);
+    for (let i = 0; i < 10; i++) {
+      this._currentNavigationItems[i] = this._navigationItems.ARC_CHART;
+    }
   }
 
   private _getColors(meter: IMeter): string[] {
@@ -59,6 +69,11 @@ export class UtilitySpendingComponent implements OnInit {
 
   private reloadClick() {
     this._storeServices.loadMetersFromDb(this.user);
+  }
+
+  private _onNavigationItemTap(item: any) {
+    this._currentNavigationItems[item.index] = item.selection;
+    console.log("item tapped", item);
   }
 
 }

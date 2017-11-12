@@ -3,37 +3,46 @@
 <div *ngIf="_meters | async; let meters">
   <div *ngFor="let meter of meters; let i = index">
     <ion-card class="chart-card layout vertical">
-      <div class="header">
-        <div [class.status]="_isUsageCostBehindGoal(meter)"></div>
-        <img class="exclamation-icon" src="assets/exclamation.svg">
-        <div class="meter-name">{{ meter._name }}</div>
-      </div>
-
-      <div *ngIf="meter._actualUsageCost > 0">
-        <arc-tween-chart
-          [outerArcValue]="meter._actualUsageCost"
-          [innerArcValue]="_getDailyGoalCost(meter)"
-          [totalValue]="meter._goal"
-          [centerValue]="meter._usage / 1000 | number: '.1-2'"
-          [centerLabel]="_getUnit(meter)"
-          [colors]="_getColors(meter)"
-          [image]="_getImage(meter)"
-          [animate]="i === 0"
-        ></arc-tween-chart>
-
-        <div
-          class="actual-cost"
-          [ngStyle]="{ 'color': _isUsageCostBehindGoal(meter) ? '#C22A17' : '#969696' }"
-        >
-          {{ meter._actualUsageCost | currency: 'USD': true:'1.2-2' }}
+      <div *ngIf="_currentNavigationItems[i] === _navigationItems.ARC_CHART">
+        <div class="header">
+          <div [class.status]="_isUsageCostBehindGoal(meter)"></div>
+          <img class="exclamation-icon" src="assets/exclamation.svg">
+          <div class="meter-name">{{ meter._name }}</div>
         </div>
 
-        <div class="spending-goal">
-          Spending goal of {{ meter._goal | currency:'USD': true:'1.2-2' }}
-        </div>
+        <div *ngIf="meter._actualUsageCost > 0">
+          <arc-tween-chart
+            [outerArcValue]="meter._actualUsageCost"
+            [innerArcValue]="_getDailyGoalCost(meter)"
+            [totalValue]="meter._goal"
+            [centerValue]="meter._usage / 1000 | number: '.1-2'"
+            [centerLabel]="_getUnit(meter)"
+            [colors]="_getColors(meter)"
+            [image]="_getImage(meter)"
+            [animate]="i === 0"
+          ></arc-tween-chart>
 
-        <navigation-bar></navigation-bar>
+          <div
+            class="actual-cost"
+            [ngStyle]="{ 'color': _isUsageCostBehindGoal(meter) ? '#C22A17' : '#969696' }"
+          >
+            {{ meter._actualUsageCost | currency: 'USD': true:'1.2-2' }}
+          </div>
+
+          <div class="spending-goal">
+            Spending goal of {{ meter._goal | currency:'USD': true:'1.2-2' }}
+          </div>
+        </div>
       </div>
+
+      <div *ngIf="_currentNavigationItems[i] === _navigationItems.LINE_CHART">
+        <line-chart></line-chart>
+      </div>
+
+      <navigation-bar
+        [index]="i"
+        (itemTapped)="_onNavigationItemTap($event)"
+      ></navigation-bar>
     </ion-card>
   </div>
 

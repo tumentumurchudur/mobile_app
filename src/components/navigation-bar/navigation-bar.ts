@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output, Input } from '@angular/core';
 
 @Component({
   selector: 'navigation-bar',
@@ -12,33 +12,18 @@ export class NavigationBarComponent {
     EDIT: "edit"
   };
 
+  @Input() index: number = 0;
+  @Output() itemTapped = new EventEmitter<any>();
+
   private _currentSelection: string = this._selections.ARC_CHART;
 
   constructor() {
   }
 
-  private _onArcChartTap() {
-    this._currentSelection = this._selections.ARC_CHART;
-    // TODO: Remove when implemented.
-    console.log("_onArcChartTap");
-  }
-
-  private _onLineChartTap() {
-    this._currentSelection = this._selections.LINE_CHART;
-    // TODO: Remove when implemented.
-    console.log("_onLineChartTap");
-  }
-
-  private _onComparisonTap() {
-    this._currentSelection = this._selections.COMPARISON;
-    // TODO: Remove when implemented.
-    console.log("_onComparisonTap");
-  }
-
-  private _onEditTap() {
-    this._currentSelection = this._selections.EDIT;
-    // TODO: Remove when implemented.
-    console.log("_onEditTap");
+  private _onTap(item: string) {
+    this._currentSelection = item;
+    const index = this.index;
+    this.itemTapped.emit({ selection: this._currentSelection, index });
   }
 
 }
