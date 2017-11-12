@@ -7,7 +7,6 @@
         <div [class.status]="_isUsageCostBehindGoal(meter)"></div>
         <img class="exclamation-icon" src="assets/exclamation.svg">
         <div class="meter-name">{{ meter._name }}</div>
-        <div># of reads: {{ meter._reads ? meter._reads.length : 0 }}</div>
       </div>
 
       <div *ngIf="meter._actualUsageCost > 0">
@@ -32,6 +31,8 @@
         <div class="spending-goal">
           Spending goal of {{ meter._goal | currency:'USD': true:'1.2-2' }}
         </div>
+
+        <navigation-bar></navigation-bar>
       </div>
     </ion-card>
   </div>
