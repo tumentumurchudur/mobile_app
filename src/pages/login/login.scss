@@ -44,6 +44,7 @@ page-login {
   }
 
   .login-select {
+    height: 2rem;
     color: $vu-white;
     font-size: 1.8rem;
     //margin-bottom: .5rem;
@@ -52,6 +53,7 @@ page-login {
   }
 
   .signup-text {
+    height: 2rem;
     margin-left: 3rem;
   }
 
@@ -67,23 +69,21 @@ page-login {
     width: 100%;
     background: transparent !important;
     background-color: #2AACE0;
-    padding: 0;
+    padding: 0 !important;
   }
 
   ion-input {
     margin-left: 3rem;
     color: $vu-white;
     position: relative;
-    bottom: -15%;
-
   }
 
   .login-input-icon {
     font-size: 2.5rem;
     color: $vu-white;
     position: absolute;
-    bottom: 1.5%;
-    left: 5%;
+    bottom: 2.5%;
+    left: 1%;
   }
 
   .orWith {
@@ -110,6 +110,7 @@ page-login {
 
   a {
     text-decoration: none;
+    color: $primary;
   }
 
   .forgot-pass-btn {

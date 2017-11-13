@@ -29,7 +29,12 @@ import { MyApp } from "./app.component";
   ],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(MyApp),
+    IonicModule.forRoot(MyApp,
+      {
+        autoFocusAssist: false,
+        scrollAssist: false
+
+      }),
     StoreModule.forRoot(reducers, { metaReducers }),
     EffectsModule.forRoot([MainEffects]),
     IonicStorageModule.forRoot(),

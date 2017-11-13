@@ -1,6 +1,6 @@
-<ion-content padding class="login-page">
+<ion-content class="login-page">
 
-  <ion-grid style="width:100%; height: 100%; position: relative;">
+  <ion-grid style="width:100%; height: 100%; position: relative; padding: 0 25px;">
 
     <ion-row style="height: 25%; position:relative; margin-top: 5%;">
       <ion-col class="logo-container">
@@ -21,7 +21,7 @@
       <div class="self-end signup-text" [class.deselected-option]="this.isLoggingIn" (tap)="this.isLoggingIn = false">Sign Up</div>
     </ion-row>
 
-    <ion-row style="height: 25%">
+    <ion-row style="height: 15%; margin-bottom: 2rem;">
         <ion-item>
           <ion-label>
             <ion-icon class="login-input-icon" name="mail"></ion-icon>
@@ -35,8 +35,8 @@
           </ion-label>
           <ion-input type="password" [(ngModel)]="_user.password"></ion-input>
         </ion-item>
-        <button ion-button outline block (click)="_onLoginClick(_user)">{{this.isLoggingIn ? "Login" : "Register"}}</button>
     </ion-row>
+    <button ion-button outline block color="primary" (click)="_onLoginClick(_user)">{{this.isLoggingIn ? "Login" : "Register"}}</button>
 
     <ion-row class="orWith">
       <ion-col width-33 style="padding: .5rem 0 0 0;"><hr></ion-col>
