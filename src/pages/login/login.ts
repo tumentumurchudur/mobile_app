@@ -24,9 +24,7 @@ export class LoginPage {
     private _storeServices: StoreServices,
     private _auth: AuthProvider,
     public navCtrl: NavController
-  ) {
-    console.log(this.isLoggingIn);
-  }
+  ) {}
 
   private _onLoginClick(user: IUser): void {
     if (this.isLoggingIn) {
