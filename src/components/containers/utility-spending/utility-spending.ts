@@ -25,7 +25,7 @@ export class UtilitySpendingComponent implements OnInit {
   }
 
   ngOnInit() {
-    this._storeServices.loadMeters(this.user.uid);
+    this._storeServices.loadMeters(this.user);
   }
 
   private _getColors(meter: IMeter): string[] {
@@ -47,7 +47,10 @@ export class UtilitySpendingComponent implements OnInit {
   }
 
   private _getDailyGoalCost(meter: IMeter) {
-    return meter._goal / meter._billing_total * meter._billing_since_start;
+    const goalDailyCost = meter._goal / meter._billing_total;
+    const facilityFeePerDay = meter._facilityFee / meter._billing_total;
+
+    return goalDailyCost * meter._billing_since_start + facilityFeePerDay;
   }
 
   private _isUsageCostBehindGoal(meter: IMeter) {
@@ -55,7 +58,7 @@ export class UtilitySpendingComponent implements OnInit {
   }
 
   private reloadClick() {
-    this._storeServices.loadMeters(this.user.uid);
+    this._storeServices.loadMetersFromDb(this.user);
   }
 
 }

@@ -89,18 +89,23 @@ export class CostHelper {
 
 				while(next <= rate.length-1) {
 					if(usage >= rate[next].tier) {
-						total += (rate[next].tier - rate[curr].tier) * rate[curr].rate
+						total += (rate[next].tier - rate[curr].tier) * rate[curr].rate;
 					} else if(usage < rate[next].tier) {
-						total += (usage - rate[curr].tier) * rate[curr].rate
-						break
+						total += (usage - rate[curr].tier) * rate[curr].rate;
+						break;
 					}
 					if(next === rate.length - 1 && usage > rate[next].tier) {
-						total += (usage - rate[next].tier) * rate[next].rate
+						total += (usage - rate[next].tier) * rate[next].rate;
 					}
-					curr++
-					next++
+					curr++;
+					next++;
 				}
-				meters[i]._actualUsageCost = total > 0 ? total / 100 : 0; // + meters[i]._facilityFee;
+
+				if (rate.length === 1) {
+					total += rate[0].rate * usage;
+				}
+
+				meters[i]._actualUsageCost = total > 0 ? total / 100 : 0;
 			}
 		}
 		return meters;

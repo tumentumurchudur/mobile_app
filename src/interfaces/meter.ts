@@ -1,4 +1,5 @@
 import { ITier } from "./tier";
+import { IRead } from "./read";
 
 export interface IMeter {
   _name: string,
@@ -13,7 +14,7 @@ export interface IMeter {
   _type: string,
   _ncmpAvgGuid: string,
   _ncmpEffGuid: string,
-  _reads: any[],
+  _reads: IRead[],
   _usage: number,
   _utilityType: string,
   _utilityUnit: string,
