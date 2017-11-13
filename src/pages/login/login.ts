@@ -18,7 +18,7 @@ export class LoginPage {
     password: "james123", //"spark123",
     uid: null
   };
-  public isLoggingIn: boolean = true;
+  public isNewUser: boolean = false;
 
   constructor(
     private _storeServices: StoreServices,
@@ -27,7 +27,7 @@ export class LoginPage {
   ) {}
 
   private _onLoginClick(user: IUser): void {
-    if (this.isLoggingIn) {
+    if (!this.isNewUser) {
       this._auth.loginWithEmail(user).subscribe(userData => {
         const user: IUser = {
           email: userData.email,
