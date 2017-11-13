@@ -26,7 +26,7 @@ export class LoginPage {
     public navCtrl: NavController
   ) {}
 
-  public onSelectLogin(boolean): void {
+  private _onSelectLogin(boolean): void {
     this.isNewUser = boolean;
   }
 
