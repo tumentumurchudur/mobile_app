@@ -1,13 +1,10 @@
 <ion-content class="login-page">
-
   <ion-grid>
-
-    <ion-row style="height: 30vh; position:relative; margin-top: 8vh;">
+    <ion-row class="logo-container">
       <ion-col>
         <div class="img-container">
           <img class="login-img" src="assets/whiteLogo.png">
         </div>
-
         <div class="app-title">
           <div><span class="vu-white-text">vu</span><span class="vu-blue-text">tiliti</span> <span class="app-name-spark">spark</span>
           </div>
@@ -15,13 +12,11 @@
         </div>
       </ion-col>
     </ion-row>
-
     <ion-row class="login-select">
       <div class="selected-option" [class.deselected-option]="!(this.isLoggingIn)" (tap)="this.isLoggingIn = true">Login</div>
       <div class="selected-option signup-text" [class.deselected-option]="this.isLoggingIn" (tap)="this.isLoggingIn = false">Sign Up</div>
     </ion-row>
-
-    <ion-row style="height: 15vh; margin-bottom: 2vh;">
+    <ion-row class="login-input">
         <ion-item>
           <ion-label>
             <ion-icon class="login-input-icon" name="mail"></ion-icon>
@@ -31,7 +26,6 @@
                      placeholder="Email address">
           </ion-input>
         </ion-item>
-
         <ion-item>
           <ion-label>
             <ion-icon class="login-input-icon" name="lock"></ion-icon>
@@ -43,33 +37,24 @@
         </ion-item>
     </ion-row>
     <button ion-button outline block color="primary" (click)="_onLoginClick(_user)">{{this.isLoggingIn ? "Login" : "Register"}}</button>
-
-    <ion-row class="orWith">
-      <ion-col width-33 style="padding: .75vh 0 0 0;"><hr></ion-col>
-      <ion-col width-33 style="font-size: 1.85vh; text-align: center; padding-top: .5vh;"> or </ion-col>
-      <ion-col width-33 style="padding: .75vh 0 0 0;"><hr></ion-col>
+    <ion-row class="or-with">
+      <ion-col width-33><hr></ion-col>
+      <ion-col width-33 class="or-text"> or </ion-col>
+      <ion-col width-33><hr></ion-col>
     </ion-row>
-
     <ion-row class="bottom-row">
         <button class="social-login" ion-button outline color="light" (tap)="_onFacebookClick()">
           <img class="icon-image" src="assets/facebook.png">
         </button>
-
         <button class="social-login" ion-button outline color="light" (tap)="_onGoogleClick()">
           <img class="icon-image" src="assets/google-plus-icon.png">
         </button>
     </ion-row>
-
     <ion-row>
       <ion-col class="terms self-start">
         By logging in you agree to the <a href="https://www.vutiliti.com/tos.html">Terms of Use</a>
       </ion-col>
     </ion-row>
-
     <button class="forgot-pass-btn" ion-button full (click)="_onResetPasswordClick()">Reset Password</button>
-
   </ion-grid>
-
-
-
 </ion-content>
