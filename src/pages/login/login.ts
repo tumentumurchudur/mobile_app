@@ -26,12 +26,8 @@ export class LoginPage {
     public navCtrl: NavController
   ) {}
 
-  public onSelectLogin() {
-    if (!this.isNewUser) {
-      return this.isNewUser = true;
-    } else {
-      return this.isNewUser = false;
-    }
+  public onSelectLogin(boolean): void {
+    this.isNewUser = boolean;
   }
 
   private _onLoginClick(user: IUser): void {

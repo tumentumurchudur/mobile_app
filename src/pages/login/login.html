@@ -13,8 +13,8 @@
       </ion-col>
     </ion-row>
     <ion-row class="login-select">
-      <div class="selected-option" [class.deselected-option]="this.isNewUser" (tap)="onSelectLogin()">Login</div>
-      <div class="selected-option signup-text" [class.deselected-option]="!this.isNewUser" (tap)="onSelectLogin()">Sign Up</div>
+      <div class="selected-option" [class.deselected-option]="this.isNewUser" (tap)="onSelectLogin(false)">Login</div>
+      <div class="selected-option signup-text" [class.deselected-option]="!this.isNewUser" (tap)="onSelectLogin(true)">Sign Up</div>
     </ion-row>
     <ion-row class="login-input">
         <ion-item>
