@@ -73,10 +73,12 @@
       "cordova-plugin-googleplus": {
         "REVERSED_CLIENT_ID": "com.googleusercontent.apps.664713118536-q2649h2j3qqkgekblfk0udqigcuep7ua"
       }
-    }
+    },
+    "platforms": [
+      "android"
+    ]
   },
   "platforms": [
     "android"
   ]
 }
-
