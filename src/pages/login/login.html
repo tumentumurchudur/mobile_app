@@ -2,7 +2,7 @@
   <ion-grid>
     <ion-row class="logo-container">
       <ion-col>
-        <div class="img-container">
+        <div>
           <img class="login-img" src="assets/whiteLogo.png">
         </div>
         <div class="app-title">
@@ -13,8 +13,8 @@
       </ion-col>
     </ion-row>
     <ion-row class="login-select">
-      <div class="selected-option" [class.deselected-option]="this.isNewUser" (tap)="this.isNewUser = false">Login</div>
-      <div class="selected-option signup-text" [class.deselected-option]="!this.isNewUser" (tap)="this.isNewUser = true">Sign Up</div>
+      <div class="selected-option" [class.deselected-option]="this.isNewUser" (tap)="onSelectLogin()">Login</div>
+      <div class="selected-option signup-text" [class.deselected-option]="!this.isNewUser" (tap)="onSelectLogin()">Sign Up</div>
     </ion-row>
     <ion-row class="login-input">
         <ion-item>

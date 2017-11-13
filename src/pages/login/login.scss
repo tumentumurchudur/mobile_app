@@ -19,10 +19,6 @@ page-login {
     margin-top: 8vh;
   }
 
-  .img-container{
-    position: relative;
-  }
-
   .login-img {
     position: absolute;
     top: 0;
@@ -63,7 +59,6 @@ page-login {
     font-size: 3vh;
     height: 100%;
     transition: all 0.3s ease;
-    opacity: 1;
   }
 
   .deselected-option {
@@ -133,7 +128,6 @@ page-login {
   .social-login {
     padding: 0px;
     border-radius: 50%;
-    //border-color: #2AACE0;
     width: 8.5vh;
     height: 8.5vh;
   }

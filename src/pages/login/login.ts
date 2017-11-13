@@ -26,6 +26,14 @@ export class LoginPage {
     public navCtrl: NavController
   ) {}
 
+  public onSelectLogin() {
+    if (!this.isNewUser) {
+      return this.isNewUser = true;
+    } else {
+      return this.isNewUser = false;
+    }
+  }
+
   private _onLoginClick(user: IUser): void {
     if (!this.isNewUser) {
       this._auth.loginWithEmail(user).subscribe(userData => {
