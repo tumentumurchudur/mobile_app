@@ -14,7 +14,7 @@ export class MyApp {
       statusBar.overlaysWebView(false);
       statusBar.backgroundColorByHexString("#d5dde2");
 
-      if (platform.is('android')) {
+      if (platform.is("android")) {
         statusBar.overlaysWebView(true);
         statusBar.backgroundColorByHexString("#d5dde2");
       }

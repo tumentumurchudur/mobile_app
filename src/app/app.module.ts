@@ -33,7 +33,6 @@ import { MyApp } from "./app.component";
       {
         autoFocusAssist: false,
         scrollAssist: false
-
       }),
     StoreModule.forRoot(reducers, { metaReducers }),
     EffectsModule.forRoot([MainEffects]),
