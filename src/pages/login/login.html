@@ -1,23 +1,64 @@
-<ion-header>
-  <ion-navbar color="primary">
-    <ion-title>Login</ion-title>
-  </ion-navbar>
-</ion-header>
+<ion-content padding class="login-page">
 
-<ion-content padding>
-  <ion-item>
-    <ion-label floating>Email Address</ion-label>
-    <ion-input type="text" [(ngModel)]="_user.email"></ion-input>
-  </ion-item>
+  <ion-grid style="width:100%; height: 100%; position: relative;">
 
-  <ion-item>
-    <ion-label floating>Password</ion-label>
-    <ion-input type="password" [(ngModel)]="_user.password"></ion-input>
-  </ion-item>
+    <ion-row style="height: 25%; position:relative; margin-top: 5%;">
+      <ion-col class="logo-container">
+        <div class="img-container">
+          <img class="login-img" src="assets/whiteLogo.png">
+        </div>
 
-  <button ion-button full (click)="_onLoginClick(_user)">Login</button>
-  <button ion-button full (click)="_onFacebookClick()">Facebook Login</button>
-  <button ion-button full (click)="_onGoogleClick()">Google Login</button>
-  <button ion-button full (click)="_onSignUpClick()">Sign Up</button>
-  <button ion-button full (click)="_onResetPasswordClick()">Reset Password</button>
+        <div class="app-title">
+          <div><span class="vu-white-text">vu</span><span class="vu-blue-text">tiliti</span> <span class="app-name-spark">spark</span>
+          </div>
+          <div class="app-tagline">information to spark change</div>
+        </div>
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="login-select">
+      <div class="self-end" [class.deselected-option]="!(this.isLoggingIn)" (tap)="this.isLoggingIn = true">Login</div>
+      <div class="self-end signup-text" [class.deselected-option]="this.isLoggingIn" (tap)="this.isLoggingIn = false">Sign Up</div>
+    </ion-row>
+
+    <ion-row style="height: 25%">
+        <ion-item>
+          <ion-label>
+            <ion-icon class="login-input-icon" name="mail"></ion-icon>
+          </ion-label>
+          <ion-input type="text" [(ngModel)]="_user.email"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>
+            <ion-icon class="login-input-icon" name="lock"></ion-icon>
+          </ion-label>
+          <ion-input type="password" [(ngModel)]="_user.password"></ion-input>
+        </ion-item>
+        <button ion-button outline block (click)="_onLoginClick(_user)">{{this.isLoggingIn ? "Login" : "Register"}}</button>
+    </ion-row>
+
+    <ion-row class="orWith">
+      <ion-col width-33 style="padding: .5rem 0 0 0;"><hr></ion-col>
+      <ion-col width-33 style="text-align: center; padding-top: .35rem;"> or </ion-col>
+      <ion-col width-33 style="padding: .5rem 0 0 0;"><hr></ion-col>
+    </ion-row>
+
+    <ion-row>
+      <button ion-button full (click)="_onFacebookClick()">Facebook Login</button>
+      <button ion-button full (click)="_onGoogleClick()">Google Login</button>
+    </ion-row>
+
+    <ion-row class="flex-2 layout horizontal center">
+      <ion-col class="terms self-start">
+        By logging in you agree to the <a href="https://www.vutiliti.com/tos.html">Terms of Use</a>
+      </ion-col>
+    </ion-row>
+
+    <button class="forgot-pass-btn" ion-button full (click)="_onResetPasswordClick()">Reset Password</button>
+
+  </ion-grid>
+
+
+
 </ion-content>

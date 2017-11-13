@@ -19,19 +19,26 @@ export class LoginPage {
     password: "james123", //"spark123",
     uid: null
   };
+  public isLoggingIn: boolean = true;
 
   constructor(
     private _store: Store<AppState>,
     private _auth: AuthProvider,
     public navCtrl: NavController
-  ) { }
+  ) {
+    console.log(this.isLoggingIn);
+  }
 
   private _onLoginClick(user: IUser): void {
-    this._auth.loginWithEmail(user).subscribe(userData => {
-      this.navCtrl.push("HomePage", { user: userData });
-    }, (error) => {
-      console.log("Login failed");
-    });
+    if (this.isLoggingIn) {
+      this._auth.loginWithEmail(user).subscribe(userData => {
+        this.navCtrl.push("HomePage", { user: userData });
+      }, (error) => {
+        console.log("Login failed");
+      });
+    } else {
+      this.navCtrl.push("SignUpPage");
+    }
   }
 
   private _onFacebookClick(): void {
@@ -48,10 +55,6 @@ export class LoginPage {
     }, (error) => {
       console.log("Login failed");
     })
-  }
-
-  private _onSignUpClick(): void {
-    this.navCtrl.push("SignUpPage");
   }
 
   private _onResetPasswordClick(): void {

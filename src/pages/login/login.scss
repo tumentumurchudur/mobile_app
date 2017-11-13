@@ -1,3 +1,124 @@
 page-login {
+  .login-page{
+    max-height: 100%;
+    background: url("../assets/loginBackground.png") no-repeat;
+    background-position: 50% 55%;
+    background-size: cover;
+    display: flex;
+  }
 
+  logo-container {
+    position: relative;
+  }
+
+  .img-container{
+    position: relative;
+  }
+
+  .login-img {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    margin: auto;
+    //margin-top: 10%;
+    opacity: .10;
+    width: 40%;
+  }
+
+  .app-title {
+    text-align: center;
+    font-size: 5rem;
+    color: $vu-white;
+    z-index: 3;
+    margin-top: 7%;
+  }
+
+  .app-name-spark {
+    font-family: 'Bryant Pro Regular', sans-serif;
+  }
+
+  .app-tagline {
+    font-family: 'Bryant Pro Regular', sans-serif;
+    font-size: 1.5rem;
+  }
+
+  .login-select {
+    color: $vu-white;
+    font-size: 1.8rem;
+    //margin-bottom: .5rem;
+    transition: all 0.3s ease;
+    opacity: 1;
+  }
+
+  .signup-text {
+    margin-left: 3rem;
+  }
+
+  .deselected-option {
+    font-size: 1.35rem;
+    color: #9DAEB2;
+    transition: all 0.3s ease;
+    opacity: .4;
+    margin-bottom: .2rem;
+  }
+
+  ion-item {
+    width: 100%;
+    background: transparent !important;
+    background-color: #2AACE0;
+    padding: 0;
+  }
+
+  ion-input {
+    margin-left: 3rem;
+    color: $vu-white;
+    position: relative;
+    bottom: -15%;
+
+  }
+
+  .login-input-icon {
+    font-size: 2.5rem;
+    color: $vu-white;
+    position: absolute;
+    bottom: 1.5%;
+    left: 5%;
+  }
+
+  .orWith {
+    color: $vu-white !important;
+    height: 2rem;
+    width: 100%;
+    margin: 2rem 0 2rem 0;
+    font-family: 'Bryant Pro Regular', sans-serif;
+  }
+
+  hr {
+    border-top: 1px solid $vu-white;
+  }
+
+  .terms {
+    text-align: center;
+    color: $vu-white;
+    font-weight: lighter;
+    font-family: 'Bryant Pro Regular', sans-serif;
+    font-size: 1.2rem;
+    z-index: 5;
+    padding-top: 3rem;
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  .forgot-pass-btn {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: 0;
+    color: #ffffff;
+    background-color: rgba(221, 221, 221, 0.15);
+  }
 }
