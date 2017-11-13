@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Store } from "@ngrx/store";
 import { AppState } from "../reducers";
-import { LoadMeters } from "../actions";
+import { LoadMeters, LoadFromDb, AddUser, UpdateUser } from "../actions";
+import { IUser } from "../../interfaces";
 
 @Injectable()
 export class StoreServices {
@@ -20,8 +21,20 @@ export class StoreServices {
 	 * @param {string} uid
 	 * @memberof StoreServices
 	 */
-	public loadMeters(uid: string) {
-		this._store.dispatch(new LoadMeters((uid)));
+	public loadMeters(user: IUser) {
+		this._store.dispatch(new LoadMeters((user)));
+	}
+
+	public loadMetersFromDb(user: IUser) {
+		this._store.dispatch(new LoadFromDb(user));
+	}
+
+	public addUser(user: IUser) {
+		this._store.dispatch(new AddUser(user));
+	}
+
+	public updateUser(user: IUser) {
+		this._store.dispatch(new UpdateUser(user));
 	}
 
 }

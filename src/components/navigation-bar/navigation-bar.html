@@ -1,0 +1,33 @@
+<div class="navigation-container">
+  <ion-icon
+    class="icon-item"
+    name="radio-button-on"
+    [class.btn-selected]="_currentSelection === _selections.ARC_CHART"
+    (tap)="_onArcChartTap()"
+  >
+  </ion-icon>
+
+  <ion-icon
+    class="icon-item"
+    name="pulse"
+    [class.btn-selected]="_currentSelection === _selections.LINE_CHART"
+    (tap)="_onLineChartTap()"
+  >
+  </ion-icon>
+
+  <ion-icon
+    class="icon-item"
+    name="ribbon"
+    [class.btn-selected]="_currentSelection === _selections.COMPARISON"
+    (tap)="_onComparisonTap()"
+  >
+  </ion-icon>
+
+  <ion-icon
+    class="icon-item"
+    name="create"
+    [class.btn-selected]="_currentSelection === _selections.EDIT"
+    (tap)="_onEditTap()"
+  >
+  </ion-icon>
+</div>

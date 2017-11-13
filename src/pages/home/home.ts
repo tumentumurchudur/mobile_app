@@ -1,6 +1,10 @@
-import { Component } from '@angular/core';
-import { NavParams, IonicPage } from 'ionic-angular';
+import { Component, OnInit, OnDestroy, } from '@angular/core';
+import { Subscription } from 'rxjs/Subscription';
+
+import { IonicPage } from 'ionic-angular';
 import { IUser } from '../../interfaces';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../store/reducers';
 
 @IonicPage({
   name: 'HomePage'
@@ -9,13 +13,27 @@ import { IUser } from '../../interfaces';
   selector: 'page-home',
   templateUrl: 'home.html'
 })
-export class HomePage {
+export class HomePage implements OnInit, OnDestroy {
   private _user: IUser;
+  private _subscriptions: Subscription[] = [];
+
+  ngOnInit() {
+    const subscription = this._store.select(state => state.user)
+      .subscribe((user: IUser) => {
+        this._user = user;
+      });
+
+    this._subscriptions.push(subscription);
+  }
+
+  ngOnDestroy() {
+    for (const subscription of this._subscriptions) {
+      subscription.unsubscribe();
+    }
+  }
 
   constructor(
-    private navParams: NavParams
-  ) {
-    this._user = navParams.get('user');
-  }
+    private _store: Store<AppState>
+  ) { }
 
 }

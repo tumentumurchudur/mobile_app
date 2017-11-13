@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { IMeter } from '../../interfaces';
+import { IMeter, IUser } from '../../interfaces';
 
 export const LOAD_METERS: string = "LOAD_METERS"
 export const ADD_METERS: string = "ADD_METERS";
@@ -7,9 +7,9 @@ export const LOAD_FROM_DB: string = "LOAD FROM DB";
 
 export class LoadMeters implements Action {
 	public readonly type = LOAD_METERS;
-	public payload: string | null;
+	public payload: IUser | null;
 
-	constructor(private _payload: string) {
+	constructor(private _payload: IUser) {
 		this.payload = _payload;
 	}
 }
@@ -25,12 +25,12 @@ export class AddMeters implements Action {
 
 export class LoadFromDb implements Action {
 	public readonly type = LOAD_FROM_DB;
-	public payload: string | null;
+	public payload: IUser | null;
 
-	constructor(private _payload: string) {
+	constructor(private _payload: IUser) {
 		this.payload = _payload;
 	}
 }
 
 
-export type Actions = AddMeters | LoadMeters;
+export type Actions = AddMeters | LoadMeters | LoadFromDb;

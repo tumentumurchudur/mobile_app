@@ -127,11 +127,21 @@ export class DatabaseProvider {
         ...meters.map(meter => this._getProviderForMeter(meter._provider))
       )
       .map(providers => {
+        const planTypes = ["Residential", "City", "County"];
+
         return providers.map((provider, index) => {
           const { plans = null } = provider;
-          const residential = plans ? plans.Residential : null;
-          const facilityFee = residential ? residential.facility_fee : null;
-          const rateSchedules = residential ? residential.rate_schedules : null;
+          let rateInfo = null;
+
+          for(const type of planTypes) {
+            if (plans[type]) {
+              rateInfo = plans[type];
+              break;
+            }
+          }
+
+          const facilityFee = rateInfo ? rateInfo.facility_fee : null;
+          const rateSchedules = rateInfo ? rateInfo.rate_schedules : null;
           const summer = rateSchedules ? rateSchedules.summer : null;
           const winter = rateSchedules ? rateSchedules.winter : null;
 
