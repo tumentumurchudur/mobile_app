@@ -1,9 +1,9 @@
 <ion-content class="login-page">
 
-  <ion-grid style="width:100%; height: 100%; position: relative; padding: 0 8vw;">
+  <ion-grid>
 
     <ion-row style="height: 30vh; position:relative; margin-top: 8%;">
-      <ion-col class="logo-container">
+      <ion-col>
         <div class="img-container">
           <img class="login-img" src="assets/whiteLogo.png">
         </div>
@@ -21,7 +21,7 @@
       <div class="selected-option signup-text" [class.deselected-option]="this.isLoggingIn" (tap)="this.isLoggingIn = false">Sign Up</div>
     </ion-row>
 
-    <ion-row style="height: 15%; margin-bottom: 1rem;">
+    <ion-row style="height: 15vh; margin-bottom: 2vh;">
         <ion-item>
           <ion-label>
             <ion-icon class="login-input-icon" name="mail"></ion-icon>
@@ -45,9 +45,9 @@
     <button ion-button outline block color="primary" (click)="_onLoginClick(_user)">{{this.isLoggingIn ? "Login" : "Register"}}</button>
 
     <ion-row class="orWith">
-      <ion-col width-33 style="padding: .5rem 0 0 0;"><hr></ion-col>
-      <ion-col width-33 style="text-align: center; padding-top: .35rem;"> or </ion-col>
-      <ion-col width-33 style="padding: .5rem 0 0 0;"><hr></ion-col>
+      <ion-col width-33 style="padding: .75vh 0 0 0;"><hr></ion-col>
+      <ion-col width-33 style="font-size: 1.85vh; text-align: center; padding-top: .5vh;"> or </ion-col>
+      <ion-col width-33 style="padding: .75vh 0 0 0;"><hr></ion-col>
     </ion-row>
 
     <ion-row class="bottom-row">
