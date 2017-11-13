@@ -4,16 +4,19 @@ import { IonicModule } from 'ionic-angular';
 
 import { UtilitySpendingComponent } from './containers/utility-spending/utility-spending';
 import { ArcTweenChartComponent } from './arc-tween-chart/arc-tween-chart';
+import { NavigationBarComponent } from './navigation-bar/navigation-bar';
 
 @NgModule({
 	declarations: [
 		UtilitySpendingComponent,
-    ArcTweenChartComponent
+    ArcTweenChartComponent,
+    NavigationBarComponent
 	],
 	imports: [CommonModule, IonicModule],
 	exports: [
 		UtilitySpendingComponent,
-    ArcTweenChartComponent
+    ArcTweenChartComponent,
+    NavigationBarComponent
 	]
 })
 export class ComponentsModule {}
