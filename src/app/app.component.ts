@@ -15,7 +15,7 @@ export class MyApp {
       statusBar.backgroundColorByHexString("#d5dde2");
 
       if (platform.is('android')) {
-        statusBar.overlaysWebView(false);
+        statusBar.overlaysWebView(true);
         statusBar.backgroundColorByHexString("#d5dde2");
       }
       splashScreen.hide();
