@@ -21,17 +21,16 @@ page-login {
     right: 0;
     left: 0;
     margin: auto;
-    //margin-top: 10%;
     opacity: .10;
-    width: 40%;
+    width: 40vw;
   }
 
   .app-title {
     text-align: center;
-    font-size: 5rem;
+    font-size: 7vh;
     color: $vu-white;
     z-index: 3;
-    margin-top: 7%;
+    margin-top: 6vh;
   }
 
   .app-name-spark {
@@ -40,25 +39,28 @@ page-login {
 
   .app-tagline {
     font-family: 'Bryant Pro Regular', sans-serif;
-    font-size: 1.5rem;
+    font-size: 2.75vh;
   }
 
   .login-select {
-    height: 2rem;
+    height: 3vh;
+  }
+
+  .signup-text {
+    margin-left: 3rem;
+  }
+
+  .selected-option {
     color: $vu-white;
-    font-size: 1.8rem;
-    //margin-bottom: .5rem;
+    font-size: 3vh;
+    height: 100%;
     transition: all 0.3s ease;
     opacity: 1;
   }
 
-  .signup-text {
-    height: 2rem;
-    margin-left: 3rem;
-  }
-
   .deselected-option {
-    font-size: 1.35rem;
+    padding-top: .5rem;
+    font-size: 2vh;
     color: #9DAEB2;
     transition: all 0.3s ease;
     opacity: .4;
@@ -75,7 +77,8 @@ page-login {
   ion-input {
     margin-left: 3rem;
     color: $vu-white;
-    position: relative;
+    position: relative !important;
+    bottom: -15%;
   }
 
   .login-input-icon {
@@ -98,6 +101,29 @@ page-login {
     border-top: 1px solid $vu-white;
   }
 
+  .bottom-row {
+    margin: 0px;
+    display: flex;
+    justify-content: space-around;
+  }
+
+  .social-login {
+    padding: 0px;
+    border-radius: 50%;
+    //border-color: #2AACE0;
+    width: 5.5rem;
+    height: 5.5rem;
+  }
+
+  .social-login img {
+    width: 80%;
+    height: 80%;
+  }
+
+  .rounded {
+    border-radius: 15px;
+  }
+
   .terms {
     text-align: center;
     color: $vu-white;
@@ -106,11 +132,6 @@ page-login {
     font-size: 1.2rem;
     z-index: 5;
     padding-top: 3rem;
-  }
-
-  a {
-    text-decoration: none;
-    color: $primary;
   }
 
   .forgot-pass-btn {

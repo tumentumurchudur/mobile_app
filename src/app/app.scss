@@ -26,6 +26,15 @@ $cordova-ios-statusbar-padding: 0px !important;
 $navbar-ios-height:5rem;
 $vu-white: #dddddd;
 
+a {
+  text-decoration: none;
+  color: $primary;
+}
+
+.button-md{
+  text-transform: none;
+}
+
 .vu-blue-text {
   color: $primary;
   font-family: "Bryant Pro Bold Alternate";
