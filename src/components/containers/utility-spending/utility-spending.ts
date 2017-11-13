@@ -8,6 +8,8 @@ import { Observable } from "rxjs/Observable";
 import { IUser, IMeter } from '../../../interfaces';
 import { chartConfigs } from "../../../configs";
 
+const MAX_NUM_OF_CHARTS: number = 15;
+
 @Component({
   selector: 'utility-spending',
   templateUrl: 'utility-spending.html'
@@ -22,7 +24,8 @@ export class UtilitySpendingComponent implements OnInit {
     COMPARISON: "comparison",
     EDIT: "edit"
   };
-  private _currentNavigationItems: any[] = [];
+  private _currentNavigationItems: string[] = [];
+  private _currentNavigationIndex: number = 0;
 
   constructor(
     private _store: Store<AppState>,
@@ -33,7 +36,8 @@ export class UtilitySpendingComponent implements OnInit {
 
   ngOnInit() {
     this._storeServices.loadMeters(this.user);
-    for (let i = 0; i < 10; i++) {
+
+    for (let i = 0; i < MAX_NUM_OF_CHARTS; i++) {
       this._currentNavigationItems[i] = this._navigationItems.ARC_CHART;
     }
   }
@@ -73,7 +77,7 @@ export class UtilitySpendingComponent implements OnInit {
 
   private _onNavigationItemTap(item: any) {
     this._currentNavigationItems[item.index] = item.selection;
-    console.log("item tapped", item);
+    this._currentNavigationIndex = item.index;
   }
 
 }

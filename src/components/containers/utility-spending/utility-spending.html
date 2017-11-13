@@ -3,13 +3,18 @@
 <div *ngIf="_meters | async; let meters">
   <div *ngFor="let meter of meters; let i = index">
     <ion-card class="chart-card layout vertical">
-      <div *ngIf="_currentNavigationItems[i] === _navigationItems.ARC_CHART">
-        <div class="header">
-          <div [class.status]="_isUsageCostBehindGoal(meter)"></div>
-          <img class="exclamation-icon" src="assets/exclamation.svg">
-          <div class="meter-name">{{ meter._name }}</div>
-        </div>
+      <!-- Header -->
+      <div class="header">
+        <div [class.status]="_isUsageCostBehindGoal(meter)"></div>
+        <img class="exclamation-icon" src="assets/exclamation.svg">
+        <div class="meter-name">{{ meter._name }}</div>
+      </div>
 
+      <!-- Arc chart -->
+      <div
+        class="card-content"
+        *ngIf="_currentNavigationItems[i] === _navigationItems.ARC_CHART"
+      >
         <div *ngIf="meter._actualUsageCost > 0">
           <arc-tween-chart
             [outerArcValue]="meter._actualUsageCost"
@@ -19,7 +24,7 @@
             [centerLabel]="_getUnit(meter)"
             [colors]="_getColors(meter)"
             [image]="_getImage(meter)"
-            [animate]="i === 0"
+            [animate]="i === 0 || i === _currentNavigationIndex"
           ></arc-tween-chart>
 
           <div
@@ -35,10 +40,31 @@
         </div>
       </div>
 
-      <div *ngIf="_currentNavigationItems[i] === _navigationItems.LINE_CHART">
+      <!-- Line chart -->
+      <div
+        class="card-content"
+        *ngIf="_currentNavigationItems[i] === _navigationItems.LINE_CHART"
+      >
         <line-chart></line-chart>
       </div>
 
+      <!-- Neigborhood comparison -->
+      <div
+        class="card-content"
+        *ngIf="_currentNavigationItems[i] === _navigationItems.COMPARISON"
+      >
+        Neigborhood comparison
+      </div>
+
+      <!-- Device Edit -->
+      <div
+        class="card-content"
+        *ngIf="_currentNavigationItems[i] === _navigationItems.EDIT"
+      >
+        Device Edit
+      </div>
+
+      <!-- Navigation -->
       <navigation-bar
         [index]="i"
         (itemTapped)="_onNavigationItemTap($event)"
