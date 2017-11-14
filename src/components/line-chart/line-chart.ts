@@ -8,10 +8,12 @@ import * as d3 from "d3";
 export class LineChartComponent implements OnInit {
   @Input() width: number = 300;
   @Input() height: number = 240;
-  @Input() data: any = null;
+  @Input() data: any[] = [];
+  @Input() lineColor: string = "orange";
+  @Input() dotColor: string = "orange";
+  @Input() dateFormat: string = "%m/%d";
 
   private element: any;
-
   private margin: any = { left: 10, right: 10, top: 10, bottom: 10 };
 
   constructor(element: ElementRef) {
@@ -31,11 +33,12 @@ export class LineChartComponent implements OnInit {
       .attr("height", this.height + this.margin.top)
       .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
 
-    // set the domain and ranges
+    // set the domain and ranges for x axis
     const x = d3.scaleTime()
       .domain(d3.extent(this.data, d => d.date))
       .range([0, width]);
 
+    // set the domain and ranges for y axis
     const y = d3.scaleLinear()
       .domain([0, d3.max(this.data, d => d.close)])
       .range([height, 0]);
@@ -46,11 +49,10 @@ export class LineChartComponent implements OnInit {
       .y(d => y(d.close));
 
     // add line path using line()
-    const path = svg.append("path")
+    const path = d3.select(this.element).select("path")
       .attr("d", line(this.data))
-      .attr("class", "line-path")
       .attr("transform", "translate(20, 10)")
-      .attr("stroke", "orange")
+      .attr("stroke", this.lineColor || "orange")
       .attr("stroke-width", "2");
 
     // add dots
@@ -58,11 +60,10 @@ export class LineChartComponent implements OnInit {
       .data(this.data)
       .enter().append("svg:circle")
       .attr("transform", "translate(20, 10)")
-      .attr("class", "circ")
       .attr("r", 3)
       .attr("cx", d => x(d.date))
       .attr("cy", d => y(d.close))
-      .style("fill", "orange");
+      .style("fill", this.dotColor || "orange");
 
     const totalLength = path.node().getTotalLength();
 
@@ -78,7 +79,7 @@ export class LineChartComponent implements OnInit {
       .ticks(5)
       .tickPadding(5)
       .tickSizeInner(-height)
-      .tickFormat(d3.timeFormat("%m/%d"));
+      .tickFormat(d3.timeFormat(this.dateFormat));
 
     const yAxis = d3.axisLeft(y)
       .ticks(5)
@@ -86,12 +87,10 @@ export class LineChartComponent implements OnInit {
       .tickSizeInner(-width);
 
     svg.append("g")
-      .attr("class", "y axis")
       .attr("transform", "translate(20, 10)")
       .call(yAxis);
 
     svg.append("g")
-      .attr("class", "x-axis axis")
       .attr("transform", "translate(20," + (height + this.margin.top) + ")")
       .call(xAxis);
   }
