@@ -5,6 +5,7 @@ import { Component, EventEmitter, Output, Input } from '@angular/core';
   templateUrl: 'navigation-bar.html'
 })
 export class NavigationBarComponent {
+  // TODO: Move these to configs.
   private _selections = {
     ARC_CHART: "arc-chart",
     LINE_CHART: "line-chart",
@@ -17,13 +18,10 @@ export class NavigationBarComponent {
 
   private _currentSelection: string = this._selections.ARC_CHART;
 
-  constructor() {
-  }
-
   private _onTap(item: string) {
     this._currentSelection = item;
-    const index = this.index;
-    this.itemTapped.emit({ selection: this._currentSelection, index });
+
+    this.itemTapped.emit({ selection: this._currentSelection, index: this.index });
   }
 
 }

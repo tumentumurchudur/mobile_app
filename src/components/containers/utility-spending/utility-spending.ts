@@ -28,7 +28,7 @@ export class UtilitySpendingComponent implements OnInit {
   private _currentNavigationIndex: number = 0;
 
   // TODO: Remove once wired it up to meter reads.
-  private _lineChartData = [
+  private _lineChartData: any[] = [
     { date: new Date("11/1/2017"), close: 30.13 },
     { date: new Date("11/5/2017"), close: 15.98 },
     { date: new Date("11/15/2017"), close: 61.25 },
@@ -49,6 +49,8 @@ export class UtilitySpendingComponent implements OnInit {
   ngOnInit() {
     this._storeServices.loadMeters(this.user);
 
+    // Initializes the # of chart that can be shown.
+    // TODO: This should be more dynamic based on meters.length.
     for (let i = 0; i < MAX_NUM_OF_CHARTS; i++) {
       this._currentNavigationItems[i] = this._navigationItems.ARC_CHART;
     }
