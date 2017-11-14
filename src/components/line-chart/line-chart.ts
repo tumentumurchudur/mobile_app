@@ -8,6 +8,7 @@ import * as d3 from "d3";
 export class LineChartComponent implements OnInit {
   @Input() width: number = 300;
   @Input() height: number = 240;
+  @Input() data: any = null;
 
   private element: any;
 
@@ -24,107 +25,67 @@ export class LineChartComponent implements OnInit {
   private _draw() {
     const width = this.width - this.margin.left - this.margin.right;
     const height = this.height - this.margin.top - this.margin.bottom;
+    const padding = 10;
 
     const svg = d3.select(this.element).select("svg")
-      .attr("width", this.width + 10)
+      .attr("width", this.width + padding)
       .attr("height", this.height)
-      .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
-      // .attr("viewBox", "0 0 " + width + " " + height);
+      .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")")
+      .attr("viewBox", "0 0 " + this.width + " " + this.height);
 
-    // parse the date / time
-    // const parseTime = d3.timeParse("%d-%b-%y");
-
-    // // set the ranges
-    // const x = d3.scaleTime().range([0, width]);
-    // const y = d3.scaleLinear().range([height, 0]);
-
-    // // define the line
-    // const line = d3.line()
-    //   .x(function(d) { return x(d.date); })
-    //   .y(function(d) { return y(d.close); });
-
-
-    // const data = [
-    //   { date: "1-May-12", close: 58.13 },
-    //   { date: "30-Apr-12", close: 53.98 },
-    //   { date: "27-Apr-12", close: 61.25 }
-    // ];
-
-    // format the data
-    // data.forEach(function(d) {
-    //   d.date = parseTime(d.date);
-    //   d.close = +d.close;
-    // });
-
-    // // Scale the range of the data
-    // x.domain(d3.extent(data, function(d) { return d.date; }));
-    // y.domain([0, d3.max(data, function(d) { return d.close; })]);
-
-
-    // TODO: Remove once implemented.
-    const data = d3.range(11).map(function() {
-      return Math.random() * 10
-    });
-
-    const x = d3.scaleLinear()
-      .domain([0, 10])
+    // set the domain and ranges
+    const x = d3.scaleTime()
+      .domain(d3.extent(this.data, d => d.date))
       .range([0, width]);
 
     const y = d3.scaleLinear()
-      .domain([0, 10])
+      .domain([0, d3.max(this.data, d => d.close)])
       .range([height, 0]);
 
+    // define the line
     const line = d3.line()
-      .x((d,i) => {
-        return x(i);
-      })
-      .y((d) => {
-        return y(d);
-      });
+      .x(d => x(d.date))
+      .y(d => y(d.close));
 
-    // gridlines in x axis function
-    function make_x_gridlines() {
-      return d3.axisBottom(x).ticks(5)
-    }
+    // grid lines in x and y axis
+    const xGridLines = () => d3.axisBottom(x);
+    const yGridLines = () => d3.axisLeft(y);
 
-    // gridlines in y axis function
-    function make_y_gridlines() {
-      return d3.axisLeft(y).ticks(5)
-    }
+    // add the X grid lines
+    svg.append("g")
+      .attr("class", "grid")
+      .attr("transform", "translate(" + this.margin.left * 2 + "," + height + ")")
+      .call(xGridLines()
+        .tickSize(-height)
+        .tickFormat("")
+      );
 
-  // add the X gridlines
-  svg.append("g")
-    .attr("class", "grid")
-    .attr("transform", "translate(20," + height + ")")
-    .call(make_x_gridlines()
-      .tickSize(-height)
-      .tickFormat("")
-    );
+    // add the Y grid lines
+    svg.append("g")
+      .attr("class", "grid")
+      .attr("transform", "translate(" + this.margin.left * 2 + ", 0)")
+      .call(yGridLines()
+        .tickSize(-width)
+        .tickFormat("")
+      );
 
-  // add the Y gridlines
-  svg.append("g")
-    .attr("class", "grid")
-    .attr("transform", "translate(20, 0)")
-    .call(make_y_gridlines()
-      .tickSize(-width)
-      .tickFormat("")
-    );
-
+    // add line path using line()
     const path = svg.append("path")
-      .attr("d", line(data))
-      .attr("transform", "translate(20,0)")
+      .attr("d", line(this.data))
+      .attr("transform", "translate(" + this.margin.left * 2 + ",0)")
       .attr("stroke", "orange")
       .attr("stroke-width", "2")
       .attr("fill", "none");
 
+    // add dots
     const circles = svg.selectAll("dot")
-      .data(data)
+      .data(this.data)
       .enter().append("svg:circle")
-      .attr("transform", "translate(20,0)")
-      .attr('class', 'circ')
-      .attr("r", 5)
-      .attr("cx", (d, i) => x(i))
-      .attr("cy", (d, i) => y(d))
+      .attr("transform", "translate(" + this.margin.left * 2 + ",0)")
+      .attr("class", "circ")
+      .attr("r", 3)
+      .attr("cx", d => x(d.date))
+      .attr("cy", d => y(d.close))
       .style("fill", "orange");
 
     const totalLength = path.node().getTotalLength();
@@ -133,21 +94,24 @@ export class LineChartComponent implements OnInit {
       .attr("stroke-dasharray", totalLength + " " + totalLength)
       .attr("stroke-dashoffset", totalLength)
       .transition()
-      .duration(2000)
+      .duration(1000)
       .attr("stroke-dashoffset", 0);
 
-    const xAxis = d3.axisBottom(x).ticks(5);
+    // x and y axis
+    const xAxis = d3.axisBottom(x)
+      .ticks(5)
+      .tickFormat(d3.timeFormat("%m/%d"));
+
     const yAxis = d3.axisLeft(y).ticks(5);
 
     svg.append("g")
       .attr("class", "y axis")
-      .attr("transform", "translate(20,0)")
+      .attr("transform", "translate(" + this.margin.left * 2 + ",0)")
       .call(yAxis);
 
-    // draw x axis with labels and move to the bottom of the chart area
     svg.append("g")
-      .attr("class", "x-axis axis")  // two classes, one for css formatting, one for selection below
-      .attr("transform", "translate(20," + height + ")")
+      .attr("class", "x-axis axis")
+      .attr("transform", "translate(" + this.margin.left * 2 + "," + height + ")")
       .call(xAxis);
   }
 

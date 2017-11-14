@@ -27,6 +27,15 @@ export class UtilitySpendingComponent implements OnInit {
   private _currentNavigationItems: string[] = [];
   private _currentNavigationIndex: number = 0;
 
+  // TODO: Remove once wired it up to meter reads.
+  private _lineChartData = [
+    { date: new Date("11/1/2017"), close: 30.13 },
+    { date: new Date("11/5/2017"), close: 15.98 },
+    { date: new Date("11/15/2017"), close: 61.25 },
+    { date: new Date("11/21/2017"), close: 10.25 },
+    { date: new Date("11/26/2017"), close: 6.25 }
+  ];
+
   constructor(
     private _store: Store<AppState>,
     private _storeServices: StoreServices
