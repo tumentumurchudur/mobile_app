@@ -1,7 +1,18 @@
 line-chart {
-  .grid line {
-    stroke: lightgrey;
-    stroke-opacity: 0.7;
-    shape-rendering: crispEdges;
+  .chart-container {
+    position: relative;
+    left: -10px;
+  }
+
+  .tick line {
+    opacity: .2;
+  }
+
+  .axis text {
+    font: 10px sans-serif;
+  }
+
+  .line-path {
+    fill: none;
   }
 }

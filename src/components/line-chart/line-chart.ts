@@ -25,13 +25,11 @@ export class LineChartComponent implements OnInit {
   private _draw() {
     const width = this.width - this.margin.left - this.margin.right;
     const height = this.height - this.margin.top - this.margin.bottom;
-    const padding = 10;
 
     const svg = d3.select(this.element).select("svg")
-      .attr("width", this.width + padding)
-      .attr("height", this.height)
-      .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")")
-      .attr("viewBox", "0 0 " + this.width + " " + this.height);
+      .attr("width", this.width + this.margin.left)
+      .attr("height", this.height + this.margin.top)
+      .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
 
     // set the domain and ranges
     const x = d3.scaleTime()
@@ -47,41 +45,19 @@ export class LineChartComponent implements OnInit {
       .x(d => x(d.date))
       .y(d => y(d.close));
 
-    // grid lines in x and y axis
-    const xGridLines = () => d3.axisBottom(x);
-    const yGridLines = () => d3.axisLeft(y);
-
-    // add the X grid lines
-    svg.append("g")
-      .attr("class", "grid")
-      .attr("transform", "translate(" + this.margin.left * 2 + "," + height + ")")
-      .call(xGridLines()
-        .tickSize(-height)
-        .tickFormat("")
-      );
-
-    // add the Y grid lines
-    svg.append("g")
-      .attr("class", "grid")
-      .attr("transform", "translate(" + this.margin.left * 2 + ", 0)")
-      .call(yGridLines()
-        .tickSize(-width)
-        .tickFormat("")
-      );
-
     // add line path using line()
     const path = svg.append("path")
       .attr("d", line(this.data))
-      .attr("transform", "translate(" + this.margin.left * 2 + ",0)")
+      .attr("class", "line-path")
+      .attr("transform", "translate(20, 10)")
       .attr("stroke", "orange")
-      .attr("stroke-width", "2")
-      .attr("fill", "none");
+      .attr("stroke-width", "2");
 
     // add dots
     const circles = svg.selectAll("dot")
       .data(this.data)
       .enter().append("svg:circle")
-      .attr("transform", "translate(" + this.margin.left * 2 + ",0)")
+      .attr("transform", "translate(20, 10)")
       .attr("class", "circ")
       .attr("r", 3)
       .attr("cx", d => x(d.date))
@@ -100,18 +76,23 @@ export class LineChartComponent implements OnInit {
     // x and y axis
     const xAxis = d3.axisBottom(x)
       .ticks(5)
+      .tickPadding(5)
+      .tickSizeInner(-height)
       .tickFormat(d3.timeFormat("%m/%d"));
 
-    const yAxis = d3.axisLeft(y).ticks(5);
+    const yAxis = d3.axisLeft(y)
+      .ticks(5)
+      .tickPadding(5)
+      .tickSizeInner(-width);
 
     svg.append("g")
       .attr("class", "y axis")
-      .attr("transform", "translate(" + this.margin.left * 2 + ",0)")
+      .attr("transform", "translate(20, 10)")
       .call(yAxis);
 
     svg.append("g")
       .attr("class", "x-axis axis")
-      .attr("transform", "translate(" + this.margin.left * 2 + "," + height + ")")
+      .attr("transform", "translate(20," + (height + this.margin.top) + ")")
       .call(xAxis);
   }
 

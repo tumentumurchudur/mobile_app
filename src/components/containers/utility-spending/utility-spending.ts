@@ -33,7 +33,9 @@ export class UtilitySpendingComponent implements OnInit {
     { date: new Date("11/5/2017"), close: 15.98 },
     { date: new Date("11/15/2017"), close: 61.25 },
     { date: new Date("11/21/2017"), close: 10.25 },
-    { date: new Date("11/26/2017"), close: 6.25 }
+    { date: new Date("11/26/2017"), close: 6.25 },
+    { date: new Date("11/27/2017"), close: 45.25 },
+    { date: new Date("11/29/2017"), close: 100.25 }
   ];
 
   constructor(
