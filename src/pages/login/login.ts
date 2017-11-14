@@ -18,7 +18,7 @@ export class LoginPage {
     password: "james123", //"spark123",
     uid: null
   };
-  public isNewUser: boolean = false;
+  private _isNewUser: boolean = false;
 
   constructor(
     private _storeServices: StoreServices,
@@ -26,12 +26,16 @@ export class LoginPage {
     public navCtrl: NavController
   ) {}
 
-  private _onSelectLogin(boolean): void {
-    this.isNewUser = boolean;
+  private _onLoginOptionClick() {
+    this._isNewUser = false;
+  }
+
+  private _onSignUpOptionClick() {
+    this._isNewUser = true;
   }
 
   private _onLoginClick(user: IUser): void {
-    if (!this.isNewUser) {
+    if (!this._isNewUser) {
       this._auth.loginWithEmail(user).subscribe(userData => {
         const user: IUser = {
           email: userData.email,

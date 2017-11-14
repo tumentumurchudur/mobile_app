@@ -26,7 +26,7 @@ page-login {
     right: 0;
     left: 0;
     margin: auto;
-    opacity: .10;
+    opacity: .1;
     width: 40vw;
   }
 
@@ -34,7 +34,6 @@ page-login {
     text-align: center;
     font-size: 7vh;
     color: $vu-white;
-    z-index: 3;
     margin-top: 6vh;
   }
 
@@ -105,7 +104,7 @@ page-login {
     color: $vu-white !important;
     height: 3vh;
     width: 100%;
-    margin: 2vh 0 2vh 0;
+    margin: 2vh 0;
     font-family: 'Bryant Pro Regular', sans-serif;
   }
 
@@ -148,7 +147,6 @@ page-login {
     font-weight: lighter;
     font-family: 'Bryant Pro Regular', sans-serif;
     font-size: 1.85vh;
-    z-index: 5;
     padding-top: 5vh;
   }
 
@@ -159,7 +157,7 @@ page-login {
     left: 0;
     right: 0;
     margin: 0;
-    color: #ffffff;
+    color: $vu-white;
     background-color: rgba(221, 221, 221, 0.15);
   }
 }

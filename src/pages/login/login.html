@@ -13,8 +13,8 @@
       </ion-col>
     </ion-row>
     <ion-row class="login-select">
-      <div class="selected-option" [class.deselected-option]="this.isNewUser" (tap)="_onSelectLogin(false)">Login</div>
-      <div class="selected-option signup-text" [class.deselected-option]="!this.isNewUser" (tap)="_onSelectLogin(true)">Sign Up</div>
+      <div class="selected-option" [class.deselected-option]="this._isNewUser" (tap)="_onLoginOptionClick()">Login</div>
+      <div class="selected-option signup-text" [class.deselected-option]="!this._isNewUser" (tap)="_onSignUpOptionClick()">Sign Up</div>
     </ion-row>
     <ion-row class="login-input">
         <ion-item>
@@ -40,9 +40,9 @@
     </ion-row>
     <button ion-button outline block color="primary" (click)="_onLoginClick(_user)">{{!this.isNewUser ? "Login" : "Register"}}</button>
     <ion-row class="or-with">
-      <ion-col width-33><hr></ion-col>
-      <ion-col width-33 class="or-text"> or </ion-col>
-      <ion-col width-33><hr></ion-col>
+      <ion-col><hr></ion-col>
+      <ion-col class="or-text"> or </ion-col>
+      <ion-col><hr></ion-col>
     </ion-row>
     <ion-row class="bottom-row">
         <button class="social-login" ion-button outline color="light" (tap)="_onFacebookClick()">
@@ -53,7 +53,7 @@
         </button>
     </ion-row>
     <ion-row>
-      <ion-col class="terms self-start">
+      <ion-col class="terms">
         By logging in you agree to the <a href="https://www.vutiliti.com/tos.html">Terms of Use</a>
       </ion-col>
     </ion-row>
