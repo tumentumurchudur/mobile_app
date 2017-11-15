@@ -1,22 +1,17 @@
-import { Component, EventEmitter, Output, Input } from '@angular/core';
+import { Component, EventEmitter, Output, Input } from "@angular/core";
+import { navigationConfigs  } from "../../configs";
 
 @Component({
   selector: 'navigation-bar',
   templateUrl: 'navigation-bar.html'
 })
 export class NavigationBarComponent {
-  // TODO: Move these to configs.
-  private _selections = {
-    ARC_CHART: "arc-chart",
-    LINE_CHART: "line-chart",
-    COMPARISON: "comparison",
-    EDIT: "edit"
-  };
+  private _navigationItems = navigationConfigs;
 
   @Input() index: number = 0;
   @Output() itemTapped = new EventEmitter<any>();
 
-  private _currentSelection: string = this._selections.ARC_CHART;
+  private _currentSelection: string = this._navigationItems.ARC_CHART;
 
   private _onTap(item: string) {
     this._currentSelection = item;

@@ -44,26 +44,19 @@ export class LineChartComponent implements OnInit {
       .range([height, 0]);
 
     // define the line
-    const line = d3.line()
-      .x(d => x(d.date))
-      .y(d => y(d.close));
+    const line = this._makeLineFunc(x, y, "close");
+    const line2 = this._makeLineFunc(x, y, "open");
+    const line3 = this._makeLineFunc(x, y, "neutral");
 
     // add line path using line()
-    const path = d3.select(this.element).select("path")
-      .attr("d", line(this.data))
-      .attr("transform", "translate(20, 10)")
-      .attr("stroke", this.lineColor || "orange")
-      .attr("stroke-width", "2");
+    const path = this._addPath(line, "line1", null);
+    const path2 = this._addPath(line2, "line2", "green");
+    const path3 = this._addPath(line3, "line3", "red");
 
     // add dots
-    const circles = svg.selectAll("dot")
-      .data(this.data)
-      .enter().append("svg:circle")
-      .attr("transform", "translate(20, 10)")
-      .attr("r", 3)
-      .attr("cx", d => x(d.date))
-      .attr("cy", d => y(d.close))
-      .style("fill", this.dotColor || "orange");
+    const circles = this._addDots(svg, x, y, "close");
+    const circles2 = this._addDots(svg, x, y, "open");
+    const circles3 = this._addDots(svg, x, y, "neutral");
 
     const totalLength = path.node().getTotalLength();
 
@@ -71,7 +64,27 @@ export class LineChartComponent implements OnInit {
       .attr("stroke-dasharray", totalLength + " " + totalLength)
       .attr("stroke-dashoffset", totalLength)
       .transition()
-      .duration(1000)
+      .duration(500)
+      .attr("stroke-dashoffset", 0);
+
+    const totalLength2 = path2.node().getTotalLength();
+
+    path2
+      .attr("stroke-dasharray", totalLength2 + " " + totalLength2)
+      .attr("stroke-dashoffset", totalLength2)
+      .transition()
+      .delay(500)
+      .duration(500)
+      .attr("stroke-dashoffset", 0);
+
+    const totalLength3 = path3.node().getTotalLength();
+
+    path3
+      .attr("stroke-dasharray", totalLength3 + " " + totalLength3)
+      .attr("stroke-dashoffset", totalLength3)
+      .transition()
+      .delay(1000)
+      .duration(500)
       .attr("stroke-dashoffset", 0);
 
     // x and y axis
@@ -93,6 +106,31 @@ export class LineChartComponent implements OnInit {
     svg.append("g")
       .attr("transform", "translate(20," + (height + this.margin.top) + ")")
       .call(xAxis);
+  }
+
+  private _makeLineFunc(x: (date: any) => any, y: (val: number) => any, col: string): any {
+    return d3.line()
+      .x(d => x(d.date))
+      .y(d => y(d[col]));
+  }
+
+  private _addPath(line: (data: any) => any, id: string, color: string | null) {
+    return d3.select(this.element).select("#" + id)
+      .attr("d", line(this.data))
+      .attr("transform", "translate(20, 10)")
+      .attr("stroke", color || "orange")
+      .attr("stroke-width", "2");
+  }
+
+  private _addDots(svg: any, x: any, y: any, col: string) {
+    return svg.selectAll("dot")
+      .data(this.data)
+      .enter().append("svg:circle")
+      .attr("transform", "translate(20, 10)")
+      .attr("r", 3)
+      .attr("cx", d => x(d.date))
+      .attr("cy", d => y(d[col]))
+      .style("fill", this.dotColor || "orange");
   }
 
 }
