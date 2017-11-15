@@ -18,29 +18,42 @@ export class LoginPage {
     password: "james123", //"spark123",
     uid: null
   };
+  private _isNewUser: boolean = false;
 
   constructor(
     private _storeServices: StoreServices,
     private _auth: AuthProvider,
     public navCtrl: NavController
-  ) { }
+  ) {}
+
+  private _onLoginOptionClick() {
+    this._isNewUser = false;
+  }
+
+  private _onSignUpOptionClick() {
+    this._isNewUser = true;
+  }
 
   private _onLoginClick(user: IUser): void {
-    this._auth.loginWithEmail(user).subscribe(userData => {
-      const user: IUser = {
-        email: userData.email,
-        uid: userData.uid,
-        password: null,
-        orgPath: null
-      };
+    if (!this._isNewUser) {
+      this._auth.loginWithEmail(user).subscribe(userData => {
+        const user: IUser = {
+          email: userData.email,
+          uid: userData.uid,
+          password: null,
+          orgPath: null
+        };
 
-      // Update the store with current user.
-      this._storeServices.addUser(user);
+        // Update the store with current user.
+        this._storeServices.addUser(user);
 
-      this.navCtrl.push("HomePage");
-    }, (error) => {
-      console.log("Login failed:", error);
-    });
+        this.navCtrl.push("HomePage");
+      }, (error) => {
+        console.log("Login failed:", error);
+      });
+    } else {
+      this.navCtrl.push("SignUpPage");
+    }
   }
 
   private _onFacebookClick(): void {
@@ -57,10 +70,6 @@ export class LoginPage {
     }, (error) => {
       console.log("Login failed:", error);
     })
-  }
-
-  private _onSignUpClick(): void {
-    this.navCtrl.push("SignUpPage");
   }
 
   private _onResetPasswordClick(): void {

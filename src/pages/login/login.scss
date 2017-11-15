@@ -1,3 +1,156 @@
-page-login {
+@import "../../styles/variables";
 
+page-login {
+  .login-page{
+    max-height: 100%;
+    background: url("../assets/loginBackground.png") no-repeat;
+    background-position: 50% 55%;
+    background-size: cover;
+    display: flex;
+  }
+
+  ion-grid.grid {
+    height: 100%;
+    position: relative;
+    padding: 0 11vw;
+  }
+
+  .no-padding {
+    padding: 0;
+  }
+
+  .logo-container {
+    height: 30vh;
+    margin-top: 8vh;
+
+    .login-img {
+      position: absolute;
+      top: 0;
+      right: 0;
+      left: 0;
+      margin: auto;
+      opacity: .1;
+      width: 40vw;
+    }
+
+    .app-title {
+      text-align: center;
+      font-size: 7vh;
+      color: $vu-white;
+      margin-top: 6vh;
+
+      .app-name-spark {
+        font-family: $bryant-regular, sans-serif;
+      }
+
+      .app-tagline {
+        font-family: $bryant-regular, sans-serif;
+        font-size: 2.75vh;
+      }
+    }
+  }
+
+  .login-options {
+    display: flex;
+
+    .signup-text {
+      margin-left: 5vh;
+    }
+
+    .selected-option {
+      color: $vu-white;
+      font-size: 3vh;
+      height: 100%;
+      transition: all 0.3s ease;
+    }
+
+    .deselected-option {
+      padding-top: .75vh;
+      font-size: 2vh;
+      color: $gull-gray;
+      transition: all 0.3s ease;
+      opacity: .4;
+    }
+
+    .login-input {
+      margin-bottom: 2vh;
+    }
+  }
+
+  ion-item {
+    background: transparent !important;
+    padding: 0 !important;
+    font-size: 2.5vh;
+  }
+
+  ion-input {
+    margin-left: 4.5vh;
+    color: $vu-white;
+    position: relative !important;
+    bottom: -15%;
+  }
+
+  .login-input-icon {
+    font-size: 3.5vh;
+    color: $vu-white;
+    position: absolute;
+    bottom: 2.5%;
+    left: 1%;
+  }
+
+  .or-with {
+    color: $vu-white !important;
+    height: 3vh;
+    margin: 2vh 0;
+    font-family: $bryant-regular, sans-serif;
+
+    .line {
+      border-bottom: 1px solid $vu-white;
+      padding: .75vh 0 0 0;
+    }
+
+    .or-text {
+      font-size: 1.85vh;
+      text-align: center;
+      padding-top: .5vh;
+    }
+  }
+
+  .bottom-row {
+    margin: 0;
+    display: flex;
+    justify-content: space-around;
+
+    .social-login {
+      padding: 0;
+      border-radius: 50%;
+      width: 8.5vh;
+      height: 8.5vh;
+    }
+
+    .social-login img {
+      width: 80%;
+      height: 80%;
+    }
+  }
+
+  .terms {
+    text-align: center;
+    color: $vu-white;
+    font-weight: lighter;
+    font-family: $bryant-regular, sans-serif;
+    font-size: 1.85vh;
+    padding-top: 5vh;
+  }
+
+  .forgot-pass-btn {
+    font-weight: lighter;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: 0;
+    color: $vu-white;
+    background-color: rgba(221, 221, 221, 0.15);
+  }
 }
