@@ -1,22 +1,38 @@
 <ion-content class="login-page">
   <ion-grid>
-    <ion-row class="logo-container">
-      <ion-col>
-        <div>
-          <img class="login-img" src="assets/whiteLogo.png">
-        </div>
+    <ion-row>
+      <ion-col class="logo-container">
+        <img class="login-img" src="assets/whiteLogo.png">
         <div class="app-title">
-          <div><span class="vu-white-text">vu</span><span class="vu-blue-text">tiliti</span> <span class="app-name-spark">spark</span>
+          <div>
+            <span class="vu-white-text">vu</span>
+            <span class="vu-blue-text">tiliti</span>
+            <span class="app-name-spark">spark</span>
           </div>
           <div class="app-tagline">information to spark change</div>
         </div>
       </ion-col>
     </ion-row>
-    <ion-row class="login-select">
-      <div class="selected-option" [class.deselected-option]="this._isNewUser" (tap)="_onLoginOptionClick()">Login</div>
-      <div class="selected-option signup-text" [class.deselected-option]="!this._isNewUser" (tap)="_onSignUpOptionClick()">Sign Up</div>
+    <ion-row>
+     <ion-col class="login-options">
+       <div
+         class="selected-option"
+         [class.deselected-option]="this._isNewUser"
+         (tap)="_onLoginOptionClick()"
+       >
+         Login
+       </div>
+       <div
+         class="selected-option signup-text"
+         [class.deselected-option]="!this._isNewUser"
+         (tap)="_onSignUpOptionClick()"
+       >
+         Sign Up
+       </div>
+     </ion-col>
     </ion-row>
-    <ion-row class="login-input">
+    <ion-row>
+      <ion-col class="no-padding">
         <ion-item>
           <ion-label>
             <ion-icon class="login-input-icon" name="mail"></ion-icon>
@@ -24,7 +40,8 @@
           <ion-input
             type="text"
             [(ngModel)]="_user.email"
-            placeholder="Email address">
+            placeholder="Email address"
+          >
           </ion-input>
         </ion-item>
         <ion-item>
@@ -34,23 +51,31 @@
           <ion-input
             type="password"
             [(ngModel)]="_user.password"
-            placeholder="Password">
+            placeholder="Password"
+          >
           </ion-input>
         </ion-item>
+      </ion-col>
     </ion-row>
-    <button ion-button outline block color="primary" (click)="_onLoginClick(_user)">{{!this.isNewUser ? "Login" : "Register"}}</button>
+    <ion-row>
+      <ion-col class="no-padding">
+        <button ion-button outline block color="primary" (click)="_onLoginClick(_user)">{{!this.isNewUser ? "Login" : "Register"}}</button>
+      </ion-col>
+    </ion-row>
     <ion-row class="or-with">
-      <ion-col><hr></ion-col>
+      <ion-col><div class="line"></div></ion-col>
       <ion-col class="or-text"> or </ion-col>
-      <ion-col><hr></ion-col>
+      <ion-col><div class="line"></div></ion-col>
     </ion-row>
-    <ion-row class="bottom-row">
+    <ion-row>
+      <ion-col  class="bottom-row">
         <button class="social-login" ion-button outline color="light" (tap)="_onFacebookClick()">
           <img class="icon-image" src="assets/facebook.png">
         </button>
         <button class="social-login" ion-button outline color="light" (tap)="_onGoogleClick()">
           <img class="icon-image" src="assets/google-plus-icon.png">
         </button>
+      </ion-col>
     </ion-row>
     <ion-row>
       <ion-col class="terms">

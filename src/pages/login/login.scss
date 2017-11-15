@@ -1,3 +1,6 @@
+@import "../../styles/variables";
+
+
 page-login {
   .login-page{
     max-height: 100%;
@@ -8,80 +11,76 @@ page-login {
   }
 
   ion-grid.grid {
-    width:100%;
     height: 100%;
     position: relative;
     padding: 0 11vw;
   }
 
+  .no-padding {
+    padding: 0;
+  }
+
   .logo-container {
     height: 30vh;
-    position:relative;
     margin-top: 8vh;
+
+    .login-img {
+      position: absolute;
+      top: 0;
+      right: 0;
+      left: 0;
+      margin: auto;
+      opacity: .1;
+      width: 40vw;
+    }
+
+    .app-title {
+      text-align: center;
+      font-size: 7vh;
+      color: $vu-white;
+      margin-top: 6vh;
+
+      .app-name-spark {
+        font-family: $bryant-regular, sans-serif;
+      }
+
+      .app-tagline {
+        font-family: $bryant-regular, sans-serif;
+        font-size: 2.75vh;
+      }
+    }
   }
 
-  .login-img {
-    position: absolute;
-    top: 0;
-    right: 0;
-    left: 0;
-    margin: auto;
-    opacity: .1;
-    width: 40vw;
-  }
+  .login-options {
+    display: flex;
 
-  .app-title {
-    text-align: center;
-    font-size: 7vh;
-    color: $vu-white;
-    margin-top: 6vh;
-  }
+    .signup-text {
+      margin-left: 5vh;
+    }
 
-  .app-name-spark {
-    font-family: 'Bryant Pro Regular', sans-serif;
-  }
+    .selected-option {
+      color: $vu-white;
+      font-size: 3vh;
+      height: 100%;
+      transition: all 0.3s ease;
+    }
 
-  .app-tagline {
-    font-family: 'Bryant Pro Regular', sans-serif;
-    font-size: 2.75vh;
-  }
+    .deselected-option {
+      padding-top: .75vh;
+      font-size: 2vh;
+      color: $gull-gray;
+      transition: all 0.3s ease;
+      opacity: .4;
+    }
 
-  .login-select {
-    height: 3vh;
-  }
-
-  .signup-text {
-    margin-left: 5vh;
-  }
-
-  .selected-option {
-    color: $vu-white;
-    font-size: 3vh;
-    height: 100%;
-    transition: all 0.3s ease;
-  }
-
-  .deselected-option {
-    padding-top: .75vh;
-    font-size: 2vh;
-    color: #9DAEB2;
-    transition: all 0.3s ease;
-    opacity: .4;
-  }
-
-  .login-input {
-    height: 15vh;
-    margin-bottom: 2vh;
+    .login-input {
+      margin-bottom: 2vh;
+    }
   }
 
   ion-item {
-    width: 100%;
     background: transparent !important;
-    background-color: #2AACE0;
     padding: 0 !important;
-  }
-
-  ion-item.item-ios {
     font-size: 2.5vh;
   }
 
@@ -103,49 +102,44 @@ page-login {
   .or-with {
     color: $vu-white !important;
     height: 3vh;
-    width: 100%;
     margin: 2vh 0;
-    font-family: 'Bryant Pro Regular', sans-serif;
-  }
+    font-family: $bryant-regular, sans-serif;
 
-  hr {
-    border-top: 1px solid $vu-white;
-    padding: .75vh 0 0 0;
-  }
+    .line {
+      border-bottom: 1px solid $vu-white;
+      padding: .75vh 0 0 0;
+    }
 
-  .or-text {
-    font-size: 1.85vh;
-    text-align: center;
-    padding-top: .5vh;
+    .or-text {
+      font-size: 1.85vh;
+      text-align: center;
+      padding-top: .5vh;
+    }
   }
 
   .bottom-row {
-    margin: 0px;
+    margin: 0;
     display: flex;
     justify-content: space-around;
-  }
 
-  .social-login {
-    padding: 0px;
-    border-radius: 50%;
-    width: 8.5vh;
-    height: 8.5vh;
-  }
+    .social-login {
+      padding: 0;
+      border-radius: 50%;
+      width: 8.5vh;
+      height: 8.5vh;
+    }
 
-  .social-login img {
-    width: 80%;
-    height: 80%;
-  }
-
-  .rounded {
-    border-radius: 15px;
+    .social-login img {
+      width: 80%;
+      height: 80%;
+    }
   }
 
   .terms {
     text-align: center;
     color: $vu-white;
     font-weight: lighter;
-    font-family: 'Bryant Pro Regular', sans-serif;
+    font-family: $bryant-regular, sans-serif;
     font-size: 1.85vh;
     padding-top: 5vh;
   }
