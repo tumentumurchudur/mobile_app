@@ -61,3 +61,87 @@ a {
 .item-md.item-input.ng-valid.input-has-value:not(.input-has-focus) .item-inner {
   box-shadow: inset 0 -1px 0 0 #29ACE0 !important;
 }
+
+.timespan-alert.alert-md {
+  padding: 50px;
+  //.alert-md {
+  .alert-wrapper {
+    width: 80%;
+    position: absolute;
+    top: 9%;
+    border-radius: 0;
+  }
+  .alert-button {
+    border: 1px solid #9DAEB2;
+  }
+  .alert-button-group {
+    padding: 0;
+  }
+  .alert-head {
+    height: 0;
+    padding: 0px !important;
+  }
+  .alert-button {
+    margin: 0;
+    border-radius: 0;
+  }
+}
+
+.timespan-alert.alert-ios {
+  .alert-wrapper {
+    width: 80%;
+    position: absolute;
+    top: 10%;
+    border-radius: 0;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .alert-button{
+    border: 1px solid #9DAEB2;
+  }
+  .alert-button-group {
+    padding: 0;
+  }
+  .alert-message:empty {
+    padding: 0;
+  }
+  .alert-head {
+    height: 0;
+    padding: 0;
+  }
+  .alert-button {
+    margin: 0;
+    height: 7rem;
+  }
+  .alert-button:last-child {
+    font-weight: normal;
+  }
+}
+
+
+.timespan-option-btn {
+  width: 100%;
+  height: 8rem;
+  font-size: 2.25rem;
+  text-align: center;
+}
+
+.hide-timespan-option {
+  visibility: hidden;
+  height: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+}
+
+.timespan-selected {
+  background-color: $vu-white !important;
+  opacity: .5;
+}
+
+.timespan-option-btn .button-inner {
+  justify-content: center !important;
+  text-transform: capitalize;
+}
+

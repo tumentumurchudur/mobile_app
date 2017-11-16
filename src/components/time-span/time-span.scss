@@ -1,0 +1,66 @@
+button {
+  color: #21A8DE !important;
+  font-size: 1.5rem;
+  text-transform: capitalize;
+}
+.btn-selected {
+  color: #D7EFF9 !important;
+}
+
+time-span {
+  .timeSpan {
+    text-transform: capitalize;
+  }
+
+  .btn-selected {
+    color: #29ACE0 !important;
+  }
+
+  button {
+    border: 1px solid #9DAEB2;
+  }
+
+  .button-md-light {
+    color: #29ACE0 !important;
+  }
+
+  .button-md {
+    box-shadow: none;
+    height: 4rem;
+  }
+
+  .button-group {
+    width: 70%;
+    margin: auto;
+    color: #29ACE0 !important;
+    ion-col {
+      &:first-child:not(:last-child) {
+        padding-right: 0;
+        .button {
+          border-top-left-radius: 5px;
+          border-bottom-left-radius: 5px;
+          border-top-right-radius: 0px;
+          border-bottom-right-radius: 0px;
+          border-right: 0px;
+        }
+      }
+      &:not(:first-child):not(:last-child) {
+        padding-right: 0;
+        padding-left: 0;
+        .button {
+          border-radius: 0;
+        }
+      }
+      &:last-child:not(:first-child) {
+        padding-left: 0;
+        .button {
+          border-top-right-radius: 5px;
+          border-bottom-right-radius: 5px;
+          border-top-left-radius: 0px;
+          border-bottom-left-radius: 0px;
+          border-left: 0px;
+        }
+      }
+    }
+  }
+}

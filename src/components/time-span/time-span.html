@@ -1,3 +1,11 @@
-<div>
-  TimeSpan
-</div>
+<ion-row class="flex button-group">
+  <ion-col>
+    <button ion-button block icon-only color="light" (tap)="adjacentDateRangePeriod('prev')"><ion-icon name="ios-arrow-back"></ion-icon></button>
+  </ion-col>
+  <ion-col>
+    <button class="timeSpan" ion-button block color="light" (tap)="changeTimeSpan()">{{this._currentSelection}}</button>
+  </ion-col>
+  <ion-col>
+    <button ion-button block icon-only color="light" (tap)="adjacentDateRangePeriod('next')"><ion-icon name="ios-arrow-forward"></ion-icon></button>
+  </ion-col>
+</ion-row>
