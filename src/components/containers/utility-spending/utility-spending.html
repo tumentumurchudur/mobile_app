@@ -45,7 +45,10 @@
         class="card-content"
         *ngIf="_currentNavigationItems[i] === _navigationItems.LINE_CHART"
       >
-        <line-chart [data]="_lineChartData"></line-chart>
+        <line-chart
+          [data]="_lineChartData"
+          [series]="['line1', 'line2', 'line3']"
+        ></line-chart>
       </div>
 
       <!-- Neigborhood comparison -->

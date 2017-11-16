@@ -13,6 +13,7 @@ export class LineChartComponent implements OnInit {
   @Input() lineColors: string[] = ["orange", "red", "green"];
   @Input() dotColors: string[] = ["orange", "red", "green"];
   @Input() dateFormat: string = "%m/%d";
+  @Input() series: string[] = ["line1", "line2", "line3"];
 
   private element: any;
   private margin: any = { left: 10, right: 10, top: 10, bottom: 10 };
@@ -26,6 +27,7 @@ export class LineChartComponent implements OnInit {
   }
 
   private _draw() {
+    const delay = 100;
     const viewBoxWithMultiplier = 1.1;
     const width = this.width - this.margin.left - this.margin.right;
     const height = this.height - this.margin.top - this.margin.bottom;
@@ -41,28 +43,23 @@ export class LineChartComponent implements OnInit {
 
     // set the domain and ranges for y axis
     const y = d3.scaleLinear()
-      .domain([0, d3.max(this.data, (d: ILineItem) => Math.max(d.line1, d.line2, d.line3))])
+      // TODO: make col names more dynamic.
+      .domain([0, d3.max(this.data, d => Math.max(d["line1"] || 0, d["line2"] || 0, d["line3"] || 0))])
       .range([height, 0]);
 
-    // define line functions.
-    const lineFunc1 = this._makeLineFunc(x, y, "line1");
-    const lineFunc2 = this._makeLineFunc(x, y, "line2");
-    const lineFunc3 = this._makeLineFunc(x, y, "line3");
+    this.series.forEach((colName, index) => {
+      // make line function
+      const lineFunc = this._makeLineFunc(x, y, colName);
 
-    // add line paths using the line functions.
-    const path1 = this._addPath(lineFunc1, "path1", this.lineColors[0]);
-    const path2 = this._addPath(lineFunc2, "path2", this.lineColors[1]);
-    const path3 = this._addPath(lineFunc3, "path3", this.lineColors[2]);
+       // add line paths using the line functions.
+      const path = this._addPath(lineFunc, "path" + index, this.lineColors[index]);
 
-    // add dots
-    const circles1 = this._addDots(svg, x, y, "line1", this.dotColors[0]);
-    const circles2 = this._addDots(svg, x, y, "line2", this.dotColors[1]);
-    const circles3 = this._addDots(svg, x, y, "line3", this.dotColors[2]);
+      // add dots
+      this._addDots(svg, x, y, colName, this.dotColors[index]);
 
-    // renders and animates lines.
-    this._animatePath(path1, 100, 500);
-    this._animatePath(path2, 200, 500);
-    this._animatePath(path3, 300, 500);
+      // animate lines.
+      this._animatePath(path, delay * (index + 1), 500);
+    });
 
     // x and y axis
     const xAxis = d3.axisBottom(x)
@@ -105,8 +102,8 @@ export class LineChartComponent implements OnInit {
       .enter().append("svg:circle")
       .attr("transform", "translate(20, 10)")
       .attr("r", 3)
-      .attr("cx", (d: ILineItem) => x(d.date))
-      .attr("cy", (d: ILineItem) => y(d[colName]))
+      .attr("cx", (d) => x(d.date))
+      .attr("cy", (d) => y(d[colName]))
       .style("fill", color);
   }
 
