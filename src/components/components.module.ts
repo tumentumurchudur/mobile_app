@@ -5,6 +5,7 @@ import { IonicModule } from 'ionic-angular';
 import { UtilitySpendingComponent } from './containers/utility-spending/utility-spending';
 import { ArcTweenChartComponent } from './arc-tween-chart/arc-tween-chart';
 import { NavigationBarComponent } from './navigation-bar/navigation-bar';
+import { TimeSpanComponent } from "./time-span/time-span";
 import { LineChartComponent } from './line-chart/line-chart';
 
 @NgModule({
@@ -12,6 +13,7 @@ import { LineChartComponent } from './line-chart/line-chart';
 		UtilitySpendingComponent,
     ArcTweenChartComponent,
     NavigationBarComponent,
+    TimeSpanComponent,
     LineChartComponent
 	],
 	imports: [CommonModule, IonicModule],
@@ -19,6 +21,7 @@ import { LineChartComponent } from './line-chart/line-chart';
 		UtilitySpendingComponent,
     ArcTweenChartComponent,
     NavigationBarComponent,
+    TimeSpanComponent,
     LineChartComponent
 	]
 })
