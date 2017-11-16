@@ -45,13 +45,7 @@
         class="card-content"
         *ngIf="_currentNavigationItems[i] === _navigationItems.LINE_CHART"
       >
-        <line-chart
-          [data]="_lineChartData"
-          [width]="330"
-          [lineColor]="orange"
-          [dotColor]="orange"
-          [height]="240"
-        ></line-chart>
+        <line-chart [data]="_lineChartData"></line-chart>
       </div>
 
       <!-- Neigborhood comparison -->
