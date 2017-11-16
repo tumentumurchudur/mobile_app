@@ -1,11 +1,6 @@
 line-chart {
-  .chart-container {
-    position: relative;
-    left: -10px;
-  }
-
   .tick line {
-    opacity: .2;
+    opacity: .1;
   }
 
   .line-path {
