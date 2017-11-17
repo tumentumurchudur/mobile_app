@@ -39,7 +39,7 @@ export class UtilitySpendingComponent implements OnInit {
     private _store: Store<AppState>,
     private _storeServices: StoreServices
   ) {
-    this._meters = this._store.select(state => state.meters);
+    this._meters = this._storeServices.selectMeters();
   }
 
   ngOnInit() {

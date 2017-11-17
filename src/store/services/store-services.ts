@@ -4,6 +4,7 @@ import { AppState } from "../reducers";
 import { LoadMeters, LoadFromDb, AddUser, UpdateUser, AddRates } from "../actions";
 import { IUser, IRates } from "../../interfaces";
 import { Observable } from 'rxjs/Observable';
+import { IMeter } from '../../interfaces/meter';
 
 @Injectable()
 export class StoreServices {
@@ -30,6 +31,10 @@ export class StoreServices {
 		this._store.dispatch(new LoadFromDb(user));
 	}
 
+	public selectMeters() : Observable<IMeter[]> {
+		return this._store.select(state => state.meters)
+	}
+
 	public addUser(user: IUser) {
 		this._store.dispatch(new AddUser(user));
 	}
@@ -42,7 +47,7 @@ export class StoreServices {
 		this._store.dispatch(new AddRates(rates));
 	}
 
-	public getRates(): Observable<IRates[]> {
+	public selectRates(): Observable<IRates[]> {
 		return this._store.select(state => state.rates);
 	}
 

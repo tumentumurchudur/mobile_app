@@ -94,19 +94,21 @@ export class MainEffects {
       let rates: IRates[];
       let metersWithRates: any[];
 
-      // Check if rates data is available in the store.
-      this._storeServices.getRates().subscribe((data: IRates[]) => {
+      // Gets rates data from the store if available.
+      this._storeServices.selectRates().subscribe((data: IRates[]) => {
         rates = data;
       });
 
+      // Check if rates data is available in the store.
       if (rates && rates.length) {
+        // Adds rates data to meters data since it is already available in the store.
         metersWithRates = meters.map((meter: IMeter) => {
           const rate = rates.find(r => r._guid === meter._guid);
 
           return Object.assign({}, meter, {
-            _summer: rate._summer,
-            _winter: rate._winter,
-            _facilityFee: rate._facilityFee
+            _summer: rate ? rate._summer : null,
+            _winter: rate ? rate._winter : null,
+            _facilityFee: rate ? rate._facilityFee : null
           });
         });
       }
