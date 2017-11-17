@@ -25,12 +25,12 @@ export class TimeSpanComponent {
   @Input() index: number = 0;
   @Output() itemTapped = new EventEmitter<any>();
 
-  private _currentSelection: string = this._timespanSelections[1];
+  private _currentTimespan: string = this._timespanSelections[1];
 
   private _onTap(item: string) {
-    this._currentSelection = item;
+    this._currentTimespan = item;
 
-    this.itemTapped.emit({ selection: this._currentSelection, index: this.index });
+    this.itemTapped.emit({ selection: this._currentTimespan, index: this.index });
   }
 
   changeTimeSpan() {
@@ -42,9 +42,8 @@ export class TimeSpanComponent {
       alert.addButton({
         text: timespan,
         handler: () => {
-          this._currentSelection = timespan;
+          this._currentTimespan = timespan;
         }
-        // cssClass: `timespan-option-btn ${this.applySelectedClass(timespan)} ${this.applyHideClass(timespan)}`
       });
     });
 

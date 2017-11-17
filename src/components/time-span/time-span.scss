@@ -1,11 +1,4 @@
-button {
-  color: #21A8DE !important;
-  font-size: 1.5rem;
-  text-transform: capitalize;
-}
-.btn-selected {
-  color: #D7EFF9 !important;
-}
+@import "../../styles/variables";
 
 time-span {
   .timeSpan {
@@ -13,27 +6,31 @@ time-span {
   }
 
   .btn-selected {
-    color: #29ACE0 !important;
+    color: $gull-gray !important;
   }
 
-  button {
-    border: 1px solid #9DAEB2;
+  .btn-selected {
+    color: $primary !important;
   }
 
   .button-md-light {
-    color: #29ACE0 !important;
+    color: $primary !important;
   }
 
   .button-md {
     box-shadow: none;
-    height: 4rem;
+    height: 3.5rem;
   }
 
   .button-group {
     width: 70%;
     margin: auto;
-    color: #29ACE0 !important;
     ion-col {
+      button {
+        color: #29ACE0 !important;
+        border: 1px solid #9DAEB2;
+      }
+
       &:first-child:not(:last-child) {
         padding-right: 0;
         .button {

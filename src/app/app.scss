@@ -25,6 +25,8 @@ $toolbar-ios-height: 5rem !important;
 $cordova-ios-statusbar-padding: 0px !important;
 $navbar-ios-height:5rem;
 $vu-white: #dddddd;
+$alert-text: #21A8DE;
+$alert-border: #9DAEB2;
 
 a {
   text-decoration: none;
@@ -64,19 +66,18 @@ a {
 
 .timespan-alert.alert-md {
   padding: 50px;
-  //.alert-md {
+
   .alert-wrapper {
     width: 80%;
     position: absolute;
     top: 9%;
     border-radius: 0;
   }
-  .alert-button {
-    border: 1px solid #9DAEB2;
-  }
+
   .alert-button-group {
     padding: 0;
   }
+
   .alert-head {
     height: 0;
     padding: 0px !important;
@@ -84,6 +85,14 @@ a {
   .alert-button {
     margin: 0;
     border-radius: 0;
+    height: 8vh;
+    color: $alert-text !important;
+    font-size: 2.5vh;
+    border: .75px solid $alert-border;
+
+    .button-inner {
+      justify-content: center;
+    }
   }
 }
 
@@ -98,41 +107,34 @@ a {
     margin-left: auto;
     margin-right: auto;
   }
-  .alert-button{
-    border: 1px solid #9DAEB2;
-  }
+
   .alert-button-group {
     padding: 0;
   }
+
   .alert-message:empty {
     padding: 0;
   }
+
   .alert-head {
     height: 0;
     padding: 0;
   }
+
   .alert-button {
     margin: 0;
-    height: 7rem;
+    height: 8vh;
+    margin: 0;
+    border-radius: 0;
+    text-transform: capitalize;
+    color: $alert-text !important;
+    font-size: 2.5vh;
+    border: .75px solid $alert-border;
   }
+
   .alert-button:last-child {
     font-weight: normal;
   }
-}
-
-
-.timespan-option-btn {
-  width: 100%;
-  height: 8rem;
-  font-size: 2.25rem;
-  text-align: center;
-}
-
-.hide-timespan-option {
-  visibility: hidden;
-  height: 0 !important;
-  padding: 0 !important;
-  border: none !important;
 }
 
 .timespan-selected {
