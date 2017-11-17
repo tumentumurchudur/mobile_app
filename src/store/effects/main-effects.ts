@@ -9,9 +9,9 @@ import "rxjs/add/operator/switchMap";
 import "rxjs/add/observable/combineLatest";
 import "rxjs/add/observable/fromPromise";
 
-import { LOAD_METERS, LOAD_FROM_DB, AddMeters, LoadFromDb, AddProviders } from "../actions";
+import { LOAD_METERS, LOAD_FROM_DB, AddMeters, LoadFromDb } from "../actions";
 import { DatabaseProvider } from "../../providers";
-import { IMeter, IUser } from "../../interfaces";
+import { IMeter, IUser, IRates } from "../../interfaces";
 import { StoreServices } from "../../store/services";
 
 import { CostHelper } from "../../helpers";
@@ -43,7 +43,7 @@ export class MainEffects {
     })
     .map((values: any[]) => {
       const [meters = [], user] = values;
-      console.log("meters", meters);
+
       // Load data from API.
       if (!meters.length) {
         return new LoadFromDb(user);
@@ -91,16 +91,16 @@ export class MainEffects {
     })
     .switchMap((values: any[]) => {
       const [meters, user] = values;
+      let rates: IRates[];
+      let metersWithRates: any[];
 
-      // Check if rates data is already fetched.
-      let rates: any;
-      this._storeServices.getRates().subscribe(data => {
+      // Check if rates data is available in the store.
+      this._storeServices.getRates().subscribe((data: IRates[]) => {
         rates = data;
       });
 
-      let newMeters: any[];
       if (rates && rates.length) {
-        newMeters = meters.map((meter: IMeter) => {
+        metersWithRates = meters.map((meter: IMeter) => {
           const rate = rates.find(r => r._guid === meter._guid);
 
           return Object.assign({}, meter, {
@@ -112,7 +112,9 @@ export class MainEffects {
       }
 
       return Observable.combineLatest([
-        newMeters && newMeters.length ? Observable.of(newMeters) : this._db.getProviderForMeters(meters),
+        metersWithRates && metersWithRates.length
+          ? Observable.of(metersWithRates)
+          : this._db.getProviderForMeters(meters),
         Observable.of(user)
       ]);
     })
