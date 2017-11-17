@@ -136,11 +136,12 @@ export class ArcTweenChartComponent implements OnInit {
    * @memberof ArcTweenChartComponent
    */
   draw() {
+    const viewBoxWithMultiplier = 1.2;
     const svg = d3.select(this.element).select("svg")
-      .attr("viewBox", "0 0 " + this.viewBoxWidth + " " + this.viewBoxHeight);
+      .attr("viewBox", "0 0 " + this.viewBoxWidth * viewBoxWithMultiplier + " " + this.viewBoxHeight);
 
     const vis = d3.select(this.element).select("svg").select("g")
-      .attr("transform", "translate(" + (this.margin.left + this.diameter / 2) + ","
+      .attr("transform", "translate(" + (this.margin.left + this.diameter / 2) * viewBoxWithMultiplier + ","
         + (this.margin.top + this.diameter / 2) + ")");
 
     // Outer arc

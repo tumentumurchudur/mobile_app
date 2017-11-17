@@ -5,8 +5,8 @@ import { AppState } from '../../../store/reducers';
 import { StoreServices } from "../../../store/services";
 
 import { Observable } from "rxjs/Observable";
-import { IUser, IMeter } from '../../../interfaces';
-import { chartConfigs } from "../../../configs";
+import { IUser, IMeter, ILineItem } from '../../../interfaces';
+import { chartConfigs, navigationConfigs } from "../../../configs";
 
 const MAX_NUM_OF_CHARTS: number = 15;
 
@@ -18,25 +18,21 @@ export class UtilitySpendingComponent implements OnInit {
   @Input() user: IUser | null;
 
   private _meters: Observable<IMeter[] | null>;
-  private _navigationItems = {
-    ARC_CHART: "arc-chart",
-    LINE_CHART: "line-chart",
-    COMPARISON: "comparison",
-    EDIT: "edit"
-  };
+  private _navigationItems = navigationConfigs;
   private _currentNavigationItems: string[] = [];
   private _currentNavigationIndex: number = 0;
 
   // TODO: Remove once wired it up to meter reads.
-  private _lineChartData: any[] = [
-    { date: new Date("11/1/2017"), close: 30.13 },
-    { date: new Date("11/5/2017"), close: 15.98 },
-    { date: new Date("11/15/2017"), close: 61.25 },
-    { date: new Date("11/21/2017"), close: 10.25 },
-    { date: new Date("11/26/2017"), close: 6.25 },
-    { date: new Date("11/27/2017"), close: 45.25 },
-    { date: new Date("11/29/2017"), close: 100.25 },
-    { date: new Date("11/30/2017"), close: 85.25 }
+  private _lineChartData: ILineItem[] = [
+    { date: new Date("11/1/2017"),  line1: 30.13, line2: 25.15, line3: 15 },
+    { date: new Date("11/5/2017"),  line1: 15.98, line2: 35.15, line3: 25 },
+    { date: new Date("11/15/2017"), line1: 61.25, line2: 15.15, line3: 35 },
+    { date: new Date("11/21/2017"), line1: 10.25, line2: 45.15, line3: 125 },
+    { date: new Date("11/24/2017"), line1: 24.25, line2: 45.15, line3: 125 },
+    { date: new Date("11/27/2017"), line1: 66.25, line2: 25.15, line3: 25 },
+    { date: new Date("11/28/2017"), line1: 10.25, line2: 45.15, line3: 125 },
+    { date: new Date("11/29/2017"), line1: 24.25, line2: 45.15, line3: 125 },
+    { date: new Date("11/30/2017"), line1: 66.25, line2: 25.15, line3: 25 }
   ];
 
   constructor(
