@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Store } from "@ngrx/store";
 import { AppState } from "../reducers";
-import { LoadMeters, LoadFromDb, AddUser, UpdateUser } from "../actions";
-import { IUser } from "../../interfaces";
+import { LoadMeters, LoadFromDb, AddUser, UpdateUser, AddRates } from "../actions";
+import { IUser, IRates } from "../../interfaces";
+import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class StoreServices {
@@ -35,6 +36,14 @@ export class StoreServices {
 
 	public updateUser(user: IUser) {
 		this._store.dispatch(new UpdateUser(user));
+	}
+
+	public addRates(rates: IRates[]) {
+		this._store.dispatch(new AddRates(rates));
+	}
+
+	public getRates(): Observable<IRates[]> {
+		return this._store.select(state => state.rates);
 	}
 
 }

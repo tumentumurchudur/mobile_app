@@ -14,7 +14,7 @@ export interface IMeter {
   _type: string,
   _ncmpAvgGuid: string,
   _ncmpEffGuid: string,
-  _reads: IRead[],
+  _reads: any[],
   _usage: number,
   _utilityType: string,
   _utilityUnit: string,

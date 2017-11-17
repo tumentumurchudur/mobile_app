@@ -4,6 +4,7 @@ import { IMeter, IUser } from '../../interfaces';
 export const LOAD_METERS: string = "LOAD_METERS"
 export const ADD_METERS: string = "ADD_METERS";
 export const LOAD_FROM_DB: string = "LOAD FROM DB";
+export const ADD_RATES: string = "ADD RATES";
 
 export class LoadMeters implements Action {
 	public readonly type = LOAD_METERS;
@@ -32,5 +33,14 @@ export class LoadFromDb implements Action {
 	}
 }
 
+export class AddRates implements Action {
+	public readonly type = ADD_RATES;
+	public payload: any | null;
 
-export type Actions = AddMeters | LoadMeters | LoadFromDb;
+	constructor(private _payload: any) {
+		this.payload = _payload;
+	}
+}
+
+
+export type Actions = AddMeters | LoadMeters | LoadFromDb | AddRates;

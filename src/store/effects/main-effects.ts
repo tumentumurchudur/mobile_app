@@ -9,7 +9,7 @@ import "rxjs/add/operator/switchMap";
 import "rxjs/add/observable/combineLatest";
 import "rxjs/add/observable/fromPromise";
 
-import { LOAD_METERS, LOAD_FROM_DB, AddMeters, LoadFromDb } from "../actions";
+import { LOAD_METERS, LOAD_FROM_DB, AddMeters, LoadFromDb, AddProviders } from "../actions";
 import { DatabaseProvider } from "../../providers";
 import { IMeter, IUser } from "../../interfaces";
 import { StoreServices } from "../../store/services";
@@ -43,7 +43,7 @@ export class MainEffects {
     })
     .map((values: any[]) => {
       const [meters = [], user] = values;
-
+      console.log("meters", meters);
       // Load data from API.
       if (!meters.length) {
         return new LoadFromDb(user);
@@ -92,13 +92,43 @@ export class MainEffects {
     .switchMap((values: any[]) => {
       const [meters, user] = values;
 
+      // Check if rates data is already fetched.
+      let rates: any;
+      this._storeServices.getRates().subscribe(data => {
+        rates = data;
+      });
+
+      let newMeters: any[];
+      if (rates && rates.length) {
+        newMeters = meters.map((meter: IMeter) => {
+          const rate = rates.find(r => r._guid === meter._guid);
+
+          return Object.assign({}, meter, {
+            _summer: rate._summer,
+            _winter: rate._winter,
+            _facilityFee: rate._facilityFee
+          });
+        });
+      }
+
       return Observable.combineLatest([
-        this._db.getProviderForMeters(meters),
+        newMeters && newMeters.length ? Observable.of(newMeters) : this._db.getProviderForMeters(meters),
         Observable.of(user)
       ]);
     })
     .map((values: any[]) => {
       const [meters, user] = values;
+
+      // Update rates data in the store.
+      const rates = meters.map((meter: IMeter) => {
+        return {
+          _guid: meter._guid,
+          _winter: meter._winter,
+          _summer: meter._summer,
+          _facilityFee: meter._facilityFee
+        };
+      });
+      this._storeServices.addRates(rates);
 
       // Sets sum of reads diffs to _usage property.
       this._helper.calcUsageDiffs(meters);

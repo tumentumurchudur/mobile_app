@@ -3,7 +3,9 @@ export {
 	LoadMeters,
 	AddMeters,
 	LoadFromDb,
+	AddRates,
 	LOAD_METERS,
 	ADD_METERS,
-	LOAD_FROM_DB
+	LOAD_FROM_DB,
+	ADD_RATES
 } from "./actions";

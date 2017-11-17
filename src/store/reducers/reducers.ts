@@ -1,5 +1,5 @@
 import { ActionReducerMap, MetaReducer } from "@ngrx/store";
-import { IMeter, IUser, IRead } from '../../interfaces';
+import { IMeter, IUser, IRead, IRates } from '../../interfaces';
 import * as ActionTypes from '../actions';
 import { convertConfigs } from "../../configs";
 
@@ -9,7 +9,8 @@ import { environment } from '../../environments/environment'; // Angular CLI env
 export interface AppState {
 	meters: IMeter[] | null;
 	user: IUser | null,
-	reads: [string, IRead][] | null // [meter_guid, IRead][]
+	reads: [string, IRead][] | null,
+	rates: IRates[]
 }
 
 export interface MeterState {
@@ -20,6 +21,10 @@ export interface UserState {
 	user: IUser | null
 }
 
+export interface RatesState {
+	rates: IRates[] | null
+}
+
 export const meterReducerMap: ActionReducerMap<MeterState> = {
 	meters: meterReducer
 }
@@ -28,11 +33,16 @@ export const userReducerMap: ActionReducerMap<UserState> = {
 	user: userReducer
 }
 
+export const ratesReducerMap: ActionReducerMap<RatesState> = {
+	rates: ratesReducer
+}
+
 export const reducers: ActionReducerMap<AppState> = {
 	meters: meterReducer,
 	user: userReducer,
 	// TODO: Implement reducer for reads.
-	reads: null
+	reads: null,
+	rates: ratesReducer
 };
 
 export function meterReducer(state: IMeter[] = [], action): IMeter[] {
@@ -59,6 +69,15 @@ export function userReducer(state: IUser = userDefault, action): IUser {
 		case ActionTypes.UPDATE_USER: {
 			return Object.assign({}, state, action.payload);
 		}
+		default:
+			return state;
+	}
+}
+
+export function ratesReducer(state: IRates[] = [], action): IRates[] {
+	switch(action.type) {
+		case ActionTypes.ADD_RATES:
+			return action.payload;
 		default:
 			return state;
 	}
