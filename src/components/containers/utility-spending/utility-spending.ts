@@ -1,7 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
 
-import { Store } from '@ngrx/store';
-import { AppState } from '../../../store/reducers';
 import { StoreServices } from "../../../store/services";
 
 import { Observable } from "rxjs/Observable";
@@ -36,7 +34,6 @@ export class UtilitySpendingComponent implements OnInit {
   ];
 
   constructor(
-    private _store: Store<AppState>,
     private _storeServices: StoreServices
   ) {
     this._meters = this._storeServices.selectMeters();
