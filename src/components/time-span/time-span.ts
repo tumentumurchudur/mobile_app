@@ -2,7 +2,6 @@ import { Component, EventEmitter, Output, Input } from '@angular/core';
 import { AlertController } from 'ionic-angular';
 import { timeSpanConfigs } from "../../configs";
 
-
 @Component({
   selector: 'time-span',
   templateUrl: 'time-span.html'
