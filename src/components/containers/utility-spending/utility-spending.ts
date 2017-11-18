@@ -90,4 +90,8 @@ export class UtilitySpendingComponent implements OnInit {
     this._currentNavigationIndex = item.index;
   }
 
+  private _onTimeSpanTap() {
+
+  }
+
 }

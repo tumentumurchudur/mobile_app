@@ -1,5 +1,7 @@
 import { Component, EventEmitter, Output, Input } from '@angular/core';
-import {AlertController, DateTime} from 'ionic-angular';
+import { AlertController } from 'ionic-angular';
+import { timeSpanConfigs } from "../../configs";
+
 
 @Component({
   selector: 'time-span',
@@ -7,30 +9,17 @@ import {AlertController, DateTime} from 'ionic-angular';
 })
 export class TimeSpanComponent {
 
-  constructor(private alertCtrl: AlertController) {
-
-  }
-
-
-  private _today = Date.now();
-  // TODO: Move these to configs.
-  private _timespanSelections: Array<string> = [
-    "hour",
-    "day",
-    "week",
-    "month",
-    "year"
-  ];
-
   @Input() index: number = 0;
   @Output() itemTapped = new EventEmitter<any>();
 
-  private _currentTimespan: string = this._timespanSelections[1];
+  private _currentTimespan = timeSpanConfigs.DAY;
 
-  private _onTap(item: string) {
-    this._currentTimespan = item;
+  constructor(private alertCtrl: AlertController) {
+  }
 
-    this.itemTapped.emit({ selection: this._currentTimespan, index: this.index });
+  private _onTap(action: string) {
+
+    this.itemTapped.emit({direction: action, timeSpan: this._currentTimespan})
   }
 
   changeTimeSpan() {
@@ -38,21 +27,15 @@ export class TimeSpanComponent {
 
     alert.setCssClass('timespan-alert');
 
-    this._timespanSelections.forEach((timespan) => {
+    for(const timespan in timeSpanConfigs) {
       alert.addButton({
-        text: timespan,
+        text: timeSpanConfigs[timespan],
         handler: () => {
-          this._currentTimespan = timespan;
+          this._currentTimespan = timeSpanConfigs[timespan];
         }
       });
-    });
-
-    // 'null' means 'now'
+    };
     alert.present();
-  }
-
-  adjacentDateRangePeriod() {
-
   }
 
 }

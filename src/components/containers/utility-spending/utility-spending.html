@@ -45,6 +45,12 @@
         class="card-content"
         *ngIf="_currentNavigationItems[i] === _navigationItems.LINE_CHART"
       >
+        <time-span
+        (itemTapped)="_onTimeSpanTap($event)"
+        >
+          <!--TODO: Have component handle startDate and logic from timeSpan to display current time-->
+          {{date | date}}
+        </time-span>
         <line-chart
           [data]="_lineChartData"
           [series]="['line1', 'line2', 'line3']"
