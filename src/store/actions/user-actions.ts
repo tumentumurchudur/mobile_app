@@ -6,7 +6,7 @@ export const UPDATE_USER: string = "UPDATE USER";
 
 export class AddUser implements Action {
 	public readonly type = ADD_USER;
-	public payload: IUser | null = null;
+	public payload: IUser | null;
 
 	constructor(private _payload: IUser) {
 		this.payload = _payload;
@@ -15,11 +15,9 @@ export class AddUser implements Action {
 
 export class UpdateUser implements Action {
 	public readonly type = UPDATE_USER;
-	public payload: IUser | null = null;
+	public payload: IUser | null;
 
 	constructor(private _payload: IUser) {
 		this.payload = _payload;
 	}
 }
-
-export type Actions = AddUser | UpdateUser
