@@ -91,15 +91,17 @@ export class MainEffects {
     })
     .switchMap((values: any[]) => {
       const [meters, user] = values;
-      let rates: IRates[];
-      let metersWithRates: any[];
 
-      // Gets rates data from the store if available.
-      this._storeServices.selectRates().subscribe((data: IRates[]) => {
-        rates = data;
-      });
+      return Observable.combineLatest([
+        Observable.of(meters),
+        this._storeServices.selectRates().take(1),
+        Observable.of(user)
+      ]);
+    })
+    .switchMap((values: any[]) => {
+      const [meters, rates, user] = values;
+      let metersWithRates: IMeter[];
 
-      // Check if rates data is available in the store.
       if (rates && rates.length) {
         // Adds rates data to meters data since it is already available in the store.
         metersWithRates = meters.map((meter: IMeter) => {
@@ -117,22 +119,25 @@ export class MainEffects {
         metersWithRates && metersWithRates.length
           ? Observable.of(metersWithRates)
           : this._db.getProviderForMeters(meters),
+        Observable.of(rates),
         Observable.of(user)
       ]);
     })
     .map((values: any[]) => {
-      const [meters, user] = values;
+      const [meters, rates, user] = values;
 
-      // Update rates data in the store.
-      const rates = meters.map((meter: IMeter) => {
-        return {
-          _guid: meter._guid,
-          _winter: meter._winter,
-          _summer: meter._summer,
-          _facilityFee: meter._facilityFee
-        };
-      });
-      this._storeServices.addRates(rates);
+      // Add rates data to the store.
+      if (!rates || !rates.length) {
+        const newRates = meters.map((meter: IMeter) => {
+          return {
+            _guid: meter._guid,
+            _winter: meter._winter,
+            _summer: meter._summer,
+            _facilityFee: meter._facilityFee
+          };
+        });
+        this._storeServices.addRates(newRates);
+      }
 
       // Sets sum of reads diffs to _usage property.
       this._helper.calcUsageDiffs(meters);
