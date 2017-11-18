@@ -9,12 +9,13 @@ import "rxjs/add/operator/switchMap";
 import "rxjs/add/observable/combineLatest";
 import "rxjs/add/observable/fromPromise";
 
-import { LOAD_METERS, LOAD_FROM_DB, AddMeters, LoadFromDb } from "../actions";
+import { LOAD_METERS, LOAD_FROM_DB, LOAD_READS_FROM_DB, AddMeters, LoadFromDb, LoadReadsFromDb } from "../actions";
 import { DatabaseProvider } from "../../providers";
 import { IMeter, IUser, IRates } from "../../interfaces";
 import { StoreServices } from "../../store/services";
 
 import { CostHelper } from "../../helpers";
+import { AddReads } from '../actions/reads-actions';
 
 @Injectable()
 export class MainEffects {
@@ -150,6 +151,30 @@ export class MainEffects {
 
       // Dispatch action to update the store.
       return new AddMeters(meters);
+    });
+
+  @Effect()
+  public loadReadsDataFromDb = this._actions$
+    .ofType(LOAD_READS_FROM_DB)
+    .map((action: any) => action.payload)
+    .switchMap((meters: IMeter[]) => {
+      return Observable.combineLatest([
+        this._db.getReadsForMeters(meters)
+      ]);
+    })
+    .flatMap((values: any[]) => {
+      const [ meters = [] ] = values;
+      const reads = meters.map((meter: IMeter) => {
+        return {
+          _guid: meter._guid,
+          _reads: meter._reads
+        }
+      });
+
+      return [
+        new AddReads(reads),
+        new AddMeters(meters)
+      ];
     });
 
   /**

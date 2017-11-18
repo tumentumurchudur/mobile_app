@@ -209,7 +209,7 @@ export class DatabaseProvider {
             });
           }
 
-          observer.next(reads);
+          observer.next({ guid: meterGuid, reads });
         }, error => {
           observer.error(error);
         });
