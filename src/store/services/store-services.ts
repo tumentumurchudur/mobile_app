@@ -1,7 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Store } from "@ngrx/store";
 import { AppState } from "../reducers";
-import { LoadMeters, LoadFromDb, AddUser, UpdateUser, AddReads, LoadReadsFromDb, LoadSummariesFromDb } from "../actions";
+import {
+	LoadMeters,
+	LoadFromDb,
+	AddUser,
+	UpdateUser,
+	AddReads,
+	LoadReadsFromDb,
+	LoadSummariesFromDb
+} from "../actions";
 import { IUser, IRates, IReads } from "../../interfaces";
 import { Observable } from 'rxjs/Observable';
 import { IMeter } from '../../interfaces/meter';

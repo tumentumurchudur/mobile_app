@@ -216,7 +216,7 @@ export class DatabaseProvider {
     });
   }
 
-  public getReadsHistory(meterGuid: string, timeSpan: string) {
+  public getSummaries(meterGuid: string, timeSpan: string) {
     return Observable.create(observer => {
       return this._readsRef
       .child(meterGuid)

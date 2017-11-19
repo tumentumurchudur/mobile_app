@@ -156,7 +156,7 @@ export class MainEffects {
         return Observable.combineLatest([
           Observable.of(guid),
           // TODO: Make time span more dynamic.
-          this._db.getReadsHistory(guid, "months")
+          this._db.getSummaries(guid, "months")
         ]);
       })
       .map((data: any[]) => {
