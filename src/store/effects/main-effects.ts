@@ -10,7 +10,7 @@ import "rxjs/add/observable/combineLatest";
 import "rxjs/add/observable/fromPromise";
 
 import { DatabaseProvider } from "../../providers";
-import { IMeter, IUser, IRates } from "../../interfaces";
+import { IMeter, IUser } from "../../interfaces";
 
 import { CostHelper } from "../../helpers";
 import {
