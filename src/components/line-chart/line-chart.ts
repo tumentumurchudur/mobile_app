@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ElementRef } from '@angular/core';
+import { Component, Input, ElementRef, OnChanges } from '@angular/core';
 import { ILineItem } from '../../interfaces';
 import * as d3 from "d3";
 
@@ -6,7 +6,7 @@ import * as d3 from "d3";
   selector: 'line-chart',
   templateUrl: 'line-chart.html'
 })
-export class LineChartComponent implements OnInit {
+export class LineChartComponent implements OnChanges {
   @Input() width: number = 330;
   @Input() height: number = 240;
   @Input() data: ILineItem[] = [];
@@ -22,7 +22,7 @@ export class LineChartComponent implements OnInit {
     this.element = element.nativeElement;
   }
 
-  ngOnInit() {
+  ngOnChanges() {
     this._draw();
   }
 

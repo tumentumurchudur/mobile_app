@@ -216,6 +216,32 @@ export class DatabaseProvider {
     });
   }
 
+  public getReadsHistory(meterGuid: string, timeSpan: string) {
+    return Observable.create(observer => {
+      return this._readsRef
+      .child(meterGuid)
+      .child(`read_summaries/${timeSpan}`)
+      .orderByKey()
+      .once("value")
+      .then(snapshot => {
+        const data = snapshot.val();
+        let reads = [];
+
+        if (data) {
+          reads = Object.keys(data).map(key => {
+            return {
+              date: new Date(data[key].lastReadTime),
+              line1: data[key].delta
+            };
+          });
+        }
+        observer.next(reads);
+      }, error => {
+        observer.error(error);
+      });
+    });
+  }
+
   /**
    * Iterates over meterObject containing meters and
    * puts the meters into an array and returns the array.
