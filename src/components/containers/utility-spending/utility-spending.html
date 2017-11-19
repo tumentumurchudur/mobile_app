@@ -46,7 +46,7 @@
         *ngIf="_currentNavigationItems[i] === _navigationItems.LINE_CHART"
       >
         <div *ngIf="_summaries | async; let summaries;">
-          <div *ngIf="summaries.length && _hasLineChartData(summaries, meter._guid); else noHistory">
+          <div *ngIf="summaries.length && _hasSummaries(summaries, meter._guid); else noHistory">
             <line-chart
               [data]="_getSummariesByGuid(summaries, meter._guid)"
               [series]="['line1']"

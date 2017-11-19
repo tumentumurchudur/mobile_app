@@ -87,7 +87,7 @@ export class UtilitySpendingComponent implements OnInit {
     return data ? data.summaries : [];
   }
 
-  private _hasLineChartData(summaries: IReadSummaries[], guid: string) {
+  private _hasSummaries(summaries: IReadSummaries[], guid: string) {
     const data = summaries.filter(summary => summary.guid === guid)[0];
 
     return data ? data.summaries.length > 0 : false;
