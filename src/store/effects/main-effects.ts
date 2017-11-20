@@ -9,13 +9,23 @@ import "rxjs/add/operator/switchMap";
 import "rxjs/add/observable/combineLatest";
 import "rxjs/add/observable/fromPromise";
 
-import { LOAD_METERS, LOAD_FROM_DB, LOAD_READS_FROM_DB, AddMeters, LoadFromDb } from "../actions";
 import { DatabaseProvider } from "../../providers";
-import { IMeter, IUser, IRates } from "../../interfaces";
+import { IMeter, IUser } from "../../interfaces";
 
 import { CostHelper } from "../../helpers";
-import { AddReads } from '../actions/reads-actions';
-import { AddUser, UpdateUser } from '../actions/user-actions';
+import {
+  LOAD_METERS,
+  LOAD_FROM_DB,
+  LOAD_READS_FROM_DB,
+  ADD_SUMMARIES,
+  LOAD_SUMMARIES_FROM_DB,
+  AddMeters,
+  LoadFromDb,
+  AddReads,
+  AddSummaries,
+  AddUser,
+  UpdateUser
+} from "../actions";
 
 @Injectable()
 export class MainEffects {
@@ -137,6 +147,23 @@ export class MainEffects {
         new AddMeters(meters)
       ];
     });
+
+    @Effect()
+    public loadSummariesFromDb = this._actions$
+      .ofType(LOAD_SUMMARIES_FROM_DB)
+      .map((action: any) => action.payload)
+      .switchMap((guid: string) => {
+        return Observable.combineLatest([
+          Observable.of(guid),
+          // TODO: Make time span more dynamic.
+          this._db.getSummaries(guid, "months")
+        ]);
+      })
+      .map((data: any[]) => {
+        const [ guid, summaries ] = data;
+
+        return new AddSummaries({ guid: guid, summaries: summaries });
+      });
 
   /**
    * Creates an instance of MainEffects.

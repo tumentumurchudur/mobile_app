@@ -1,7 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Store } from "@ngrx/store";
 import { AppState } from "../reducers";
-import { LoadMeters, LoadFromDb, AddUser, UpdateUser, AddRates, AddReads, LoadReadsFromDb } from "../actions";
+import {
+	LoadMeters,
+	LoadFromDb,
+	AddUser,
+	UpdateUser,
+	AddReads,
+	LoadReadsFromDb,
+	LoadSummariesFromDb
+} from "../actions";
 import { IUser, IRates, IReads } from "../../interfaces";
 import { Observable } from 'rxjs/Observable';
 import { IMeter } from '../../interfaces/meter';
@@ -43,14 +51,6 @@ export class StoreServices {
 		this._store.dispatch(new UpdateUser(user));
 	}
 
-	public addRates(rates: IRates[]) {
-		this._store.dispatch(new AddRates(rates));
-	}
-
-	public selectRates(): Observable<IRates[]> {
-		return this._store.select(state => state.rates);
-	}
-
 	public loadReadsFromDb(meters$: Observable<IMeter[]>) {
 		let meters: IMeter[];
 
@@ -64,7 +64,16 @@ export class StoreServices {
 		this._store.dispatch(new AddReads(reads));
 	}
 
-	public selectReads() {
-		return this._store.select(state => state.reads);
+	public loadSummariesFromDb(meters$: Observable<IMeter[]>, index: number) {
+		let meter: IMeter;
+
+		meters$.subscribe(meters => {
+			meter = meters[index];
+		});
+		this._store.dispatch(new LoadSummariesFromDb(meter._guid));
+	}
+
+	public selectSummaryReads() {
+		return this._store.select(state => state.summaries);
 	}
 }
