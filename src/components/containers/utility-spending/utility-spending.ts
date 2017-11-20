@@ -1,4 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
+import moment from 'moment';
+import StartOf = moment.unitOfTime.StartOf;
 
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../store/reducers';
@@ -21,6 +23,8 @@ export class UtilitySpendingComponent implements OnInit {
   private _navigationItems = navigationConfigs;
   private _currentNavigationItems: string[] = [];
   private _currentNavigationIndex: number = 0;
+
+  startDate: Date = new Date();
 
   // TODO: Remove once wired it up to meter reads.
   private _lineChartData: ILineItem[] = [
@@ -90,8 +94,14 @@ export class UtilitySpendingComponent implements OnInit {
     this._currentNavigationIndex = item.index;
   }
 
-  private _onTimeSpanTap() {
-
+  private _onTimeSpanTap(timeSpan) {
+    let oldStartDate = this.startDate ? moment(this.startDate).startOf(<StartOf>timeSpan): moment().startOf(<StartOf>timeSpan);
+    if (timeSpan.direction == "prev") {
+      this.startDate = oldStartDate.subtract(1, timeSpan.timeSpan ).toDate();
+      console.log("Start date", this.startDate);
+    } else if (timeSpan.direction == "next") {
+      this.startDate = oldStartDate.add(1, timeSpan.timeSpan).toDate();
+      console.log("Start date", this.startDate);
+    }
   }
-
 }
