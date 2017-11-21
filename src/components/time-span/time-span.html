@@ -6,14 +6,15 @@
       color="light"
       (tap)="_onTap('prev')"
     >
-      <ion-icon name="ios-arrow-back"></ion-icon></button>
+      <ion-icon name="ios-arrow-back"></ion-icon>
+    </button>
   </ion-col>
   <ion-col>
     <button
       class="timeSpan"
       ion-button block
       color="light"
-      (tap)="changeTimeSpan()"
+      (tap)="_changeTimeSpan()"
     >
       {{this._currentTimespan}}
     </button>
@@ -29,7 +30,6 @@
     </button>
   </ion-col>
 </ion-row>
-
 <ion-row>
   <ion-col align-self-center>
   </ion-col>

@@ -24,8 +24,8 @@ export class TimeSpanComponent {
     this.itemTapped.emit({direction: action, timeSpan: this._currentTimespan})
   }
 
-  changeTimeSpan() {
-    let alert = this.alertCtrl.create();
+  private _changeTimeSpan() {
+    const alert = this.alertCtrl.create();
 
     alert.setCssClass('timespan-alert');
 
