@@ -8,9 +8,10 @@ import {
 	UpdateUser,
 	AddReads,
 	LoadReadsFromDb,
-	LoadSummariesFromDb
+	LoadSummaries,
+	LoadingSummaries
 } from "../actions";
-import { IUser, IRates, IReads } from "../../interfaces";
+import { IUser, IReads } from "../../interfaces";
 import { Observable } from 'rxjs/Observable';
 import { IMeter } from '../../interfaces/meter';
 
@@ -64,16 +65,22 @@ export class StoreServices {
 		this._store.dispatch(new AddReads(reads));
 	}
 
-	public loadSummariesFromDb(meters$: Observable<IMeter[]>, index: number) {
+	public loadSummaries(meters$: Observable<IMeter[]>, index: number, timeSpan: string) {
 		let meter: IMeter;
 
 		meters$.subscribe(meters => {
 			meter = meters[index];
 		});
-		this._store.dispatch(new LoadSummariesFromDb(meter._guid));
+
+		this._store.dispatch(new LoadingSummaries(true));
+		this._store.dispatch(new LoadSummaries({ guid: meter._guid, timeSpan: timeSpan, summaries: [] }));
 	}
 
-	public selectSummaryReads() {
-		return this._store.select(state => state.summaries);
+	public selectSummariesData() {
+		return this._store.select(state => state.summaries.data);
+	}
+
+	public selectSummariesLoading() {
+		return this._store.select(state => state.summaries.loading);
 	}
 }
