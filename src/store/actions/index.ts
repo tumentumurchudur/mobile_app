@@ -5,11 +5,11 @@ export {
   AddReads,
   LoadReadsFromDb,
   AddSummaries,
-  LoadSummariesFromDb,
+  LoadSummaries,
   LoadingSummaries,
   ADD_READS,
   LOAD_READS_FROM_DB,
   ADD_SUMMARIES,
-  LOAD_SUMMARIES_FROM_DB,
+  LOAD_SUMMARIES,
   LOADING_SUMMARIES
 } from "./reads-actions";

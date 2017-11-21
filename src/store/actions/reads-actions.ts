@@ -4,7 +4,7 @@ import { IReads, IMeter, IReadSummaries } from '../../interfaces';
 export const ADD_READS: string = "ADD READS";
 export const LOAD_READS_FROM_DB: string = "LOAD READS FROM DB";
 export const ADD_SUMMARIES: string = "ADD SUMMARIES";
-export const LOAD_SUMMARIES_FROM_DB: string = "ADD SUMMARIES FROM DB";
+export const LOAD_SUMMARIES: string = "LOAD SUMMARIES";
 export const LOADING_SUMMARIES: string = "LOADING SUMMARIES";
 
 export class AddReads implements Action {
@@ -34,11 +34,11 @@ export class AddSummaries implements Action {
 	}
 }
 
-export class LoadSummariesFromDb implements Action {
-	public readonly type = LOAD_SUMMARIES_FROM_DB;
-	public payload: any | null;
+export class LoadSummaries implements Action {
+	public readonly type = LOAD_SUMMARIES;
+	public payload: IReadSummaries | null;
 
-	constructor(private _payload: any) {
+	constructor(private _payload: IReadSummaries) {
 		this.payload = _payload;
 	}
 }

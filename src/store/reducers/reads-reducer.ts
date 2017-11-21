@@ -28,9 +28,9 @@ export function readsReducer(state = [], action): any {
 		switch (action.type) {
 			case ActionTypes.ADD_SUMMARIES:
 				const { guid = null, timeSpan = null } = action.payload;
-				const filteredState = state.data.filter(s => s.guid !== guid && s.timeSpan !== timeSpan);
+				const filteredData = state.data.filter(s => s.guid !== guid && s.timeSpan !== timeSpan);
 
-				return Object.assign({}, state, { data: filteredState.concat(action.payload) }, { loading: false });
+				return Object.assign({}, state, { data: filteredData.concat(action.payload) }, { loading: false });
 			case ActionTypes.LOADING_SUMMARIES: {
 				return Object.assign({}, state, { loading: true });
 			}

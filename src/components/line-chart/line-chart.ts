@@ -24,24 +24,14 @@ export class LineChartComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    this.clear();
+    // TODO: Fine tune re-render logic.
+    this._clear();
     this._draw();
-    // for (const propName in changes) {
-    //   const change = changes[propName];
-
-    //   if (propName === "data") {
-    //     const curVal  = JSON.stringify(change.currentValue);
-    //     const prevVal = JSON.stringify(change.previousValue);
-
-    //     if (!curVal || !curVal.length) {
-    //       return;
-    //     }
-    //   }
-    // }
   }
 
   private _draw() {
     const delay = 100;
+    const left = 20;
     const viewBoxWithMultiplier = 1.1;
     const width = this.width - this.margin.left - this.margin.right;
     const height = this.height - this.margin.top - this.margin.bottom;
@@ -55,10 +45,12 @@ export class LineChartComponent implements OnChanges {
       .domain(d3.extent(this.data, (d: ILineItem) => d.date))
       .range([0, width]);
 
+    const maxDomain = d3.max(this.data, d => Math.max(d["line1"] || 0, d["line2"] || 0, d["line3"] || 0));
+
     // set the domain and ranges for y axis
     const y = d3.scaleLinear()
       // TODO: make col names more dynamic.
-      .domain([0, d3.max(this.data, d => Math.max(d["line1"] || 0, d["line2"] || 0, d["line3"] || 0))])
+      .domain([0, maxDomain])
       .range([height, 0]);
 
     this.series.forEach((colName, index) => {
@@ -82,23 +74,24 @@ export class LineChartComponent implements OnChanges {
       .tickSizeInner(-height)
       .tickFormat(d3.timeFormat(this.dateFormat));
 
+    // Calculates the range of values for Y axis.
+    let divider = "1";
+    for (let i = 0; i < parseInt(maxDomain).toString().length - 2; i++) {
+      divider += "0";
+    }
+
     const yAxis = d3.axisLeft(y)
       .ticks(5)
       .tickPadding(5)
       .tickSizeInner(-width)
-      .tickFormat(function (d) {
-        if ((d / 100000) >= 1) {
-          d = d / 100000 + "K";
-        }
-        return d;
-      });
+      .tickFormat(d => d / parseInt(divider));
 
     svg.append("g")
-      .attr("transform", "translate(25, 10)")
+      .attr("transform", "translate(20, 10)")
       .call(yAxis);
 
     svg.append("g")
-      .attr("transform", "translate(25," + (height + this.margin.top) + ")")
+      .attr("transform", "translate(20," + (height + this.margin.top) + ")")
       .call(xAxis);
   }
 
@@ -113,7 +106,7 @@ export class LineChartComponent implements OnChanges {
       .attr("class", "line-path")
       .attr("id", id)
       .attr("d", lineFunc(this.data))
-      .attr("transform", "translate(25, 10)")
+      .attr("transform", "translate(20, 10)")
       .attr("stroke", color)
       .attr("stroke-width", "2");
   }
@@ -122,7 +115,7 @@ export class LineChartComponent implements OnChanges {
     return svg.selectAll("dot")
       .data(this.data)
       .enter().append("svg:circle")
-      .attr("transform", "translate(25, 10)")
+      .attr("transform", "translate(20, 10)")
       .attr("r", 3)
       .attr("cx", (d) => x(d.date))
       .attr("cy", (d) => y(d[colName]))
@@ -141,8 +134,9 @@ export class LineChartComponent implements OnChanges {
       .attr("stroke-dashoffset", 0);
   }
 
-  clear() {
+  private _clear() {
     const svg = d3.select(this.element).select("svg")
+
     svg.selectAll("*").remove();
   }
 

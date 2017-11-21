@@ -24,7 +24,7 @@
             [centerLabel]="_getUnit(meter)"
             [colors]="_getColors(meter)"
             [image]="_getImage(meter)"
-            [animate]="i === 0 || i === _currentNavigationIndex"
+            [animate]="i === 0 || i === _currentMeterIndex"
           ></arc-tween-chart>
 
           <div
@@ -46,25 +46,23 @@
         *ngIf="_currentNavigationItems[i] === _navigationItems.LINE_CHART"
       >
         <div *ngIf="_loading | async; let loading">
-          <div *ngIf="loading">
-            Loading data...
-          </div>
+          <div *ngIf="loading">Loading data...</div>
         </div>
         <div *ngIf="_summaries | async; let summaries;">
-          <div *ngIf="_getSummariesByGuid(summaries, meter._guid, i).length">
+          <div *ngIf="_getSummariesByGuid(summaries, meter._guid, i).length > 0">
             <line-chart
               [data]="_getSummariesByGuid(summaries, meter._guid, i)"
               [series]="['line1']"
+              [dateFormat]="_getDateFormat(i)"
             ></line-chart>
-            <div>
-              <span (click)="_onTimeSpanClick('hours')">Hours</span>
-              <span (click)="_onTimeSpanClick('days')">Days</span>
-              <span (click)="_onTimeSpanClick('months')">Months</span>
-              <span (click)="_onTimeSpanClick('years')">Years</span>
-            </div>
           </div>
-          <div *ngIf="!summaries.length">
-            <span>No summary chart</span>
+
+          <!-- TODO: Replace by time span component -->
+          <div>
+            <span (click)="_onTimeSpanClick('hours')">Hours</span>
+            <span (click)="_onTimeSpanClick('days')">Days</span>
+            <span (click)="_onTimeSpanClick('months')">Months</span>
+            <span (click)="_onTimeSpanClick('years')">Years</span>
           </div>
         </div>
       </div>

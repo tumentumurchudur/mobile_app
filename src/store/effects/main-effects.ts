@@ -18,7 +18,7 @@ import {
   LOAD_FROM_DB,
   LOAD_READS_FROM_DB,
   ADD_SUMMARIES,
-  LOAD_SUMMARIES_FROM_DB,
+  LOAD_SUMMARIES,
   AddMeters,
   LoadFromDb,
   AddReads,
@@ -26,6 +26,7 @@ import {
   AddUser,
   UpdateUser
 } from "../actions";
+import { IReadSummaries } from '../../interfaces/read-summaries';
 
 @Injectable()
 export class MainEffects {
@@ -93,7 +94,6 @@ export class MainEffects {
     })
     .switchMap((values: any[]) => {
       const [meters, user] = values;
-      console.log(meters);
 
       return Observable.combineLatest([
         this._db.getReadsForMeters(meters),
@@ -153,9 +153,9 @@ export class MainEffects {
 
     @Effect()
     public loadSummariesFromDb = this._actions$
-      .ofType(LOAD_SUMMARIES_FROM_DB)
+      .ofType(LOAD_SUMMARIES)
       .map((action: any) => action.payload)
-      .switchMap((data: any) => {
+      .switchMap((data: IReadSummaries) => {
         return Observable.combineLatest([
           Observable.of(data.guid),
           Observable.of(data.timeSpan),
