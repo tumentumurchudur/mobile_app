@@ -1,0 +1,31 @@
+import { ActionReducerMap } from "@ngrx/store";
+import { IUser } from '../../interfaces';
+import * as ActionTypes from '../actions';
+
+export interface UserState {
+	user: IUser | null
+}
+
+export const userReducerMap: ActionReducerMap<UserState> = {
+	user: userReducer
+}
+
+const userDefault: IUser = {
+	email: null,
+	uid: null,
+	orgPath: null,
+	password: null
+}
+
+export function userReducer(state: IUser = userDefault, action): IUser {
+	switch(action.type) {
+		case ActionTypes.ADD_USER: {
+			return action.payload;
+		}
+		case ActionTypes.UPDATE_USER: {
+			return Object.assign({}, state, action.payload);
+		}
+		default:
+			return state;
+	}
+}

@@ -9,12 +9,23 @@ import "rxjs/add/operator/switchMap";
 import "rxjs/add/observable/combineLatest";
 import "rxjs/add/observable/fromPromise";
 
-import { LOAD_METERS, LOAD_FROM_DB, AddMeters, LoadFromDb } from "../actions";
 import { DatabaseProvider } from "../../providers";
 import { IMeter, IUser } from "../../interfaces";
-import { StoreServices } from "../../store/services";
 
 import { CostHelper } from "../../helpers";
+import {
+  LOAD_METERS,
+  LOAD_FROM_DB,
+  LOAD_READS_FROM_DB,
+  ADD_SUMMARIES,
+  LOAD_SUMMARIES_FROM_DB,
+  AddMeters,
+  LoadFromDb,
+  AddReads,
+  AddSummaries,
+  AddUser,
+  UpdateUser
+} from "../actions";
 
 @Injectable()
 export class MainEffects {
@@ -48,6 +59,7 @@ export class MainEffects {
       if (!meters.length) {
         return new LoadFromDb(user);
       }
+      // Load data from cache.
       return new AddMeters(meters);
     });
 
@@ -63,18 +75,14 @@ export class MainEffects {
     .ofType(LOAD_FROM_DB)
     .map((action: any) => action.payload)
     .switchMap((user: IUser) => {
-
-      // Send request for org path if it is not already in the store.
       return Observable.combineLatest([
-        user.orgPath ? Observable.of(user.orgPath) : this._db.getOrgPathForUser(user.uid),
+        this._db.getOrgPathForUser(user.uid),
         Observable.of(user)
       ]);
     })
     .switchMap((values: any[]) => {
       const [orgPath, user] = values;
-
-      // Update the user in the store once orgPath is available.
-      this._storeServices.updateUser({ orgPath } as IUser);
+      user.orgPath = orgPath;
 
       return Observable.combineLatest([
         this._db.getMetersForOrg(orgPath),
@@ -97,7 +105,7 @@ export class MainEffects {
         Observable.of(user)
       ]);
     })
-    .map((values: any[]) => {
+    .flatMap((values: any[]) => {
       const [meters, user] = values;
 
       // Sets sum of reads diffs to _usage property.
@@ -109,9 +117,53 @@ export class MainEffects {
       // Store meter data locally by uid as key.
       this._storage.set(user.uid, meters);
 
-      // Dispatch action to update the store.
-      return new AddMeters(meters);
+      // Dispatch actions to update the store.
+      return [
+        new AddMeters(meters),
+        new UpdateUser(user)
+      ];
     });
+
+  @Effect()
+  public refreshReadsDataFromDb = this._actions$
+    .ofType(LOAD_READS_FROM_DB)
+    .map((action: any) => action.payload)
+    .switchMap((meters: IMeter[]) => {
+      return Observable.combineLatest([
+        this._db.getReadsForMeters(meters)
+      ]);
+    })
+    .flatMap((values: any[]) => {
+      const [ meters = [] ] = values;
+      const reads = meters.map((meter: IMeter) => {
+        return {
+          _guid: meter._guid,
+          _reads: meter._reads
+        }
+      });
+
+      return [
+        new AddReads(reads),
+        new AddMeters(meters)
+      ];
+    });
+
+    @Effect()
+    public loadSummariesFromDb = this._actions$
+      .ofType(LOAD_SUMMARIES_FROM_DB)
+      .map((action: any) => action.payload)
+      .switchMap((guid: string) => {
+        return Observable.combineLatest([
+          Observable.of(guid),
+          // TODO: Make time span more dynamic.
+          this._db.getSummaries(guid, "months")
+        ]);
+      })
+      .map((data: any[]) => {
+        const [ guid, summaries ] = data;
+
+        return new AddSummaries({ guid: guid, summaries: summaries });
+      });
 
   /**
    * Creates an instance of MainEffects.
@@ -123,8 +175,7 @@ export class MainEffects {
     private readonly _actions$: Actions,
     private readonly _db: DatabaseProvider,
     private readonly _helper: CostHelper,
-    private readonly _storage: Storage,
-    private readonly _storeServices: StoreServices
+    private readonly _storage: Storage
   ) { }
 
 }

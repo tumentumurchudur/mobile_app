@@ -1,68 +1,26 @@
 import { ActionReducerMap, MetaReducer } from "@ngrx/store";
-import { IMeter, IUser, IRead } from '../../interfaces';
-import * as ActionTypes from '../actions';
-import { convertConfigs } from "../../configs";
+import { IMeter, IUser, IReads, IRates, IReadSummaries } from '../../interfaces';
 
 import { storeFreeze } from 'ngrx-store-freeze';
 import { environment } from '../../environments/environment'; // Angular CLI environment
 
+import { meterReducer } from "./meter-reducer";
+import { userReducer } from "./user-reducer";
+import { readsReducer, summariesReducer } from "./reads-reducer";
+
 export interface AppState {
 	meters: IMeter[] | null;
 	user: IUser | null,
-	reads: [string, IRead][] | null // [meter_guid, IRead][]
-}
-
-export interface MeterState {
-	meters: IMeter[] | null
-}
-
-export interface UserState {
-	user: IUser | null
-}
-
-export const meterReducerMap: ActionReducerMap<MeterState> = {
-	meters: meterReducer
-}
-
-export const userReducerMap: ActionReducerMap<UserState> = {
-	user: userReducer
+	reads: IReads[] | null,
+	summaries: IReadSummaries[] | null
 }
 
 export const reducers: ActionReducerMap<AppState> = {
 	meters: meterReducer,
 	user: userReducer,
-	// TODO: Implement reducer for reads.
-	reads: null
+	reads: readsReducer,
+	summaries: summariesReducer
 };
-
-export function meterReducer(state: IMeter[] = [], action): IMeter[] {
-	switch (action.type) {
-		case ActionTypes.ADD_METERS:
-			return [...action.payload];
-		default:
-			return state;
-	}
-}
-
-const userDefault: IUser = {
-	email: null,
-	uid: null,
-	orgPath: null,
-	password: null
-}
-
-export function userReducer(state: IUser = userDefault, action): IUser {
-	switch(action.type) {
-		case ActionTypes.ADD_USER: {
-			return action.payload;
-		}
-		case ActionTypes.UPDATE_USER: {
-			return Object.assign({}, state, action.payload);
-		}
-		default:
-			return state;
-	}
-}
 
 // TODO: We may use this in the future.
 /**
