@@ -10,7 +10,7 @@ import {
 	LoadReadsFromDb,
 	LoadSummariesFromDb
 } from "../actions";
-import { IUser, IRates, IReads } from "../../interfaces";
+import { IUser, IReads } from "../../interfaces";
 import { Observable } from 'rxjs/Observable';
 import { IMeter } from '../../interfaces/meter';
 
