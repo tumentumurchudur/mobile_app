@@ -45,16 +45,27 @@
         class="card-content"
         *ngIf="_currentNavigationItems[i] === _navigationItems.LINE_CHART"
       >
+        <div *ngIf="_loading | async; let loading">
+          <div *ngIf="loading">
+            Loading data...
+          </div>
+        </div>
         <div *ngIf="_summaries | async; let summaries;">
-          <div *ngIf="summaries.length && _hasSummaries(summaries, meter._guid); else noLineChart">
+          <div *ngIf="_getSummariesByGuid(summaries, meter._guid, i).length">
             <line-chart
-              [data]="_getSummariesByGuid(summaries, meter._guid)"
+              [data]="_getSummariesByGuid(summaries, meter._guid, i)"
               [series]="['line1']"
             ></line-chart>
+            <div>
+              <span (click)="_onTimeSpanClick('hours')">Hours</span>
+              <span (click)="_onTimeSpanClick('days')">Days</span>
+              <span (click)="_onTimeSpanClick('months')">Months</span>
+              <span (click)="_onTimeSpanClick('years')">Years</span>
+            </div>
           </div>
-          <ng-template #noLineChart>
-              <span>History not found</span>
-          </ng-template>
+          <div *ngIf="!summaries.length">
+            <span>No summary chart</span>
+          </div>
         </div>
       </div>
 

@@ -1,10 +1,11 @@
-import { Component, Input, ElementRef, OnChanges } from '@angular/core';
+import { Component, Input, ElementRef, OnChanges, ChangeDetectionStrategy, SimpleChanges } from '@angular/core';
 import { ILineItem } from '../../interfaces';
 import * as d3 from "d3";
 
 @Component({
   selector: 'line-chart',
-  templateUrl: 'line-chart.html'
+  templateUrl: 'line-chart.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LineChartComponent implements OnChanges {
   @Input() width: number = 330;
@@ -22,8 +23,21 @@ export class LineChartComponent implements OnChanges {
     this.element = element.nativeElement;
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges) {
+    this.clear();
     this._draw();
+    // for (const propName in changes) {
+    //   const change = changes[propName];
+
+    //   if (propName === "data") {
+    //     const curVal  = JSON.stringify(change.currentValue);
+    //     const prevVal = JSON.stringify(change.previousValue);
+
+    //     if (!curVal || !curVal.length) {
+    //       return;
+    //     }
+    //   }
+    // }
   }
 
   private _draw() {
@@ -52,7 +66,7 @@ export class LineChartComponent implements OnChanges {
       const lineFunc = this._makeLineFunc(x, y, colName);
 
        // add line paths using the line functions.
-      const path = this._addPath(lineFunc, "path" + index, this.lineColors[index]);
+      const path = this._addPath(svg, lineFunc, "path" + index, this.lineColors[index]);
 
       // add dots
       this._addDots(svg, x, y, colName, this.dotColors[index]);
@@ -71,14 +85,20 @@ export class LineChartComponent implements OnChanges {
     const yAxis = d3.axisLeft(y)
       .ticks(5)
       .tickPadding(5)
-      .tickSizeInner(-width);
+      .tickSizeInner(-width)
+      .tickFormat(function (d) {
+        if ((d / 100000) >= 1) {
+          d = d / 100000 + "K";
+        }
+        return d;
+      });
 
     svg.append("g")
-      .attr("transform", "translate(20, 10)")
+      .attr("transform", "translate(25, 10)")
       .call(yAxis);
 
     svg.append("g")
-      .attr("transform", "translate(20," + (height + this.margin.top) + ")")
+      .attr("transform", "translate(25," + (height + this.margin.top) + ")")
       .call(xAxis);
   }
 
@@ -88,10 +108,12 @@ export class LineChartComponent implements OnChanges {
       .y(d => y(d[colName]));
   }
 
-  private _addPath(lineFunc: (data: any) => any, id: string, color: string) {
-    return d3.select(this.element).select("#" + id)
+  private _addPath(svg, lineFunc: (data: any) => any, id: string, color: string) {
+    return svg.append("path")
+      .attr("class", "line-path")
+      .attr("id", id)
       .attr("d", lineFunc(this.data))
-      .attr("transform", "translate(20, 10)")
+      .attr("transform", "translate(25, 10)")
       .attr("stroke", color)
       .attr("stroke-width", "2");
   }
@@ -100,7 +122,7 @@ export class LineChartComponent implements OnChanges {
     return svg.selectAll("dot")
       .data(this.data)
       .enter().append("svg:circle")
-      .attr("transform", "translate(20, 10)")
+      .attr("transform", "translate(25, 10)")
       .attr("r", 3)
       .attr("cx", (d) => x(d.date))
       .attr("cy", (d) => y(d[colName]))
@@ -117,6 +139,11 @@ export class LineChartComponent implements OnChanges {
       .delay(delay)
       .duration(duration)
       .attr("stroke-dashoffset", 0);
+  }
+
+  clear() {
+    const svg = d3.select(this.element).select("svg")
+    svg.selectAll("*").remove();
   }
 
 }

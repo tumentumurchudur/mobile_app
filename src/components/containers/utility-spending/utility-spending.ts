@@ -17,16 +17,19 @@ export class UtilitySpendingComponent implements OnInit {
 
   private _meters: Observable<IMeter[] | null>;
   private _summaries: Observable<any[] | null>;
+  private _loading: Observable<boolean>;
 
   private _navigationItems = navigationConfigs;
   private _currentNavigationItems: string[] = [];
   private _currentNavigationIndex: number = 0;
+  private _timeSpan: string[] = [];
 
   constructor(
     private _storeServices: StoreServices
   ) {
     this._meters = this._storeServices.selectMeters();
     this._summaries = this._storeServices.selectSummaryReads();
+    this._loading = this._storeServices.selectLoadingSummariesFlag();
   }
 
   ngOnInit() {
@@ -36,6 +39,7 @@ export class UtilitySpendingComponent implements OnInit {
     // TODO: This should be more dynamic based on meters.length.
     for (let i = 0; i < MAX_NUM_OF_CHARTS; i++) {
       this._currentNavigationItems[i] = this._navigationItems.ARC_CHART;
+      this._timeSpan[i] = "months";
     }
   }
 
@@ -77,19 +81,21 @@ export class UtilitySpendingComponent implements OnInit {
     this._currentNavigationIndex = item.index;
 
     if (this._currentNavigationItems[item.index] === this._navigationItems.LINE_CHART) {
-      this._storeServices.loadSummariesFromDb(this._meters, this._currentNavigationIndex);
+      const timeSpan = this._timeSpan[item.index];
+
+      this._storeServices.loadSummariesFromDb(this._meters, this._currentNavigationIndex, timeSpan);
     }
   }
 
-  private _getSummariesByGuid(summaries: IReadSummaries[], guid: string) {
-    const data = summaries.filter(summary => summary.guid === guid)[0];
+  private _getSummariesByGuid(summaries: IReadSummaries[], guid: string, index: number) {
+    const data = summaries.filter(summary => summary.guid === guid && summary.timeSpan === this._timeSpan[index])[0];
 
     return data ? data.summaries : [];
   }
 
-  private _hasSummaries(summaries: IReadSummaries[], guid: string) {
-    const data = summaries.filter(summary => summary.guid === guid)[0];
-
-    return data ? data.summaries.length > 0 : false;
+  // TODO: Replace by handler for time span component.
+  private _onTimeSpanClick(timeSpan) {
+    this._timeSpan[this._currentNavigationIndex] = timeSpan;
+    this._storeServices.loadSummariesFromDb(this._meters, this._currentNavigationIndex, timeSpan);
   }
 }

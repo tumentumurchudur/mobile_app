@@ -4,7 +4,10 @@ import * as ActionTypes from '../actions';
 
 export interface ReadsState {
 	reads: IReads[] | null,
-	summaries: IReadSummaries[] | null
+	summaries: {
+		loading: boolean,
+		data: IReadSummaries[] | null
+	}
 }
 
 export const readsReducerMap: ActionReducerMap<ReadsState> = {
@@ -21,13 +24,16 @@ export function readsReducer(state = [], action): any {
 	}
 }
 
-	export function summariesReducer(state = [], action): IReadSummaries[] {
+	export function summariesReducer(state = { data: [], loading: true }, action) {
 		switch (action.type) {
 			case ActionTypes.ADD_SUMMARIES:
-				const { guid = null } = action.payload;
-				const filteredState = state.filter(s => s.guid !== guid);
+				const { guid = null, timeSpan = null } = action.payload;
+				const filteredState = state.data.filter(s => s.guid !== guid && s.timeSpan !== timeSpan);
 
-				return filteredState.concat(action.payload);
+				return Object.assign({}, state, { data: filteredState.concat(action.payload) }, { loading: false });
+			case ActionTypes.LOADING_SUMMARIES: {
+				return Object.assign({}, state, { loading: true });
+			}
 			default:
 				return state;
 		}

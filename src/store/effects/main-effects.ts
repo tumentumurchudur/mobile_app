@@ -81,8 +81,10 @@ export class MainEffects {
       ]);
     })
     .switchMap((values: any[]) => {
+      console.log(values);
       const [orgPath, user] = values;
-      user.orgPath = orgPath;
+      // user.orgPath = orgPath;
+      // console.log(orgPath, user);
 
       return Observable.combineLatest([
         this._db.getMetersForOrg(orgPath),
@@ -91,6 +93,7 @@ export class MainEffects {
     })
     .switchMap((values: any[]) => {
       const [meters, user] = values;
+      console.log(meters);
 
       return Observable.combineLatest([
         this._db.getReadsForMeters(meters),
@@ -152,17 +155,17 @@ export class MainEffects {
     public loadSummariesFromDb = this._actions$
       .ofType(LOAD_SUMMARIES_FROM_DB)
       .map((action: any) => action.payload)
-      .switchMap((guid: string) => {
+      .switchMap((data: any) => {
         return Observable.combineLatest([
-          Observable.of(guid),
-          // TODO: Make time span more dynamic.
-          this._db.getSummaries(guid, "months")
+          Observable.of(data.guid),
+          Observable.of(data.timeSpan),
+          this._db.getSummaries(data.guid, data.timeSpan)
         ]);
       })
       .map((data: any[]) => {
-        const [ guid, summaries ] = data;
+        const [ guid, timeSpan, summaries ] = data;
 
-        return new AddSummaries({ guid: guid, summaries: summaries });
+        return new AddSummaries({ guid: guid, timeSpan: timeSpan, summaries: summaries });
       });
 
   /**
