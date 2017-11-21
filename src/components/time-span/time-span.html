@@ -1,6 +1,7 @@
 <ion-row class="button-group">
   <ion-col>
     <button
+      [disabled]="disablePrevButton"
       ion-button block icon-only
       color="light"
       (tap)="_onTap('prev')"
@@ -19,6 +20,7 @@
   </ion-col>
   <ion-col>
     <button
+      [disabled]="disableNextButton"
       ion-button block icon-only
       color="light"
       (tap)="_onTap('next')"

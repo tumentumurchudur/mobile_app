@@ -9,6 +9,9 @@ import { timeSpanConfigs } from "../../configs";
 export class TimeSpanComponent {
 
   @Input() index: number = 0;
+  @Input() disableNextButton: boolean = false;
+  @Input() disablePrevButton: boolean = false;
+
   @Output() itemTapped = new EventEmitter<any>();
 
   private _currentTimespan = timeSpanConfigs.DAY;

@@ -25,7 +25,6 @@ export class UtilitySpendingComponent implements OnInit {
   private _currentNavigationIndex: number = 0;
 
   startDate: Date = new Date();
-  private _isNow: boolean;
 
   // TODO: Remove once wired it up to meter reads.
   private _lineChartData: ILineItem[] = [
@@ -96,14 +95,12 @@ export class UtilitySpendingComponent implements OnInit {
   }
 
   private _onTimeSpanTap(timeSpan) {
-    let oldStartDate = this.startDate ? moment(this.startDate).startOf(<StartOf>timeSpan): moment().startOf(<StartOf>timeSpan.timeSpan);
-    if (timeSpan.direction == "prev") {
-      this.startDate = oldStartDate.subtract(1, timeSpan.timeSpan ).toDate();
-      console.log("Start date", this.startDate);
-    } else if (timeSpan.direction == "next") {
-      this.startDate = oldStartDate.add(1, timeSpan.timeSpan).toDate();
-      console.log("Start date", this.startDate);
-    }
+    // let oldStartDate = this.startDate ? moment(this.startDate).startOf(<StartOf>timeSpan.timeSpan): moment().startOf(<StartOf>timeSpan.timeSpan);
+    // if (timeSpan.direction == "prev") {
+    //   this.startDate = oldStartDate.subtract(1, timeSpan.timeSpan ).toDate();
+    // } else if (timeSpan.direction == "next") {
+    //   this.startDate = oldStartDate.add(1, timeSpan.timeSpan).toDate();
+    // }
   }
 
 }
