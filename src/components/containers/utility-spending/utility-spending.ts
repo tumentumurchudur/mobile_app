@@ -104,7 +104,7 @@ export class UtilitySpendingComponent implements OnInit {
   }
 
   // TODO: Replace by handler for time span component.
-  private _onTimeSpanClick(timeSpan) {
+  private _onTimeSpanClick(timeSpan: string): void {
     this._selectedTimeSpans[this._currentMeterIndex] = timeSpan;
     this._storeServices.loadSummaries(this._meters, this._currentMeterIndex, timeSpan);
   }

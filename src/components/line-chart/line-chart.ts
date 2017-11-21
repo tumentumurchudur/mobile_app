@@ -31,7 +31,6 @@ export class LineChartComponent implements OnChanges {
 
   private _draw() {
     const delay = 100;
-    const left = 20;
     const viewBoxWithMultiplier = 1.1;
     const width = this.width - this.margin.left - this.margin.right;
     const height = this.height - this.margin.top - this.margin.bottom;
@@ -45,12 +44,11 @@ export class LineChartComponent implements OnChanges {
       .domain(d3.extent(this.data, (d: ILineItem) => d.date))
       .range([0, width]);
 
-    const maxDomain = d3.max(this.data, d => Math.max(d["line1"] || 0, d["line2"] || 0, d["line3"] || 0));
+    const maxYDomain = d3.max(this.data, d => Math.max(d["line1"] || 0, d["line2"] || 0, d["line3"] || 0));
 
     // set the domain and ranges for y axis
     const y = d3.scaleLinear()
-      // TODO: make col names more dynamic.
-      .domain([0, maxDomain])
+      .domain([0, maxYDomain])
       .range([height, 0]);
 
     this.series.forEach((colName, index) => {
@@ -76,7 +74,7 @@ export class LineChartComponent implements OnChanges {
 
     // Calculates the range of values for Y axis.
     let divider = "1";
-    for (let i = 0; i < parseInt(maxDomain).toString().length - 2; i++) {
+    for (let i = 0; i < parseInt(maxYDomain).toString().length - 2; i++) {
       divider += "0";
     }
 
@@ -101,7 +99,7 @@ export class LineChartComponent implements OnChanges {
       .y(d => y(d[colName]));
   }
 
-  private _addPath(svg, lineFunc: (data: any) => any, id: string, color: string) {
+  private _addPath(svg: any, lineFunc: (data: any) => any, id: string, color: string) {
     return svg.append("path")
       .attr("class", "line-path")
       .attr("id", id)

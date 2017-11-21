@@ -82,14 +82,12 @@ export class MainEffects {
       ]);
     })
     .switchMap((values: any[]) => {
-      console.log(values);
       const [orgPath, user] = values;
-      // user.orgPath = orgPath;
-      // console.log(orgPath, user);
+      const updatedUser = Object.assign({}, user, { orgPath });
 
       return Observable.combineLatest([
         this._db.getMetersForOrg(orgPath),
-        Observable.of(user)
+        Observable.of(updatedUser)
       ]);
     })
     .switchMap((values: any[]) => {
@@ -152,7 +150,7 @@ export class MainEffects {
     });
 
     @Effect()
-    public loadSummariesFromDb = this._actions$
+    public loadSummaries = this._actions$
       .ofType(LOAD_SUMMARIES)
       .map((action: any) => action.payload)
       .switchMap((data: IReadSummaries) => {
