@@ -25,6 +25,8 @@ $toolbar-ios-height: 5rem !important;
 $cordova-ios-statusbar-padding: 0px !important;
 $navbar-ios-height:5rem;
 $vu-white: #dddddd;
+$alert-text: #21A8DE;
+$alert-border: #9DAEB2;
 
 a {
   text-decoration: none;
@@ -61,3 +63,87 @@ a {
 .item-md.item-input.ng-valid.input-has-value:not(.input-has-focus) .item-inner {
   box-shadow: inset 0 -1px 0 0 #29ACE0 !important;
 }
+
+.timespan-alert.alert-md {
+  padding: 50px;
+
+  .alert-wrapper {
+    width: 80%;
+    position: absolute;
+    top: 9%;
+    border-radius: 0;
+  }
+
+  .alert-button-group {
+    padding: 0;
+  }
+
+  .alert-head {
+    height: 0;
+    padding: 0px !important;
+  }
+  .alert-button {
+    margin: 0;
+    border-radius: 0;
+    height: 8vh;
+    color: $alert-text !important;
+    font-size: 2.5vh;
+    border: .75px solid $alert-border;
+
+    .button-inner {
+      justify-content: center;
+    }
+  }
+}
+
+.timespan-alert.alert-ios {
+  .alert-wrapper {
+    width: 80%;
+    position: absolute;
+    top: 10%;
+    border-radius: 0;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .alert-button-group {
+    padding: 0;
+  }
+
+  .alert-message:empty {
+    padding: 0;
+  }
+
+  .alert-head {
+    height: 0;
+    padding: 0;
+  }
+
+  .alert-button {
+    margin: 0;
+    height: 8vh;
+    margin: 0;
+    border-radius: 0;
+    text-transform: capitalize;
+    color: $alert-text !important;
+    font-size: 2.5vh;
+    border: .75px solid $alert-border;
+  }
+
+  .alert-button:last-child {
+    font-weight: normal;
+  }
+}
+
+.timespan-selected {
+  background-color: $vu-white !important;
+  opacity: .5;
+}
+
+.timespan-option-btn .button-inner {
+  justify-content: center !important;
+  text-transform: capitalize;
+}
+

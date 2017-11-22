@@ -1,4 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
+import moment from 'moment';
+import StartOf = moment.unitOfTime.StartOf;
 
 import { StoreServices } from "../../../store/services";
 
@@ -87,6 +89,14 @@ export class UtilitySpendingComponent implements OnInit {
     }
   }
 
+  private _onTimeSpanTap(timeSpan) {
+    // let oldStartDate = this.startDate ? moment(this.startDate).startOf(<StartOf>timeSpan.timeSpan): moment().startOf(<StartOf>timeSpan.timeSpan);
+    // if (timeSpan.direction == "prev") {
+    //   this.startDate = oldStartDate.subtract(1, timeSpan.timeSpan ).toDate();
+    // } else if (timeSpan.direction == "next") {
+    //   this.startDate = oldStartDate.add(1, timeSpan.timeSpan).toDate();
+    // }
+  }
   private _getSummariesByGuid(summaries: IReadSummaries[], guid: string, index: number) {
     const data = summaries.filter(summary => {
       return summary.guid === guid && summary.timeSpan === this._selectedTimeSpans[index]

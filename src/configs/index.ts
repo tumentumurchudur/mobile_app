@@ -3,3 +3,4 @@ export { convertConfigs } from "./convert-configs";
 export { chartConfigs } from "./chart-configs";
 export { googleConfig } from "./social-configs";
 export { navigationConfigs  } from "./navigation-configs";
+export { timeSpanConfigs } from "./timespan-configs";

@@ -45,6 +45,8 @@
         class="card-content"
         *ngIf="_currentNavigationItems[i] === _navigationItems.LINE_CHART"
       >
+        <time-span (itemTapped)="_onTimeSpanTap($event)"></time-span>
+        <div>{{startDate | date}}</div>
         <div *ngIf="_loading | async; let loading">
           <div *ngIf="loading">Loading data...</div>
         </div>

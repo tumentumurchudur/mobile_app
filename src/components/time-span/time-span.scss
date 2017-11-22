@@ -1,0 +1,63 @@
+@import "../../styles/variables";
+
+time-span {
+  .timeSpan {
+    text-transform: capitalize;
+  }
+
+  .btn-selected {
+    color: $gull-gray !important;
+  }
+
+  .btn-selected {
+    color: $primary !important;
+  }
+
+  .button-md-light {
+    color: $primary !important;
+  }
+
+  .button-md {
+    box-shadow: none;
+    height: 3.5rem;
+  }
+
+  .button-group {
+    width: 70%;
+    margin: auto;
+    ion-col {
+      button {
+        color: #29ACE0 !important;
+        border: 1px solid #9DAEB2;
+      }
+
+      &:first-child:not(:last-child) {
+        padding-right: 0;
+        .button {
+          border-top-left-radius: 5px;
+          border-bottom-left-radius: 5px;
+          border-top-right-radius: 0px;
+          border-bottom-right-radius: 0px;
+          border-right: 0px;
+        }
+      }
+      &:not(:first-child):not(:last-child) {
+        padding-right: 0;
+        padding-left: 0;
+        .button {
+          border-radius: 0;
+        }
+      }
+      &:last-child:not(:first-child) {
+        padding-left: 0;
+        .button {
+          border-top-right-radius: 5px;
+          border-bottom-right-radius: 5px;
+          border-top-left-radius: 0px;
+          border-bottom-left-radius: 0px;
+          border-left: 0px;
+        }
+      }
+    }
+  }
+}
