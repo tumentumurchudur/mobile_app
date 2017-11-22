@@ -1,0 +1,36 @@
+<ion-row class="button-group">
+  <ion-col>
+    <button
+      [disabled]="disablePrevButton"
+      ion-button block icon-only
+      color="light"
+      (tap)="_onTap('prev')"
+    >
+      <ion-icon name="ios-arrow-back"></ion-icon>
+    </button>
+  </ion-col>
+  <ion-col>
+    <button
+      class="timeSpan"
+      ion-button block
+      color="light"
+      (tap)="_changeTimeSpan()"
+    >
+      {{this._currentTimespan}}
+    </button>
+  </ion-col>
+  <ion-col>
+    <button
+      [disabled]="disableNextButton"
+      ion-button block icon-only
+      color="light"
+      (tap)="_onTap('next')"
+    >
+      <ion-icon name="ios-arrow-forward"></ion-icon>
+    </button>
+  </ion-col>
+</ion-row>
+<ion-row>
+  <ion-col align-self-center>
+  </ion-col>
+</ion-row>

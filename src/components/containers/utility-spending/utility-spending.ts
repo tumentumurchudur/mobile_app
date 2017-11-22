@@ -88,6 +88,10 @@ export class UtilitySpendingComponent implements OnInit {
     }
   }
 
+  private _onTimeSpanTap(timeSpan) {
+    // TODO: Implement time span click.
+  }
+
   private _getSummariesByGuid(summaries: IReadSummaries[], guid: string, index: number) {
     const data = summaries.filter(summary => {
       return summary.guid === guid && summary.timeSpan === this._selectedTimeSpans[index]
