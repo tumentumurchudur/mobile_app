@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
 
 import { StoreServices } from "../../../store/services";
 
@@ -10,14 +10,15 @@ const MAX_NUM_OF_CHARTS: number = 15;
 
 @Component({
   selector: 'utility-spending',
-  templateUrl: 'utility-spending.html'
+  templateUrl: 'utility-spending.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UtilitySpendingComponent implements OnInit {
   @Input() user: IUser | null;
 
-  private _meters: Observable<IMeter[] | null>;
-  private _summaries: Observable<IReadSummaries[] | null>;
-  private _loading: Observable<boolean>;
+  private _meters$: Observable<IMeter[] | null>;
+  private _summaries$: Observable<IReadSummaries[] | null>;
+  private _loading$: Observable<boolean>;
 
   private _navigationItems = navigationConfigs;
   private _currentNavigationItems: string[] = [];
@@ -27,9 +28,9 @@ export class UtilitySpendingComponent implements OnInit {
   constructor(
     private _storeServices: StoreServices
   ) {
-    this._meters = this._storeServices.selectMeters();
-    this._summaries = this._storeServices.selectSummariesData();
-    this._loading = this._storeServices.selectSummariesLoading();
+    this._meters$ = this._storeServices.selectMeters();
+    this._summaries$ = this._storeServices.selectSummariesData();
+    this._loading$ = this._storeServices.selectSummariesLoading();
   }
 
   ngOnInit() {
@@ -73,7 +74,7 @@ export class UtilitySpendingComponent implements OnInit {
   }
 
   private reloadClick() {
-    this._storeServices.loadReadsFromDb(this._meters);
+    this._storeServices.loadReadsFromDb(this._meters$);
   }
 
   private _onNavigationItemTap(item: any) {
@@ -83,7 +84,7 @@ export class UtilitySpendingComponent implements OnInit {
     if (this._currentNavigationItems[item.index] === this._navigationItems.LINE_CHART) {
       const timeSpan = this._selectedTimeSpans[item.index];
 
-      this._storeServices.loadSummaries(this._meters, item.index, timeSpan);
+      this._storeServices.loadSummaries(this._meters$, item.index, timeSpan);
     }
   }
 
@@ -108,6 +109,8 @@ export class UtilitySpendingComponent implements OnInit {
   // TODO: Replace by handler for time span component.
   private _onTimeSpanClick(guid: string, timeSpan: string, index: number): void {
     this._selectedTimeSpans[index] = timeSpan;
-    this._storeServices.loadSummaries(this._meters, index, timeSpan);
+    this._currentMeterIndex = index;
+
+    this._storeServices.loadSummaries(this._meters$, index, timeSpan);
   }
 }

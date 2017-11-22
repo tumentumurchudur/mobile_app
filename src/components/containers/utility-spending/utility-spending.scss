@@ -33,6 +33,13 @@ utility-spending {
 		.card-content {
 			height: 63vh;
 			text-align: center;
+			position: relative;
+
+			.linechart-status {
+				position: absolute;
+				top: 25%;
+				left: 37%;
+			}
 		}
 
 		.meter-name {
