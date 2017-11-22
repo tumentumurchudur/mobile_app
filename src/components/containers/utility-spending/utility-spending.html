@@ -49,21 +49,25 @@
           <div *ngIf="loading">Loading data...</div>
         </div>
         <div *ngIf="_summaries | async; let summaries;">
-          <div *ngIf="_getSummariesByGuid(summaries, meter._guid, i).length > 0">
+          <div *ngIf="_getSummariesByGuid(summaries, meter._guid, i).length > 0; else noLineChart">
             <line-chart
               [data]="_getSummariesByGuid(summaries, meter._guid, i)"
               [series]="['line1']"
               [dateFormat]="_getDateFormat(i)"
             ></line-chart>
+
+            <!-- TODO: Replace by time span component -->
+            <div>
+              <span (click)="_onTimeSpanClick(meter._guid, 'hours', i)">Hours</span>
+              <span (click)="_onTimeSpanClick(meter._guid, 'days', i)">Days</span>
+              <span (click)="_onTimeSpanClick(meter._guid, 'months', i)">Months</span>
+              <span (click)="_onTimeSpanClick(meter._guid, 'years', i)">Years</span>
+            </div>
           </div>
 
-          <!-- TODO: Replace by time span component -->
-          <div>
-            <span (click)="_onTimeSpanClick('hours')">Hours</span>
-            <span (click)="_onTimeSpanClick('days')">Days</span>
-            <span (click)="_onTimeSpanClick('months')">Months</span>
-            <span (click)="_onTimeSpanClick('years')">Years</span>
-          </div>
+          <ng-template #noLineChart>
+            <span>No Chart Available</span>
+          </ng-template>
         </div>
       </div>
 

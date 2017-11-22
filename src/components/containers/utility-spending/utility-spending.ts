@@ -83,12 +83,14 @@ export class UtilitySpendingComponent implements OnInit {
     if (this._currentNavigationItems[item.index] === this._navigationItems.LINE_CHART) {
       const timeSpan = this._selectedTimeSpans[item.index];
 
-      this._storeServices.loadSummaries(this._meters, this._currentMeterIndex, timeSpan);
+      this._storeServices.loadSummaries(this._meters, item.index, timeSpan);
     }
   }
 
   private _getSummariesByGuid(summaries: IReadSummaries[], guid: string, index: number) {
-    const data = summaries.filter(summary => summary.guid === guid && summary.timeSpan === this._selectedTimeSpans[index])[0];
+    const data = summaries.filter(summary => {
+      return summary.guid === guid && summary.timeSpan === this._selectedTimeSpans[index]
+    })[0];
 
     return data ? data.summaries : [];
   }
@@ -104,8 +106,8 @@ export class UtilitySpendingComponent implements OnInit {
   }
 
   // TODO: Replace by handler for time span component.
-  private _onTimeSpanClick(timeSpan: string): void {
-    this._selectedTimeSpans[this._currentMeterIndex] = timeSpan;
-    this._storeServices.loadSummaries(this._meters, this._currentMeterIndex, timeSpan);
+  private _onTimeSpanClick(guid: string, timeSpan: string, index: number): void {
+    this._selectedTimeSpans[index] = timeSpan;
+    this._storeServices.loadSummaries(this._meters, index, timeSpan);
   }
 }
