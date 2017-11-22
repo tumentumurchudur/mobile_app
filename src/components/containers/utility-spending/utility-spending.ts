@@ -18,17 +18,20 @@ export class UtilitySpendingComponent implements OnInit {
   @Input() user: IUser | null;
 
   private _meters: Observable<IMeter[] | null>;
-  private _summaries: Observable<any[] | null>;
+  private _summaries: Observable<IReadSummaries[] | null>;
+  private _loading: Observable<boolean>;
 
   private _navigationItems = navigationConfigs;
   private _currentNavigationItems: string[] = [];
-  private _currentNavigationIndex: number = 0;
+  private _currentMeterIndex: number = 0;
+  private _selectedTimeSpans: string[] = [];
 
   constructor(
     private _storeServices: StoreServices
   ) {
     this._meters = this._storeServices.selectMeters();
-    this._summaries = this._storeServices.selectSummaryReads();
+    this._summaries = this._storeServices.selectSummariesData();
+    this._loading = this._storeServices.selectSummariesLoading();
   }
 
   ngOnInit() {
@@ -38,6 +41,7 @@ export class UtilitySpendingComponent implements OnInit {
     // TODO: This should be more dynamic based on meters.length.
     for (let i = 0; i < MAX_NUM_OF_CHARTS; i++) {
       this._currentNavigationItems[i] = this._navigationItems.ARC_CHART;
+      this._selectedTimeSpans[i] = "months";
     }
   }
 
@@ -76,10 +80,12 @@ export class UtilitySpendingComponent implements OnInit {
 
   private _onNavigationItemTap(item: any) {
     this._currentNavigationItems[item.index] = item.selection;
-    this._currentNavigationIndex = item.index;
+    this._currentMeterIndex = item.index;
 
     if (this._currentNavigationItems[item.index] === this._navigationItems.LINE_CHART) {
-      this._storeServices.loadSummariesFromDb(this._meters, this._currentNavigationIndex);
+      const timeSpan = this._selectedTimeSpans[item.index];
+
+      this._storeServices.loadSummaries(this._meters, item.index, timeSpan);
     }
   }
 
@@ -91,16 +97,27 @@ export class UtilitySpendingComponent implements OnInit {
     //   this.startDate = oldStartDate.add(1, timeSpan.timeSpan).toDate();
     // }
   }
-
-  private _getSummariesByGuid(summaries: IReadSummaries[], guid: string) {
-    const data = summaries.filter(summary => summary.guid === guid)[0];
+  private _getSummariesByGuid(summaries: IReadSummaries[], guid: string, index: number) {
+    const data = summaries.filter(summary => {
+      return summary.guid === guid && summary.timeSpan === this._selectedTimeSpans[index]
+    })[0];
 
     return data ? data.summaries : [];
   }
 
-  private _hasSummaries(summaries: IReadSummaries[], guid: string) {
-    const data = summaries.filter(summary => summary.guid === guid)[0];
+  // TODO: Needs to determine.
+  private _getDateFormat(index: number): string {
+    switch(this._selectedTimeSpans[index]) {
+      case "hours":
+        return "%b%y";
+      default:
+        return "%b";
+    }
+  }
 
-    return data ? data.summaries.length > 0 : false;
+  // TODO: Replace by handler for time span component.
+  private _onTimeSpanClick(guid: string, timeSpan: string, index: number): void {
+    this._selectedTimeSpans[index] = timeSpan;
+    this._storeServices.loadSummaries(this._meters, index, timeSpan);
   }
 }

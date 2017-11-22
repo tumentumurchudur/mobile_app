@@ -12,7 +12,7 @@ export interface AppState {
 	meters: IMeter[] | null;
 	user: IUser | null,
 	reads: IReads[] | null,
-	summaries: IReadSummaries[] | null
+	summaries: any | null
 }
 
 export const reducers: ActionReducerMap<AppState> = {

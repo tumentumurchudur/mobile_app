@@ -1,10 +1,11 @@
-import { Component, Input, ElementRef, OnChanges } from '@angular/core';
+import { Component, Input, ElementRef, OnChanges, ChangeDetectionStrategy, SimpleChanges } from '@angular/core';
 import { ILineItem } from '../../interfaces';
 import * as d3 from "d3";
 
 @Component({
   selector: 'line-chart',
-  templateUrl: 'line-chart.html'
+  templateUrl: 'line-chart.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LineChartComponent implements OnChanges {
   @Input() width: number = 330;
@@ -22,7 +23,9 @@ export class LineChartComponent implements OnChanges {
     this.element = element.nativeElement;
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges) {
+    // TODO: Fine tune re-render logic.
+    this._clear();
     this._draw();
   }
 
@@ -41,10 +44,11 @@ export class LineChartComponent implements OnChanges {
       .domain(d3.extent(this.data, (d: ILineItem) => d.date))
       .range([0, width]);
 
+    const maxYDomain = d3.max(this.data, d => Math.max(d["line1"] || 0, d["line2"] || 0, d["line3"] || 0));
+
     // set the domain and ranges for y axis
     const y = d3.scaleLinear()
-      // TODO: make col names more dynamic.
-      .domain([0, d3.max(this.data, d => Math.max(d["line1"] || 0, d["line2"] || 0, d["line3"] || 0))])
+      .domain([0, maxYDomain])
       .range([height, 0]);
 
     this.series.forEach((colName, index) => {
@@ -52,7 +56,7 @@ export class LineChartComponent implements OnChanges {
       const lineFunc = this._makeLineFunc(x, y, colName);
 
        // add line paths using the line functions.
-      const path = this._addPath(lineFunc, "path" + index, this.lineColors[index]);
+      const path = this._addPath(svg, lineFunc, "path" + index, this.lineColors[index]);
 
       // add dots
       this._addDots(svg, x, y, colName, this.dotColors[index]);
@@ -68,10 +72,17 @@ export class LineChartComponent implements OnChanges {
       .tickSizeInner(-height)
       .tickFormat(d3.timeFormat(this.dateFormat));
 
+    // Calculates the range of values for Y axis.
+    let divider = "1";
+    for (let i = 0; i < parseInt(maxYDomain).toString().length - 2; i++) {
+      divider += "0";
+    }
+
     const yAxis = d3.axisLeft(y)
       .ticks(5)
       .tickPadding(5)
-      .tickSizeInner(-width);
+      .tickSizeInner(-width)
+      .tickFormat(d => d / parseInt(divider));
 
     svg.append("g")
       .attr("transform", "translate(20, 10)")
@@ -88,8 +99,10 @@ export class LineChartComponent implements OnChanges {
       .y(d => y(d[colName]));
   }
 
-  private _addPath(lineFunc: (data: any) => any, id: string, color: string) {
-    return d3.select(this.element).select("#" + id)
+  private _addPath(svg: any, lineFunc: (data: any) => any, id: string, color: string) {
+    return svg.append("path")
+      .attr("class", "line-path")
+      .attr("id", id)
       .attr("d", lineFunc(this.data))
       .attr("transform", "translate(20, 10)")
       .attr("stroke", color)
@@ -117,6 +130,12 @@ export class LineChartComponent implements OnChanges {
       .delay(delay)
       .duration(duration)
       .attr("stroke-dashoffset", 0);
+  }
+
+  private _clear() {
+    const svg = d3.select(this.element).select("svg")
+
+    svg.selectAll("*").remove();
   }
 
 }
