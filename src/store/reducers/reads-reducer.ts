@@ -24,11 +24,13 @@ export function readsReducer(state = [], action): any {
 	}
 }
 
-	export function summariesReducer(state = { data: [], loading: true }, action) {
+	export function summariesReducer(state = { data: [], loading: false }, action): any {
 		switch (action.type) {
 			case ActionTypes.ADD_SUMMARIES:
 				const { guid = null, timeSpan = null } = action.payload;
-				const filteredData = state.data.filter(s => s.guid !== guid && s.timeSpan !== timeSpan);
+				const filteredData: IReadSummaries[] = state.data.filter((s: IReadSummaries) => {
+					return s.guid !== guid || s.timeSpan !== timeSpan;
+				});
 
 				return Object.assign({}, state, { data: filteredData.concat(action.payload) }, { loading: false });
 			case ActionTypes.LOADING_SUMMARIES: {
