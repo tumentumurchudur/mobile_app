@@ -18,7 +18,7 @@ import {
   LOAD_FROM_DB,
   LOAD_READS_FROM_DB,
   ADD_SUMMARIES,
-  LOAD_SUMMARIES_FROM_DB,
+  LOAD_SUMMARIES,
   AddMeters,
   LoadFromDb,
   AddReads,
@@ -26,6 +26,7 @@ import {
   AddUser,
   UpdateUser
 } from "../actions";
+import { IReadSummaries } from '../../interfaces/read-summaries';
 
 @Injectable()
 export class MainEffects {
@@ -82,11 +83,11 @@ export class MainEffects {
     })
     .switchMap((values: any[]) => {
       const [orgPath, user] = values;
-      user.orgPath = orgPath;
+      const updatedUser = Object.assign({}, user, { orgPath });
 
       return Observable.combineLatest([
         this._db.getMetersForOrg(orgPath),
-        Observable.of(user)
+        Observable.of(updatedUser)
       ]);
     })
     .switchMap((values: any[]) => {
@@ -149,20 +150,20 @@ export class MainEffects {
     });
 
     @Effect()
-    public loadSummariesFromDb = this._actions$
-      .ofType(LOAD_SUMMARIES_FROM_DB)
+    public loadSummaries = this._actions$
+      .ofType(LOAD_SUMMARIES)
       .map((action: any) => action.payload)
-      .switchMap((guid: string) => {
+      .switchMap((data: IReadSummaries) => {
         return Observable.combineLatest([
-          Observable.of(guid),
-          // TODO: Make time span more dynamic.
-          this._db.getSummaries(guid, "months")
+          Observable.of(data.guid),
+          Observable.of(data.timeSpan),
+          this._db.getSummaries(data.guid, data.timeSpan)
         ]);
       })
       .map((data: any[]) => {
-        const [ guid, summaries ] = data;
+        const [ guid, timeSpan, summaries ] = data;
 
-        return new AddSummaries({ guid: guid, summaries: summaries });
+        return new AddSummaries({ guid: guid, timeSpan: timeSpan, summaries: summaries });
       });
 
   /**
