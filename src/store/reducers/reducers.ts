@@ -11,7 +11,7 @@ import { readsReducer, summariesReducer } from "./reads-reducer";
 export interface AppState {
 	meters: IMeter[] | null;
 	user: IUser | null,
-	reads: IReads[] | null,
+	reads: any | null,
 	summaries: any | null
 }
 

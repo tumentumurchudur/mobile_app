@@ -3,15 +3,25 @@ import { IReads, IMeter, IReadSummaries } from '../../interfaces';
 
 export const ADD_READS: string = "ADD READS";
 export const LOAD_READS_FROM_DB: string = "LOAD READS FROM DB";
+export const LOAD_READS_BY_DATE: string = "LOAD READS BY DATE";
 export const ADD_SUMMARIES: string = "ADD SUMMARIES";
 export const LOAD_SUMMARIES: string = "LOAD SUMMARIES";
 export const LOADING_SUMMARIES: string = "LOADING SUMMARIES";
 
 export class AddReads implements Action {
 	public readonly type = ADD_READS;
-	public payload: IReads[] | null;
+	public payload: any | null;
 
-	constructor(private _payload: IReads[]) {
+	constructor(private _payload: any) {
+		this.payload = _payload;
+	}
+}
+
+export class LoadReadsByDateRange implements Action {
+	public readonly type = LOAD_READS_BY_DATE;
+	public payload: any | null;
+
+	constructor(private _payload: any) {
 		this.payload = _payload;
 	}
 }

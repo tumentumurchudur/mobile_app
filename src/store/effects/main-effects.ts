@@ -17,6 +17,7 @@ import {
   LOAD_METERS,
   LOAD_FROM_DB,
   LOAD_READS_FROM_DB,
+  LOAD_READS_BY_DATE,
   ADD_SUMMARIES,
   LOAD_SUMMARIES,
   AddMeters,
@@ -144,7 +145,7 @@ export class MainEffects {
       });
 
       return [
-        new AddReads(reads),
+        // new AddReads(reads),
         new AddMeters(meters)
       ];
     });
@@ -184,6 +185,32 @@ export class MainEffects {
           timeSpan: timeSpan,
           summaries: normalizedSummaries.length ? normalizedSummaries : summaries
         });
+      });
+
+    @Effect()
+    public loadReadsByDate = this._actions$
+      .ofType(LOAD_READS_BY_DATE)
+      .map((action: any) => action.payload)
+      .switchMap((values: any) => {
+        const { guid, startDate, endDate } = values;
+
+        return Observable.combineLatest([
+          Observable.of(guid),
+          Observable.of(startDate),
+          Observable.of(endDate),
+          this._db.getReadsByDateRange(guid, startDate, endDate)
+        ]);
+      })
+      .map(values => {
+        const [ guid, startDate, endDate, reads ] = values;
+        const payload = {
+          guid,
+          startDate,
+          endDate,
+          reads: reads
+        };
+
+        return new AddReads(payload);
       });
 
   /**

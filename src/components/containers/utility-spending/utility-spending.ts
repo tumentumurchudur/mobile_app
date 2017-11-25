@@ -5,6 +5,7 @@ import { StoreServices } from "../../../store/services";
 import { Observable } from "rxjs/Observable";
 import { IUser, IMeter, IReadSummaries } from '../../../interfaces';
 import { chartConfigs, navigationConfigs } from "../../../configs";
+import { IReads } from '../../../interfaces/reads';
 
 const MAX_NUM_OF_CHARTS: number = 15;
 
@@ -19,6 +20,7 @@ export class UtilitySpendingComponent implements OnInit {
   private _meters$: Observable<IMeter[] | null>;
   private _summaries$: Observable<IReadSummaries[] | null>;
   private _loading$: Observable<boolean>;
+  private _reads$: Observable<IReads[] | null>;
 
   private _navigationItems = navigationConfigs;
   private _currentNavigationItems: string[] = [];
@@ -31,6 +33,7 @@ export class UtilitySpendingComponent implements OnInit {
     this._meters$ = this._storeServices.selectMeters();
     this._summaries$ = this._storeServices.selectSummariesData();
     this._loading$ = this._storeServices.selectSummariesLoading();
+    this._reads$ = this._storeServices.selectReadsData();
   }
 
   ngOnInit() {
@@ -116,5 +119,20 @@ export class UtilitySpendingComponent implements OnInit {
     this._currentMeterIndex = index;
 
     this._storeServices.loadSummaries(this._meters$, index, timeSpan);
+  }
+
+  private _onPrevMonth(meterGuid: string) {
+    const startDate = new Date("11/1/2017");
+    const endDate = new Date("11/30/2017");
+
+    this._storeServices.loadReadsByDateRange(meterGuid, startDate, endDate);
+  }
+
+  private _getReadsByGuid(reads: IReads[], guid: string, index: number) {
+    const data = reads.filter(read => {
+      return read.guid === guid
+    })[0];
+
+    return data ? data.reads : [];
   }
 }
