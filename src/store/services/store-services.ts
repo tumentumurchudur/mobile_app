@@ -9,6 +9,7 @@ import {
 	AddReads,
 	LoadReadsFromDb,
 	LoadReadsByDateRange,
+	LoadingReads,
 	LoadSummaries,
 	LoadingSummaries
 } from "../actions";
@@ -67,7 +68,12 @@ export class StoreServices {
 	}
 
 	public loadReadsByDateRange(meterGuid: string, startDate: Date, endDate: Date) {
+		this._store.dispatch(new LoadingReads());
 		this._store.dispatch(new LoadReadsByDateRange({ guid: meterGuid, startDate, endDate }));
+	}
+
+	public selectReadsLoading() {
+		return this._store.select(state => state.reads.loading);
 	}
 
 	public loadSummaries(meters$: Observable<IMeter[]>, index: number, timeSpan: string) {
@@ -77,7 +83,7 @@ export class StoreServices {
 			meter = meters[index];
 		});
 
-		this._store.dispatch(new LoadingSummaries(true));
+		this._store.dispatch(new LoadingSummaries());
 		this._store.dispatch(new LoadSummaries({ guid: meter._guid, timeSpan: timeSpan, summaries: [] }));
 	}
 

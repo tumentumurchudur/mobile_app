@@ -50,7 +50,7 @@
           <div *ngIf="!_prevButtonClicked[i] && !_nextButtonClicked[i]">
             <line-chart
               [data]="_getSummariesByGuid(summaries, meter._guid, i)"
-              [loading]="_loading$ | async"
+              [loading]="_loadingSummaries$ | async"
               [animate]="_currentMeterIndex === i"
               [series]="['line1']"
               [dateFormat]="_getDateFormat(i)"
@@ -64,7 +64,7 @@
           <div *ngIf="_prevButtonClicked[i] || _nextButtonClicked[i]">
             <line-chart
               [data]="_getReadsByGuid(reads, meter._guid, i)"
-              [loading]="_loading$ | async"
+              [loading]="_loadingReads$ | async"
               [animate]="_currentMeterIndex === i"
               [series]="['line1']"
               [dateFormat]="_getDateFormat(i)"

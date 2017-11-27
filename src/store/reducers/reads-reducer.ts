@@ -29,6 +29,8 @@ export function readsReducer(state = { data: [], loading: false }, action): any 
 			});
 
 			return Object.assign({}, state, { data: filteredData.concat(action.payload) }, { loading: false });
+		case ActionTypes.LOADING_READS:
+			return Object.assign({}, state, { loading: true });
 		default:
 			return state;
 	}

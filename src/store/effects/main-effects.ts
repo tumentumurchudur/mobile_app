@@ -163,9 +163,19 @@ export class MainEffects {
       })
       .map((data: any[]) => {
         const [ guid, timeSpan, summaries ] = data;
+        let reducedSummaries = summaries;
+
+        // Remove elements from array if length exceeds 1000.
+        if (summaries.length >= 1000) {
+          const middleIndex = summaries.length / 2;
+          const startIndex = middleIndex - 500;
+          const endIndex = middleIndex + 500;
+
+          reducedSummaries = summaries.slice(startIndex, endIndex);
+        }
 
         // Normalize data in summaries array.
-        const allValues = summaries.map(s => s.line1);
+        const allValues = reducedSummaries.map(s => s.line1);
         const max = Math.max.apply(0, allValues);
 
         const tolerance = .5;
@@ -175,7 +185,7 @@ export class MainEffects {
         // Check if abnormal values are less than 10% of all values.
         if (largeValues.length < allValues.length * .1) {
           // Remove abnormally large values from summaries array.
-          normalizedSummaries = summaries.filter(s => {
+          normalizedSummaries = reducedSummaries.filter(s => {
             return largeValues.indexOf(s.line1) === -1 && s.line1 > 0;
           });
         }
@@ -183,7 +193,7 @@ export class MainEffects {
         return new AddSummaries({
           guid: guid,
           timeSpan: timeSpan,
-          summaries: normalizedSummaries.length ? normalizedSummaries : summaries
+          summaries: normalizedSummaries.length ? normalizedSummaries : reducedSummaries
         });
       });
 
