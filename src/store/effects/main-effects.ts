@@ -163,7 +163,27 @@ export class MainEffects {
       .map((data: any[]) => {
         const [ guid, timeSpan, summaries ] = data;
 
-        return new AddSummaries({ guid: guid, timeSpan: timeSpan, summaries: summaries });
+        // Normalize data in summaries array.
+        const allValues = summaries.map(s => s.line1);
+        const max = Math.max.apply(0, allValues);
+
+        const tolerance = .5;
+        const largeValues = allValues.filter(val => val <= max && val >= max * tolerance);
+        let normalizedSummaries = [];
+
+        // Check if abnormal values are less than 10% of all values.
+        if (largeValues.length < allValues.length * .1) {
+          // Remove abnormally large values from summaries array.
+          normalizedSummaries = summaries.filter(s => {
+            return largeValues.indexOf(s.line1) === -1 && s.line1 > 0;
+          });
+        }
+
+        return new AddSummaries({
+          guid: guid,
+          timeSpan: timeSpan,
+          summaries: normalizedSummaries.length ? normalizedSummaries : summaries
+        });
       });
 
   /**
