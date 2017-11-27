@@ -11,9 +11,9 @@ export const LOADING_SUMMARIES: string = "LOADING SUMMARIES";
 
 export class AddReads implements Action {
 	public readonly type = ADD_READS;
-	public payload: any | null;
+	public payload: IReads | null;
 
-	constructor(private _payload: any) {
+	constructor(private _payload: IReads) {
 		this.payload = _payload;
 	}
 }

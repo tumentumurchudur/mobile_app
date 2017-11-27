@@ -63,7 +63,7 @@ export class StoreServices {
 		this._store.dispatch(new LoadReadsFromDb(meters));
 	}
 
-	public addReads(reads: IReads[]) {
+	public addReads(reads: IReads) {
 		this._store.dispatch(new AddReads(reads));
 	}
 

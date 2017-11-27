@@ -10,7 +10,7 @@ import "rxjs/add/observable/combineLatest";
 import "rxjs/add/observable/fromPromise";
 
 import { DatabaseProvider } from "../../providers";
-import { IMeter, IUser } from "../../interfaces";
+import { IMeter, IUser, IReads } from "../../interfaces";
 
 import { CostHelper } from "../../helpers";
 import {
@@ -135,19 +135,10 @@ export class MainEffects {
         this._db.getReadsForMeters(meters)
       ]);
     })
-    .flatMap((values: any[]) => {
+    .map((values: any[]) => {
       const [ meters = [] ] = values;
-      const reads = meters.map((meter: IMeter) => {
-        return {
-          _guid: meter._guid,
-          _reads: meter._reads
-        }
-      });
 
-      return [
-        // new AddReads(reads),
-        new AddMeters(meters)
-      ];
+      return new AddMeters(meters);
     });
 
     @Effect()
@@ -165,11 +156,11 @@ export class MainEffects {
         const [ guid, timeSpan, summaries ] = data;
         let reducedSummaries = summaries;
 
-        // Remove elements from array if length exceeds 1000.
-        if (summaries.length >= 1000) {
+        // Remove elements from array if length exceeds 500.
+        if (summaries.length >= 500) {
           const middleIndex = summaries.length / 2;
-          const startIndex = middleIndex - 500;
-          const endIndex = middleIndex + 500;
+          const startIndex = middleIndex - 250;
+          const endIndex = middleIndex + 250;
 
           reducedSummaries = summaries.slice(startIndex, endIndex);
         }
@@ -218,7 +209,7 @@ export class MainEffects {
           startDate,
           endDate,
           reads: reads
-        };
+        } as IReads;
 
         return new AddReads(payload);
       });

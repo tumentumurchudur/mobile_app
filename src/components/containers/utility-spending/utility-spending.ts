@@ -102,7 +102,7 @@ export class UtilitySpendingComponent implements OnInit {
   private _getSummariesByGuid(summaries: IReadSummaries[], guid: string, index: number): any[] {
     const data = summaries.filter(summary => {
       return summary.guid === guid && summary.timeSpan === this._selectedTimeSpans[index]
-    })[0];
+    })[0] || null;
 
     return data ? data.summaries : [];
   }
@@ -150,7 +150,7 @@ export class UtilitySpendingComponent implements OnInit {
   }
 
   private _getReadsByGuid(reads: IReads[], guid: string, index: number): IRead[] {
-    const data = reads.filter(read => read.guid === guid)[0];
+    const data = reads.filter(read => read.guid === guid)[0] || null;
 
     return data ? ChartHelper.getDelta(data.reads) : [];
   }
