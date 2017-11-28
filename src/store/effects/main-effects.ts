@@ -12,7 +12,7 @@ import "rxjs/add/observable/fromPromise";
 import { DatabaseProvider } from "../../providers";
 import { IMeter, IUser, IReads } from "../../interfaces";
 
-import { CostHelper } from "../../helpers";
+import { CostHelper, ChartHelper } from "../../helpers";
 import {
   LOAD_METERS,
   LOAD_FROM_DB,
@@ -154,37 +154,12 @@ export class MainEffects {
       })
       .map((data: any[]) => {
         const [ guid, timeSpan, summaries ] = data;
-        let reducedSummaries = summaries;
-
-        // Remove elements from array if length exceeds 500.
-        if (summaries.length >= 500) {
-          const middleIndex = summaries.length / 2;
-          const startIndex = middleIndex - 250;
-          const endIndex = middleIndex + 250;
-
-          reducedSummaries = summaries.slice(startIndex, endIndex);
-        }
-
-        // Normalize data in summaries array.
-        const allValues = reducedSummaries.map(s => s.line1);
-        const max = Math.max.apply(0, allValues);
-
-        const tolerance = .5;
-        const largeValues = allValues.filter(val => val <= max && val >= max * tolerance);
-        let normalizedSummaries = [];
-
-        // Check if abnormal values are less than 10% of all values.
-        if (largeValues.length < allValues.length * .1) {
-          // Remove abnormally large values from summaries array.
-          normalizedSummaries = reducedSummaries.filter(s => {
-            return largeValues.indexOf(s.line1) === -1 && s.line1 > 0;
-          });
-        }
+        const normalizedSummaries = ChartHelper.normalizeLineChartData(summaries);
 
         return new AddSummaries({
           guid: guid,
           timeSpan: timeSpan,
-          summaries: normalizedSummaries.length ? normalizedSummaries : reducedSummaries
+          summaries: normalizedSummaries
         });
       });
 
@@ -204,11 +179,14 @@ export class MainEffects {
       })
       .map(values => {
         const [ guid, startDate, endDate, reads ] = values;
+        const deltas = ChartHelper.getDelta(reads);
+        const reducedDeltas = ChartHelper.normalizeLineChartData(deltas);
         const payload = {
           guid,
           startDate,
           endDate,
-          reads: reads
+          reads: reads,
+          deltas: reducedDeltas
         } as IReads;
 
         return new AddReads(payload);
