@@ -180,13 +180,13 @@ export class MainEffects {
       .map(values => {
         const [ guid, startDate, endDate, reads ] = values;
         const deltas = ChartHelper.getDelta(reads);
-        const reducedDeltas = ChartHelper.normalizeLineChartData(deltas);
+        const normalizedDeltas = ChartHelper.normalizeLineChartData(deltas);
         const payload = {
           guid,
           startDate,
           endDate,
           reads: reads,
-          deltas: reducedDeltas
+          deltas: normalizedDeltas
         } as IReads;
 
         return new AddReads(payload);
