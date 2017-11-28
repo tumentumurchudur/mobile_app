@@ -6,6 +6,7 @@ import { IUser, IMeter } from '../interfaces';
 
 import { Observable } from "rxjs/Observable";
 import "rxjs/add/observable/combineLatest";
+import { IReads } from '../interfaces/reads';
 
 @Injectable()
 export class DatabaseProvider {
@@ -239,6 +240,35 @@ export class DatabaseProvider {
       }, error => {
         observer.error(error);
       });
+    });
+  }
+
+  public getReadsByDateRange(meterGuid: string, startDate: Date, endDate: Date): Observable<IReads[]> {
+    const startAt = startDate.getTime().toString();
+    const endAt = endDate.getTime().toString();
+
+    return Observable.create(observer => {
+      return this._readsRef
+        .child(meterGuid)
+        .child("reads")
+        .orderByKey()
+        .startAt(startAt)
+        .endAt(endAt)
+        .once("value")
+        .then(snapshot => {
+          const data = snapshot.val();
+          let reads = [];
+
+          if (data) {
+            reads = Object.keys(data).map(key => {
+              return { date: key, total: data[key].total };
+            });
+          }
+
+          observer.next(reads);
+        }, error => {
+          observer.error(error);
+        });
     });
   }
 

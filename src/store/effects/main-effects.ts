@@ -10,13 +10,14 @@ import "rxjs/add/observable/combineLatest";
 import "rxjs/add/observable/fromPromise";
 
 import { DatabaseProvider } from "../../providers";
-import { IMeter, IUser } from "../../interfaces";
+import { IMeter, IUser, IReads } from "../../interfaces";
 
 import { CostHelper } from "../../helpers";
 import {
   LOAD_METERS,
   LOAD_FROM_DB,
   LOAD_READS_FROM_DB,
+  LOAD_READS_BY_DATE,
   ADD_SUMMARIES,
   LOAD_SUMMARIES,
   AddMeters,
@@ -134,19 +135,10 @@ export class MainEffects {
         this._db.getReadsForMeters(meters)
       ]);
     })
-    .flatMap((values: any[]) => {
+    .map((values: any[]) => {
       const [ meters = [] ] = values;
-      const reads = meters.map((meter: IMeter) => {
-        return {
-          _guid: meter._guid,
-          _reads: meter._reads
-        }
-      });
 
-      return [
-        new AddReads(reads),
-        new AddMeters(meters)
-      ];
+      return new AddMeters(meters);
     });
 
     @Effect()
@@ -162,9 +154,19 @@ export class MainEffects {
       })
       .map((data: any[]) => {
         const [ guid, timeSpan, summaries ] = data;
+        let reducedSummaries = summaries;
+
+        // Remove elements from array if length exceeds 500.
+        if (summaries.length >= 500) {
+          const middleIndex = summaries.length / 2;
+          const startIndex = middleIndex - 250;
+          const endIndex = middleIndex + 250;
+
+          reducedSummaries = summaries.slice(startIndex, endIndex);
+        }
 
         // Normalize data in summaries array.
-        const allValues = summaries.map(s => s.line1);
+        const allValues = reducedSummaries.map(s => s.line1);
         const max = Math.max.apply(0, allValues);
 
         const tolerance = .5;
@@ -174,7 +176,7 @@ export class MainEffects {
         // Check if abnormal values are less than 10% of all values.
         if (largeValues.length < allValues.length * .1) {
           // Remove abnormally large values from summaries array.
-          normalizedSummaries = summaries.filter(s => {
+          normalizedSummaries = reducedSummaries.filter(s => {
             return largeValues.indexOf(s.line1) === -1 && s.line1 > 0;
           });
         }
@@ -182,8 +184,34 @@ export class MainEffects {
         return new AddSummaries({
           guid: guid,
           timeSpan: timeSpan,
-          summaries: normalizedSummaries.length ? normalizedSummaries : summaries
+          summaries: normalizedSummaries.length ? normalizedSummaries : reducedSummaries
         });
+      });
+
+    @Effect()
+    public loadReadsByDate = this._actions$
+      .ofType(LOAD_READS_BY_DATE)
+      .map((action: any) => action.payload)
+      .switchMap((values: any) => {
+        const { guid, startDate, endDate } = values;
+
+        return Observable.combineLatest([
+          Observable.of(guid),
+          Observable.of(startDate),
+          Observable.of(endDate),
+          this._db.getReadsByDateRange(guid, startDate, endDate)
+        ]);
+      })
+      .map(values => {
+        const [ guid, startDate, endDate, reads ] = values;
+        const payload = {
+          guid,
+          startDate,
+          endDate,
+          reads: reads
+        } as IReads;
+
+        return new AddReads(payload);
       });
 
   /**

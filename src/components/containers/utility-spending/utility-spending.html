@@ -45,37 +45,44 @@
         class="card-content"
         *ngIf="_currentNavigationItems[i] === _navigationItems.LINE_CHART"
       >
+        <!-- Years, Months, Days and Hours -->
         <div *ngIf="_summaries$ | async as summaries">
-          <div *ngIf="_loading$ | async; else notLoading">
-            <span class="linechart-status" *ngIf="_currentMeterIndex === i">
-              Loading data...
-            </span>
-          </div>
-          <ng-template #notLoading>
-            <span
-              class="linechart-status"
-              *ngIf="!_getSummariesByGuid(summaries, meter._guid, i).length"
-            >
-              Chart not available
-            </span>
-          </ng-template>
-
-          <div *ngIf="_getSummariesByGuid(summaries, meter._guid, i).length">
+          <div *ngIf="!_prevButtonClicked[i] && !_nextButtonClicked[i]">
             <line-chart
               [data]="_getSummariesByGuid(summaries, meter._guid, i)"
+              [loading]="_loadingSummaries$ | async"
+              [animate]="_currentMeterIndex === i"
               [series]="['line1']"
               [dateFormat]="_getDateFormat(i)"
             ></line-chart>
-
-            <!-- TODO: Replace by time span component -->
-            <div>
-              <span (click)="_onTimeSpanClick(meter._guid, 'hours', i)">Hours</span>
-              <span (click)="_onTimeSpanClick(meter._guid, 'days', i)">Days</span>
-              <span (click)="_onTimeSpanClick(meter._guid, 'months', i)">Months</span>
-              <span (click)="_onTimeSpanClick(meter._guid, 'years', i)">Years</span>
-            </div>
+            <span>Count: {{ _getSummariesByGuid(summaries, meter._guid, i).length }}</span>
           </div>
         </div>
+
+        <!-- Prev and Next -->
+        <div *ngIf="_reads$ | async as reads">
+          <div *ngIf="_prevButtonClicked[i] || _nextButtonClicked[i]">
+            <line-chart
+              [data]="_getReadsByGuid(reads, meter._guid, i)"
+              [loading]="_loadingReads$ | async"
+              [animate]="_currentMeterIndex === i"
+              [series]="['line1']"
+              [dateFormat]="_getDateFormat(i)"
+            ></line-chart>
+            <span>Count: {{ _getReadsByGuid(reads, meter._guid, i).length }}</span>
+          </div>
+        </div>
+
+        <!-- TODO: Replace by time span component -->
+        <div>
+          <span (click)="_onPrevClick(meter._guid, i)">Prev</span>
+          <span (click)="_onTimeSpanClick(meter._guid, 'hours', i)">Hours</span>
+          <span (click)="_onTimeSpanClick(meter._guid, 'days', i)">Days</span>
+          <span (click)="_onTimeSpanClick(meter._guid, 'months', i)">Months</span>
+          <span (click)="_onTimeSpanClick(meter._guid, 'years', i)">Years</span>
+          <span (click)="_onNextClick(meter._guid, i)">Next</span>
+        </div>
+
       </div>
 
       <!-- Neigborhood comparison -->

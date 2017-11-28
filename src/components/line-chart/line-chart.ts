@@ -11,6 +11,8 @@ export class LineChartComponent implements OnChanges {
   @Input() width: number = 330;
   @Input() height: number = 240;
   @Input() data: ILineItem[] = [];
+  @Input() loading: boolean = false;
+  @Input() animate: boolean = false;
   @Input() lineColors: string[] = ["orange", "red", "green"];
   @Input() dotColors: string[] = ["orange", "red", "green"];
   @Input() dateFormat: string = "%m/%d";
@@ -26,7 +28,10 @@ export class LineChartComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     // TODO: Fine tune re-render logic.
     this._clear();
-    this._draw();
+
+    if (this.data && this.data.length) {
+      this._draw();
+    }
   }
 
   private _draw() {
@@ -123,13 +128,20 @@ export class LineChartComponent implements OnChanges {
   private _animatePath(path: any, delay: number = 0, duration: number = 0) {
     const totalLength = path.node().getTotalLength();
 
-    path
+    if (this.animate) {
+      path
       .attr("stroke-dasharray", totalLength + " " + totalLength)
       .attr("stroke-dashoffset", totalLength)
       .transition()
       .delay(delay)
       .duration(duration)
       .attr("stroke-dashoffset", 0);
+    } else {
+      path
+      .attr("stroke-dasharray", totalLength + " " + totalLength)
+      .attr("stroke-dashoffset", totalLength)
+      .attr("stroke-dashoffset", 0);
+    }
   }
 
   private _clear() {

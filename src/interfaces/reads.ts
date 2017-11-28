@@ -1,6 +1,8 @@
 import { IRead } from "./read";
 
 export interface IReads {
-  _guid: string | null,
-  _reads: IRead[] | null
+  guid: string | null,
+  startDate: Date | null,
+  endDate: Date | null,
+  reads: IRead[] | null
 }

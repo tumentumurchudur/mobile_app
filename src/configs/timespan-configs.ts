@@ -1,7 +1,7 @@
 export const timeSpanConfigs = {
-  HOUR: "hour",
-  DAY: "day",
-  WEEK: "week",
-  MONTH: "month",
-  YEAR: "year"
+  HOUR: "hours",
+  DAY: "days",
+  WEEK: "weeks",
+  MONTH: "months",
+  YEAR: "years"
 }

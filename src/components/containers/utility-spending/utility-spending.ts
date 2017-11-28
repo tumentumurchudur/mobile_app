@@ -3,8 +3,9 @@ import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core
 import { StoreServices } from "../../../store/services";
 
 import { Observable } from "rxjs/Observable";
-import { IUser, IMeter, IReadSummaries } from '../../../interfaces';
-import { chartConfigs, navigationConfigs } from "../../../configs";
+import { IUser, IMeter, IReadSummaries, IReads, IRead } from "../../../interfaces";
+import { chartConfigs, navigationConfigs, timeSpanConfigs } from "../../../configs";
+import { ChartHelper } from "../../../helpers";
 
 const MAX_NUM_OF_CHARTS: number = 15;
 
@@ -18,19 +19,25 @@ export class UtilitySpendingComponent implements OnInit {
 
   private _meters$: Observable<IMeter[] | null>;
   private _summaries$: Observable<IReadSummaries[] | null>;
-  private _loading$: Observable<boolean>;
+  private _loadingSummaries$: Observable<boolean>;
+  private _reads$: Observable<IReads[] | null>;
+  private _loadingReads$: Observable<boolean>;
 
   private _navigationItems = navigationConfigs;
   private _currentNavigationItems: string[] = [];
   private _currentMeterIndex: number = 0;
   private _selectedTimeSpans: string[] = [];
+  private _prevButtonClicked: boolean[] = [];
+  private _nextButtonClicked: boolean[] = [];
 
   constructor(
     private _storeServices: StoreServices
   ) {
     this._meters$ = this._storeServices.selectMeters();
     this._summaries$ = this._storeServices.selectSummariesData();
-    this._loading$ = this._storeServices.selectSummariesLoading();
+    this._loadingSummaries$ = this._storeServices.selectSummariesLoading();
+    this._reads$ = this._storeServices.selectReadsData();
+    this._loadingReads$ = this._storeServices.selectReadsLoading();
   }
 
   ngOnInit() {
@@ -40,7 +47,7 @@ export class UtilitySpendingComponent implements OnInit {
     // TODO: This should be more dynamic based on meters.length.
     for (let i = 0; i < MAX_NUM_OF_CHARTS; i++) {
       this._currentNavigationItems[i] = this._navigationItems.ARC_CHART;
-      this._selectedTimeSpans[i] = "months";
+      this._selectedTimeSpans[i] = timeSpanConfigs.MONTH;
     }
   }
 
@@ -92,10 +99,10 @@ export class UtilitySpendingComponent implements OnInit {
     // TODO: Implement time span click.
   }
 
-  private _getSummariesByGuid(summaries: IReadSummaries[], guid: string, index: number) {
+  private _getSummariesByGuid(summaries: IReadSummaries[], guid: string, index: number): any[] {
     const data = summaries.filter(summary => {
       return summary.guid === guid && summary.timeSpan === this._selectedTimeSpans[index]
-    })[0];
+    })[0] || null;
 
     return data ? data.summaries : [];
   }
@@ -114,7 +121,37 @@ export class UtilitySpendingComponent implements OnInit {
   private _onTimeSpanClick(guid: string, timeSpan: string, index: number): void {
     this._selectedTimeSpans[index] = timeSpan;
     this._currentMeterIndex = index;
+    this._prevButtonClicked[index] = false;
+    this._nextButtonClicked[index] = false;
 
     this._storeServices.loadSummaries(this._meters$, index, timeSpan);
+  }
+
+  private _onPrevClick(meterGuid: string, index: number) {
+    this._prevButtonClicked[index] = true;
+    this._nextButtonClicked[index] = false;
+
+    // TODO: Replace by time span component logic.
+    const startDate = new Date("11/1/2017");
+    const endDate = new Date("11/30/2017");
+
+    this._storeServices.loadReadsByDateRange(meterGuid, startDate, endDate);
+  }
+
+  private _onNextClick(meterGuid: string, index: number) {
+    this._nextButtonClicked[index] = true;
+    this._prevButtonClicked[index] = false;
+
+    // TODO: Replace by time span component logic.
+    const startDate = new Date("10/1/2017");
+    const endDate = new Date("10/15/2017");
+
+    this._storeServices.loadReadsByDateRange(meterGuid, startDate, endDate);
+  }
+
+  private _getReadsByGuid(reads: IReads[], guid: string, index: number): IRead[] {
+    const data = reads.filter(read => read.guid === guid)[0] || null;
+
+    return data ? ChartHelper.getDelta(data.reads) : [];
   }
 }
