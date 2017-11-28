@@ -84,19 +84,15 @@ export class UtilitySpendingComponent implements OnInit {
     this._storeServices.loadReadsFromDb(this._meters$);
   }
 
-  private _onNavigationItemTap(item: any) {
-    this._currentNavigationItems[item.index] = item.selection;
-    this._currentMeterIndex = item.index;
+  private _onNavigationItemClick(item: string, index: number) {
+    this._currentNavigationItems[index] = item;
+    this._currentMeterIndex = index;
 
-    if (this._currentNavigationItems[item.index] === this._navigationItems.LINE_CHART) {
-      const timeSpan = this._selectedTimeSpans[item.index];
+    if (this._currentNavigationItems[index] === this._navigationItems.LINE_CHART) {
+      const timeSpan = this._selectedTimeSpans[index];
 
-      this._storeServices.loadSummaries(this._meters$, item.index, timeSpan);
+      this._storeServices.loadSummaries(this._meters$, index, timeSpan);
     }
-  }
-
-  private _onTimeSpanTap(timeSpan) {
-    // TODO: Implement time span click.
   }
 
   private _getSummariesByGuid(summaries: IReadSummaries[], guid: string, index: number): any[] {
@@ -149,9 +145,9 @@ export class UtilitySpendingComponent implements OnInit {
     this._storeServices.loadReadsByDateRange(meterGuid, startDate, endDate);
   }
 
-  private _getReadsByGuid(reads: IReads[], guid: string, index: number): IRead[] {
+  private _getReadsByGuid(reads: IReads[], guid: string, index: number): any[] {
     const data = reads.filter(read => read.guid === guid)[0] || null;
 
-    return data ? ChartHelper.getDelta(data.reads) : [];
+    return data ? data.deltas : [];
   }
 }

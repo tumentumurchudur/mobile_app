@@ -4,5 +4,6 @@ export interface IReads {
   guid: string | null,
   startDate: Date | null,
   endDate: Date | null,
-  reads: IRead[] | null
+  reads: IRead[] | null,
+  deltas: any[] | null
 }

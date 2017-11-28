@@ -103,8 +103,7 @@
 
       <!-- Navigation -->
       <navigation-bar
-        [index]="i"
-        (itemTapped)="_onNavigationItemTap($event)"
+        (itemTapped)="_onNavigationItemClick($event, i)"
       ></navigation-bar>
     </ion-card>
   </div>
