@@ -176,8 +176,8 @@ export class ArcTweenChartComponent implements OnInit {
         .style("fill", this.colors[1] || "orange")
         .attr("d", arc)
         .transition()
-        .delay(100)
-        .duration(1000)
+        .delay(500)
+        .duration(800)
         .call(arcTween, outerValue * τ, arc);
 
       innerArcPath = vis.append("path")
@@ -185,8 +185,8 @@ export class ArcTweenChartComponent implements OnInit {
         .style("fill", this.colors[2] || "red")
         .attr("d", innerArc)
         .transition()
-        .delay(500)
-        .duration(1000)
+        .delay(100)
+        .duration(800)
         .call(arcTween, innerValue * τ, innerArc);
     } else {
       outerArcPath = vis.append("path")

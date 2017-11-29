@@ -66,9 +66,8 @@ export class ChartHelper {
           : moment(dateRange.endDate).add(direction === "prev" ? -1 : 1, "M");
 
         break;
-
-      // TODO: Implement
       case timeSpanConfigs.DAY:
+        break;
       case timeSpanConfigs.WEEK:
       case timeSpanConfigs.HOUR:
       case timeSpanConfigs.YEAR:

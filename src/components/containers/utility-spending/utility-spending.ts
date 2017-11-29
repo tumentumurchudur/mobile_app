@@ -140,7 +140,9 @@ export class UtilitySpendingComponent implements OnInit {
 
   private _getReadsByGuid(reads: IReads[], guid: string, index: number): any[] {
     const { startDate, endDate } = this._selectedDateRanges[index];
-    const data = reads.filter(read => read.guid === guid && read.startDate === startDate && read.endDate === endDate)[0] || null;
+    const data = reads.filter(read => {
+      return read.guid === guid && read.startDate === startDate && read.endDate === endDate
+    })[0] || null;
 
     return data ? data.deltas : [];
   }
