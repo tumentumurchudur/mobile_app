@@ -1,9 +1,9 @@
-import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectionStrategy } from "@angular/core";
 
 import { StoreServices } from "../../../store/services";
 
 import { Observable } from "rxjs/Observable";
-import { IUser, IMeter, IReadSummaries, IReads, IRead } from "../../../interfaces";
+import { IUser, IMeter, IReadSummaries, IReads, IRead, IDateRange } from "../../../interfaces";
 import { chartConfigs, navigationConfigs, timeSpanConfigs } from "../../../configs";
 import { ChartHelper } from "../../../helpers";
 
@@ -26,7 +26,7 @@ export class UtilitySpendingComponent implements OnInit {
   private _navigationItems = navigationConfigs;
   private _currentNavigationItems: string[] = [];
   private _currentMeterIndex: number = 0;
-  private _selectedTimeSpans: string[] = [];
+  private _selectedDateRanges: IDateRange[] = [];
   private _prevButtonClicked: boolean[] = [];
   private _nextButtonClicked: boolean[] = [];
 
@@ -47,7 +47,11 @@ export class UtilitySpendingComponent implements OnInit {
     // TODO: This should be more dynamic based on meters.length.
     for (let i = 0; i < MAX_NUM_OF_CHARTS; i++) {
       this._currentNavigationItems[i] = this._navigationItems.ARC_CHART;
-      this._selectedTimeSpans[i] = timeSpanConfigs.MONTH;
+      this._selectedDateRanges[i] = {
+        timeSpan: timeSpanConfigs.MONTH,
+        startDate: null,
+        endDate: null
+      } as IDateRange;
     }
   }
 
@@ -89,7 +93,7 @@ export class UtilitySpendingComponent implements OnInit {
     this._currentMeterIndex = index;
 
     if (this._currentNavigationItems[index] === this._navigationItems.LINE_CHART) {
-      const timeSpan = this._selectedTimeSpans[index];
+      const timeSpan = this._selectedDateRanges[index].timeSpan;
 
       this._storeServices.loadSummaries(this._meters$, index, timeSpan);
     }
@@ -97,7 +101,7 @@ export class UtilitySpendingComponent implements OnInit {
 
   private _getSummariesByGuid(summaries: IReadSummaries[], guid: string, index: number): any[] {
     const data = summaries.filter(summary => {
-      return summary.guid === guid && summary.timeSpan === this._selectedTimeSpans[index]
+      return summary.guid === guid && summary.timeSpan === this._selectedDateRanges[index].timeSpan
     })[0] || null;
 
     return data ? data.summaries : [];
@@ -105,7 +109,7 @@ export class UtilitySpendingComponent implements OnInit {
 
   // TODO: Needs to determine.
   private _getDateFormat(index: number): string {
-    switch(this._selectedTimeSpans[index]) {
+    switch(this._selectedDateRanges[index].timeSpan) {
       case "hours":
         return "%b%y";
       default:
@@ -115,7 +119,7 @@ export class UtilitySpendingComponent implements OnInit {
 
   // TODO: Replace by handler for time span component.
   private _onTimeSpanClick(guid: string, timeSpan: string, index: number): void {
-    this._selectedTimeSpans[index] = timeSpan;
+    this._selectedDateRanges[index].timeSpan = timeSpan;
     this._currentMeterIndex = index;
     this._prevButtonClicked[index] = false;
     this._nextButtonClicked[index] = false;
@@ -123,30 +127,20 @@ export class UtilitySpendingComponent implements OnInit {
     this._storeServices.loadSummaries(this._meters$, index, timeSpan);
   }
 
-  private _onPrevClick(meterGuid: string, index: number) {
+  private _onTimeTravelClick(direction: string, meterGuid: string, index: number) {
     this._prevButtonClicked[index] = true;
     this._nextButtonClicked[index] = false;
 
-    // TODO: Replace by time span component logic.
-    const startDate = new Date("11/1/2017");
-    const endDate = new Date("11/30/2017");
+    this._selectedDateRanges[index] = ChartHelper.getDateRange(direction, this._selectedDateRanges[index]);
 
-    this._storeServices.loadReadsByDateRange(meterGuid, startDate, endDate);
-  }
-
-  private _onNextClick(meterGuid: string, index: number) {
-    this._nextButtonClicked[index] = true;
-    this._prevButtonClicked[index] = false;
-
-    // TODO: Replace by time span component logic.
-    const startDate = new Date("10/1/2017");
-    const endDate = new Date("10/15/2017");
+    const { startDate, endDate } = this._selectedDateRanges[index];
 
     this._storeServices.loadReadsByDateRange(meterGuid, startDate, endDate);
   }
 
   private _getReadsByGuid(reads: IReads[], guid: string, index: number): any[] {
-    const data = reads.filter(read => read.guid === guid)[0] || null;
+    const { startDate, endDate } = this._selectedDateRanges[index];
+    const data = reads.filter(read => read.guid === guid && read.startDate === startDate && read.endDate === endDate)[0] || null;
 
     return data ? data.deltas : [];
   }

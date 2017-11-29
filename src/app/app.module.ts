@@ -13,6 +13,7 @@ import { AuthProvider, DatabaseProvider } from "../providers"
 import { Facebook } from "@ionic-native/facebook";
 import { GooglePlus } from "@ionic-native/google-plus";
 
+import { StoreDevtoolsModule } from "@ngrx/store-devtools";
 import { StoreModule } from "@ngrx/store";
 import { reducers, metaReducers } from '../store/reducers';
 import { EffectsModule } from '@ngrx/effects';
@@ -35,6 +36,9 @@ import { MyApp } from "./app.component";
         scrollAssist: false
       }),
     StoreModule.forRoot(reducers, { metaReducers }),
+    StoreDevtoolsModule.instrument({
+      maxAge: 25 //  Retains last 25 states
+    }),
     EffectsModule.forRoot([MainEffects]),
     IonicStorageModule.forRoot(),
     AngularFireModule.initializeApp(fireBaseConfig),

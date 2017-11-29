@@ -69,18 +69,20 @@
               [series]="['line1']"
               [dateFormat]="_getDateFormat(i)"
             ></line-chart>
-            <span>Count: {{ _getReadsByGuid(reads, meter._guid, i).length }}</span>
+            <div>Count: {{ _getReadsByGuid(reads, meter._guid, i).length }}</div>
+            <div>Date Range: {{ _selectedDateRanges[i]?.startDate | date: "shortDate" }} -
+              {{ _selectedDateRanges[i]?.endDate | date: "shortDate" }}</div>
           </div>
         </div>
 
         <!-- TODO: Replace by time span component -->
         <div>
-          <span (click)="_onPrevClick(meter._guid, i)">Prev</span>
+          <span (click)="_onTimeTravelClick('prev', meter._guid, i)">Prev</span>
           <span (click)="_onTimeSpanClick(meter._guid, 'hours', i)">Hours</span>
           <span (click)="_onTimeSpanClick(meter._guid, 'days', i)">Days</span>
           <span (click)="_onTimeSpanClick(meter._guid, 'months', i)">Months</span>
           <span (click)="_onTimeSpanClick(meter._guid, 'years', i)">Years</span>
-          <span (click)="_onNextClick(meter._guid, i)">Next</span>
+          <span (click)="_onTimeTravelClick('next', meter._guid, i)">Next</span>
         </div>
 
       </div>

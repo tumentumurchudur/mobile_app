@@ -1,5 +1,7 @@
 import { Injectable } from "@angular/core";
-import { IRead, ILineItem } from '../interfaces';
+import { IRead, ILineItem, IDateRange } from "../interfaces";
+import { timeSpanConfigs } from "../configs";
+import * as moment from "moment";
 
 export class ChartHelper {
   public static getDelta(data: IRead[]): ILineItem[] {
@@ -20,7 +22,7 @@ export class ChartHelper {
 
   public static normalizeLineChartData(data: ILineItem[]) {
     let reducedSummaries = [];
-    const maxCount = 100;
+    const maxCount = 60;
     const tolerance = .5;
 
     // Remove elements from array if length exceeds maxCount.
@@ -48,4 +50,37 @@ export class ChartHelper {
     }
     return reducedSummaries;
   }
+
+  public static getDateRange(direction: string, dateRange: IDateRange): IDateRange {
+    let startDate;
+    let endDate;
+
+    switch(dateRange.timeSpan) {
+      case timeSpanConfigs.MONTH:
+        startDate = !dateRange.startDate
+          ? moment().startOf("month")
+          : moment(dateRange.startDate).add(direction === "prev" ? -1 : 1, "M");
+
+        endDate = !dateRange.endDate
+          ? moment().endOf("month")
+          : moment(dateRange.endDate).add(direction === "prev" ? -1 : 1, "M");
+
+        break;
+
+      // TODO: Implement
+      case timeSpanConfigs.DAY:
+      case timeSpanConfigs.WEEK:
+      case timeSpanConfigs.HOUR:
+      case timeSpanConfigs.YEAR:
+      default:
+        break;
+    }
+
+    return {
+      startDate: startDate.toDate(),
+      endDate: endDate.toDate(),
+      timeSpan: dateRange.timeSpan
+    }
+  }
+
 }
