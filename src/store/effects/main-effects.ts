@@ -28,6 +28,7 @@ import {
   UpdateUser
 } from "../actions";
 import { IReadSummaries } from '../../interfaces/read-summaries';
+import { IDateRange } from '../../interfaces/date-range';
 
 @Injectable()
 export class MainEffects {
@@ -168,19 +169,26 @@ export class MainEffects {
       .ofType(LOAD_READS_BY_DATE)
       .map((action: any) => action.payload)
       .switchMap((values: any) => {
-        const { guid, startDate, endDate } = values;
+        const { guid, timeSpan, startDate, endDate } = values;
 
         return Observable.combineLatest([
           Observable.of(guid),
+          Observable.of(timeSpan),
           Observable.of(startDate),
           Observable.of(endDate),
           this._db.getReadsByDateRange(guid, startDate, endDate)
         ]);
       })
       .map(values => {
-        const [ guid, startDate, endDate, reads ] = values;
+        const [ guid, timeSpan, startDate, endDate, reads ] = values;
         const deltas = ChartHelper.getDelta(reads);
-        const normalizedDeltas = ChartHelper.normalizeLineChartData(deltas);
+
+        // const normalizedDeltas = ChartHelper.normalizeLineChartData(deltas);
+
+        const dateRange: IDateRange = { timeSpan, startDate, endDate };
+        const normalizedDeltas = ChartHelper.normalizeReads(dateRange, deltas);
+
+        console.log(timeSpan, startDate, endDate);
         const payload = {
           guid,
           startDate,

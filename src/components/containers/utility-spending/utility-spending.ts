@@ -92,7 +92,7 @@ export class UtilitySpendingComponent implements OnInit {
       this._selectedDateRanges[index].dateFormat = dateFormat;
 
       // Initiate request to load data from database for given guid, start and end dates.
-      this._storeServices.loadReadsByDateRange(meterGuid, startDate, endDate);
+      this._storeServices.loadReadsByDateRange(meterGuid, timeSpan, startDate, endDate);
     }
   }
 
@@ -108,15 +108,15 @@ export class UtilitySpendingComponent implements OnInit {
 
     this._currentMeterIndex = index;
 
-    this._storeServices.loadReadsByDateRange(meterGuid, startDate, endDate);
+    this._storeServices.loadReadsByDateRange(meterGuid, timeSpan, startDate, endDate);
   }
 
   private _onTimeTravelClick(direction: string, meterGuid: string, index: number) {
     this._selectedDateRanges[index] = ChartHelper.getDateRange(direction, this._selectedDateRanges[index]);
 
-    const { startDate, endDate } = this._selectedDateRanges[index];
+    const { timeSpan, startDate, endDate } = this._selectedDateRanges[index];
 
-    this._storeServices.loadReadsByDateRange(meterGuid, startDate, endDate);
+    this._storeServices.loadReadsByDateRange(meterGuid, timeSpan, startDate, endDate);
   }
 
   private _getReadsByGuid(reads: IReads[], guid: string, index: number): any[] {

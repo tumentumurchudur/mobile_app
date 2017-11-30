@@ -20,6 +20,31 @@ export class ChartHelper {
     return chartData;
   }
 
+  public static normalizeReads(dateRange: IDateRange, data: ILineItem[]) {
+    let { startDate, endDate, timeSpan } = dateRange;
+    const dataPoints = [];
+
+    switch(timeSpan) {
+      case timeSpanConfigs.MONTH:
+        while(startDate < endDate) {
+          const startDay = moment(startDate).startOf("day").toDate();
+          const endDay = moment(startDate).endOf("day").toDate();
+
+          const points = data.filter(d => d.date >= startDay && d.date <= endDay);
+          const total = points.reduce((a, b) => { return a + b.line1 }, 0);
+
+          dataPoints.push({ date: startDay, line1: total });
+
+          startDate = moment(startDate).add(1, "d").toDate();
+        }
+
+        break;
+      default:
+        break;
+    }
+    return dataPoints;
+  }
+
   public static normalizeLineChartData(data: ILineItem[]) {
     let reducedSummaries = [];
     const maxCount = 60;
