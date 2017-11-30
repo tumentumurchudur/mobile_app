@@ -26,10 +26,8 @@ export class LineChartComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    // TODO: Fine tune re-render logic.
-    this._clear();
-
-    if (this.data && this.data.length) {
+    if (changes.data && changes.data.currentValue !== changes.data.previousValue) {
+      this._clear();
       this._draw();
     }
   }

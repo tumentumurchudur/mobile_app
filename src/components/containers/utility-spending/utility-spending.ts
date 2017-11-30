@@ -18,8 +18,6 @@ export class UtilitySpendingComponent implements OnInit {
   @Input() user: IUser | null;
 
   private _meters$: Observable<IMeter[] | null>;
-  private _summaries$: Observable<IReadSummaries[] | null>;
-  private _loadingSummaries$: Observable<boolean>;
   private _reads$: Observable<IReads[] | null>;
   private _loadingReads$: Observable<boolean>;
 
@@ -27,15 +25,11 @@ export class UtilitySpendingComponent implements OnInit {
   private _currentNavigationItems: string[] = [];
   private _currentMeterIndex: number = 0;
   private _selectedDateRanges: IDateRange[] = [];
-  private _prevButtonClicked: boolean[] = [];
-  private _nextButtonClicked: boolean[] = [];
 
   constructor(
     private _storeServices: StoreServices
   ) {
     this._meters$ = this._storeServices.selectMeters();
-    this._summaries$ = this._storeServices.selectSummariesData();
-    this._loadingSummaries$ = this._storeServices.selectSummariesLoading();
     this._reads$ = this._storeServices.selectReadsData();
     this._loadingReads$ = this._storeServices.selectReadsLoading();
   }
@@ -47,11 +41,7 @@ export class UtilitySpendingComponent implements OnInit {
     // TODO: This should be more dynamic based on meters.length.
     for (let i = 0; i < MAX_NUM_OF_CHARTS; i++) {
       this._currentNavigationItems[i] = this._navigationItems.ARC_CHART;
-      this._selectedDateRanges[i] = {
-        timeSpan: timeSpanConfigs.DAY,
-        startDate: null,
-        endDate: null
-      } as IDateRange;
+      this._selectedDateRanges[i] = { timeSpan: timeSpanConfigs.MONTH };
     }
   }
 
@@ -88,49 +78,40 @@ export class UtilitySpendingComponent implements OnInit {
     this._storeServices.loadReadsFromDb(this._meters$);
   }
 
-  private _onNavigationItemClick(item: string, index: number) {
-    this._currentNavigationItems[index] = item;
+  private _onNavigationItemClick(selectedItem: string, index: number, meterGuid: string) {
+    this._currentNavigationItems[index] = selectedItem;
     this._currentMeterIndex = index;
 
+    // Line chart is selected.
     if (this._currentNavigationItems[index] === this._navigationItems.LINE_CHART) {
-      const timeSpan = this._selectedDateRanges[index].timeSpan;
+      const { timeSpan } = this._selectedDateRanges[index];
+      const { startDate, endDate, dateFormat } = ChartHelper.getDefaultDateRange(timeSpan);
 
-      this._storeServices.loadSummaries(this._meters$, index, timeSpan);
-    }
-  }
+      this._selectedDateRanges[index].startDate = startDate;
+      this._selectedDateRanges[index].endDate = endDate;
+      this._selectedDateRanges[index].dateFormat = dateFormat;
 
-  private _getSummariesByGuid(summaries: IReadSummaries[], guid: string, index: number): any[] {
-    const data = summaries.filter(summary => {
-      return summary.guid === guid && summary.timeSpan === this._selectedDateRanges[index].timeSpan
-    })[0] || null;
-
-    return data ? data.summaries : [];
-  }
-
-  // TODO: Needs to determine.
-  private _getDateFormat(index: number): string {
-    switch(this._selectedDateRanges[index].timeSpan) {
-      case "hours":
-        return "%b%y";
-      default:
-        return "%b";
+      // Initiate request to load data from database for given guid, start and end dates.
+      this._storeServices.loadReadsByDateRange(meterGuid, startDate, endDate);
     }
   }
 
   // TODO: Replace by handler for time span component.
-  private _onTimeSpanClick(guid: string, timeSpan, index: number): void {
-    this._selectedDateRanges[index].timeSpan = timeSpan.timeSpan;
-    this._currentMeterIndex = index;
-    this._prevButtonClicked[index] = false;
-    this._nextButtonClicked[index] = false;
+  private _onTimeSpanClick(meterGuid: string, timeSpan, index: number): void {
+    // Sets default start and end dates.
+    const { startDate, endDate, dateFormat } = ChartHelper.getDefaultDateRange(timeSpan.timeSpan);
 
-    this._storeServices.loadSummaries(this._meters$, index, timeSpan.timeSpan);
+    this._selectedDateRanges[index].timeSpan = timeSpan.timeSpan;
+    this._selectedDateRanges[index].startDate = startDate;
+    this._selectedDateRanges[index].endDate = endDate;
+    this._selectedDateRanges[index].dateFormat = dateFormat;
+
+    this._currentMeterIndex = index;
+
+    this._storeServices.loadReadsByDateRange(meterGuid, startDate, endDate);
   }
 
   private _onTimeTravelClick(direction, meterGuid: string, index: number) {
-    this._prevButtonClicked[index] = true;
-    this._nextButtonClicked[index] = false;
-
     this._selectedDateRanges[index] = ChartHelper.getDateRange(direction.direction, this._selectedDateRanges[index]);
 
     const { startDate, endDate } = this._selectedDateRanges[index];
@@ -140,7 +121,9 @@ export class UtilitySpendingComponent implements OnInit {
 
   private _getReadsByGuid(reads: IReads[], guid: string, index: number): any[] {
     const { startDate, endDate } = this._selectedDateRanges[index];
-    const data = reads.filter(read => read.guid === guid && read.startDate === startDate && read.endDate === endDate)[0] || null;
+    const data = reads.filter(read => {
+      return read.guid === guid && read.startDate === startDate && read.endDate === endDate
+    })[0] || null;
 
     return data ? data.deltas : [];
   }

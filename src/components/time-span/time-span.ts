@@ -15,14 +15,14 @@ export class TimeSpanComponent {
   @Output() changeTimeSpan = new EventEmitter<any>();
   @Output() itemTapped = new EventEmitter<any>();
 
-  private _currentTimespan = 'day';
+  private _currentTimespan = 'month';
 
   constructor(private alertCtrl: AlertController) {
   }
 
   private _onTap(action: string) {
 
-    this.itemTapped.emit({direction: action, timeSpan: this._currentTimespan})
+    this.itemTapped.emit({direction: action})
   }
 
   private _changeTimeSpan() {
