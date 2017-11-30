@@ -12,9 +12,10 @@ export class TimeSpanComponent {
   @Input() disableNextButton: boolean = false;
   @Input() disablePrevButton: boolean = false;
 
+  @Output() changeTimeSpan = new EventEmitter<any>();
   @Output() itemTapped = new EventEmitter<any>();
 
-  private _currentTimespan = timeSpanConfigs.DAY;
+  private _currentTimespan = 'day';
 
   constructor(private alertCtrl: AlertController) {
   }
@@ -31,12 +32,13 @@ export class TimeSpanComponent {
 
     for(const timespan in timeSpanConfigs) {
       alert.addButton({
-        text: timeSpanConfigs[timespan],
+        text: timeSpanConfigs[timespan].substring(0, timeSpanConfigs[timespan].length - 1),
         handler: () => {
-          this._currentTimespan = timeSpanConfigs[timespan];
+          this._currentTimespan = timeSpanConfigs[timespan].substring(0, timeSpanConfigs[timespan].length - 1);
+          this.changeTimeSpan.emit({timeSpan: timeSpanConfigs[timespan]});
         }
       });
-    };
+    }
     alert.present();
   }
 

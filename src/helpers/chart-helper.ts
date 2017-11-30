@@ -69,8 +69,38 @@ export class ChartHelper {
 
       // TODO: Implement
       case timeSpanConfigs.DAY:
+        startDate = !dateRange.startDate
+          ? moment().startOf("day")
+          : moment(dateRange.startDate).add(direction === "prev" ? -1 : 1, "day");
+
+        endDate = !dateRange.endDate
+          ? moment().endOf("day")
+          : moment(dateRange.endDate).add(direction === "prev" ? -1 : 1, "day");
+
+        break;
+
       case timeSpanConfigs.WEEK:
+        startDate = !dateRange.startDate
+          ? moment().startOf("week")
+          : moment(dateRange.startDate).add(direction === "prev" ? -1 : 1, "week");
+
+        endDate = !dateRange.endDate
+          ? moment().endOf("week")
+          : moment(dateRange.endDate).add(direction === "prev" ? -1 : 1, "week");
+
+        break;
+
       case timeSpanConfigs.HOUR:
+        startDate = !dateRange.startDate
+          ? moment().startOf("hour")
+          : moment(dateRange.startDate).add(direction === "prev" ? -1 : 1, "hour");
+
+        endDate = !dateRange.endDate
+          ? moment().endOf("hour")
+          : moment(dateRange.endDate).add(direction === "prev" ? -1 : 1, "hour");
+
+        break;
+
       case timeSpanConfigs.YEAR:
       default:
         break;

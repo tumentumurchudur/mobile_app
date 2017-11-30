@@ -48,7 +48,7 @@ export class UtilitySpendingComponent implements OnInit {
     for (let i = 0; i < MAX_NUM_OF_CHARTS; i++) {
       this._currentNavigationItems[i] = this._navigationItems.ARC_CHART;
       this._selectedDateRanges[i] = {
-        timeSpan: timeSpanConfigs.MONTH,
+        timeSpan: timeSpanConfigs.DAY,
         startDate: null,
         endDate: null
       } as IDateRange;
@@ -118,20 +118,20 @@ export class UtilitySpendingComponent implements OnInit {
   }
 
   // TODO: Replace by handler for time span component.
-  private _onTimeSpanClick(guid: string, timeSpan: string, index: number): void {
-    this._selectedDateRanges[index].timeSpan = timeSpan;
+  private _onTimeSpanClick(guid: string, timeSpan, index: number): void {
+    this._selectedDateRanges[index].timeSpan = timeSpan.timeSpan;
     this._currentMeterIndex = index;
     this._prevButtonClicked[index] = false;
     this._nextButtonClicked[index] = false;
 
-    this._storeServices.loadSummaries(this._meters$, index, timeSpan);
+    this._storeServices.loadSummaries(this._meters$, index, timeSpan.timeSpan);
   }
 
-  private _onTimeTravelClick(direction: string, meterGuid: string, index: number) {
+  private _onTimeTravelClick(direction, meterGuid: string, index: number) {
     this._prevButtonClicked[index] = true;
     this._nextButtonClicked[index] = false;
 
-    this._selectedDateRanges[index] = ChartHelper.getDateRange(direction, this._selectedDateRanges[index]);
+    this._selectedDateRanges[index] = ChartHelper.getDateRange(direction.direction, this._selectedDateRanges[index]);
 
     const { startDate, endDate } = this._selectedDateRanges[index];
 

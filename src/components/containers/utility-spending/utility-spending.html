@@ -45,6 +45,10 @@
         class="card-content"
         *ngIf="_currentNavigationItems[i] === _navigationItems.LINE_CHART"
       >
+        <time-span
+        (changeTimeSpan)="_onTimeSpanClick(meter._guid, $event, i)"
+        (itemTapped)="_onTimeSpanClick($event, meter._guid, i)"
+        ></time-span>
         <!-- Years, Months, Days and Hours -->
         <div *ngIf="_summaries$ | async as summaries">
           <div *ngIf="!_prevButtonClicked[i] && !_nextButtonClicked[i]">
