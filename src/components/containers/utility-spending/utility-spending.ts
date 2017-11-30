@@ -111,7 +111,7 @@ export class UtilitySpendingComponent implements OnInit {
     this._storeServices.loadReadsByDateRange(meterGuid, startDate, endDate);
   }
 
-  private _onTimeTravelClick(direction, meterGuid: string, index: number) {
+  private _onTimeTravelClick(direction: string, meterGuid: string, index: number) {
     this._selectedDateRanges[index] = ChartHelper.getDateRange(direction, this._selectedDateRanges[index]);
 
     const { startDate, endDate } = this._selectedDateRanges[index];
