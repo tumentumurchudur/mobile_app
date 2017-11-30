@@ -26,18 +26,49 @@ export class ChartHelper {
 
     switch(timeSpan) {
       case timeSpanConfigs.MONTH:
+      case timeSpanConfigs.WEEK:
         while(startDate < endDate) {
           const startDay = moment(startDate).startOf("day").toDate();
           const endDay = moment(startDate).endOf("day").toDate();
+          const lineItem = this._getTotalByDateRange(startDay, endDay, data);
 
-          const points = data.filter(d => d.date >= startDay && d.date <= endDay);
-          const total = points.reduce((a, b) => { return a + b.line1 }, 0);
-
-          dataPoints.push({ date: startDay, line1: total });
+          dataPoints.push(lineItem);
 
           startDate = moment(startDate).add(1, "d").toDate();
         }
+        break;
+      case timeSpanConfigs.DAY:
+        while(startDate < endDate) {
+          const startHour = startDate;
+          const endHour = moment(startDate).add(1, "h").toDate();
+          const lineItem = this._getTotalByDateRange(startHour, endHour, data);
 
+          dataPoints.push(lineItem);
+
+          startDate = moment(startDate).add(1, "h").toDate();
+        }
+        break;
+      case timeSpanConfigs.YEAR:
+        while(startDate < endDate) {
+          const startMonth = moment(startDate).startOf("month").toDate();
+          const endMonth = moment(startDate).endOf("month").toDate();
+          const lineItem = this._getTotalByDateRange(startMonth, endMonth, data);
+
+          dataPoints.push(lineItem);
+
+          startDate = moment(startDate).add(1, "M").toDate();
+        }
+        break;
+      case timeSpanConfigs.HOUR:
+        while(startDate < endDate) {
+          const startHour = startDate;
+          const endHour = moment(startDate).add(15, "m").toDate();
+          const lineItem = this._getTotalByDateRange(startHour, endHour, data);
+
+          dataPoints.push(lineItem);
+
+          startDate = moment(startDate).add(15, "m").toDate();
+        }
         break;
       default:
         break;
@@ -153,6 +184,16 @@ export class ChartHelper {
       timeSpan: dateRange.timeSpan,
       dateFormat: dateRange.dateFormat
     }
+  }
+
+  private static _getTotalByDateRange(startDate: Date, endDate: Date, data: ILineItem[]): ILineItem {
+    const points = data.filter(d => d.date >= startDate && d.date < endDate);
+    const total = points.reduce((a, b) => { return a + b.line1 }, 0);
+
+    return {
+      date: startDate,
+      line1: total
+    };
   }
 
 }

@@ -188,7 +188,6 @@ export class MainEffects {
         const dateRange: IDateRange = { timeSpan, startDate, endDate };
         const normalizedDeltas = ChartHelper.normalizeReads(dateRange, deltas);
 
-        console.log(timeSpan, startDate, endDate);
         const payload = {
           guid,
           startDate,
