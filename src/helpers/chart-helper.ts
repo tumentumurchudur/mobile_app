@@ -51,26 +51,73 @@ export class ChartHelper {
     return reducedSummaries;
   }
 
+  public static getDefaultDateRange(timeSpan: string) {
+    switch(timeSpan) {
+      case timeSpanConfigs.MONTH:
+        return {
+          startDate: moment().startOf("month").toDate(),
+          endDate: moment().endOf("month").toDate(),
+          dateFormat: "%e" // abbreviated weekday namespace-padded day of the month as a decimal number [ 1,31]
+        }
+      case timeSpanConfigs.DAY:
+        return {
+          startDate: moment().startOf("day").toDate(),
+          endDate: moment().endOf("day").toDate(),
+          dateFormat: "%I%p" // hour (12-hour clock) as a decimal number [01,12] followed by either AM or PM
+        }
+      case timeSpanConfigs.WEEK:
+        return {
+          startDate: moment().startOf("week").toDate(),
+          endDate: moment().endOf("week").toDate(),
+          dateFormat: "%a" // abbreviated weekday name
+        }
+      case timeSpanConfigs.HOUR:
+        return {
+          startDate: moment().startOf("hour").toDate(),
+          endDate: moment().endOf("hour").toDate(),
+          dateFormat: "%M" // minute as a decimal number [00,59]
+        }
+      case timeSpanConfigs.YEAR:
+        return {
+          startDate: moment().startOf("year").toDate(),
+          endDate: moment().endOf("year").toDate(),
+          dateFormat: "%b" // abbreviated month name
+        }
+      default:
+        break;
+    }
+  }
+
   public static getDateRange(direction: string, dateRange: IDateRange): IDateRange {
     let startDate;
     let endDate;
 
     switch(dateRange.timeSpan) {
       case timeSpanConfigs.MONTH:
-        startDate = !dateRange.startDate
-          ? moment().startOf("month")
-          : moment(dateRange.startDate).add(direction === "prev" ? -1 : 1, "M");
-
-        endDate = !dateRange.endDate
-          ? moment().endOf("month")
-          : moment(dateRange.endDate).add(direction === "prev" ? -1 : 1, "M");
+        startDate = moment(dateRange.startDate).add(direction === "prev" ? -1 : 1, "M");
+        endDate = moment(dateRange.endDate).add(direction === "prev" ? -1 : 1, "M");
 
         break;
       case timeSpanConfigs.DAY:
+        startDate = moment(dateRange.startDate).add(direction === "prev" ? -24 : 24, "h");
+        endDate = moment(dateRange.endDate).add(direction === "prev" ? -24 : 24, "h");
+
         break;
       case timeSpanConfigs.WEEK:
+        startDate = moment(dateRange.startDate).add(direction === "prev" ? -7 : 7, "d");
+        endDate = moment(dateRange.endDate).add(direction === "prev" ? -7 : 7, "d");
+
+        break;
       case timeSpanConfigs.HOUR:
+        startDate = moment(dateRange.startDate).add(direction === "prev" ? -60 : 60, "m");
+        endDate = moment(dateRange.endDate).add(direction === "prev" ? -60 : 60, "m");
+
+        break;
       case timeSpanConfigs.YEAR:
+        startDate = moment(dateRange.startDate).add(direction === "prev" ? -1 : 1, "y");
+        endDate = moment(dateRange.endDate).add(direction === "prev" ? -1 : 1, "y");
+
+        break;
       default:
         break;
     }
@@ -78,7 +125,8 @@ export class ChartHelper {
     return {
       startDate: startDate.toDate(),
       endDate: endDate.toDate(),
-      timeSpan: dateRange.timeSpan
+      timeSpan: dateRange.timeSpan,
+      dateFormat: dateRange.dateFormat
     }
   }
 
