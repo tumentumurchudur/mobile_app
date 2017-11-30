@@ -15,7 +15,7 @@ export class TimeSpanComponent {
   @Output() timeSpanChanged = new EventEmitter<string>();
   @Output() itemTapped = new EventEmitter<string>();
 
-  private _currentTimespan = timeSpanConfigs.MONTH;
+  private _currentTimespan = "month";
 
   constructor(private alertCtrl: AlertController) {
   }
