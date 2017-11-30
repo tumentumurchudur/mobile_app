@@ -12,10 +12,10 @@ export class TimeSpanComponent {
   @Input() disableNextButton: boolean = false;
   @Input() disablePrevButton: boolean = false;
 
-  @Output() timeSpanChanged = new EventEmitter<any>();
-  @Output() itemTapped = new EventEmitter<any>();
+  @Output() timeSpanChanged = new EventEmitter<string>();
+  @Output() itemTapped = new EventEmitter<string>();
 
-  private _currentTimespan = "month";
+  private _currentTimespan = timeSpanConfigs.MONTH;
 
   constructor(private alertCtrl: AlertController) {
   }
