@@ -97,11 +97,11 @@ export class UtilitySpendingComponent implements OnInit {
   }
 
   // TODO: Replace by handler for time span component.
-  private _onTimeSpanClick(meterGuid: string, timeSpan, index: number): void {
+  private _onTimeSpanClick(meterGuid: string, timeSpan: string, index: number): void {
     // Sets default start and end dates.
-    const { startDate, endDate, dateFormat } = ChartHelper.getDefaultDateRange(timeSpan.timeSpan);
+    const { startDate, endDate, dateFormat } = ChartHelper.getDefaultDateRange(timeSpan);
 
-    this._selectedDateRanges[index].timeSpan = timeSpan.timeSpan;
+    this._selectedDateRanges[index].timeSpan = timeSpan;
     this._selectedDateRanges[index].startDate = startDate;
     this._selectedDateRanges[index].endDate = endDate;
     this._selectedDateRanges[index].dateFormat = dateFormat;
@@ -112,7 +112,7 @@ export class UtilitySpendingComponent implements OnInit {
   }
 
   private _onTimeTravelClick(direction, meterGuid: string, index: number) {
-    this._selectedDateRanges[index] = ChartHelper.getDateRange(direction.direction, this._selectedDateRanges[index]);
+    this._selectedDateRanges[index] = ChartHelper.getDateRange(direction, this._selectedDateRanges[index]);
 
     const { startDate, endDate } = this._selectedDateRanges[index];
 

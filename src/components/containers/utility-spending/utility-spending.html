@@ -46,7 +46,7 @@
         *ngIf="_currentNavigationItems[i] === _navigationItems.LINE_CHART"
       >
         <time-span
-        (changeTimeSpan)="_onTimeSpanClick(meter._guid, $event, i)"
+        (timeSpanChanged)="_onTimeSpanClick(meter._guid, $event, i)"
         (itemTapped)="_onTimeTravelClick($event, meter._guid, i)"
         ></time-span>
         <div *ngIf="_reads$ | async as reads">
