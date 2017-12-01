@@ -66,6 +66,17 @@ export class LineChartComponent implements OnChanges {
 
       // animate lines.
       this._animatePath(path, delay * (index + 1), 800);
+
+      svg.append("path")
+        .attr("class", "area")
+        .attr("d", this._createArea(x, y, height, this.data, ""))
+        .attr("fill", () => "orange")
+        .attr("transform", "translate(20, 10)")
+        .transition()
+        .delay(800)
+        .duration(350)
+        .attr("d", this._createArea(x, y, height, this.data, "line1"));
+
     });
 
     // x and y axis
@@ -141,6 +152,13 @@ export class LineChartComponent implements OnChanges {
       .attr("stroke-dashoffset", 0);
     }
   }
+
+  private _createArea(xScale, yScale, height, data, field) {
+    return d3.area()
+      .x(d => xScale(d.date))
+      .y0(height)
+      .y1(d => yScale(d[field] || 0))(data);
+  };
 
   private _clear() {
     const svg = d3.select(this.element).select("svg")

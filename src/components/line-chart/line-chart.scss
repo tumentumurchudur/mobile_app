@@ -7,6 +7,12 @@ line-chart {
       top: 40%;
       left: 25%;
     }
+
+    .no-data {
+      position: absolute;
+      top: 40%;
+      left: 44%;
+    }
   }
 
   .tick line {
@@ -15,5 +21,9 @@ line-chart {
 
   .line-path {
     fill: none;
+  }
+
+  .area {
+    opacity: .2;
   }
 }
