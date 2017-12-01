@@ -1,4 +1,14 @@
 line-chart {
+  .chart-container {
+    position: relative;
+
+    .loading {
+      position: absolute;
+      top: 40%;
+      left: 25%;
+    }
+  }
+
   .tick line {
     opacity: .1;
   }
