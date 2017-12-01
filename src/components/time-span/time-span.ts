@@ -12,31 +12,34 @@ export class TimeSpanComponent {
   @Input() disableNextButton: boolean = false;
   @Input() disablePrevButton: boolean = false;
 
-  @Output() itemTapped = new EventEmitter<any>();
+  @Output() timeSpanChanged = new EventEmitter<string>();
+  @Output() itemTapped = new EventEmitter<string>();
 
-  private _currentTimespan = timeSpanConfigs.DAY;
+  private _currentTimespan = "month";
 
   constructor(private alertCtrl: AlertController) {
   }
 
-  private _onTap(action: string) {
+  private _onTap(direction: string) {
 
-    this.itemTapped.emit({direction: action, timeSpan: this._currentTimespan})
+    this.itemTapped.emit(direction);
   }
 
   private _changeTimeSpan() {
     const alert = this.alertCtrl.create();
-
     alert.setCssClass('timespan-alert');
 
     for(const timespan in timeSpanConfigs) {
+      const currentTimeSpan = timeSpanConfigs[timespan];
+
       alert.addButton({
-        text: timeSpanConfigs[timespan],
+        text: currentTimeSpan.substring(0, currentTimeSpan.length - 1),
         handler: () => {
-          this._currentTimespan = timeSpanConfigs[timespan];
+          this._currentTimespan = currentTimeSpan.substring(0, currentTimeSpan.length - 1);
+          this.timeSpanChanged.emit(currentTimeSpan);
         }
       });
-    };
+    }
     alert.present();
   }
 

@@ -45,6 +45,10 @@
         class="card-content"
         *ngIf="_currentNavigationItems[i] === _navigationItems.LINE_CHART"
       >
+        <time-span
+          (timeSpanChanged)="_onTimeSpanClick($event, meter._guid, i)"
+          (itemTapped)="_onTimeTravelClick($event, meter._guid, i)"
+        ></time-span>
         <div *ngIf="_reads$ | async as reads">
             <line-chart
               [data]="_getReadsByGuid(reads, meter._guid, i)"
@@ -57,17 +61,6 @@
             <div>Str: {{ _selectedDateRanges[i]?.startDate | date: "short" }}</div>
             <div>End: {{ _selectedDateRanges[i]?.endDate | date: "short" }}</div>
             <div>Time Span: {{ _selectedDateRanges[i]?.timeSpan }}</div>
-        </div>
-
-        <!-- TODO: Replace by time span component -->
-        <div>
-          <span (click)="_onTimeTravelClick('prev', meter._guid, i)">Prev</span>
-          <span (click)="_onTimeSpanClick(meter._guid, 'hours', i)">Hours</span>
-          <span (click)="_onTimeSpanClick(meter._guid, 'days', i)">Days</span>
-          <span (click)="_onTimeSpanClick(meter._guid, 'weeks', i, meter)">Weeks</span>
-          <span (click)="_onTimeSpanClick(meter._guid, 'months', i, meter)">Months</span>
-          <span (click)="_onTimeSpanClick(meter._guid, 'years', i)">Years</span>
-          <span (click)="_onTimeTravelClick('next', meter._guid, i)">Next</span>
         </div>
       </div>
 

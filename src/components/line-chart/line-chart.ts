@@ -65,7 +65,7 @@ export class LineChartComponent implements OnChanges {
       this._addDots(svg, x, y, colName, this.dotColors[index]);
 
       // animate lines.
-      this._animatePath(path, delay * (index + 1), 500);
+      this._animatePath(path, delay * (index + 1), 800);
     });
 
     // x and y axis

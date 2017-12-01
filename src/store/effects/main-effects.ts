@@ -155,12 +155,11 @@ export class MainEffects {
       })
       .map((data: any[]) => {
         const [ guid, timeSpan, summaries ] = data;
-        const normalizedSummaries = ChartHelper.normalizeLineChartData(summaries);
 
         return new AddSummaries({
           guid: guid,
           timeSpan: timeSpan,
-          summaries: normalizedSummaries
+          summaries: summaries
         });
       });
 
@@ -181,19 +180,16 @@ export class MainEffects {
       })
       .map(values => {
         const [ guid, timeSpan, startDate, endDate, reads ] = values;
-        const deltas = ChartHelper.getDelta(reads);
-
-        // const normalizedDeltas = ChartHelper.normalizeLineChartData(deltas);
+        const deltas = ChartHelper.getDeltas(reads);
 
         const dateRange: IDateRange = { timeSpan, startDate, endDate };
-        const normalizedDeltas = ChartHelper.normalizeReads(dateRange, deltas);
 
         const payload = {
           guid,
           startDate,
           endDate,
           reads: reads,
-          deltas: normalizedDeltas
+          deltas: deltas.length ? ChartHelper.normalizeReads(dateRange, deltas) : []
         } as IReads;
 
         return new AddReads(payload);

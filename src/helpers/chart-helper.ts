@@ -4,7 +4,7 @@ import { timeSpanConfigs } from "../configs";
 import * as moment from "moment";
 
 export class ChartHelper {
-  public static getDelta(data: IRead[]): ILineItem[] {
+  public static getDeltas(data: IRead[]): ILineItem[] {
     const chartData = [];
 
     for(let i = data.length - 1; i >= 0; i--) {
@@ -20,9 +20,10 @@ export class ChartHelper {
     return chartData;
   }
 
-  public static normalizeReads(dateRange: IDateRange, data: ILineItem[]) {
+  public static normalizeReads(dateRange: IDateRange, data: ILineItem[]): ILineItem[] {
     let { startDate, endDate, timeSpan } = dateRange;
     const dataPoints = [];
+    const emptyPoints = [];
 
     switch(timeSpan) {
       case timeSpanConfigs.MONTH:
@@ -30,81 +31,71 @@ export class ChartHelper {
         while(startDate < endDate) {
           const startDay = moment(startDate).startOf("day").toDate();
           const endDay = moment(startDate).endOf("day").toDate();
-          const lineItem = this._getTotalByDateRange(startDay, endDay, data);
+          const dataPoint: ILineItem = this._getTotalsByDateRange(startDay, endDay, data);
 
-          dataPoints.push(lineItem);
+          // Check if data point is empty
+          if (dataPoint.line1 <= 0) {
+            // Tracks the index of empty days.
+            // So [5, 8, 9] => means values at index 5, 8, and 9 are zero.
+            emptyPoints.push(dataPoints.length);
+          }
+          dataPoints.push(dataPoint);
 
           startDate = moment(startDate).add(1, "d").toDate();
         }
+
+        // Iterate over array that tracked empty data points and fill in missing values.
+        this._fillEmptyHoles(dataPoints, emptyPoints);
         break;
       case timeSpanConfigs.DAY:
         while(startDate < endDate) {
           const startHour = startDate;
           const endHour = moment(startDate).add(1, "h").toDate();
-          const lineItem = this._getTotalByDateRange(startHour, endHour, data);
+          const dataPoint = this._getTotalsByDateRange(startHour, endHour, data);
 
-          dataPoints.push(lineItem);
+          if (dataPoint.line1 <= 0) {
+            emptyPoints.push(dataPoints.length);
+          }
+          dataPoints.push(dataPoint);
 
           startDate = moment(startDate).add(1, "h").toDate();
         }
+        this._fillEmptyHoles(dataPoints, emptyPoints);
         break;
       case timeSpanConfigs.YEAR:
         while(startDate < endDate) {
           const startMonth = moment(startDate).startOf("month").toDate();
           const endMonth = moment(startDate).endOf("month").toDate();
-          const lineItem = this._getTotalByDateRange(startMonth, endMonth, data);
+          const dataPoint = this._getTotalsByDateRange(startMonth, endMonth, data);
 
-          dataPoints.push(lineItem);
+          if (dataPoint.line1 <= 0) {
+            emptyPoints.push(dataPoints.length);
+          }
+          dataPoints.push(dataPoint);
 
           startDate = moment(startDate).add(1, "M").toDate();
         }
+        this._fillEmptyHoles(dataPoints, emptyPoints);
         break;
       case timeSpanConfigs.HOUR:
         while(startDate < endDate) {
           const startHour = startDate;
           const endHour = moment(startDate).add(15, "m").toDate();
-          const lineItem = this._getTotalByDateRange(startHour, endHour, data);
+          const dataPoint = this._getTotalsByDateRange(startHour, endHour, data);
 
-          dataPoints.push(lineItem);
+          if (dataPoint.line1 <= 0) {
+            emptyPoints.push(dataPoints.length);
+          }
+          dataPoints.push(dataPoint);
 
           startDate = moment(startDate).add(15, "m").toDate();
         }
+        this._fillEmptyHoles(dataPoints, emptyPoints);
         break;
       default:
         break;
     }
     return dataPoints;
-  }
-
-  public static normalizeLineChartData(data: ILineItem[]) {
-    let reducedSummaries = [];
-    const maxCount = 60;
-    const tolerance = .5;
-
-    // Remove elements from array if length exceeds maxCount.
-    if (data.length >= maxCount) {
-      const middleIndex = data.length / 2;
-      const startIndex = middleIndex - (maxCount * .5);
-      const endIndex = middleIndex + (maxCount * .5);
-
-      reducedSummaries = data.slice(startIndex, endIndex);
-    } else {
-      reducedSummaries = Object.assign([], data);
-    }
-
-    // Normalize data in summaries array.
-    const allValues = reducedSummaries.map((s: ILineItem) => s.line1);
-    const max = Math.max.apply(0, allValues);
-    const largeValues = allValues.filter(val => val <= max && val >= max * tolerance);
-
-    // Check if abnormal values are less than 10% of all values.
-    if (largeValues.length < allValues.length * .1) {
-      // Remove abnormally large values from summaries array.
-      return reducedSummaries.filter(s => {
-        return largeValues.indexOf(s.line1) === -1 && s.line1 > 0;
-      });
-    }
-    return reducedSummaries;
   }
 
   public static getDefaultDateRange(timeSpan: string) {
@@ -186,7 +177,7 @@ export class ChartHelper {
     }
   }
 
-  private static _getTotalByDateRange(startDate: Date, endDate: Date, data: ILineItem[]): ILineItem {
+  private static _getTotalsByDateRange(startDate: Date, endDate: Date, data: ILineItem[]): ILineItem {
     const points = data.filter(d => d.date >= startDate && d.date < endDate);
     const total = points.reduce((a, b) => { return a + b.line1 }, 0);
 
@@ -194,6 +185,66 @@ export class ChartHelper {
       date: startDate,
       line1: total
     };
+  }
+
+  private static _fillEmptyHoles(data: ILineItem[], indices: number[]) {
+    indices.forEach(emptyIndex => {
+      // Moves back to find the first non-zero value in data array.
+      let backIndex = emptyIndex > 0 ? emptyIndex - 1 : 0;
+
+      // Moves forward to find the first non-zero value in data array.
+      let frwdIndex = emptyIndex < data.length - 1 ? emptyIndex + 1 : data.length - 1;
+
+      // Non-zero value comes before the zero value at index emptyIndex.
+      let prevVal = 0;
+
+      // Non-zero value comes after the zero value at index emptyIndex.
+      let nextVal = 0;
+
+      // if zero value is at index 0 or 1
+      if (backIndex === 0) {
+        prevVal = data[0].line1 || 0;
+      }
+
+      // if zero value is at last index
+      if (frwdIndex >= data.length) {
+        nextVal = 0;
+      }
+
+      // Moves both forward and backward directions at the same time
+      // until first non-zero values are found.
+      while (backIndex > 0 || frwdIndex < data.length) {
+
+        if (backIndex > 0) {
+          // First non-zero value is found before emptyIndex.
+          if (data[backIndex].line1 > 0) {
+            prevVal = data[backIndex].line1;
+            backIndex = 0;
+          } else {
+            backIndex--;
+          }
+        }
+
+        if (frwdIndex < data.length) {
+          // First non-zero value is found after emptyIndex.
+          if (data[frwdIndex].line1 > 0) {
+            nextVal = data[frwdIndex].line1;
+            frwdIndex = data.length;
+          } else {
+            frwdIndex++;
+          }
+        }
+
+      }
+
+      if (prevVal && nextVal) {
+        data[emptyIndex].line1 = (prevVal + nextVal) / 2;
+      } else if (prevVal && !nextVal) {
+        data[emptyIndex].line1 = prevVal;
+      } else if (!prevVal && nextVal) {
+        data[emptyIndex].line1 = nextVal;
+      }
+    })
   }
 
 }

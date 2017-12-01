@@ -3,7 +3,7 @@ import { Component, OnInit, Input, ChangeDetectionStrategy } from "@angular/core
 import { StoreServices } from "../../../store/services";
 
 import { Observable } from "rxjs/Observable";
-import { IUser, IMeter, IReadSummaries, IReads, IRead, IDateRange } from "../../../interfaces";
+import { IUser, IMeter, IReads, IDateRange } from "../../../interfaces";
 import { chartConfigs, navigationConfigs, timeSpanConfigs } from "../../../configs";
 import { ChartHelper } from "../../../helpers";
 
@@ -96,8 +96,7 @@ export class UtilitySpendingComponent implements OnInit {
     }
   }
 
-  // TODO: Replace by handler for time span component.
-  private _onTimeSpanClick(meterGuid: string, timeSpan: string, index: number): void {
+  private _onTimeSpanClick(timeSpan: string, meterGuid: string, index: number): void {
     // Sets default start and end dates.
     const { startDate, endDate, dateFormat } = ChartHelper.getDefaultDateRange(timeSpan);
 
