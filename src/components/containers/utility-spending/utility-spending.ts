@@ -3,7 +3,7 @@ import { Component, OnInit, Input, ChangeDetectionStrategy } from "@angular/core
 import { StoreServices } from "../../../store/services";
 
 import { Observable } from "rxjs/Observable";
-import { IUser, IMeter, IReadSummaries, IReads, IRead, IDateRange } from "../../../interfaces";
+import { IUser, IMeter, IReads, IDateRange } from "../../../interfaces";
 import { chartConfigs, navigationConfigs, timeSpanConfigs } from "../../../configs";
 import { ChartHelper } from "../../../helpers";
 
@@ -92,12 +92,11 @@ export class UtilitySpendingComponent implements OnInit {
       this._selectedDateRanges[index].dateFormat = dateFormat;
 
       // Initiate request to load data from database for given guid, start and end dates.
-      this._storeServices.loadReadsByDateRange(meterGuid, startDate, endDate);
+      this._storeServices.loadReadsByDateRange(meterGuid, timeSpan, startDate, endDate);
     }
   }
 
-  // TODO: Replace by handler for time span component.
-  private _onTimeSpanClick(meterGuid: string, timeSpan: string, index: number): void {
+  private _onTimeSpanClick(timeSpan: string, meterGuid: string, index: number): void {
     // Sets default start and end dates.
     const { startDate, endDate, dateFormat } = ChartHelper.getDefaultDateRange(timeSpan);
 
@@ -108,15 +107,15 @@ export class UtilitySpendingComponent implements OnInit {
 
     this._currentMeterIndex = index;
 
-    this._storeServices.loadReadsByDateRange(meterGuid, startDate, endDate);
+    this._storeServices.loadReadsByDateRange(meterGuid, timeSpan, startDate, endDate);
   }
 
   private _onTimeTravelClick(direction: string, meterGuid: string, index: number) {
     this._selectedDateRanges[index] = ChartHelper.getDateRange(direction, this._selectedDateRanges[index]);
 
-    const { startDate, endDate } = this._selectedDateRanges[index];
+    const { timeSpan, startDate, endDate } = this._selectedDateRanges[index];
 
-    this._storeServices.loadReadsByDateRange(meterGuid, startDate, endDate);
+    this._storeServices.loadReadsByDateRange(meterGuid, timeSpan, startDate, endDate);
   }
 
   private _getReadsByGuid(reads: IReads[], guid: string, index: number): any[] {

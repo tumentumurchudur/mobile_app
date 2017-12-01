@@ -28,6 +28,7 @@ import {
   UpdateUser
 } from "../actions";
 import { IReadSummaries } from '../../interfaces/read-summaries';
+import { IDateRange } from '../../interfaces/date-range';
 
 @Injectable()
 export class MainEffects {
@@ -154,12 +155,11 @@ export class MainEffects {
       })
       .map((data: any[]) => {
         const [ guid, timeSpan, summaries ] = data;
-        const normalizedSummaries = ChartHelper.normalizeLineChartData(summaries);
 
         return new AddSummaries({
           guid: guid,
           timeSpan: timeSpan,
-          summaries: normalizedSummaries
+          summaries: summaries
         });
       });
 
@@ -168,25 +168,28 @@ export class MainEffects {
       .ofType(LOAD_READS_BY_DATE)
       .map((action: any) => action.payload)
       .switchMap((values: any) => {
-        const { guid, startDate, endDate } = values;
+        const { guid, timeSpan, startDate, endDate } = values;
 
         return Observable.combineLatest([
           Observable.of(guid),
+          Observable.of(timeSpan),
           Observable.of(startDate),
           Observable.of(endDate),
           this._db.getReadsByDateRange(guid, startDate, endDate)
         ]);
       })
       .map(values => {
-        const [ guid, startDate, endDate, reads ] = values;
-        const deltas = ChartHelper.getDelta(reads);
-        const normalizedDeltas = ChartHelper.normalizeLineChartData(deltas);
+        const [ guid, timeSpan, startDate, endDate, reads ] = values;
+        const deltas = ChartHelper.getDeltas(reads);
+
+        const dateRange: IDateRange = { timeSpan, startDate, endDate };
+
         const payload = {
           guid,
           startDate,
           endDate,
           reads: reads,
-          deltas: normalizedDeltas
+          deltas: deltas.length ? ChartHelper.normalizeReads(dateRange, deltas) : []
         } as IReads;
 
         return new AddReads(payload);
