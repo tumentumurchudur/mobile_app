@@ -13,17 +13,18 @@ line-chart {
       top: 40%;
       left: 44%;
     }
+
+    .tick line {
+      opacity: .1;
+    }
+
+    .line-path {
+      fill: none;
+    }
+
+    .area {
+      opacity: .2;
+    }
   }
 
-  .tick line {
-    opacity: .1;
-  }
-
-  .line-path {
-    fill: none;
-  }
-
-  .area {
-    opacity: .2;
-  }
 }

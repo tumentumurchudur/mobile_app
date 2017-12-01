@@ -56,9 +56,9 @@ export class LineChartComponent implements OnChanges {
 
     this.series.forEach((colName, index) => {
       // make line function
-      const lineFunc = this._makeLineFunc(x, y, colName);
+      const lineFunc = this._getLineFunc(x, y, colName);
 
-       // add line paths using the line functions.
+      // add line paths using the line functions.
       const path = this._addPath(svg, lineFunc, "path" + index, this.lineColors[index]);
 
       // add dots
@@ -67,15 +67,16 @@ export class LineChartComponent implements OnChanges {
       // animate lines.
       this._animatePath(path, delay * (index + 1), 800);
 
+      // add area under line chart
       svg.append("path")
         .attr("class", "area")
-        .attr("d", this._createArea(x, y, height, this.data, ""))
+        .attr("d", this._getAreaFunc(x, y, height, this.data, ""))
         .attr("fill", () => "orange")
         .attr("transform", "translate(20, 10)")
         .transition()
         .delay(800)
         .duration(350)
-        .attr("d", this._createArea(x, y, height, this.data, "line1"));
+        .attr("d", this._getAreaFunc(x, y, height, this.data, colName));
 
     });
 
@@ -107,7 +108,7 @@ export class LineChartComponent implements OnChanges {
       .call(xAxis);
   }
 
-  private _makeLineFunc(x: (date: any) => any, y: (val: number) => any, colName: string): any {
+  private _getLineFunc(x: (date: any) => any, y: (val: number) => any, colName: string): any {
     return d3.line()
       .x(d => x(d.date))
       .y(d => y(d[colName]));
@@ -153,7 +154,7 @@ export class LineChartComponent implements OnChanges {
     }
   }
 
-  private _createArea(xScale, yScale, height, data, field) {
+  private _getAreaFunc(xScale, yScale, height, data, field) {
     return d3.area()
       .x(d => xScale(d.date))
       .y0(height)

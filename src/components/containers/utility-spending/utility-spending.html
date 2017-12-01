@@ -45,10 +45,11 @@
         class="card-content"
         *ngIf="_currentNavigationItems[i] === _navigationItems.LINE_CHART"
       >
-        <time-span
+        <timespan-selector
+          [selectedTimeSpan]="_selectedDateRanges[i].timeSpan"
           (timeSpanChanged)="_onTimeSpanClick($event, meter._guid, i)"
           (itemTapped)="_onTimeTravelClick($event, meter._guid, i)"
-        ></time-span>
+        ></timespan-selector>
 
         <div>{{ _showDateRange(i) }}</div>
 

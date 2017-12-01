@@ -3,44 +3,44 @@ import { AlertController } from 'ionic-angular';
 import { timeSpanConfigs } from "../../configs";
 
 @Component({
-  selector: 'time-span',
-  templateUrl: 'time-span.html'
+  selector: 'timespan-selector',
+  templateUrl: 'timespan-selector.html'
 })
-export class TimeSpanComponent {
-
-  @Input() index: number = 0;
+export class TimeSpanSelectorComponent {
+  @Input() selectedTimeSpan: string = timeSpanConfigs.MONTH;
   @Input() disableNextButton: boolean = false;
   @Input() disablePrevButton: boolean = false;
 
   @Output() timeSpanChanged = new EventEmitter<string>();
   @Output() itemTapped = new EventEmitter<string>();
 
-  private _currentTimespan = "month";
-
-  constructor(private alertCtrl: AlertController) {
+  constructor(
+    private alertCtrl: AlertController) {
   }
 
   private _onTap(direction: string) {
-
     this.itemTapped.emit(direction);
   }
 
   private _changeTimeSpan() {
     const alert = this.alertCtrl.create();
-    alert.setCssClass('timespan-alert');
+    alert.setCssClass("timespan-alert");
 
-    for(const timespan in timeSpanConfigs) {
-      const currentTimeSpan = timeSpanConfigs[timespan];
+    for(const timeSpan in timeSpanConfigs) {
+      const currentTimeSpan = timeSpanConfigs[timeSpan];
 
       alert.addButton({
         text: currentTimeSpan.substring(0, currentTimeSpan.length - 1),
         handler: () => {
-          this._currentTimespan = currentTimeSpan.substring(0, currentTimeSpan.length - 1);
           this.timeSpanChanged.emit(currentTimeSpan);
         }
       });
     }
     alert.present();
+  }
+
+  private _getSelectedTimeSpan() {
+    return this.selectedTimeSpan.substring(0, this.selectedTimeSpan.length - 1);
   }
 
 }
