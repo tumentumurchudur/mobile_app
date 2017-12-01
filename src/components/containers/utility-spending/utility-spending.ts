@@ -126,4 +126,8 @@ export class UtilitySpendingComponent implements OnInit {
 
     return data ? data.deltas : [];
   }
+
+  private _showDateRange(index: number): string {
+    return ChartHelper.getFormattedDateRange(this._selectedDateRanges[index]);
+  }
 }

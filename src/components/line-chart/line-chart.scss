@@ -1,9 +1,30 @@
 line-chart {
-  .tick line {
-    opacity: .1;
+  .chart-container {
+    position: relative;
+
+    .loading {
+      position: absolute;
+      top: 40%;
+      left: 25%;
+    }
+
+    .no-data {
+      position: absolute;
+      top: 40%;
+      left: 44%;
+    }
+
+    .tick line {
+      opacity: .1;
+    }
+
+    .line-path {
+      fill: none;
+    }
+
+    .area {
+      opacity: .2;
+    }
   }
 
-  .line-path {
-    fill: none;
-  }
 }

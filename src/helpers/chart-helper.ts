@@ -98,6 +98,24 @@ export class ChartHelper {
     return dataPoints;
   }
 
+  public static getFormattedDateRange(dateRange: IDateRange): string {
+    const { startDate, endDate, timeSpan } = dateRange;
+
+    switch(timeSpan) {
+      case timeSpanConfigs.MONTH:
+      case timeSpanConfigs.WEEK:
+        return moment(startDate).format("MMM DD, YY") + " - " + moment(endDate).format("MMM DD, YY");
+      case timeSpanConfigs.DAY:
+        return moment(startDate).format("hh a") + " - " + moment(endDate).format("hh a");
+      case timeSpanConfigs.HOUR:
+        return moment(startDate).format("hh:mm a") + " - " + moment(endDate).format("hh:mm a");
+      case timeSpanConfigs.YEAR:
+        return moment(startDate).format("MMM YY") + " - " + moment(endDate).format("MMM YY");
+      default:
+        return "";
+    }
+  }
+
   public static getDefaultDateRange(timeSpan: string) {
     switch(timeSpan) {
       case timeSpanConfigs.MONTH:

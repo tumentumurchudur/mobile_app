@@ -1,7 +1,9 @@
-<svg preserveAspectRatio="xMidYMid meet"></svg>
-<div *ngIf="(!data || !data.length) && !loading">
-  No data
-</div>
-<div *ngIf="loading">
-  Loading chart data...
+<div class="chart-container">
+  <svg preserveAspectRatio="xMidYMid meet"></svg>
+  <div class="no-data" *ngIf="(!data || !data.length) && !loading">
+    No data
+  </div>
+  <div class="loading" *ngIf="loading">
+    Please wait while loading data...
+  </div>
 </div>
