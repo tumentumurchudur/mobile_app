@@ -1,8 +1,6 @@
-import { Injectable } from "@angular/core";
 import { IMeter, ILineItem } from '../interfaces';
 import { convertConfigs } from "../configs";
 
-@Injectable()
 export class CostHelper {
 	/**
 	 * Adds up daily usage number from _reads array.
@@ -14,7 +12,7 @@ export class CostHelper {
 	 * @returns
 	 * @memberof CostHelper
 	 */
-	public calcUsageDiffs(meters: IMeter[]) {
+	public static calcUsageDiffs(meters: IMeter[]) {
 		// Calculates consumption data from meter._reads array.
 		meters.forEach(meter => {
 			const reads = meter._reads;
@@ -33,52 +31,55 @@ export class CostHelper {
 		return meters;
 	}
 
-	public calcCostFromReads(meter: IMeter, deltas: ILineItem[]) {
-		console.log(meter, deltas);
-
+	public static calcCostFromReads(meter: IMeter, deltas: ILineItem[]): any {
 		let totalDelta: number = 0;
 		let totalCost: number = 0;
 
 		for (const delta of deltas) {
 			const { date, line1 } = delta;
 
-			totalDelta += line1;
+			totalDelta += line1 > 0 ? line1 : 0;
 
 			const rate = this._getRate(meter, date, totalDelta);
-			let usage: number;
 
-			if (meter._utilityType === "gas") {
-				usage = line1 / convertConfigs.ccfToDth;
-			} else if (meter._utilityType === "water") {
-				usage = line1 / convertConfigs.galToCcf;
-			} else {
-				usage = line1;
-			}
-
-			if (!isNaN(rate)) {
-				totalCost += usage * rate;
+			if (line1 > 0) {
+				if (meter._utilityType === "gas") {
+					totalCost += line1 / convertConfigs.ccfToDth * rate;
+				} else if (meter._utilityType === "water") {
+					totalCost += line1 / convertConfigs.galToCcf * rate;
+				} else {
+					totalCost += line1 * rate;
+				}
 			}
 		}
-		return totalCost;
+
+		return {
+			totalCost: totalCost > 0 ? totalCost / 100 : 0,
+			totalDelta
+		};
 	}
 
-	private _getRate(meter: IMeter, date: Date, delta: number): number {
+	private static _getRate(meter: IMeter, date: Date, delta: number): number {
 		const { _winter, _summer } = meter;
 		const isSummer = date >= _summer.start_date && date < _summer.end_date || false;
 		const tiers = isSummer && _summer ? _summer.tiers : (_winter ? _winter.tiers : null);
 		const rates = [];
 
-		for (let key of Object.keys(tiers)) {
-			const limit = parseInt(key);
-			const rate = tiers[key];
+		if (tiers) {
+			for (let key of Object.keys(tiers)) {
+				const limit = parseInt(key);
+				const rate = tiers[key];
 
-			rates.push({ limit, rate });
+				rates.push({ limit, rate });
 
-			if (delta <= limit) {
-				return rates[rates.length - 2];
+				if (delta > 0 && delta <= limit) {
+					return rates[rates.length - 2].rate || rate;
+				}
 			}
+			return rates[rates.length - 1].rate;
 		}
-		return rates[rates.length - 1].rate;
+
+		return 1;
 	}
 
 	/**
@@ -88,7 +89,7 @@ export class CostHelper {
 	 * @returns
 	 * @memberof CostHelper
 	 */
-	public calcUsageCost(meters: IMeter[]) {
+	public static calcUsageCost(meters: IMeter[]) {
 		for(let i = 0; i <= meters.length - 1; i++) {
 			const today = new Date();
 			const summer = meters[i]._summer;
@@ -168,7 +169,7 @@ export class CostHelper {
 	 * @returns {number}
 	 * @memberof CostHelper
 	 */
-	private _findDiffDays(startDate: Date, endDate: Date): number {
+	private static _findDiffDays(startDate: Date, endDate: Date): number {
 		const timeDiff = Math.abs(startDate.getTime() - endDate.getTime());
 
 		return Math.floor(timeDiff / (1000 * 3600 * 24));

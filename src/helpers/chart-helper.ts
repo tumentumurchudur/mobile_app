@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { IRead, ILineItem, IDateRange } from "../interfaces";
 import { timeSpanConfigs } from "../configs";
 import * as moment from "moment";
+import { ALLOW_MULTIPLE_PLATFORMS } from "@angular/core/src/application_ref";
 
 export class ChartHelper {
   public static getDeltas(data: IRead[]): ILineItem[] {
@@ -20,7 +21,23 @@ export class ChartHelper {
     return chartData;
   }
 
-  public static normalizeReads(dateRange: IDateRange, data: ILineItem[]): ILineItem[] {
+  public static normalizeData(data: ILineItem[]): ILineItem[] {
+    const tolerance = .5;
+
+    // Massage data in summaries array.
+    const allValues = data.map((s: ILineItem) => s.line1);
+    const max = Math.max.apply(0, allValues);
+    const largeValues = allValues.filter(val => val <= max && val >= max * tolerance);
+
+    // Check if abnormal values are less than 10% of all values.
+    if (largeValues.length < allValues.length * .1) {
+      // Remove abnormally large values.
+      return data.filter(s => largeValues.indexOf(s.line1) === -1);
+    }
+    return data;
+  }
+
+  public static groupReadsByTimeSpan(dateRange: IDateRange, data: ILineItem[]): ILineItem[] {
     let { startDate, endDate, timeSpan } = dateRange;
     const dataPoints = [];
     const emptyPoints = [];

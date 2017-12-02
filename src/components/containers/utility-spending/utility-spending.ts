@@ -118,13 +118,26 @@ export class UtilitySpendingComponent implements OnInit {
     this._storeServices.loadReadsByDateRange(meter, timeSpan, startDate, endDate);
   }
 
-  private _getReadsByGuid(reads: IReads[], guid: string, index: number): any[] {
+  private _getDeltasByGuid(reads: IReads[], guid: string, index: number): any[] {
     const { startDate, endDate } = this._selectedDateRanges[index];
     const data = reads.filter(read => {
-      return read.guid === guid && read.startDate === startDate && read.endDate === endDate
+      return read.guid === guid &&
+        read.startDate.toString() === startDate.toString() &&
+        read.endDate.toString() === endDate.toString()
     })[0] || null;
 
     return data ? data.deltas : [];
+  }
+
+  private _getCostForTimeSpan(reads: IReads[], guid: string, index: number): any {
+    const { startDate, endDate } = this._selectedDateRanges[index];
+    const data = reads.filter(read => {
+      return read.guid === guid &&
+        read.startDate.toString() === startDate.toString() &&
+        read.endDate.toString() === endDate.toString()
+    })[0] || null;
+
+    return data ? data.cost : null;
   }
 
   private _showDateRange(index: number): string {

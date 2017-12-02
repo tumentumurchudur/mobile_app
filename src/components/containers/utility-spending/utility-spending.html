@@ -55,12 +55,21 @@
 
         <div *ngIf="_reads$ | async as reads">
           <line-chart
-            [data]="_getReadsByGuid(reads, meter._guid, i)"
+            [data]="_getDeltasByGuid(reads, meter._guid, i)"
             [loading]="_loadingReads$ | async"
             [animate]="_currentMeterIndex === i"
             [series]="['line1']"
             [dateFormat]="_selectedDateRanges[i]?.dateFormat"
           ></line-chart>
+
+          <div *ngIf="_getCostForTimeSpan(reads, meter._guid, i) as cost">
+            <div class="timespan-cost">
+              {{ cost.totalCost | currency:'USD': true: '1.2-2' }}
+            </div>
+            <div>
+              {{ cost.totalDelta / 1000 | number: '.1-2' }} {{ _getUnit(meter) }}
+            </div>
+          </div>
         </div>
       </div>
 

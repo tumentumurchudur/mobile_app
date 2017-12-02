@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Effect, Actions } from "@ngrx/effects";
 import { Action } from "@ngrx/store";
 import { Storage } from "@ionic/storage";
+import { StoreServices } from "../../store/services";
 
 import { Observable } from "rxjs/rx";
 import "rxjs/add/operator/map";
@@ -112,10 +113,10 @@ export class MainEffects {
       const [meters, user] = values;
 
       // Sets sum of reads diffs to _usage property.
-      this._costHelper.calcUsageDiffs(meters);
+      CostHelper.calcUsageDiffs(meters);
 
       // Sets actual usage cost to _actualUsageCost property.
-      this._costHelper.calcUsageCost(meters);
+      CostHelper.calcUsageCost(meters);
 
       // Store meter data locally by uid as key.
       this._storage.set(user.uid, meters);
@@ -169,32 +170,42 @@ export class MainEffects {
       .map((action: any) => action.payload)
       .switchMap((values: any) => {
         const { meter, timeSpan, startDate, endDate } = values;
+        let storeData;
+
+        // Check if data is available in the store.
+        this._storeServices.selectReadsData().subscribe(data => {
+          storeData = data.filter(read => {
+            return read.guid === meter._guid &&
+              read.startDate.toString() === startDate.toString() &&
+              read.endDate.toString() === endDate.toString();
+          })[0] || null;
+        });
 
         return Observable.combineLatest([
           Observable.of(meter),
           Observable.of(timeSpan),
           Observable.of(startDate),
           Observable.of(endDate),
-          this._db.getReadsByDateRange(meter._guid, startDate, endDate)
+          storeData ? Observable.of(storeData.reads) : this._db.getReadsByDateRange(meter._guid, startDate, endDate)
         ]);
       })
       .map(values => {
         const [ meter, timeSpan, startDate, endDate, reads ] = values;
-        const deltas = ChartHelper.getDeltas(reads);
+        const rawDeltas = ChartHelper.getDeltas(reads);
 
         const dateRange: IDateRange = { timeSpan, startDate, endDate };
+        const normalizedDeltas = ChartHelper.normalizeData(rawDeltas);
+        const deltas = normalizedDeltas.length ? ChartHelper.groupReadsByTimeSpan(dateRange, normalizedDeltas) : [];
+        const cost = normalizedDeltas.length ? CostHelper.calcCostFromReads(meter, normalizedDeltas) : 0;
 
         const payload = {
           guid: meter._guid,
           startDate,
           endDate,
           reads: reads,
-          deltas: deltas.length ? ChartHelper.normalizeReads(dateRange, deltas) : []
+          deltas: deltas,
+          cost: cost
         } as IReads;
-
-        // Calculate usage cost
-        const test = this._costHelper.calcCostFromReads(meter, deltas);
-        console.log("cost=>", test);
 
         return new AddReads(payload);
       });
@@ -208,8 +219,8 @@ export class MainEffects {
   constructor(
     private readonly _actions$: Actions,
     private readonly _db: DatabaseProvider,
-    private readonly _costHelper: CostHelper,
-    private readonly _storage: Storage
+    private readonly _storage: Storage,
+    private readonly _storeServices: StoreServices
   ) { }
 
 }

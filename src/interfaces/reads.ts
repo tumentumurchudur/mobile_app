@@ -5,5 +5,6 @@ export interface IReads {
   startDate: Date | null,
   endDate: Date | null,
   reads: IRead[] | null,
-  deltas: any[] | null
+  deltas: any[] | null,
+  cost: { totalCost: number, totalDelta: number } | null
 }

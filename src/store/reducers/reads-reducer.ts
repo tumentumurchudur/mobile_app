@@ -27,7 +27,6 @@ export function readsReducer(state = { data: [], loading: false }, action): any 
 					s.startDate.toString() !== startDate.toString() ||
 					s.endDate.toString() !== endDate.toString();
 			});
-
 			return Object.assign({}, state, { data: filteredData.concat(action.payload) }, { loading: false });
 		case ActionTypes.LOADING_READS:
 			return Object.assign({}, state, { loading: true });
