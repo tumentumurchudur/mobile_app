@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { IMeter } from '../interfaces';
+import { IMeter, ILineItem } from '../interfaces';
 import { convertConfigs } from "../configs";
 
 @Injectable()
@@ -31,6 +31,54 @@ export class CostHelper {
 		});
 
 		return meters;
+	}
+
+	public calcCostFromReads(meter: IMeter, deltas: ILineItem[]) {
+		console.log(meter, deltas);
+
+		let totalDelta: number = 0;
+		let totalCost: number = 0;
+
+		for (const delta of deltas) {
+			const { date, line1 } = delta;
+
+			totalDelta += line1;
+
+			const rate = this._getRate(meter, date, totalDelta);
+			let usage: number;
+
+			if (meter._utilityType === "gas") {
+				usage = line1 / convertConfigs.ccfToDth;
+			} else if (meter._utilityType === "water") {
+				usage = line1 / convertConfigs.galToCcf;
+			} else {
+				usage = line1;
+			}
+
+			if (!isNaN(rate)) {
+				totalCost += usage * rate;
+			}
+		}
+		return totalCost;
+	}
+
+	private _getRate(meter: IMeter, date: Date, delta: number): number {
+		const { _winter, _summer } = meter;
+		const isSummer = date >= _summer.start_date && date < _summer.end_date || false;
+		const tiers = isSummer && _summer ? _summer.tiers : (_winter ? _winter.tiers : null);
+		const rates = [];
+
+		for (let key of Object.keys(tiers)) {
+			const limit = parseInt(key);
+			const rate = tiers[key];
+
+			rates.push({ limit, rate });
+
+			if (delta <= limit) {
+				return rates[rates.length - 2];
+			}
+		}
+		return rates[rates.length - 1].rate;
 	}
 
 	/**

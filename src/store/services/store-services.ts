@@ -67,9 +67,9 @@ export class StoreServices {
 		this._store.dispatch(new AddReads(reads));
 	}
 
-	public loadReadsByDateRange(meterGuid: string, timeSpan: string, startDate: Date, endDate: Date) {
+	public loadReadsByDateRange(meter: IMeter, timeSpan: string, startDate: Date, endDate: Date) {
 		this._store.dispatch(new LoadingReads());
-		this._store.dispatch(new LoadReadsByDateRange({ guid: meterGuid, timeSpan, startDate, endDate }));
+		this._store.dispatch(new LoadReadsByDateRange({ meter, timeSpan, startDate, endDate }));
 	}
 
 	public selectReadsLoading() {

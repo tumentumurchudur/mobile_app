@@ -78,7 +78,7 @@ export class UtilitySpendingComponent implements OnInit {
     this._storeServices.loadReadsFromDb(this._meters$);
   }
 
-  private _onNavigationItemClick(selectedItem: string, index: number, meterGuid: string) {
+  private _onNavigationItemClick(selectedItem: string, index: number, meter: IMeter) {
     this._currentNavigationItems[index] = selectedItem;
     this._currentMeterIndex = index;
 
@@ -92,11 +92,11 @@ export class UtilitySpendingComponent implements OnInit {
       this._selectedDateRanges[index].dateFormat = dateFormat;
 
       // Initiate request to load data from database for given guid, start and end dates.
-      this._storeServices.loadReadsByDateRange(meterGuid, timeSpan, startDate, endDate);
+      this._storeServices.loadReadsByDateRange(meter, timeSpan, startDate, endDate);
     }
   }
 
-  private _onTimeSpanClick(timeSpan: string, meterGuid: string, index: number): void {
+  private _onTimeSpanClick(timeSpan: string, meter: IMeter, index: number): void {
     // Sets default start and end dates.
     const { startDate, endDate, dateFormat } = ChartHelper.getDefaultDateRange(timeSpan);
 
@@ -107,15 +107,15 @@ export class UtilitySpendingComponent implements OnInit {
 
     this._currentMeterIndex = index;
 
-    this._storeServices.loadReadsByDateRange(meterGuid, timeSpan, startDate, endDate);
+    this._storeServices.loadReadsByDateRange(meter, timeSpan, startDate, endDate);
   }
 
-  private _onTimeTravelClick(direction: string, meterGuid: string, index: number) {
+  private _onTimeTravelClick(direction: string, meter: IMeter, index: number) {
     this._selectedDateRanges[index] = ChartHelper.getDateRange(direction, this._selectedDateRanges[index]);
 
     const { timeSpan, startDate, endDate } = this._selectedDateRanges[index];
 
-    this._storeServices.loadReadsByDateRange(meterGuid, timeSpan, startDate, endDate);
+    this._storeServices.loadReadsByDateRange(meter, timeSpan, startDate, endDate);
   }
 
   private _getReadsByGuid(reads: IReads[], guid: string, index: number): any[] {

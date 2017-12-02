@@ -112,10 +112,10 @@ export class MainEffects {
       const [meters, user] = values;
 
       // Sets sum of reads diffs to _usage property.
-      this._helper.calcUsageDiffs(meters);
+      this._costHelper.calcUsageDiffs(meters);
 
       // Sets actual usage cost to _actualUsageCost property.
-      this._helper.calcUsageCost(meters);
+      this._costHelper.calcUsageCost(meters);
 
       // Store meter data locally by uid as key.
       this._storage.set(user.uid, meters);
@@ -168,29 +168,33 @@ export class MainEffects {
       .ofType(LOAD_READS_BY_DATE)
       .map((action: any) => action.payload)
       .switchMap((values: any) => {
-        const { guid, timeSpan, startDate, endDate } = values;
+        const { meter, timeSpan, startDate, endDate } = values;
 
         return Observable.combineLatest([
-          Observable.of(guid),
+          Observable.of(meter),
           Observable.of(timeSpan),
           Observable.of(startDate),
           Observable.of(endDate),
-          this._db.getReadsByDateRange(guid, startDate, endDate)
+          this._db.getReadsByDateRange(meter._guid, startDate, endDate)
         ]);
       })
       .map(values => {
-        const [ guid, timeSpan, startDate, endDate, reads ] = values;
+        const [ meter, timeSpan, startDate, endDate, reads ] = values;
         const deltas = ChartHelper.getDeltas(reads);
 
         const dateRange: IDateRange = { timeSpan, startDate, endDate };
 
         const payload = {
-          guid,
+          guid: meter._guid,
           startDate,
           endDate,
           reads: reads,
           deltas: deltas.length ? ChartHelper.normalizeReads(dateRange, deltas) : []
         } as IReads;
+
+        // Calculate usage cost
+        const test = this._costHelper.calcCostFromReads(meter, deltas);
+        console.log("cost=>", test);
 
         return new AddReads(payload);
       });
@@ -204,7 +208,7 @@ export class MainEffects {
   constructor(
     private readonly _actions$: Actions,
     private readonly _db: DatabaseProvider,
-    private readonly _helper: CostHelper,
+    private readonly _costHelper: CostHelper,
     private readonly _storage: Storage
   ) { }
 
