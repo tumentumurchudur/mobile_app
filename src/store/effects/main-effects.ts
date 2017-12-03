@@ -5,6 +5,7 @@ import { Storage } from "@ionic/storage";
 import { StoreServices } from "../../store/services";
 
 import { Observable } from "rxjs/rx";
+import { Subscription } from "rxjs/Subscription";
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/switchMap";
 import "rxjs/add/observable/combineLatest";
@@ -30,6 +31,7 @@ import {
 } from "../actions";
 import { IReadSummaries } from '../../interfaces/read-summaries';
 import { IDateRange } from '../../interfaces/date-range';
+import { subscribeOn } from 'rxjs/operator/subscribeOn';
 
 @Injectable()
 export class MainEffects {
@@ -60,13 +62,12 @@ export class MainEffects {
       const [meters = [], user] = values;
 
       // Load data from API.
-      // if (!meters.length) {
-      //   return new LoadFromDb(user);
-      // }
-      return new LoadFromDb(user);
+      if (!meters.length) {
+        return new LoadFromDb(user);
+      }
 
       // Load data from cache.
-      // return new AddMeters(meters);
+      return new AddMeters(meters);
     });
 
   /**
@@ -163,8 +164,9 @@ export class MainEffects {
         const { meter, timeSpan, startDate, endDate } = values;
         let storeData;
 
-        // Check if data is available in the store.
-        this._storeServices.selectReadsData().subscribe(data => {
+        // TODO: Needs improvement.
+        // Get data from the store if available.
+        const subscription: Subscription = this._storeServices.selectReadsData().subscribe(data => {
           storeData = data.filter(read => {
             return read.guid === meter._guid &&
               read.startDate.toString() === startDate.toString() &&
@@ -179,16 +181,22 @@ export class MainEffects {
           Observable.of(timeSpan),
           Observable.of(startDate),
           Observable.of(endDate),
-          reads
+          reads,
+          Observable.of(subscription)
         ]);
       })
       .map(values => {
-        const [ meter, timeSpan, startDate, endDate, reads ] = values;
+        const [ meter, timeSpan, startDate, endDate, reads, subscription ] = values;
+
+        if (subscription) {
+          subscription.unsubscribe();
+        }
+
         const rawDeltas = ChartHelper.getDeltas(reads);
 
         const dateRange: IDateRange = { timeSpan, startDate, endDate };
         const normalizedDeltas = ChartHelper.normalizeData(rawDeltas);
-        const deltas = normalizedDeltas.length ? ChartHelper.groupReadsByTimeSpan(dateRange, normalizedDeltas) : [];
+        const deltas = normalizedDeltas.length ? ChartHelper.groupDeltasByTimeSpan(dateRange, normalizedDeltas) : [];
 
         const cost = normalizedDeltas.length ? CostHelper.calculateCostFromDeltas(meter, normalizedDeltas) : 0;
 

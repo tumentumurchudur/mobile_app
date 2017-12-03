@@ -60,7 +60,7 @@
             [loading]="_loadingReads$ | async"
             [animate]="_currentMeterIndex === i"
             [series]="['line1']"
-            [dateFormat]="_selectedDateRanges[i]?.dateFormat"
+            [dateFormat]="_selectedDateRanges[i].dateFormat"
           ></line-chart>
 
           <div *ngIf="_getCostForTimeSpan(reads, meter._guid, i) as cost">
@@ -92,7 +92,7 @@
 
       <!-- Navigation -->
       <navigation-bar
-        (itemTapped)="_onNavigationItemClick($event, i, meter)"
+        (itemTapped)="_onNavigationItemClick($event, meter, i)"
       ></navigation-bar>
     </ion-card>
   </div>

@@ -2,7 +2,6 @@ import { Injectable } from "@angular/core";
 import { IRead, ILineItem, IDateRange } from "../interfaces";
 import { timeSpanConfigs } from "../configs";
 import * as moment from "moment";
-import { ALLOW_MULTIPLE_PLATFORMS } from "@angular/core/src/application_ref";
 
 export class ChartHelper {
   public static getDeltas(data: IRead[]): ILineItem[] {
@@ -24,8 +23,7 @@ export class ChartHelper {
   public static normalizeData(data: ILineItem[]): ILineItem[] {
     const tolerance = .5;
 
-    // Massage data in summaries array.
-    const allValues = data.map((s: ILineItem) => s.line1);
+    const allValues = data.map((d: ILineItem) => d.line1);
     const max = Math.max.apply(0, allValues);
     const largeValues = allValues.filter(val => val <= max && val >= max * tolerance);
 
@@ -37,7 +35,7 @@ export class ChartHelper {
     return data;
   }
 
-  public static groupReadsByTimeSpan(dateRange: IDateRange, data: ILineItem[]): ILineItem[] {
+  public static groupDeltasByTimeSpan(dateRange: IDateRange, data: ILineItem[]): ILineItem[] {
     let { startDate, endDate, timeSpan } = dateRange;
     const dataPoints = [];
     const emptyPoints = [];
@@ -65,7 +63,7 @@ export class ChartHelper {
         this._fillEmptyHoles(dataPoints, emptyPoints);
         break;
       case timeSpanConfigs.DAY:
-        while(startDate < endDate) {
+        while(startDate < endDate && startDate <= new Date()) {
           const startHour = startDate;
           const endHour = moment(startDate).add(1, "h").toDate();
           const dataPoint = this._getTotalsByDateRange(startHour, endHour, data);
@@ -80,7 +78,7 @@ export class ChartHelper {
         this._fillEmptyHoles(dataPoints, emptyPoints);
         break;
       case timeSpanConfigs.YEAR:
-        while(startDate < endDate) {
+        while(startDate < endDate && startDate <= new Date()) {
           const startMonth = moment(startDate).startOf("month").toDate();
           const endMonth = moment(startDate).endOf("month").toDate();
           const dataPoint = this._getTotalsByDateRange(startMonth, endMonth, data);
@@ -95,7 +93,7 @@ export class ChartHelper {
         this._fillEmptyHoles(dataPoints, emptyPoints);
         break;
       case timeSpanConfigs.HOUR:
-        while(startDate < endDate) {
+        while(startDate < endDate && startDate <= new Date()) {
           const startHour = startDate;
           const endHour = moment(startDate).add(15, "m").toDate();
           const dataPoint = this._getTotalsByDateRange(startHour, endHour, data);

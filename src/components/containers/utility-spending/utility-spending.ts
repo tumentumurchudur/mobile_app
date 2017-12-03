@@ -6,6 +6,7 @@ import { Observable } from "rxjs/Observable";
 import { IUser, IMeter, IReads, IDateRange } from "../../../interfaces";
 import { chartConfigs, navigationConfigs, timeSpanConfigs } from "../../../configs";
 import { ChartHelper } from "../../../helpers";
+import { ILineItem } from "../../../interfaces/line-item";
 
 const MAX_NUM_OF_CHARTS: number = 15;
 
@@ -78,7 +79,7 @@ export class UtilitySpendingComponent implements OnInit {
     this._storeServices.loadReadsFromDb(this._meters$);
   }
 
-  private _onNavigationItemClick(selectedItem: string, index: number, meter: IMeter) {
+  private _onNavigationItemClick(selectedItem: string, meter: IMeter, index: number) {
     this._currentNavigationItems[index] = selectedItem;
     this._currentMeterIndex = index;
 
@@ -86,6 +87,7 @@ export class UtilitySpendingComponent implements OnInit {
     if (this._currentNavigationItems[index] === this._navigationItems.LINE_CHART) {
       const { timeSpan } = this._selectedDateRanges[index];
 
+      // Get default dates if start and end dates are empty.
       if (!this._selectedDateRanges[index].startDate || !this._selectedDateRanges[index].endDate) {
         const { startDate, endDate, dateFormat } = ChartHelper.getDefaultDateRange(timeSpan);
 
@@ -96,7 +98,8 @@ export class UtilitySpendingComponent implements OnInit {
 
       // Initiate request to load data from database for given guid, start and end dates.
       this._storeServices.loadReadsByDateRange(
-        meter, timeSpan,
+        meter,
+        timeSpan,
         this._selectedDateRanges[index].startDate,
         this._selectedDateRanges[index].endDate
       );
@@ -129,7 +132,7 @@ export class UtilitySpendingComponent implements OnInit {
     this._storeServices.loadReadsByDateRange(meter, timeSpan, startDate, endDate);
   }
 
-  private _getDeltasByGuid(reads: IReads[], guid: string, index: number): any[] {
+  private _getDeltasByGuid(reads: IReads[], guid: string, index: number): ILineItem[] {
     const { startDate, endDate } = this._selectedDateRanges[index];
     const data = reads.filter(read => {
       return read.guid === guid &&

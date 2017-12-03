@@ -1,5 +1,5 @@
 import { IMeter, ILineItem } from '../interfaces';
-import { convertConfigs } from "../configs";
+import { convertConfigs, meterConfigs } from "../configs";
 
 import * as moment from "moment";
 
@@ -16,9 +16,9 @@ export class CostHelper {
 			const rate = this._getRate(meter, date, totalDelta);
 
 			if (line1 > 0) {
-				if (meter._utilityType === "gas") {
+				if (meter._utilityType === meterConfigs.types.GAS) {
 					totalCost += line1 / convertConfigs.ccfToDth * rate;
-				} else if (meter._utilityType === "water") {
+				} else if (meter._utilityType === meterConfigs.types.WATER) {
 					totalCost += line1 / convertConfigs.galToCcf * rate;
 				} else {
 					totalCost += line1 * rate;

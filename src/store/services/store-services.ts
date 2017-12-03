@@ -13,7 +13,7 @@ import {
 	LoadSummaries,
 	LoadingSummaries
 } from "../actions";
-import { IUser, IReads } from "../../interfaces";
+import { IUser, IReads, IRead } from "../../interfaces";
 import { Observable } from 'rxjs/Observable';
 import { IMeter } from '../../interfaces/meter';
 
@@ -98,4 +98,5 @@ export class StoreServices {
 	public selectReadsData() {
 		return this._store.select(state => state.reads.data);
 	}
+
 }
