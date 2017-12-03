@@ -29,9 +29,7 @@ import {
   AddUser,
   UpdateUser
 } from "../actions";
-import { IReadSummaries } from '../../interfaces/read-summaries';
-import { IDateRange } from '../../interfaces/date-range';
-import { subscribeOn } from 'rxjs/operator/subscribeOn';
+import { IReadSummaries, IDateRange } from "../../interfaces";
 
 @Injectable()
 export class MainEffects {
@@ -165,7 +163,7 @@ export class MainEffects {
         let storeData;
 
         // TODO: Needs improvement.
-        // Get data from the store if available.
+        // Get reads data from the store if available.
         const subscription: Subscription = this._storeServices.selectReadsData().subscribe(data => {
           storeData = data.filter(read => {
             return read.guid === meter._guid &&
@@ -182,6 +180,8 @@ export class MainEffects {
           Observable.of(startDate),
           Observable.of(endDate),
           reads,
+          // Needs subscription to the store observable,
+          // so it can be unsubscribed to prevent memory leaks.
           Observable.of(subscription)
         ]);
       })
