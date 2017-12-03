@@ -47,6 +47,7 @@
       >
         <timespan-selector
           [selectedTimeSpan]="_selectedDateRanges[i].timeSpan"
+          [disableNextButton]="_shouldNextButtonDisabled(i)"
           (timeSpanChanged)="_onTimeSpanClick($event, meter, i)"
           (itemTapped)="_onTimeTravelClick($event, meter, i)"
         ></timespan-selector>

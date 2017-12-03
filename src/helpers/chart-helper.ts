@@ -45,7 +45,7 @@ export class ChartHelper {
     switch(timeSpan) {
       case timeSpanConfigs.MONTH:
       case timeSpanConfigs.WEEK:
-        while(startDate < endDate) {
+        while(startDate < endDate && startDate <= new Date()) {
           const startDay = moment(startDate).startOf("day").toDate();
           const endDay = moment(startDate).endOf("day").toDate();
           const dataPoint: ILineItem = this._getTotalsByDateRange(startDay, endDay, data);

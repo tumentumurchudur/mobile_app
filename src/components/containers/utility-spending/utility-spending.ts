@@ -85,14 +85,21 @@ export class UtilitySpendingComponent implements OnInit {
     // Line chart is selected.
     if (this._currentNavigationItems[index] === this._navigationItems.LINE_CHART) {
       const { timeSpan } = this._selectedDateRanges[index];
-      const { startDate, endDate, dateFormat } = ChartHelper.getDefaultDateRange(timeSpan);
 
-      this._selectedDateRanges[index].startDate = startDate;
-      this._selectedDateRanges[index].endDate = endDate;
-      this._selectedDateRanges[index].dateFormat = dateFormat;
+      if (!this._selectedDateRanges[index].startDate || !this._selectedDateRanges[index].endDate) {
+        const { startDate, endDate, dateFormat } = ChartHelper.getDefaultDateRange(timeSpan);
+
+        this._selectedDateRanges[index].startDate = startDate;
+        this._selectedDateRanges[index].endDate = endDate;
+        this._selectedDateRanges[index].dateFormat = dateFormat;
+      }
 
       // Initiate request to load data from database for given guid, start and end dates.
-      this._storeServices.loadReadsByDateRange(meter, timeSpan, startDate, endDate);
+      this._storeServices.loadReadsByDateRange(
+        meter, timeSpan,
+        this._selectedDateRanges[index].startDate,
+        this._selectedDateRanges[index].endDate
+      );
     }
   }
 
@@ -108,6 +115,10 @@ export class UtilitySpendingComponent implements OnInit {
     this._currentMeterIndex = index;
 
     this._storeServices.loadReadsByDateRange(meter, timeSpan, startDate, endDate);
+  }
+
+  private _shouldNextButtonDisabled(index: number): boolean {
+    return this._selectedDateRanges[index].endDate > new Date();
   }
 
   private _onTimeTravelClick(direction: string, meter: IMeter, index: number) {
