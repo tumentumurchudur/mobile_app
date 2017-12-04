@@ -2,12 +2,7 @@ import {Component, Inject} from '@angular/core';
 import {FormGroup, FormBuilder, Validators} from "@angular/forms";
 import {AlertController, NavController, LoadingController} from 'ionic-angular';
 import {Keyboard} from '@ionic-native/keyboard';
-
-
-
 import moment, {Moment} from 'moment';
-
-
 
 @Component({
   selector: 'add-meter-form',
