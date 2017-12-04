@@ -7,6 +7,7 @@ import { ArcTweenChartComponent } from './arc-tween-chart/arc-tween-chart';
 import { NavigationBarComponent } from './navigation-bar/navigation-bar';
 import { TimeSpanSelectorComponent } from "./timespan-selector/timespan-selector";
 import { LineChartComponent } from './line-chart/line-chart';
+import { AddMeterFormComponent } from './add-meter-form/add-meter-form';
 
 @NgModule({
 	declarations: [
@@ -14,7 +15,8 @@ import { LineChartComponent } from './line-chart/line-chart';
     ArcTweenChartComponent,
     NavigationBarComponent,
     TimeSpanSelectorComponent,
-    LineChartComponent
+    LineChartComponent,
+    AddMeterFormComponent
 	],
 	imports: [CommonModule, IonicModule],
 	exports: [
@@ -22,7 +24,8 @@ import { LineChartComponent } from './line-chart/line-chart';
     ArcTweenChartComponent,
     NavigationBarComponent,
     TimeSpanSelectorComponent,
-    LineChartComponent
+    LineChartComponent,
+    AddMeterFormComponent
 	]
 })
 export class ComponentsModule {}
