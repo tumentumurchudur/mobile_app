@@ -14,6 +14,7 @@
       <div
         class="card-content"
         *ngIf="_currentNavigationItems[i] === _navigationItems.ARC_CHART"
+        [@arcChartState]
       >
         <div *ngIf="meter._actualUsageCost > 0">
           <arc-tween-chart
@@ -44,10 +45,11 @@
       <div
         class="card-content"
         *ngIf="_currentNavigationItems[i] === _navigationItems.LINE_CHART"
+        [@lineChartState]
       >
         <timespan-selector
           [selectedTimeSpan]="_selectedDateRanges[i].timeSpan"
-          [disableNextButton]="_shouldNextButtonDisabled(i)"
+          [disableNextButton]="_shouldDisableNextButton(i)"
           (timeSpanChanged)="_onTimeSpanClick($event, meter, i)"
           (itemTapped)="_onTimeTravelClick($event, meter, i)"
         ></timespan-selector>
@@ -55,20 +57,22 @@
         <div>{{ _showDateRange(i) }}</div>
 
         <div *ngIf="_reads$ | async as reads">
-          <line-chart
-            [data]="_getDeltasByGuid(reads, meter._guid, i)"
-            [loading]="_loadingReads$ | async"
-            [animate]="_currentMeterIndex === i"
-            [series]="['line1']"
-            [dateFormat]="_selectedDateRanges[i].dateFormat"
-          ></line-chart>
+          <div *ngIf="_getDataByGuid(reads, meter._guid, i) as data">
+            <line-chart
+              [data]="data.deltas"
+              [loading]="_loadingReads$ | async"
+              [animate]="_currentMeterIndex === i"
+              [series]="['line1']"
+              [dateFormat]="_selectedDateRanges[i].dateFormat"
+            ></line-chart>
 
-          <div *ngIf="_getCostForTimeSpan(reads, meter._guid, i) as cost">
-            <div class="timespan-cost">
-              {{ cost.totalCost | currency:'USD': true: '1.2-2' }}
-            </div>
-            <div>
-              {{ cost.totalDelta / 1000 | number: '.1-2' }} {{ _getUnit(meter) }}
+            <div *ngIf="data.cost">
+                <div class="timespan-cost">
+                  {{ data.cost.totalCost | currency:'USD': true: '1.2-2' }}
+                </div>
+                <div>
+                  {{ data.cost.totalDelta / 1000 | number: '.1-2' }} {{ _getUnit(meter) }}
+                </div>
             </div>
           </div>
         </div>
