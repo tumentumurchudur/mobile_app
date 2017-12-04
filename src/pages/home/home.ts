@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IonicPage } from 'ionic-angular';
+import { IonicPage, NavController } from 'ionic-angular';
 import { IUser } from '../../interfaces';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store/reducers';
@@ -33,7 +33,20 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   constructor(
-    private _store: Store<AppState>
+    private _store: Store<AppState>,
+    public nav: NavController
   ) { }
+
+  protected changeMainView(newView: string): void {
+    if (newView === 'ProfilePage') {
+      this.nav.push('ProfilePage');
+      return;
+    }
+
+    if (newView === 'AddMeterPage') {
+      this.nav.push('AddMeterPage');
+      return;
+    }
+  }
 
 }
