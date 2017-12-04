@@ -2,8 +2,10 @@ import { Injectable } from '@angular/core';
 import { Effect, Actions } from "@ngrx/effects";
 import { Action } from "@ngrx/store";
 import { Storage } from "@ionic/storage";
+import { StoreServices } from "../../store/services";
 
 import { Observable } from "rxjs/rx";
+import { Subscription } from "rxjs/Subscription";
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/switchMap";
 import "rxjs/add/observable/combineLatest";
@@ -27,8 +29,7 @@ import {
   AddUser,
   UpdateUser
 } from "../actions";
-import { IReadSummaries } from '../../interfaces/read-summaries';
-import { IDateRange } from '../../interfaces/date-range';
+import { IReadSummaries, IDateRange } from "../../interfaces";
 
 @Injectable()
 export class MainEffects {
@@ -62,6 +63,7 @@ export class MainEffects {
       if (!meters.length) {
         return new LoadFromDb(user);
       }
+
       // Load data from cache.
       return new AddMeters(meters);
     });
@@ -111,11 +113,21 @@ export class MainEffects {
     .flatMap((values: any[]) => {
       const [meters, user] = values;
 
-      // Sets sum of reads diffs to _usage property.
-      this._helper.calcUsageDiffs(meters);
+      // Calculates actual cost and usage.
+      for (let i = 0; i < meters.length; i++) {
+        const deltas = ChartHelper.getDeltas(meters[i]._reads);
+        const cost = deltas.length ? CostHelper.calculateCostFromDeltas(meters[i], deltas) : {};
+        const { billingTotalDays, billingCurrentDays } = CostHelper.calculateBillingCycles(meters[i]._billing_start);
 
-      // Sets actual usage cost to _actualUsageCost property.
-      this._helper.calcUsageCost(meters);
+        meters[i]._actualUsageCost = cost.totalCost || 0;
+        meters[i]._usage = cost.totalDelta || 0;
+
+        // # of days since billing start date
+        meters[i]._billing_since_start = billingCurrentDays || 0;
+
+        // # of days in billing cycle.
+        meters[i]._billing_total = billingTotalDays || 0;
+      }
 
       // Store meter data locally by uid as key.
       this._storage.set(user.uid, meters);
@@ -143,53 +155,58 @@ export class MainEffects {
     });
 
     @Effect()
-    public loadSummaries = this._actions$
-      .ofType(LOAD_SUMMARIES)
-      .map((action: any) => action.payload)
-      .switchMap((data: IReadSummaries) => {
-        return Observable.combineLatest([
-          Observable.of(data.guid),
-          Observable.of(data.timeSpan),
-          this._db.getSummaries(data.guid, data.timeSpan)
-        ]);
-      })
-      .map((data: any[]) => {
-        const [ guid, timeSpan, summaries ] = data;
-
-        return new AddSummaries({
-          guid: guid,
-          timeSpan: timeSpan,
-          summaries: summaries
-        });
-      });
-
-    @Effect()
     public loadReadsByDate = this._actions$
       .ofType(LOAD_READS_BY_DATE)
       .map((action: any) => action.payload)
       .switchMap((values: any) => {
-        const { guid, timeSpan, startDate, endDate } = values;
+        const { meter, timeSpan, startDate, endDate } = values;
+        let storeData;
+
+        // TODO: Needs improvement.
+        // Get reads data from the store if available.
+        const subscription: Subscription = this._storeServices.selectReadsData().subscribe(data => {
+          storeData = data.filter(read => {
+            return read.guid === meter._guid &&
+              read.startDate.toString() === startDate.toString() &&
+              read.endDate.toString() === endDate.toString();
+          })[0] || null;
+        });
+
+        const reads = storeData ? Observable.of(storeData.reads) : this._db.getReadsByDateRange(meter._guid, startDate, endDate);
 
         return Observable.combineLatest([
-          Observable.of(guid),
+          Observable.of(meter),
           Observable.of(timeSpan),
           Observable.of(startDate),
           Observable.of(endDate),
-          this._db.getReadsByDateRange(guid, startDate, endDate)
+          reads,
+          // Needs subscription to the store observable,
+          // so it can be unsubscribed to prevent memory leaks.
+          Observable.of(subscription)
         ]);
       })
       .map(values => {
-        const [ guid, timeSpan, startDate, endDate, reads ] = values;
-        const deltas = ChartHelper.getDeltas(reads);
+        const [ meter, timeSpan, startDate, endDate, reads, subscription ] = values;
+
+        if (subscription) {
+          subscription.unsubscribe();
+        }
+
+        const rawDeltas = ChartHelper.getDeltas(reads);
 
         const dateRange: IDateRange = { timeSpan, startDate, endDate };
+        const normalizedDeltas = ChartHelper.normalizeData(rawDeltas);
+        const deltas = normalizedDeltas.length ? ChartHelper.groupDeltasByTimeSpan(dateRange, normalizedDeltas) : [];
+
+        const cost = normalizedDeltas.length ? CostHelper.calculateCostFromDeltas(meter, normalizedDeltas) : 0;
 
         const payload = {
-          guid,
+          guid: meter._guid,
           startDate,
           endDate,
           reads: reads,
-          deltas: deltas.length ? ChartHelper.normalizeReads(dateRange, deltas) : []
+          deltas: deltas,
+          cost: cost
         } as IReads;
 
         return new AddReads(payload);
@@ -204,8 +221,8 @@ export class MainEffects {
   constructor(
     private readonly _actions$: Actions,
     private readonly _db: DatabaseProvider,
-    private readonly _helper: CostHelper,
-    private readonly _storage: Storage
+    private readonly _storage: Storage,
+    private readonly _storeServices: StoreServices
   ) { }
 
 }
