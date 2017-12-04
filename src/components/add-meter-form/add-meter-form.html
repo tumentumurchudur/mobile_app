@@ -1,4 +1,5 @@
 <form [formGroup]="addMeter" (submit)="submitForm">
+  <!--Pick Utility Type-->
   <section *ngIf="_step == 1" class="text-container">
     <h4>What type of utility do you want to add?</h4>
     <ion-list radio-group formControlName="utilityType" class="list-container">
@@ -14,6 +15,7 @@
       </ion-item>
     </ion-list>
   </section>
+  <!--Meter number and billing start date-->
   <section *ngIf="_step == 2" class="text-container">
     <h4>What is this utility's meter number and billing start date?</h4>
     <ion-item (keyup.enter)="keyboardSubmit()" class="meter-number">
@@ -35,6 +37,7 @@
       <ion-datetime formControlName="billingStart" displayFormat="MMM D"></ion-datetime>
     </ion-item>
   </section>
+  <!--Provider information-->
   <section *ngIf="_step == 3" class="text-container">
     <h4>Select your provider information</h4>
     <ion-item>
@@ -76,17 +79,17 @@
       </ion-item>
     </div>
   </section>
+  <!--Setting a spending goal-->
   <section *ngIf="_step == 4" class="text-container">
     <h4>Do you want to include a spending goal?</h4>
-
     <ion-item (keyup.enter)="keyboardSubmit()" class="spending-goal">
       <ion-label floating>Spending Goal</ion-label>
       <ion-input formControlName="goal" type="number" min="0"></ion-input>
     </ion-item>
   </section>
+  <!--Name Your meter-->
   <section *ngIf="_step == 5" class="text-container">
     <h4>Last but not least, let's give this meter a name.</h4>
-
     <ion-item (keyup.enter)="keyboardSubmit()" class="meter-name" formControlName="name">
       <ion-label floating>Meter Name</ion-label>
       <ion-input type="text" required></ion-input>
