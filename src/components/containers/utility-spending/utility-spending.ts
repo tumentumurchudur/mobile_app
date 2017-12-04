@@ -19,14 +19,14 @@ const MAX_NUM_OF_CHARTS: number = 15;
   animations: [
     trigger("lineChartState", [
       transition(":enter", [
-        style({ transform: "rotateY(100deg)", opacity: 0 }),
-        animate("500ms", style({ transform: "translateX(0)", opacity: 1 }))
+        style({ transform: "rotateY(90deg)" }),
+        animate("500ms 100ms ease-in-out")
       ])
     ]),
     trigger("arcChartState", [
       transition(":enter", [
-        style({ transform: "rotateY(100deg)", opacity: 0 }),
-        animate("500ms", style({ transform: "translateX(0)", opacity: 1 }))
+        style({ transform: "rotateY(90deg)" }),
+        animate("500ms 100ms ease-in-out")
       ])
     ])
   ]
