@@ -80,7 +80,9 @@ add-meter-form {
     position: absolute;
     bottom: 0;
     width: 100%;
+    display: flex;
     flex-direction: row;
+    align-items: stretch;
   }
 
   .form-nav-button {
@@ -91,11 +93,12 @@ add-meter-form {
     -webkit-border-radius: 0;
     -moz-border-radius: 0;
     border-radius: 0;
+    flex: 1;
   }
 
   .form-nav-button-back {
     margin: 0;
-    width: 45%;
+    width: 50%;
     height:8vh;
     -webkit-box-shadow: none;
     -moz-box-shadow: none;

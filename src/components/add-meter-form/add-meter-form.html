@@ -1,8 +1,6 @@
 <form [formGroup]="addMeter" (submit)="submitForm">
-
   <section *ngIf="_step == 1" class="text-container">
     <h4>What type of utility do you want to add?</h4>
-
     <ion-list radio-group formControlName="utilityType" class="list-container">
       <ion-item *ngFor="let type of utilityTypes">
         <ion-label>
@@ -16,10 +14,8 @@
       </ion-item>
     </ion-list>
   </section>
-
   <section *ngIf="_step == 2" class="text-container">
     <h4>What is this utility's meter number and billing start date?</h4>
-
     <ion-item (keyup.enter)="keyboardSubmit()" class="meter-number">
       <ion-label stacked>Meter Number (no spaces or hyphens)</ion-label>
       <ion-input showWhen="ios"
@@ -28,20 +24,17 @@
                  type="text"
                  [class.invalid]="!addMeter.controls['meterNumber'].valid && addMeter.controls['meterNumber'].touched">
       </ion-input>
-
       <ion-input showWhen="android"
                  #meterId
                  formControlName="meterNumber"
                  type="text">
       </ion-input>
     </ion-item>
-
     <ion-item (keyup.enter)="keyboardSubmit()" class="meter-number">
       <ion-label stacked>Billing Start Date (day of month)</ion-label>
       <ion-datetime formControlName="billingStart" displayFormat="MMM D"></ion-datetime>
     </ion-item>
   </section>
-
   <section *ngIf="_step == 3" class="text-container">
     <h4>Select your provider information</h4>
     <ion-item>
@@ -52,7 +45,6 @@
         </ion-option>
       </ion-select>
     </ion-item>
-
     <div *ngIf="addMeter.value['country']">
       <ion-item>
         <ion-label>Region</ion-label>
@@ -63,7 +55,6 @@
         </ion-select>
       </ion-item>
     </div>
-
     <div *ngIf="addMeter.value['region']">
       <ion-item>
         <ion-label>Provider</ion-label>
@@ -74,7 +65,6 @@
         </ion-select>
       </ion-item>
     </div>
-
     <div *ngIf="addMeter.value['provider']">
       <ion-item>
         <ion-label>Plan</ion-label>
@@ -86,7 +76,6 @@
       </ion-item>
     </div>
   </section>
-
   <section *ngIf="_step == 4" class="text-container">
     <h4>Do you want to include a spending goal?</h4>
 
@@ -95,7 +84,6 @@
       <ion-input formControlName="goal" type="number" min="0"></ion-input>
     </ion-item>
   </section>
-
   <section *ngIf="_step == 5" class="text-container">
     <h4>Last but not least, let's give this meter a name.</h4>
 
@@ -104,7 +92,6 @@
       <ion-input type="text" required></ion-input>
     </ion-item>
   </section>
-
   <section class="button-section">
     <button ion-button
             *ngIf="_step >= 2"
