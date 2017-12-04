@@ -8,12 +8,28 @@ import { chartConfigs, navigationConfigs, timeSpanConfigs } from "../../../confi
 import { ChartHelper } from "../../../helpers";
 import { ILineItem } from "../../../interfaces/line-item";
 
+import { trigger, state, style, animate, transition } from "@angular/animations";
+
 const MAX_NUM_OF_CHARTS: number = 15;
 
 @Component({
   selector: 'utility-spending',
   templateUrl: 'utility-spending.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [
+    trigger("lineChartState", [
+      transition(":enter", [
+        style({ transform: "rotateY(100deg)", opacity: 0 }),
+        animate("500ms", style({ transform: "translateX(0)", opacity: 1 }))
+      ])
+    ]),
+    trigger("arcChartState", [
+      transition(":enter", [
+        style({ transform: "rotateY(100deg)", opacity: 0 }),
+        animate("500ms", style({ transform: "translateX(0)", opacity: 1 }))
+      ])
+    ])
+  ]
 })
 export class UtilitySpendingComponent implements OnInit {
   @Input() user: IUser | null;
@@ -120,7 +136,7 @@ export class UtilitySpendingComponent implements OnInit {
     this._storeServices.loadReadsByDateRange(meter, timeSpan, startDate, endDate);
   }
 
-  private _shouldNextButtonDisabled(index: number): boolean {
+  private _shouldDisableNextButton(index: number): boolean {
     return this._selectedDateRanges[index].endDate > new Date();
   }
 
@@ -132,7 +148,7 @@ export class UtilitySpendingComponent implements OnInit {
     this._storeServices.loadReadsByDateRange(meter, timeSpan, startDate, endDate);
   }
 
-  private _getDeltasByGuid(reads: IReads[], guid: string, index: number): ILineItem[] {
+  private _getDataByGuid(reads: IReads[], guid: string, index: number): any {
     const { startDate, endDate } = this._selectedDateRanges[index];
     const data = reads.filter(read => {
       return read.guid === guid &&
@@ -140,21 +156,20 @@ export class UtilitySpendingComponent implements OnInit {
         read.endDate.toString() === endDate.toString()
     })[0] || null;
 
-    return data ? data.deltas : [];
-  }
-
-  private _getCostForTimeSpan(reads: IReads[], guid: string, index: number): any {
-    const { startDate, endDate } = this._selectedDateRanges[index];
-    const data = reads.filter(read => {
-      return read.guid === guid &&
-        read.startDate.toString() === startDate.toString() &&
-        read.endDate.toString() === endDate.toString()
-    })[0] || null;
-
-    return data ? data.cost : null;
+    if (data) {
+      return {
+        deltas: data.deltas,
+        cost: data.cost
+      };
+    }
+    return {
+      deltas: [],
+      cost: null
+    };
   }
 
   private _showDateRange(index: number): string {
     return ChartHelper.getFormattedDateRange(this._selectedDateRanges[index]);
   }
+
 }
