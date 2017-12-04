@@ -13,7 +13,7 @@ import {
 	LoadSummaries,
 	LoadingSummaries
 } from "../actions";
-import { IUser, IReads } from "../../interfaces";
+import { IUser, IReads, IRead } from "../../interfaces";
 import { Observable } from 'rxjs/Observable';
 import { IMeter } from '../../interfaces/meter';
 
@@ -67,9 +67,9 @@ export class StoreServices {
 		this._store.dispatch(new AddReads(reads));
 	}
 
-	public loadReadsByDateRange(meterGuid: string, timeSpan: string, startDate: Date, endDate: Date) {
+	public loadReadsByDateRange(meter: IMeter, timeSpan: string, startDate: Date, endDate: Date) {
 		this._store.dispatch(new LoadingReads());
-		this._store.dispatch(new LoadReadsByDateRange({ guid: meterGuid, timeSpan, startDate, endDate }));
+		this._store.dispatch(new LoadReadsByDateRange({ meter, timeSpan, startDate, endDate }));
 	}
 
 	public selectReadsLoading() {
@@ -98,4 +98,5 @@ export class StoreServices {
 	public selectReadsData() {
 		return this._store.select(state => state.reads.data);
 	}
+
 }

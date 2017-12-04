@@ -104,7 +104,7 @@ export class DatabaseProvider {
     return Observable
       .combineLatest(
         // sends request for reads for each meter using meter guid.
-        ...meters.map(meter => this._getReadsForMeter(meter._guid, meter._billing_start))
+        ...meters.map(meter => this.getReadsForMeter(meter._guid, meter._billing_start))
       )
       .map((allMeterData: IMeter[][]) => {
         // Adds property _reads and assigns the reads for each meter in the passed meters array.
@@ -183,7 +183,7 @@ export class DatabaseProvider {
    * @returns {Observable<IMeter[]>}
    * @memberof DatabaseProvider
    */
-  private _getReadsForMeter(meterGuid: string, billingStart: number): Observable<IMeter[]> {
+  public getReadsForMeter(meterGuid: string, billingStart: number): Observable<IMeter[]> {
     const today = new Date();
     const refDate = new Date(today.getFullYear(), today.getMonth(), billingStart);
     const prevBillingStartDate = new Date(today.getFullYear(), today.getMonth() - 1, billingStart);
