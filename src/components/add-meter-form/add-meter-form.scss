@@ -1,5 +1,7 @@
+@import "../../styles/variables";
+
 add-meter-form {
-  color: #535969;
+  color: $header-text;
   .text-container {
     padding: 0;
   }
@@ -11,8 +13,8 @@ add-meter-form {
 
   .list-container {
     width: 100%;
-    border-top: 1px solid #dedede;
-    border-bottom: 1px solid #dedede;
+    border-top: 1px solid $alto;
+    border-bottom: 1px solid $alto;
   }
   .datetime {
     margin-left: 4rem !important;
@@ -41,7 +43,7 @@ add-meter-form {
   .spending-goal ion-input,
   .meter-name ion-input {
     margin-left: 4rem;
-    color: #535969;
+    color: $input-text;
   }
 
   .list-container button {
@@ -50,24 +52,6 @@ add-meter-form {
 
   .util-type-title {
     text-transform: capitalize;
-  }
-
-  .unselected-util-type {
-    color: #CCCFD4 !important;
-  }
-
-  .previous-btn {
-    font-size: 1.5rem;
-    background-color: #8C919A;
-    color: #ffffff;
-    width: 100%;
-  }
-
-  .next-btn {
-    font-size: 1.5rem;
-    background-color: #2AACE0;
-    color: #ffffff;
-    width: 100%;
   }
 
   i {
@@ -104,7 +88,7 @@ add-meter-form {
     -moz-box-shadow: none;
     box-shadow: none;
     background: transparent;
-    color: #2AACE0;
+    color: $vutiliti-blue;
     text-transform: none;
   }
 }

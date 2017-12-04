@@ -38,15 +38,7 @@ export class HomePage implements OnInit, OnDestroy {
   ) { }
 
   protected changeMainView(newView: string): void {
-    if (newView === 'ProfilePage') {
-      this.nav.push('ProfilePage');
-      return;
-    }
-
-    if (newView === 'AddMeterPage') {
-      this.nav.push('AddMeterPage');
-      return;
-    }
+    this.nav.push(newView);
   }
 
 }

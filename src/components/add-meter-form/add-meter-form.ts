@@ -1,34 +1,35 @@
-import {Component, Inject} from '@angular/core';
-import {FormGroup, FormBuilder, Validators} from "@angular/forms";
-import {AlertController, NavController, LoadingController} from 'ionic-angular';
-import {Keyboard} from '@ionic-native/keyboard';
-import moment, {Moment} from 'moment';
+import { Component, Inject } from "@angular/core";
+import { FormGroup, FormBuilder, Validators } from "@angular/forms";
+import { AlertController, NavController, LoadingController } from "ionic-angular";
+import { Keyboard } from "@ionic-native/keyboard";
+import * as moment from "moment";
 
 @Component({
-  selector: 'add-meter-form',
-  templateUrl: 'add-meter-form.html'
+  selector: "add-meter-form",
+  templateUrl: "add-meter-form.html"
 })
 export class AddMeterFormComponent {
 
-  private addMeter: FormGroup;
+  private _addMeter: FormGroup;
   private _step: number = 1;
-  loading: any;
-  validateMeterStatus: string;
-  timeoutAlert: any;
-  private dateBS: string = moment().format("YYYY-MM-DD");
+  private _loading: any;
+  private _validateMeterStatus: string;
+  private _dateBS: string = moment().format("YYYY-MM-DD");
 
 
-  constructor(@Inject(FormBuilder)formBuilder: FormBuilder,
-              public alertCtrl: AlertController,
-              public navCtrl: NavController,
-              public loadingCtrl: LoadingController,
-              private keyboard: Keyboard
+  constructor(
+    // @Inject(FormBuilder)formBuilder: FormBuilder,
+    private _formBuilder: FormBuilder,
+    private alertCtrl: AlertController,
+    public navCtrl: NavController,
+    public loadingCtrl: LoadingController,
+    private keyboard: Keyboard
   ) {
 
-    this.addMeter = formBuilder.group({
+    this._addMeter = _formBuilder.group({
       utilityType: ["", Validators.required],
       meterNumber: ["", Validators.compose([Validators.required, Validators.minLength(7), Validators.maxLength(10), Validators.pattern("[a-zA-Z0-9]*")])],
-      billingStart: this.dateBS,
+      billingStart: this._dateBS,
       country: [""],
       region: [""],
       provider: [""],
@@ -38,35 +39,34 @@ export class AddMeterFormComponent {
     });
   }
 
-  nextStep(): void {
-    // if (this._step == 2) {
-    //   this.validateMeter();
+  private _nextStep(): void {
+    // if (this._step === 2) {
+    //   this._validateMeter();
     //   return;
     // }
     this._step++;
   }
 
-  previousStep(): void {
+  private _previousStep(): void {
     this._step--;
   }
 
 
-  validateMeter() {
+ _validateMeter() {
     this.showLoading();
 
-    this.loading.onDidDismiss(() => {
-
+    this._loading.onDidDismiss(() => {
       // No meter data came back, this timed out, so show the alert.
-      if (this.validateMeterStatus == "") {
+      if (this._validateMeterStatus === "") {
 
         let timeoutAlert = this.alertCtrl.create({
           message: "Connection is weak. Would you like to keep trying?",
           buttons: [
             {
               text: "Cancel",
-              role: 'cancel',
+              role: "cancel",
               handler: () => {
-                this.validateMeterStatus = "cancel";
+                this._validateMeterStatus = "cancel";
                 timeoutAlert.dismiss();
               }
             },
@@ -87,11 +87,11 @@ export class AddMeterFormComponent {
   }
 
   showLoading() {
-    this.loading = this.loadingCtrl.create({
-      content: 'Verifying Meter',
+    this._loading = this.loadingCtrl.create({
+      content: "Verifying Meter",
       duration: 10000
     });
-    this.loading.present();
+    this._loading.present();
   }
 
   keyboardSubmit() {
