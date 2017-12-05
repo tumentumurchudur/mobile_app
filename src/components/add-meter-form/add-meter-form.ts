@@ -51,7 +51,6 @@ export class AddMeterFormComponent {
     this._step--;
   }
 
-
  _validateMeter() {
     this.showLoading();
 
