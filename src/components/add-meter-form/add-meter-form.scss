@@ -1,0 +1,94 @@
+@import "../../styles/variables";
+
+add-meter-form {
+  color: $header-text;
+  .text-container {
+    padding: 0;
+  }
+
+  .text-container > h4 {
+    padding: 12%;
+    text-align: center;
+  }
+
+  .list-container {
+    width: 100%;
+    border-top: 1px solid $alto;
+    border-bottom: 1px solid $alto;
+  }
+  .datetime {
+    margin-left: 4rem !important;
+  }
+
+  ion-item.meter-type-option,
+  ion-item.meter-number,
+  ion-item.provider-option,
+  ion-item.spending-goal,
+  ion-item.meter-name {
+    padding-left: 0 !important;
+  }
+
+  .invalid {
+    border-bottom: 2px solid red;
+  }
+
+  .meter-number ion-label,
+  .provider-option ion-label,
+  .spending-goal ion-label,
+  .meter-name ion-label {
+    margin-left: 2rem !important;
+  }
+
+  .meter-number ion-input,
+  .spending-goal ion-input,
+  .meter-name ion-input {
+    margin-left: 4rem;
+    color: $input-text;
+  }
+
+  .list-container button {
+    padding: 0 !important;
+  }
+
+  .util-type-title {
+    text-transform: capitalize;
+  }
+
+  i {
+    margin-right: 1rem;
+    margin-left: 2rem;
+    font-size: 1.75rem;
+  }
+
+  .button-section {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  .form-nav-button {
+    display: flex;
+    margin: 0;
+    width: 100%;
+    height: 8vh;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    flex: 1;
+  }
+
+  .form-nav-button-back {
+    margin: 0;
+    width: 50%;
+    height: 8vh;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    background: transparent;
+    color: $vutiliti-blue;
+    text-transform: none;
+  }
+}

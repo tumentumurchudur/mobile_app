@@ -118,14 +118,15 @@ export class ChartHelper {
 
     switch(timeSpan) {
       case timeSpanConfigs.MONTH:
+      return moment(startDate).format("MMM YYYY");      
       case timeSpanConfigs.WEEK:
-        return moment(startDate).format("MMM DD, YY") + " - " + moment(endDate).format("MMM DD, YY");
+        return moment(startDate).format("MMM DD") + " - " + moment(endDate).format("MMM DD YYYY");
       case timeSpanConfigs.DAY:
-        return moment(startDate).format("hh a") + " - " + moment(endDate).format("hh a");
+        return moment(startDate).format("MMM DD, YYYY");
       case timeSpanConfigs.HOUR:
         return moment(startDate).format("hh:mm a") + " - " + moment(endDate).format("hh:mm a");
       case timeSpanConfigs.YEAR:
-        return moment(startDate).format("MMM YY") + " - " + moment(endDate).format("MMM YY");
+        return moment(startDate).format("MMM") + " - " + moment(endDate).format("MMM YYYY");
       default:
         return "";
     }

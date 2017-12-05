@@ -1,3 +1,27 @@
+@import "../../styles/variables";
+
 page-home {
+  .home-page {
+    background-color: $background-color;
+  }
+
+  .cog {
+    margin:auto;
+    height: 20px;
+    color: #2d2d2d;
+  }
+
+  div.toolbar-title {
+    color: #29ACE0 !important;
+    font-family: $bryant-alternate, sans-serif;
+    font-size: 3rem;
+    text-align: center;
+  }
+
+  mark {
+    color: $navbar-color;
+    background: none;
+  }
+
 
 }
