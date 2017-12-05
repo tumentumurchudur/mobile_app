@@ -8,11 +8,15 @@ arc-tween-chart {
 
 		.svg-icon {
 			position: absolute;
-			width: 15vw;
       margin: auto;
 			top: 20%;
 			left: 0;
-      right: 0;
+			right: 0;
+
+			svg {
+				width: auto;
+				height: 13vh;
+			}
 		}
 	}
 }
