@@ -100,6 +100,14 @@ export class ArcTweenChartComponent implements OnInit {
   @Input() meterIconColor: string = "orange";
 
   /**
+   * Middle text color.
+   *
+   * @type {string}
+   * @memberof ArcTweenChartComponent
+   */
+  @Input() textColor: string = "orange";
+
+  /**
    * Space between the arcs in pixels.
    *
    * @memberof ArcTweenChartComponent
@@ -138,12 +146,8 @@ export class ArcTweenChartComponent implements OnInit {
     this._draw();
   }
 
-  private _getSvg() {
+  private _getSvg(): string {
     return this.meterIcon;
-  }
-
-  private _getSvgColor() {
-    return this.meterIconColor;
   }
 
   /**
@@ -151,7 +155,7 @@ export class ArcTweenChartComponent implements OnInit {
    *
    * @memberof ArcTweenChartComponent
    */
-  private _draw() {
+  private _draw(): void {
     const viewBoxWithMultiplier = 1.2;
     const svg = d3.select(this.element).select("svg")
       .attr("viewBox", "0 0 " + this.viewBoxWidth * viewBoxWithMultiplier + " " + this.viewBoxHeight);

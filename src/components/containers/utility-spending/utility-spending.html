@@ -23,9 +23,10 @@
             [totalValue]="meter._goal"
             [centerValue]="meter._usage / 1000 | number: '.1-2'"
             [centerLabel]="_getMeterConfig(meter, 'unit')"
+            [textColor]="_getMeterConfig(meter, 'textColor')"
             [colors]="_getMeterConfig(meter, 'color')"
             [meterIcon]="_getMeterConfig(meter, 'imgSrc')"
-            [meterIconColor]="'red'"
+            [meterIconColor]="_getMeterConfig(meter, 'imgColor')"
             [animate]="i === 0 || i === _currentMeterIndex"
           ></arc-tween-chart>
 
