@@ -14,7 +14,7 @@ import { StoreServices } from "../../store/services";
 })
 export class LoginPage {
   private _user: IUser = {
-    email: "james@james.com", // "spark@vutiliti.com",
+    email: "james@james.com", //"spark@vutiliti.com",
     password: "james123", //"spark123",
     uid: null
   };
