@@ -17,13 +17,11 @@
     <ion-item (keyup.enter)="keyboardSubmit()" class="meter-number">
       <ion-label stacked>Meter Number (no spaces or hyphens)</ion-label>
       <ion-input showWhen="ios"
-         #meterId
          formControlName="meterNumber"
          type="text"
          [class.invalid]="!_addMeter.controls['meterNumber'].valid && _addMeter.controls['meterNumber'].touched">
       </ion-input>
       <ion-input showWhen="android"
-         #meterId
          formControlName="meterNumber"
          type="text">
       </ion-input>
@@ -96,16 +94,18 @@
       *ngIf="_step >= 2"
       class="form-nav-button-back"
       color="primary"
-      (tap)="_previousStep()"
-      type="submit">
+      (tap)="_decStep()"
+      type="submit"
+    >
       Back
     </button>
     <button ion-button
       *ngIf="_step <= 4"
       class="form-nav-button"
       color="primary"
-      (tap)="_nextStep()"
-      type="submit">
+      (tap)="_incStep()"
+      type="submit"
+    >
       Next
     </button>
     <button ion-button
@@ -113,7 +113,8 @@
       class="form-nav-button"
       color="primary"
       *ngIf="_step === 5"
-      type="submit">
+      type="submit"
+    >
       Save
     </button>
   </section>

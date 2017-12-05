@@ -14,22 +14,21 @@ export class AddMeterFormComponent {
   private _step: number = 1;
   private _loading: any;
   private _validateMeterStatus: string;
-  private _dateBS: string = moment().format("YYYY-MM-DD");
+  private _billingStartDate: string = moment().format("YYYY-MM-DD");
 
 
   constructor(
-    // @Inject(FormBuilder)formBuilder: FormBuilder,
     private _formBuilder: FormBuilder,
     private alertCtrl: AlertController,
-    public navCtrl: NavController,
-    public loadingCtrl: LoadingController,
+    private _navCtrl: NavController,
+    private _loadingCtrl: LoadingController,
     private keyboard: Keyboard
   ) {
 
     this._addMeter = _formBuilder.group({
       utilityType: ["", Validators.required],
       meterNumber: ["", Validators.compose([Validators.required, Validators.minLength(7), Validators.maxLength(10), Validators.pattern("[a-zA-Z0-9]*")])],
-      billingStart: this._dateBS,
+      billingStart: this._billingStartDate,
       country: [""],
       region: [""],
       provider: [""],
@@ -39,7 +38,7 @@ export class AddMeterFormComponent {
     });
   }
 
-  private _nextStep(): void {
+  private _incStep(): void {
     // if (this._step === 2) {
     //   this._validateMeter();
     //   return;
@@ -47,17 +46,16 @@ export class AddMeterFormComponent {
     this._step++;
   }
 
-  private _previousStep(): void {
+  private _decStep(): void {
     this._step--;
   }
-
 
  _validateMeter() {
     this.showLoading();
 
     this._loading.onDidDismiss(() => {
       // No meter data came back, this timed out, so show the alert.
-      if (this._validateMeterStatus === "") {
+      if (!this._validateMeterStatus) {
 
         let timeoutAlert = this.alertCtrl.create({
           message: "Connection is weak. Would you like to keep trying?",
@@ -87,7 +85,7 @@ export class AddMeterFormComponent {
   }
 
   showLoading() {
-    this._loading = this.loadingCtrl.create({
+    this._loading = this._loadingCtrl.create({
       content: "Verifying Meter",
       duration: 10000
     });
