@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Effect, Actions } from "@ngrx/effects";
-import { Action } from "@ngrx/store";
 import { Storage } from "@ionic/storage";
 import { StoreServices } from "../../store/services";
 
@@ -12,7 +11,7 @@ import "rxjs/add/observable/combineLatest";
 import "rxjs/add/observable/fromPromise";
 
 import { DatabaseProvider } from "../../providers";
-import { IMeter, IUser, IReads } from "../../interfaces";
+import { IMeter, IUser, IReads, IDateRange } from "../../interfaces";
 
 import { CostHelper, ChartHelper } from "../../helpers";
 import {
@@ -20,16 +19,11 @@ import {
   LOAD_FROM_DB,
   LOAD_READS_FROM_DB,
   LOAD_READS_BY_DATE,
-  ADD_SUMMARIES,
-  LOAD_SUMMARIES,
   AddMeters,
   LoadFromDb,
   AddReads,
-  AddSummaries,
-  AddUser,
   UpdateUser
 } from "../actions";
-import { IReadSummaries, IDateRange } from "../../interfaces";
 
 @Injectable()
 export class MainEffects {
@@ -164,7 +158,7 @@ export class MainEffects {
 
         // TODO: Needs improvement.
         // Get reads data from the store if available.
-        const subscription: Subscription = this._storeServices.selectReadsData().subscribe(data => {
+        const subscription: Subscription = this._storeServices.selectReadsData().subscribe((data: IReads[]) => {
           storeData = data.filter(read => {
             return read.guid === meter._guid &&
               read.startDate.toString() === startDate.toString() &&
