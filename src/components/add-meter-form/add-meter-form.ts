@@ -22,7 +22,7 @@ export class AddMeterFormComponent {
     private alertCtrl: AlertController,
     private _navCtrl: NavController,
     private _loadingCtrl: LoadingController,
-    private keyboard: Keyboard
+    private _keyboard: Keyboard
   ) {
 
     this._addMeter = _formBuilder.group({
@@ -39,10 +39,6 @@ export class AddMeterFormComponent {
   }
 
   private _incStep(): void {
-    // if (this._step === 2) {
-    //   this._validateMeter();
-    //   return;
-    // }
     this._step++;
   }
 
@@ -50,14 +46,14 @@ export class AddMeterFormComponent {
     this._step--;
   }
 
- _validateMeter() {
-    this.showLoading();
+  private _validateMeter() {
+    this._showLoading();
 
     this._loading.onDidDismiss(() => {
       // No meter data came back, this timed out, so show the alert.
       if (!this._validateMeterStatus) {
 
-        let timeoutAlert = this.alertCtrl.create({
+        const timeoutAlert = this.alertCtrl.create({
           message: "Connection is weak. Would you like to keep trying?",
           buttons: [
             {
@@ -71,7 +67,7 @@ export class AddMeterFormComponent {
             {
               text: "Continue",
               handler: () => {
-                this.showLoading();
+                this._showLoading();
                 timeoutAlert.dismiss();
               }
             }
@@ -80,11 +76,10 @@ export class AddMeterFormComponent {
         timeoutAlert.present();
       }
     });
-
     //validate meter function would go here
   }
 
-  showLoading() {
+  private _showLoading() {
     this._loading = this._loadingCtrl.create({
       content: "Verifying Meter",
       duration: 10000
@@ -92,8 +87,8 @@ export class AddMeterFormComponent {
     this._loading.present();
   }
 
-  keyboardSubmit() {
-    this.keyboard.close();
+  private _keyboardSubmit() {
+    this._keyboard.close();
   }
 
 }
