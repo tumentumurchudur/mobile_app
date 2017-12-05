@@ -1,10 +1,19 @@
 <div class="chart-container">
   <svg preserveAspectRatio="xMidYMid meet">
     <g>
-      <text text-anchor="middle" class="middle-text" y="35">
+      <text
+        text-anchor="middle"
+        class="middle-text"
+        [ngStyle]="{ fill: textColor }"
+        y="35"
+      >
         {{ centerValue }}  {{ centerLabel }}
       </text>
     </g>
   </svg>
-  <img src="{{image}}">
+  <div
+    class="svg-icon"
+    [ngStyle]="{ fill: meterIconColor }"
+    [inlineSVG]="_getSvg()"
+  ></div>
 </div>

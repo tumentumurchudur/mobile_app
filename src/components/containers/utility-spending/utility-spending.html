@@ -22,9 +22,11 @@
             [innerArcValue]="_getDailyGoalCost(meter)"
             [totalValue]="meter._goal"
             [centerValue]="meter._usage / 1000 | number: '.1-2'"
-            [centerLabel]="_getUnit(meter)"
-            [colors]="_getColors(meter)"
-            [image]="_getImage(meter)"
+            [centerLabel]="_getMeterConfig(meter, 'unit')"
+            [textColor]="_getMeterConfig(meter, 'textColor')"
+            [colors]="_getMeterConfig(meter, 'color')"
+            [meterIcon]="_getMeterConfig(meter, 'imgSrc')"
+            [meterIconColor]="_getMeterConfig(meter, 'imgColor')"
             [animate]="i === 0 || i === _currentMeterIndex"
           ></arc-tween-chart>
 
@@ -71,7 +73,7 @@
                   {{ data.cost.totalCost | currency:'USD': true: '1.2-2' }}
                 </div>
                 <div>
-                  {{ data.cost.totalDelta / 1000 | number: '.1-2' }} {{ _getUnit(meter) }}
+                  {{ data.cost.totalDelta / 1000 | number: '.1-2' }} {{ _getMeterConfig(meter, 'unit') }}
                 </div>
             </div>
           </div>

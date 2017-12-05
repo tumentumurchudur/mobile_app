@@ -1,20 +1,22 @@
 arc-tween-chart {
 	.middle-text {
-		fill: orange;
 		font-size: 18px;
 	}
 
 	.chart-container {
 		position: relative;
 
-		img {
+		.svg-icon {
 			position: absolute;
-			width: 15vw;
       margin: auto;
-			top: 0;
+			top: 20%;
 			left: 0;
-      right: 0;
-      bottom: 15%;
+			right: 0;
+
+			svg {
+				width: auto;
+				height: 13vh;
+			}
 		}
 	}
 }
