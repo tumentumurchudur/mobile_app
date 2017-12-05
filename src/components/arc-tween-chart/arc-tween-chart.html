@@ -6,5 +6,6 @@
       </text>
     </g>
   </svg>
-  <img src="{{image}}">
+  <div class="svg-icon" [ngStyle]="{ fill: _getSvgColor() }" [inlineSVG]="_getSvg()"></div>
+  {{ meterIconColor }}
 </div>

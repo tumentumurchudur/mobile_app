@@ -13,8 +13,8 @@ import { trigger, state, style, animate, transition } from "@angular/animations"
 const MAX_NUM_OF_CHARTS: number = 15;
 
 @Component({
-  selector: 'utility-spending',
-  templateUrl: 'utility-spending.html',
+  selector: "utility-spending",
+  templateUrl: "utility-spending.html",
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     trigger("lineChartState", [
@@ -62,22 +62,10 @@ export class UtilitySpendingComponent implements OnInit {
     }
   }
 
-  private _getColors(meter: IMeter): string[] {
+  private _getMeterConfig(meter: IMeter, config: string) {
     const meterConfig = chartConfigs.filter(config => config.name === meter._utilityType)[0] || null;
 
-    return meterConfig ? meterConfig.color : [];
-  }
-
-  private _getUnit(meter: IMeter): string {
-    const meterConfig = chartConfigs.filter(config => config.name === meter._utilityType)[0] || null;
-
-    return meterConfig ? meterConfig.unit : "";
-  }
-
-  private _getImage(meter: IMeter) {
-    const meterConfig = chartConfigs.filter(config => config.name === meter._utilityType)[0] || null;
-
-    return meterConfig ? meterConfig.imgSrc : "";
+    return meterConfig ? meterConfig[config] : "";
   }
 
   private _getDailyGoalCost(meter: IMeter) {
@@ -157,15 +145,9 @@ export class UtilitySpendingComponent implements OnInit {
     })[0] || null;
 
     if (data) {
-      return {
-        deltas: data.deltas,
-        cost: data.cost
-      };
+      return { deltas: data.deltas, cost: data.cost };
     }
-    return {
-      deltas: [],
-      cost: null
-    };
+    return { deltas: [], cost: null };
   }
 
   private _showDateRange(index: number): string {

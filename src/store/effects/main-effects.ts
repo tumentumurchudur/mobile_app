@@ -11,7 +11,7 @@ import "rxjs/add/observable/combineLatest";
 import "rxjs/add/observable/fromPromise";
 
 import { DatabaseProvider } from "../../providers";
-import { IMeter, IUser, IReads } from "../../interfaces";
+import { IMeter, IUser, IReads, IDateRange } from "../../interfaces";
 
 import { CostHelper, ChartHelper } from "../../helpers";
 import {
@@ -24,7 +24,6 @@ import {
   AddReads,
   UpdateUser
 } from "../actions";
-import { IDateRange } from "../../interfaces";
 
 @Injectable()
 export class MainEffects {
