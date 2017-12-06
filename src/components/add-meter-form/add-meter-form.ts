@@ -5,7 +5,6 @@ import { Keyboard } from "@ionic-native/keyboard";
 import * as moment from "moment";
 import { StoreServices } from "../../store/services";
 import { IMeter } from "../../interfaces/meter";
-import { ITier } from "../../interfaces/tier";
 
 
 @Component({
