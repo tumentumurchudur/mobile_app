@@ -30,9 +30,11 @@ export function meterReducer(state = { data: [], loading: false }, action): any 
 	}
 }
 
-function sortByKey(array, key) {
-	return array.sort(function(a, b) {
-			var x = a[key]; var y = b[key];
-			return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+function sortByKey(array: any[], key: string): any[] {
+	return array.sort((a, b) => {
+		const x = a[key];
+		const y = b[key];
+
+		return ((x < y) ? -1 : ((x > y) ? 1 : 0));
 	});
 }
