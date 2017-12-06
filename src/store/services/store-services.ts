@@ -16,6 +16,7 @@ import {
 import { IUser, IReads, IRead } from "../../interfaces";
 import { Observable } from 'rxjs/Observable';
 import { IMeter } from '../../interfaces/meter';
+import { UpdatingMeter } from '../actions/meter-actions';
 
 @Injectable()
 export class StoreServices {
@@ -38,12 +39,20 @@ export class StoreServices {
 		this._store.dispatch(new LoadMeters((user)));
 	}
 
+	public updateMeter(meter: IMeter) {
+		this._store.dispatch(new UpdatingMeter(meter));
+	}
+
+	public selectMeterLoading(): Observable<boolean> {
+		return this._store.select(state => state.meters.loading);
+	}
+
 	public loadMetersFromDb(user: IUser) {
 		this._store.dispatch(new LoadFromDb(user));
 	}
 
 	public selectMeters() : Observable<IMeter[]> {
-		return this._store.select(state => state.meters)
+		return this._store.select(state => state.meters.data)
 	}
 
 	public addUser(user: IUser) {

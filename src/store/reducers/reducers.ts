@@ -9,7 +9,7 @@ import { userReducer } from "./user-reducer";
 import { readsReducer, summariesReducer } from "./reads-reducer";
 
 export interface AppState {
-	meters: IMeter[] | null;
+	meters: { data: IMeter[] | null, loading: boolean } | null;
 	user: IUser | null,
 	reads: any | null,
 	summaries: any | null

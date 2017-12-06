@@ -35,6 +35,7 @@ export class UtilitySpendingComponent implements OnInit {
   @Input() user: IUser | null;
 
   private _meters$: Observable<IMeter[] | null>;
+  private _meterLoading$: Observable<boolean>;
   private _reads$: Observable<IReads[] | null>;
   private _loadingReads$: Observable<boolean>;
 
@@ -47,6 +48,7 @@ export class UtilitySpendingComponent implements OnInit {
     private _storeServices: StoreServices
   ) {
     this._meters$ = this._storeServices.selectMeters();
+    this._meterLoading$ = this._storeServices.selectMeterLoading();
     this._reads$ = this._storeServices.selectReadsData();
     this._loadingReads$ = this._storeServices.selectReadsLoading();
   }
@@ -73,6 +75,10 @@ export class UtilitySpendingComponent implements OnInit {
     const facilityFeePerDay = meter._facilityFee / meter._billing_total;
 
     return goalDailyCost * meter._billing_since_start + facilityFeePerDay;
+  }
+
+  private _updateMeter(meter: IMeter) {
+    this._storeServices.updateMeter(meter);
   }
 
   private _isUsageCostBehindGoal(meter: IMeter) {

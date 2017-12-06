@@ -16,10 +16,13 @@ import { IMeter, IUser, IReads, IDateRange } from "../../interfaces";
 import { CostHelper, ChartHelper } from "../../helpers";
 import {
   LOAD_METERS,
+  UPDATING_METER,
+  UPDATE_METER,
   LOAD_FROM_DB,
   LOAD_READS_FROM_DB,
   LOAD_READS_BY_DATE,
   AddMeters,
+  UpdateMeter,
   LoadFromDb,
   AddReads,
   UpdateUser
@@ -131,6 +134,32 @@ export class MainEffects {
         new AddMeters(meters),
         new UpdateUser(user)
       ];
+    });
+
+  @Effect()
+  public updateMeter$ = this._actions$
+    .ofType(UPDATING_METER)
+    .map((action: any) => action.payload)
+    .switchMap((meter: IMeter) => {
+      return Observable.combineLatest([
+        Observable.of(meter),
+        this._db.getReadsForMeter(meter._guid, meter._billing_start)
+      ]);
+    })
+    .map((values: any[]) => {
+      const [ meter, reads ] = values;
+
+      console.log("updating", meter._name, reads);
+
+      const deltas = ChartHelper.getDeltas(reads);
+      const cost = deltas.length ? CostHelper.calculateCostFromDeltas(meter, deltas) : {};
+
+      const newMeter = Object.assign({}, meter, {
+        _actualUsageCost: cost.totalCost || 0,
+        _usage: cost.totalDelta || 0
+      });
+
+      return new UpdateMeter(newMeter);
     });
 
   @Effect()
