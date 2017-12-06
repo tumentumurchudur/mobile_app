@@ -97,17 +97,22 @@ export class AddMeterFormComponent {
   }
 
   private _saveMeter() {
-    const providerPath = `${this._addMeter.value["utilityType"]}/${this._addMeter.value["country"]}/` +
-      `${this._addMeter.value["region"]}/${this._addMeter.value["provider"].name}`;
+      const utilityType = this._addMeter.value["utilityType"];
+      const meter_id = this._addMeter.value["meterNumber"];
+      const provider = `${this._addMeter.value["utilityType"]}/${this._addMeter.value["country"]}/` + `${this._addMeter.value["region"]}/${this._addMeter.value["provider"].name}`;
+      const plan = this._addMeter.value["plan"].name;
+      const goal = this._addMeter.value["goal"] != 0 ? parseFloat(this._addMeter.value["goal"]) : null;
+      const billing_start = this._addMeter.value["billingStart"];
+      const name = this._addMeter.value["name"];
 
     const meter: IMeter = {
-      _utilityType: this._addMeter.value["utilityType"],
-      _meter_id: this._addMeter.value["meterNumber"],
-      _provider: providerPath,
-      _plan: this._addMeter.value["plan"].name,
-      _goal: (this._addMeter.value["goal"] != 0) ? parseFloat(this._addMeter.value["goal"]) : null,
-      _billing_start: this._addMeter.value["billingStart"],
-      _name: this._addMeter.value["name"]
+      _utilityType: utilityType,
+      _meter_id: meter_id,
+      _provider: provider,
+      _plan: plan,
+      _goal: goal,
+      _billing_start: billing_start,
+      _name: name
     };
 
     this._storeServices.addMeter(meter);
