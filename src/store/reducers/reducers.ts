@@ -1,5 +1,5 @@
 import { ActionReducerMap, MetaReducer } from "@ngrx/store";
-import { IMeter, IUser, IReads, IReadSummaries } from '../../interfaces';
+import { IMeter, IUser, IReads } from '../../interfaces';
 
 import { storeFreeze } from 'ngrx-store-freeze';
 import { environment } from '../../environments/environment'; // Angular CLI environment
@@ -9,9 +9,9 @@ import { userReducer } from "./user-reducer";
 import { readsReducer, summariesReducer } from "./reads-reducer";
 
 export interface AppState {
-	meters: { data: IMeter[] | null, loading: boolean } | null;
+	meters: { data: IMeter[] | null, loading: boolean },
+	reads: { data: IReads[] | null, loading: boolean },
 	user: IUser | null,
-	reads: any | null,
 	summaries: any | null
 }
 

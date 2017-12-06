@@ -85,25 +85,6 @@ export class StoreServices {
 		return this._store.select(state => state.reads.loading);
 	}
 
-	public loadSummaries(meters$: Observable<IMeter[]>, index: number, timeSpan: string) {
-		let meter: IMeter;
-
-		meters$.subscribe(meters => {
-			meter = meters[index];
-		});
-
-		this._store.dispatch(new LoadingSummaries());
-		this._store.dispatch(new LoadSummaries({ guid: meter._guid, timeSpan: timeSpan, summaries: [] }));
-	}
-
-	public selectSummariesData() {
-		return this._store.select(state => state.summaries.data);
-	}
-
-	public selectSummariesLoading() {
-		return this._store.select(state => state.summaries.loading);
-	}
-
 	public selectReadsData() {
 		return this._store.select(state => state.reads.data);
 	}

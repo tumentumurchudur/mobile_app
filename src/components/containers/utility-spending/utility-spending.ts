@@ -77,7 +77,8 @@ export class UtilitySpendingComponent implements OnInit {
     return goalDailyCost * meter._billing_since_start + facilityFeePerDay;
   }
 
-  private _updateMeter(meter: IMeter) {
+  private _updateMeter(meter: IMeter, index: number) {
+    this._currentMeterIndex = index;
     this._storeServices.updateMeter(meter);
   }
 

@@ -15,7 +15,9 @@
         [@arcChartState]
       >
         <div *ngIf="_meterLoading$ | async">
-          Updating meter...
+          <span *ngIf="i === _currentMeterIndex">
+            Updating meter...
+          </span>
         </div>
         <div *ngIf="meter._actualUsageCost > 0">
           <arc-tween-chart
@@ -34,7 +36,7 @@
           <div
             class="actual-cost"
             [ngStyle]="{ 'color': _isUsageCostBehindGoal(meter) ? '#C22A17' : '#969696' }"
-            (click)="_updateMeter(meter)"
+            (click)="_updateMeter(meter, i)"
           >
             {{ meter._actualUsageCost | currency: 'USD': true:'1.2-2' }}
           </div>
