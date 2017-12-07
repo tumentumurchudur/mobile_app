@@ -16,10 +16,13 @@ import { IMeter, IUser, IReads, IDateRange } from "../../interfaces";
 import { CostHelper, ChartHelper } from "../../helpers";
 import {
   LOAD_METERS,
+  UPDATING_METER,
   LOAD_FROM_DB,
   LOAD_READS_FROM_DB,
   LOAD_READS_BY_DATE,
   AddMeters,
+  UpdateMeter,
+  UpdatingMeter,
   LoadFromDb,
   AddReads,
   UpdateUser
@@ -108,33 +111,60 @@ export class MainEffects {
       const [meters, user] = values;
 
       // Calculates actual cost and usage.
-      for (let i = 0; i < meters.length; i++) {
-        const deltas = ChartHelper.getDeltas(meters[i]._reads);
-        const cost = deltas.length ? CostHelper.calculateCostFromDeltas(meters[i], deltas) : {};
-        const { billingTotalDays, billingCurrentDays } = CostHelper.calculateBillingCycles(meters[i]._billing_start);
-
-        meters[i]._actualUsageCost = cost.totalCost || 0;
-        meters[i]._usage = cost.totalDelta || 0;
-
-        // # of days since billing start date
-        meters[i]._billing_since_start = billingCurrentDays || 0;
-
-        // # of days in billing cycle.
-        meters[i]._billing_total = billingTotalDays || 0;
-      }
+      const newMeters = this._calculateCostAndUsage(meters);
 
       // Store meter data locally by uid as key.
-      this._storage.set(user.uid, meters);
+      this._storage.set(user.uid, newMeters);
 
       // Dispatch actions to update the store.
       return [
-        new AddMeters(meters),
+        new AddMeters(newMeters),
         new UpdateUser(user)
       ];
     });
 
+  /**
+   * Handles UpdatingMeter action.
+   */
   @Effect()
-  public refreshReadsDataFromDb = this._actions$
+  public updateMeterReads$ = this._actions$
+    .ofType(UPDATING_METER)
+    .map((action: any) => action.payload)
+    .switchMap((meter: IMeter) => {
+      if (!meter) {
+        return Observable.combineLatest([
+          Observable.of(null),
+          Observable.of([])
+        ]);
+      } else {
+        return Observable.combineLatest([
+          Observable.of(meter),
+          // Gets reads from database for given meter.
+          this._db.getReadsForMeter(meter._guid, meter._billing_start)
+        ]);
+      }
+    })
+    .map((values: any[]) => {
+      const [ meter, reads ] = values;
+
+      if (!meter) {
+        // Nothing gets updated.
+        return new UpdateMeter(null);
+      }
+
+      const deltas = ChartHelper.getDeltas(reads);
+      const cost = deltas.length ? CostHelper.calculateCostFromDeltas(meter, deltas) : {};
+
+      const newMeter = Object.assign({}, meter, {
+        _actualUsageCost: cost.totalCost || 0,
+        _usage: cost.totalDelta || 0
+      });
+
+      return new UpdateMeter(newMeter);
+    });
+
+  @Effect()
+  public updateAllMetersReads$ = this._actions$
     .ofType(LOAD_READS_FROM_DB)
     .map((action: any) => action.payload)
     .switchMap((meters: IMeter[]) => {
@@ -145,7 +175,10 @@ export class MainEffects {
     .map((values: any[]) => {
       const [ meters = [] ] = values;
 
-      return new AddMeters(meters);
+      // Calculates actual cost and usage.
+      const newMeters = this._calculateCostAndUsage(meters);
+
+      return new AddMeters(newMeters);
     });
 
     @Effect()
@@ -205,6 +238,26 @@ export class MainEffects {
 
         return new AddReads(payload);
       });
+
+    // Calculates actual cost and usage.
+    private _calculateCostAndUsage(meters: IMeter[]): IMeter[] {
+      for (let i = 0; i < meters.length; i++) {
+        const deltas = ChartHelper.getDeltas(meters[i]._reads);
+        const cost = deltas.length ? CostHelper.calculateCostFromDeltas(meters[i], deltas) : {};
+        const { billingTotalDays, billingCurrentDays } = CostHelper.calculateBillingCycles(meters[i]._billing_start);
+
+        meters[i]._actualUsageCost = cost.totalCost || 0;
+        meters[i]._usage = cost.totalDelta || 0;
+
+        // # of days since billing start date
+        meters[i]._billing_since_start = billingCurrentDays || 0;
+
+        // # of days in billing cycle.
+        meters[i]._billing_total = billingTotalDays || 0;
+      }
+
+      return meters;
+    }
 
   /**
    * Creates an instance of MainEffects.

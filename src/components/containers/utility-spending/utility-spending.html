@@ -14,6 +14,11 @@
         *ngIf="_currentNavigationItems[i] === _navigationItems.ARC_CHART"
         [@arcChartState]
       >
+        <div *ngIf="_meterLoading$ | async">
+          <span *ngIf="i === _currentMeterIndex">
+            Updating meter...
+          </span>
+        </div>
         <div *ngIf="meter._actualUsageCost > 0">
           <arc-tween-chart
             [outerArcValue]="meter._actualUsageCost"
@@ -28,14 +33,17 @@
             [animate]="i === 0 || i === _currentMeterIndex"
           ></arc-tween-chart>
 
+          <!-- TODO: Remove (click) once add meter is implemented -->
           <div
             class="actual-cost"
             [ngStyle]="{ 'color': _isUsageCostBehindGoal(meter) ? '#C22A17' : '#969696' }"
+            (click)="_updateMeter(meter, i)"
           >
             {{ meter._actualUsageCost | currency: 'USD': true:'1.2-2' }}
           </div>
 
-          <div class="spending-goal">
+          <!-- TODO: Remove (click) when we figure out what event is supposed to refresh all meters. -->
+          <div class="spending-goal" (click)="_updateAllMeters(i)">
             Spending goal of {{ meter._goal | currency:'USD': true:'1.2-2' }}
           </div>
         </div>
@@ -64,6 +72,7 @@
               [animate]="_currentMeterIndex === i"
               [series]="['line1']"
               [dateFormat]="_selectedDateRanges[i].dateFormat"
+              [showAreaFill]="true"
             ></line-chart>
 
             <div *ngIf="data.cost">

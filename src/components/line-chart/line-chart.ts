@@ -17,6 +17,7 @@ export class LineChartComponent implements OnChanges {
   @Input() dotColors: string[] = ["orange", "red", "green"];
   @Input() dateFormat: string = "%m/%d";
   @Input() series: string[] = ["line1", "line2", "line3"];
+  @Input() showAreaFill: boolean = true;
 
   private element: any;
   private margin: any = { left: 10, right: 10, top: 10, bottom: 10 };
@@ -68,16 +69,17 @@ export class LineChartComponent implements OnChanges {
       this._animatePath(path, delay * (index + 1), 800);
 
       // add area under line chart
-      svg.append("path")
-        .attr("class", "area")
-        .attr("d", this._getAreaFunc(x, y, height, this.data, ""))
-        .attr("fill", () => "orange")
-        .attr("transform", "translate(20, 10)")
-        .transition()
-        .delay(800)
-        .duration(350)
-        .attr("d", this._getAreaFunc(x, y, height, this.data, colName));
-
+      if (this.showAreaFill) {
+        svg.append("path")
+          .attr("class", "area")
+          .attr("d", this._getAreaFunc(x, y, height, this.data, ""))
+          .attr("fill", () => "orange")
+          .attr("transform", "translate(20, 10)")
+          .transition()
+          .delay(800)
+          .duration(350)
+          .attr("d", this._getAreaFunc(x, y, height, this.data, colName));
+      }
     });
 
     // x and y axis

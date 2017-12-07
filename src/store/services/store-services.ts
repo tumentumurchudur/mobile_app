@@ -1,12 +1,15 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
 import { Store } from "@ngrx/store";
 import { AppState } from "../reducers";
+import { IUser, IReads, IMeter } from "../../interfaces";
+import { Observable } from "rxjs/Observable";
 import {
   AddMeter,
 	LoadMeters,
 	LoadFromDb,
 	AddUser,
 	UpdateUser,
+	UpdatingMeter,
 	AddReads,
 	LoadReadsFromDb,
 	LoadReadsByDateRange,
@@ -14,9 +17,6 @@ import {
 	LoadSummaries,
 	LoadingSummaries
 } from "../actions";
-import { IUser, IReads, IRead } from "../../interfaces";
-import { Observable } from 'rxjs/Observable';
-import { IMeter } from '../../interfaces/meter';
 
 @Injectable()
 export class StoreServices {
@@ -39,6 +39,15 @@ export class StoreServices {
 		this._store.dispatch(new LoadMeters((user)));
 	}
 
+	public updateMeterReads(meter: IMeter) {
+		// Update reads for given meter.
+		this._store.dispatch(new UpdatingMeter(meter));
+	}
+
+	public selectMeterLoading(): Observable<boolean> {
+		return this._store.select(state => state.meters.loading);
+	}
+
 	public loadMetersFromDb(user: IUser) {
 		this._store.dispatch(new LoadFromDb(user));
 	}
@@ -48,7 +57,7 @@ export class StoreServices {
   }
 
 	public selectMeters() : Observable<IMeter[]> {
-		return this._store.select(state => state.meters)
+		return this._store.select(state => state.meters.data)
 	}
 
 	public addUser(user: IUser) {
@@ -59,13 +68,14 @@ export class StoreServices {
 		this._store.dispatch(new UpdateUser(user));
 	}
 
-	public loadReadsFromDb(meters$: Observable<IMeter[]>) {
-		let meters: IMeter[];
+	public updateAllMetersReads(meters$: Observable<IMeter[]>) {
+		meters$.take(1).subscribe((meters: IMeter[]) => {
+			// Set loading to true in the store.
+			this._store.dispatch(new UpdatingMeter(null));
 
-		meters$.subscribe(data => {
-			meters = data;
+			// Update reads for every meter.
+			this._store.dispatch(new LoadReadsFromDb(meters));
 		});
-		this._store.dispatch(new LoadReadsFromDb(meters));
 	}
 
 	public addReads(reads: IReads) {
@@ -79,25 +89,6 @@ export class StoreServices {
 
 	public selectReadsLoading() {
 		return this._store.select(state => state.reads.loading);
-	}
-
-	public loadSummaries(meters$: Observable<IMeter[]>, index: number, timeSpan: string) {
-		let meter: IMeter;
-
-		meters$.subscribe(meters => {
-			meter = meters[index];
-		});
-
-		this._store.dispatch(new LoadingSummaries());
-		this._store.dispatch(new LoadSummaries({ guid: meter._guid, timeSpan: timeSpan, summaries: [] }));
-	}
-
-	public selectSummariesData() {
-		return this._store.select(state => state.summaries.data);
-	}
-
-	public selectSummariesLoading() {
-		return this._store.select(state => state.summaries.loading);
 	}
 
 	public selectReadsData() {
