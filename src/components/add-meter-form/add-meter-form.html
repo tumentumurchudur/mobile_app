@@ -112,6 +112,7 @@
       [disabled]="!_addMeter.value['name']"
       class="form-nav-button"
       color="primary"
+      (tap)="_saveMeter()"
       *ngIf="_step === 5"
       type="submit"
     >

@@ -16,7 +16,9 @@ export const meterReducerMap: ActionReducerMap<MeterState> = {
 export function meterReducer(state = { data: [], loading: false }, action): any {
 	switch (action.type) {
 		case ActionTypes.ADD_METERS:
-			return Object.assign({}, { data: action.payload, loading: false });
+			return Object.assign({}, state, { data: action.payload, loading: false });
+		case ActionTypes.ADD_METER:
+			return Object.assign({}, state, { data: state.data.concat(action.payload), loading: false });
 		case ActionTypes.UPDATING_METER:
 		  return Object.assign({}, state, { loading: true });
 		case ActionTypes.UPDATE_METER:
@@ -28,7 +30,7 @@ export function meterReducer(state = { data: [], loading: false }, action): any 
 			const filteredMeters = state.data.filter(meter => meter._guid !== _guid);
 			const allMeters = sortByKey(Object.assign([], filteredMeters.concat(action.payload)), "_name");
 
-			return Object.assign({}, { data: allMeters, loading: false });
+			return Object.assign({}, state, { data: allMeters, loading: false });
 		default:
 			return state;
 	}

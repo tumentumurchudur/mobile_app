@@ -2,14 +2,17 @@ export { LoadFromDb, LOAD_FROM_DB } from "./actions";
 export { ADD_USER, UPDATE_USER, AddUser, UpdateUser } from "./user-actions";
 export {
   AddMeters,
+  AddMeter,
   UpdatingMeter,
   UpdateMeter,
   LoadMeters,
   ADD_METERS,
+  ADD_METER,
   UPDATING_METER,
   UPDATE_METER,
   LOAD_METERS
 } from "./meter-actions";
+
 export {
   AddReads,
   LoadReadsFromDb,

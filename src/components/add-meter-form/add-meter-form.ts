@@ -3,6 +3,9 @@ import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { AlertController, NavController, LoadingController } from "ionic-angular";
 import { Keyboard } from "@ionic-native/keyboard";
 import * as moment from "moment";
+import { StoreServices } from "../../store/services";
+import { IMeter } from "../../interfaces/meter";
+
 
 @Component({
   selector: "add-meter-form",
@@ -18,6 +21,7 @@ export class AddMeterFormComponent {
 
 
   constructor(
+    private _storeServices: StoreServices,
     private _formBuilder: FormBuilder,
     private alertCtrl: AlertController,
     private _navCtrl: NavController,
@@ -89,6 +93,32 @@ export class AddMeterFormComponent {
 
   private _keyboardSubmit() {
     this._keyboard.close();
+  }
+
+  private _saveMeter() {
+      const utilityType = this._addMeter.value["utilityType"];
+      const meterId = this._addMeter.value["meterNumber"];
+      const country = this._addMeter.value["country"];
+      const region = this._addMeter.value["region"];
+      const meterProvider = this._addMeter.value["provider"].name;
+      const provider = `${utilityType}/${country}/${region}/${meterProvider}`;
+      const plan = this._addMeter.value["plan"].name;
+      const meterGoal = this._addMeter.value["goal"];
+      const goal = meterGoal ? parseFloat(meterGoal) : null;
+      const billingStart = this._addMeter.value["billingStart"];
+      const name = this._addMeter.value["name"];
+
+    const meter: IMeter = {
+      _utilityType: utilityType,
+      _meter_id: meterId,
+      _provider: provider,
+      _plan: plan,
+      _goal: goal,
+      _billing_start: billingStart,
+      _name: name
+    };
+
+    this._storeServices.addMeter(meter);
   }
 
 }
