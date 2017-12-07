@@ -22,11 +22,11 @@ import {
   LOAD_READS_BY_DATE,
   AddMeters,
   UpdateMeter,
+  UpdatingMeter,
   LoadFromDb,
   AddReads,
   UpdateUser
 } from "../actions";
-import { UpdatingMeter } from '../actions/meter-actions';
 
 @Injectable()
 export class MainEffects {

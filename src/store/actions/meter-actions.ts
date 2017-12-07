@@ -26,18 +26,18 @@ export class AddMeters implements Action {
 
 export class UpdatingMeter implements Action {
 	public readonly type = UPDATING_METER;
-	public payload: IMeter = null;
+	public payload: IMeter | null = null;
 
-	constructor(private _payload: IMeter) {
+	constructor(private _payload: IMeter | null) {
 		this.payload = _payload;
 	}
 }
 
 export class UpdateMeter implements Action {
 	public readonly type = UPDATE_METER;
-	public payload: IMeter = null;
+	public payload: IMeter | null = null;
 
-	constructor(private _payload: IMeter) {
+	constructor(private _payload: IMeter | null) {
 		this.payload = _payload;
 	}
 }

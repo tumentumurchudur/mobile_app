@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
 import { Store } from "@ngrx/store";
 import { AppState } from "../reducers";
 import {
@@ -6,6 +6,7 @@ import {
 	LoadFromDb,
 	AddUser,
 	UpdateUser,
+	UpdatingMeter,
 	AddReads,
 	LoadReadsFromDb,
 	LoadReadsByDateRange,
@@ -13,10 +14,8 @@ import {
 	LoadSummaries,
 	LoadingSummaries
 } from "../actions";
-import { IUser, IReads } from "../../interfaces";
-import { Observable } from 'rxjs/Observable';
-import { IMeter } from '../../interfaces/meter';
-import { UpdatingMeter } from '../actions/meter-actions';
+import { IUser, IReads, IMeter } from "../../interfaces";
+import { Observable } from "rxjs/Observable";
 
 @Injectable()
 export class StoreServices {
