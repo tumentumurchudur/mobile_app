@@ -33,6 +33,7 @@
             [animate]="i === 0 || i === _currentMeterIndex"
           ></arc-tween-chart>
 
+          <!-- TODO: Remove (click) once add meter is implemented -->
           <div
             class="actual-cost"
             [ngStyle]="{ 'color': _isUsageCostBehindGoal(meter) ? '#C22A17' : '#969696' }"
@@ -41,6 +42,7 @@
             {{ meter._actualUsageCost | currency: 'USD': true:'1.2-2' }}
           </div>
 
+          <!-- TODO: Remove (click) when we figure out what event is supposed to refresh all meters. -->
           <div class="spending-goal" (click)="_reloadClick(i)">
             Spending goal of {{ meter._goal | currency:'USD': true:'1.2-2' }}
           </div>

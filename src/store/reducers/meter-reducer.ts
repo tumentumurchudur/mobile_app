@@ -20,15 +20,15 @@ export function meterReducer(state = { data: [], loading: false }, action): any 
 		case ActionTypes.UPDATING_METER:
 		  return Object.assign({}, state, { loading: true });
 		case ActionTypes.UPDATE_METER:
-			if (action.payload) {
-				const { _guid } = action.payload;
-				const filteredMeters = state.data.filter(meter => meter._guid !== _guid);
-				const allMeters = sortByKey(Object.assign([], filteredMeters.concat(action.payload)), "_name");
-
-				return Object.assign({}, { data: allMeters, loading: false });
-			} else {
+		  if (!action.payload) {
 				return state;
 			}
+
+			const { _guid } = action.payload;
+			const filteredMeters = state.data.filter(meter => meter._guid !== _guid);
+			const allMeters = sortByKey(Object.assign([], filteredMeters.concat(action.payload)), "_name");
+
+			return Object.assign({}, { data: allMeters, loading: false });
 		default:
 			return state;
 	}

@@ -123,13 +123,15 @@ export class MainEffects {
       ];
     });
 
+  /**
+   * Handles UpdatingMeter action.
+   */
   @Effect()
-  public updateMeter$ = this._actions$
+  public updateMeterReads$ = this._actions$
     .ofType(UPDATING_METER)
     .map((action: any) => action.payload)
     .switchMap((meter: IMeter) => {
       if (!meter) {
-        // TODO: Needs another action for clarity.
         return Observable.combineLatest([
           Observable.of(null),
           Observable.of([])
@@ -137,6 +139,7 @@ export class MainEffects {
       } else {
         return Observable.combineLatest([
           Observable.of(meter),
+          // Gets reads from database for given meter.
           this._db.getReadsForMeter(meter._guid, meter._billing_start)
         ]);
       }
@@ -145,7 +148,6 @@ export class MainEffects {
       const [ meter, reads ] = values;
 
       if (!meter) {
-        // Updates the property loading = true in the store.
         return new UpdateMeter(null);
       }
 
@@ -161,7 +163,7 @@ export class MainEffects {
     });
 
   @Effect()
-  public refreshMeterReads$ = this._actions$
+  public updateAllMetersReads$ = this._actions$
     .ofType(LOAD_READS_FROM_DB)
     .map((action: any) => action.payload)
     .switchMap((meters: IMeter[]) => {

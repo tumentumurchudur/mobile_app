@@ -39,7 +39,8 @@ export class StoreServices {
 		this._store.dispatch(new LoadMeters((user)));
 	}
 
-	public updateMeter(meter: IMeter) {
+	public updateMeterReads(meter: IMeter) {
+		// Update reads for given meter.
 		this._store.dispatch(new UpdatingMeter(meter));
 	}
 
@@ -63,12 +64,12 @@ export class StoreServices {
 		this._store.dispatch(new UpdateUser(user));
 	}
 
-	public refreshMeterReads(meters$: Observable<IMeter[]>) {
+	public updateAllMetersReads(meters$: Observable<IMeter[]>) {
 		meters$.take(1).subscribe((meters: IMeter[]) => {
 			// Set loading to true in the store.
 			this._store.dispatch(new UpdatingMeter(null));
 
-			// Loads reads for every meter.
+			// Update reads for every meter.
 			this._store.dispatch(new LoadReadsFromDb(meters));
 		});
 	}

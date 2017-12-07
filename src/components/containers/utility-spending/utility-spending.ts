@@ -79,7 +79,7 @@ export class UtilitySpendingComponent implements OnInit {
 
   private _updateMeter(meter: IMeter, index: number) {
     this._currentMeterIndex = index;
-    this._storeServices.updateMeter(meter);
+    this._storeServices.updateMeterReads(meter);
   }
 
   private _isUsageCostBehindGoal(meter: IMeter) {
@@ -88,7 +88,7 @@ export class UtilitySpendingComponent implements OnInit {
 
   private _reloadClick(index: number) {
     this._currentMeterIndex = index;
-    this._storeServices.refreshMeterReads(this._meters$);
+    this._storeServices.updateAllMetersReads(this._meters$);
   }
 
   private _onNavigationItemClick(selectedItem: string, meter: IMeter, index: number) {
