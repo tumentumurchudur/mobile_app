@@ -148,6 +148,7 @@ export class MainEffects {
       const [ meter, reads ] = values;
 
       if (!meter) {
+        // Nothing gets updated.
         return new UpdateMeter(null);
       }
 
