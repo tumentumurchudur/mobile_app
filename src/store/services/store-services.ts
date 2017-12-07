@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Store } from "@ngrx/store";
 import { AppState } from "../reducers";
 import {
+  AddMeter,
 	LoadMeters,
 	LoadFromDb,
 	AddUser,
@@ -41,6 +42,10 @@ export class StoreServices {
 	public loadMetersFromDb(user: IUser) {
 		this._store.dispatch(new LoadFromDb(user));
 	}
+
+  public addMeter(meter: IMeter) {
+    this._store.dispatch(new AddMeter(meter));
+  }
 
 	public selectMeters() : Observable<IMeter[]> {
 		return this._store.select(state => state.meters)
