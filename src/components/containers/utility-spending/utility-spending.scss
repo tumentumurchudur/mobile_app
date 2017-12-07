@@ -1,6 +1,12 @@
 @import "../../../styles/variables";
+@import "../../../styles/app-spinner";
 
 utility-spending {
+	.loading {
+		text-align: center;
+		margin-top: 10px;
+	}
+
 	.chart-card {
 		margin: 12px 12px;
 		width: calc(100% - 24px);
