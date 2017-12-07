@@ -13,7 +13,7 @@ import {
 	LoadSummaries,
 	LoadingSummaries
 } from "../actions";
-import { IUser, IReads, IRead } from "../../interfaces";
+import { IUser, IReads } from "../../interfaces";
 import { Observable } from 'rxjs/Observable';
 import { IMeter } from '../../interfaces/meter';
 import { UpdatingMeter } from '../actions/meter-actions';
@@ -63,13 +63,14 @@ export class StoreServices {
 		this._store.dispatch(new UpdateUser(user));
 	}
 
-	public loadReadsFromDb(meters$: Observable<IMeter[]>) {
-		let meters: IMeter[];
+	public refreshMeterReads(meters$: Observable<IMeter[]>) {
+		meters$.take(1).subscribe((meters: IMeter[]) => {
+			// Set loading to true in the store.
+			this._store.dispatch(new UpdatingMeter(null));
 
-		meters$.subscribe(data => {
-			meters = data;
+			// Loads reads for every meter.
+			this._store.dispatch(new LoadReadsFromDb(meters));
 		});
-		this._store.dispatch(new LoadReadsFromDb(meters));
 	}
 
 	public addReads(reads: IReads) {

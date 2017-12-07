@@ -41,7 +41,7 @@
             {{ meter._actualUsageCost | currency: 'USD': true:'1.2-2' }}
           </div>
 
-          <div class="spending-goal">
+          <div class="spending-goal" (click)="_reloadClick(i)">
             Spending goal of {{ meter._goal | currency:'USD': true:'1.2-2' }}
           </div>
         </div>

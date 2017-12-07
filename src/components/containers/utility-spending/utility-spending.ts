@@ -86,8 +86,9 @@ export class UtilitySpendingComponent implements OnInit {
     return meter._actualUsageCost > this._getDailyGoalCost(meter);
   }
 
-  private reloadClick() {
-    this._storeServices.loadReadsFromDb(this._meters$);
+  private _reloadClick(index: number) {
+    this._currentMeterIndex = index;
+    this._storeServices.refreshMeterReads(this._meters$);
   }
 
   private _onNavigationItemClick(selectedItem: string, meter: IMeter, index: number) {
