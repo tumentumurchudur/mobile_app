@@ -122,6 +122,14 @@ export class ArcTweenChartComponent implements OnInit {
    */
   @Input() animate: boolean = true;
 
+  /**
+   * Indicates whether data is being loaded.
+   *
+   * @type {boolean}
+   * @memberof ArcTweenChartComponent
+   */
+  @Input() loading: boolean = false;
+
   private element: any;
 
   //these are all *relative* units, which will scale to fill the SVG.

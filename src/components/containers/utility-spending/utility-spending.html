@@ -1,123 +1,119 @@
-<div *ngIf="_meters$ | async; let meters">
-  <div *ngFor="let meter of meters; let i = index">
-    <ion-card class="chart-card layout vertical">
-      <!-- Header -->
-      <div class="header">
-        <div [class.status]="_isUsageCostBehindGoal(meter)"></div>
-        <img class="exclamation-icon" src="assets/exclamation.svg">
-        <div class="meter-name">{{ meter._name }}</div>
-      </div>
+<ion-content>
+  <ion-refresher (ionRefresh)="_updateAllMeters($event, 0)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
 
-      <!-- Arc chart -->
-      <div
-        class="card-content"
-        *ngIf="_currentNavigationItems[i] === _navigationItems.ARC_CHART"
-        [@arcChartState]
-      >
-        <div *ngIf="meter._actualUsageCost > 0">
-          <arc-tween-chart
-            [outerArcValue]="meter._actualUsageCost"
-            [innerArcValue]="_getDailyGoalCost(meter)"
-            [totalValue]="meter._goal"
-            [centerValue]="meter._usage / 1000 | number: '.1-2'"
-            [centerLabel]="_getMeterConfig(meter, 'unit')"
-            [textColor]="_getMeterConfig(meter, 'textColor')"
-            [colors]="_getMeterConfig(meter, 'color')"
-            [meterIcon]="_getMeterConfig(meter, 'imgSrc')"
-            [meterIconColor]="_getMeterConfig(meter, 'imgColor')"
-            [animate]="i === 0 || i === _currentMeterIndex"
-          ></arc-tween-chart>
-
-          <!-- TODO: Remove (click) once add meter is implemented -->
-          <div
-            class="actual-cost"
-            [ngStyle]="{ 'color': _isUsageCostBehindGoal(meter) ? '#C22A17' : '#969696' }"
-            (click)="_updateMeter(meter, i)"
-          >
-            {{ meter._actualUsageCost | currency: 'USD': true:'1.2-2' }}
-          </div>
-
-          <!-- TODO: Remove (click) when we figure out what event is supposed to refresh all meters. -->
-          <div class="spending-goal" (click)="_updateAllMeters(i)">
-            Spending goal of {{ meter._goal | currency:'USD': true:'1.2-2' }}
-          </div>
-
-          <div *ngIf="_meterLoading$ | async">
-            <span *ngIf="i === _currentMeterIndex">
-              <div class="app-spinner-wrapper">
-                <div class="app-spinner"></div>
-              </div>
-              <div class="loading">Updating meter...</div>
-            </span>
-          </div>
+  <div class="no-padding" *ngIf="_meters$ | async; let meters">
+    <div *ngFor="let meter of meters; let i = index">
+      <ion-card class="chart-card layout vertical">
+        <!-- Header -->
+        <div class="header">
+          <div [class.status]="_isUsageCostBehindGoal(meter)"></div>
+          <img class="exclamation-icon" src="assets/exclamation.svg">
+          <div class="meter-name">{{ meter._name }}</div>
         </div>
-      </div>
 
-      <!-- Line chart -->
-      <div
-        class="card-content"
-        *ngIf="_currentNavigationItems[i] === _navigationItems.LINE_CHART"
-        [@lineChartState]
-      >
-        <timespan-selector
-          [selectedTimeSpan]="_selectedDateRanges[i].timeSpan"
-          [disableNextButton]="_shouldDisableNextButton(i)"
-          (timeSpanChanged)="_onTimeSpanClick($event, meter, i)"
-          (itemTapped)="_onTimeTravelClick($event, meter, i)"
-        ></timespan-selector>
+        <!-- Arc chart -->
+        <div
+          class="card-content"
+          *ngIf="_currentNavigationItems[i] === _navigationItems.ARC_CHART"
+          [@arcChartState]
+        >
+          <div *ngIf="meter._actualUsageCost > 0">
+            <arc-tween-chart
+              [outerArcValue]="meter._actualUsageCost"
+              [innerArcValue]="_getDailyGoalCost(meter)"
+              [totalValue]="meter._goal"
+              [centerValue]="meter._usage / 1000 | number: '.1-2'"
+              [centerLabel]="_getMeterConfig(meter, 'unit')"
+              [textColor]="_getMeterConfig(meter, 'textColor')"
+              [colors]="_getMeterConfig(meter, 'color')"
+              [meterIcon]="_getMeterConfig(meter, 'imgSrc')"
+              [meterIconColor]="_getMeterConfig(meter, 'imgColor')"
+              [animate]="i === 0 || i === _currentMeterIndex"
+              [loading]="_meterLoading$ | async"
+            ></arc-tween-chart>
 
-        <div>{{ _showDateRange(i) }}</div>
+            <!-- TODO: Remove (click) once add meter is implemented -->
+            <div
+              class="actual-cost"
+              [ngStyle]="{ 'color': _isUsageCostBehindGoal(meter) ? '#C22A17' : '#969696' }"
+              (click)="_updateMeter(meter, i)"
+            >
+              {{ meter._actualUsageCost | currency: 'USD': true:'1.2-2' }}
+            </div>
 
-        <div *ngIf="_reads$ | async as reads">
-          <div *ngIf="_getDataByGuid(reads, meter._guid, i) as data">
-            <line-chart
-              [data]="data.deltas"
-              [loading]="_loadingReads$ | async"
-              [animate]="_currentMeterIndex === i"
-              [series]="['line1']"
-              [dateFormat]="_selectedDateRanges[i].dateFormat"
-              [showAreaFill]="true"
-            ></line-chart>
-
-            <div *ngIf="data.cost">
-                <div class="timespan-cost">
-                  {{ data.cost.totalCost | currency:'USD': true: '1.2-2' }}
-                </div>
-                <div>
-                  {{ data.cost.totalDelta / 1000 | number: '.1-2' }} {{ _getMeterConfig(meter, 'unit') }}
-                </div>
+            <!-- TODO: Remove (click) when we figure out what event is supposed to refresh all meters. -->
+            <div class="spending-goal">
+              Spending goal of {{ meter._goal | currency:'USD': true:'1.2-2' }}
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Neigborhood comparison -->
-      <div
-        class="card-content"
-        *ngIf="_currentNavigationItems[i] === _navigationItems.COMPARISON"
-      >
-        Neigborhood comparison
-      </div>
+        <!-- Line chart -->
+        <div
+          class="card-content"
+          *ngIf="_currentNavigationItems[i] === _navigationItems.LINE_CHART"
+          [@lineChartState]
+        >
+          <timespan-selector
+            [selectedTimeSpan]="_selectedDateRanges[i].timeSpan"
+            [disableNextButton]="_shouldDisableNextButton(i)"
+            (timeSpanChanged)="_onTimeSpanClick($event, meter, i)"
+            (itemTapped)="_onTimeTravelClick($event, meter, i)"
+          ></timespan-selector>
 
-      <!-- Device Edit -->
-      <div
-        class="card-content"
-        *ngIf="_currentNavigationItems[i] === _navigationItems.EDIT"
-      >
-        Device Edit
-      </div>
+          <div>{{ _showDateRange(i) }}</div>
 
-      <!-- Navigation -->
-      <navigation-bar
-        (itemTapped)="_onNavigationItemClick($event, meter, i)"
-      ></navigation-bar>
-    </ion-card>
-  </div>
+          <div *ngIf="_reads$ | async as reads">
+            <div *ngIf="_getDataByGuid(reads, meter._guid, i) as data">
+              <line-chart
+                [data]="data.deltas"
+                [loading]="_loadingReads$ | async"
+                [animate]="_currentMeterIndex === i"
+                [series]="['line1']"
+                [dateFormat]="_selectedDateRanges[i].dateFormat"
+                [showAreaFill]="true"
+              ></line-chart>
 
-  <div padding *ngIf="!meters || meters.length === 0">
-    <div class="app-spinner-wrapper">
-      <div class="app-spinner"></div>
+              <div *ngIf="data.cost">
+                  <div class="timespan-cost">
+                    {{ data.cost.totalCost | currency:'USD': true: '1.2-2' }}
+                  </div>
+                  <div>
+                    {{ data.cost.totalDelta / 1000 | number: '.1-2' }} {{ _getMeterConfig(meter, 'unit') }}
+                  </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Neigborhood comparison -->
+        <div
+          class="card-content"
+          *ngIf="_currentNavigationItems[i] === _navigationItems.COMPARISON"
+        >
+          Neigborhood comparison
+        </div>
+
+        <!-- Device Edit -->
+        <div
+          class="card-content"
+          *ngIf="_currentNavigationItems[i] === _navigationItems.EDIT"
+        >
+          Device Edit
+        </div>
+
+        <!-- Navigation -->
+        <navigation-bar
+          (itemTapped)="_onNavigationItemClick($event, meter, i)"
+        ></navigation-bar>
+      </ion-card>
     </div>
-    <div class="loading">Please wait while loading...</div>
+
+    <div padding *ngIf="!meters || meters.length === 0">
+      <app-spinner [text]="'Please wait while loading...'">
+      </app-spinner>
+    </div>
   </div>
-</div>
+</ion-content>

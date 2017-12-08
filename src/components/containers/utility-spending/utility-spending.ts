@@ -86,9 +86,14 @@ export class UtilitySpendingComponent implements OnInit {
     return meter._actualUsageCost > this._getDailyGoalCost(meter);
   }
 
-  private _updateAllMeters(index: number) {
+  private _updateAllMeters(refresher: any, index: number) {
     this._currentMeterIndex = index;
     this._storeServices.updateAllMetersReads(this._meters$);
+
+    // TODO: Needs improvement.
+    setTimeout(() => {
+      refresher.complete();
+    }, 750);
   }
 
   private _onNavigationItemClick(selectedItem: string, meter: IMeter, index: number) {

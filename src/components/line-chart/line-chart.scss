@@ -1,18 +1,6 @@
-@import "../../styles/app-spinner";
-
 line-chart {
   .chart-container {
     position: relative;
-
-    .loading {
-      position: absolute;
-      top: 20%;
-      left: 20%;
-
-      .text {
-        margin-top: 10px;
-      }
-    }
 
     .no-data {
       position: absolute;
