@@ -14,46 +14,43 @@
         *ngIf="_currentNavigationItems[i] === _navigationItems.ARC_CHART"
         [@arcChartState]
       >
-        <div *ngIf="_meterLoading$ | async; else doneLoading">
-          <span *ngIf="i === _currentMeterIndex">
-            <div class="app-spinner-wrapper">
-              <div class="app-spinner"></div>
-            </div>
-            <div class="loading">
-              Updating meter...
-            </div>
-          </span>
-        </div>
-        <ng-template #doneLoading>
-          <div *ngIf="meter._actualUsageCost > 0">
-            <arc-tween-chart
-              [outerArcValue]="meter._actualUsageCost"
-              [innerArcValue]="_getDailyGoalCost(meter)"
-              [totalValue]="meter._goal"
-              [centerValue]="meter._usage / 1000 | number: '.1-2'"
-              [centerLabel]="_getMeterConfig(meter, 'unit')"
-              [textColor]="_getMeterConfig(meter, 'textColor')"
-              [colors]="_getMeterConfig(meter, 'color')"
-              [meterIcon]="_getMeterConfig(meter, 'imgSrc')"
-              [meterIconColor]="_getMeterConfig(meter, 'imgColor')"
-              [animate]="i === 0 || i === _currentMeterIndex"
-            ></arc-tween-chart>
+        <div *ngIf="meter._actualUsageCost > 0">
+          <arc-tween-chart
+            [outerArcValue]="meter._actualUsageCost"
+            [innerArcValue]="_getDailyGoalCost(meter)"
+            [totalValue]="meter._goal"
+            [centerValue]="meter._usage / 1000 | number: '.1-2'"
+            [centerLabel]="_getMeterConfig(meter, 'unit')"
+            [textColor]="_getMeterConfig(meter, 'textColor')"
+            [colors]="_getMeterConfig(meter, 'color')"
+            [meterIcon]="_getMeterConfig(meter, 'imgSrc')"
+            [meterIconColor]="_getMeterConfig(meter, 'imgColor')"
+            [animate]="i === 0 || i === _currentMeterIndex"
+          ></arc-tween-chart>
 
-            <!-- TODO: Remove (click) once add meter is implemented -->
-            <div
-              class="actual-cost"
-              [ngStyle]="{ 'color': _isUsageCostBehindGoal(meter) ? '#C22A17' : '#969696' }"
-              (click)="_updateMeter(meter, i)"
-            >
-              {{ meter._actualUsageCost | currency: 'USD': true:'1.2-2' }}
-            </div>
-
-            <!-- TODO: Remove (click) when we figure out what event is supposed to refresh all meters. -->
-            <div class="spending-goal" (click)="_updateAllMeters(i)">
-              Spending goal of {{ meter._goal | currency:'USD': true:'1.2-2' }}
-            </div>
+          <!-- TODO: Remove (click) once add meter is implemented -->
+          <div
+            class="actual-cost"
+            [ngStyle]="{ 'color': _isUsageCostBehindGoal(meter) ? '#C22A17' : '#969696' }"
+            (click)="_updateMeter(meter, i)"
+          >
+            {{ meter._actualUsageCost | currency: 'USD': true:'1.2-2' }}
           </div>
-        </ng-template>
+
+          <!-- TODO: Remove (click) when we figure out what event is supposed to refresh all meters. -->
+          <div class="spending-goal" (click)="_updateAllMeters(i)">
+            Spending goal of {{ meter._goal | currency:'USD': true:'1.2-2' }}
+          </div>
+
+          <div *ngIf="_meterLoading$ | async">
+            <span *ngIf="i === _currentMeterIndex">
+              <div class="app-spinner-wrapper">
+                <div class="app-spinner"></div>
+              </div>
+              <div class="loading">Updating meter...</div>
+            </span>
+          </div>
+        </div>
       </div>
 
       <!-- Line chart -->
