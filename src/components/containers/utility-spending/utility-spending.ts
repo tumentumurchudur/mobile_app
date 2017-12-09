@@ -17,13 +17,7 @@ const MAX_NUM_OF_CHARTS: number = 15;
   templateUrl: "utility-spending.html",
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
-    trigger("lineChartState", [
-      transition(":enter", [
-        style({ transform: "rotateY(90deg)" }),
-        animate("500ms 100ms ease-in-out")
-      ])
-    ]),
-    trigger("arcChartState", [
+    trigger("cardState", [
       transition(":enter", [
         style({ transform: "rotateY(90deg)" }),
         animate("500ms 100ms ease-in-out")
@@ -43,6 +37,17 @@ export class UtilitySpendingComponent implements OnInit {
   private _currentNavigationItems: string[] = [];
   private _currentMeterIndex: number = 0;
   private _selectedDateRanges: IDateRange[] = [];
+
+  // TODO: Remove when API is implemented.
+  private _neighborhoodComparisonMockdata: any[] = [
+    { date: new Date("1/1/2017"), line1: 7, line2: 9, line3: 15 },
+    { date: new Date("1/4/2017"), line1: 10, line2: 5, line3: 19 },
+    { date: new Date("1/10/2017"), line1: 4, line2: 6, line3: 25 },
+    { date: new Date("1/15/2017"), line1: 9, line2: 35, line3: 24 }
+  ];
+  private _lineColors: string[] = ["orange", "red", "green"];
+  private _neighborhoodCosts: any[] = ["15", "25", "10"];
+  private _neighborhoodSeries: any[] = ["line1", "line2", "line3"];
 
   constructor(
     private _storeServices: StoreServices
@@ -165,6 +170,53 @@ export class UtilitySpendingComponent implements OnInit {
 
   private _showDateRange(index: number): string {
     return ChartHelper.getFormattedDateRange(this._selectedDateRanges[index]);
+  }
+
+  // TODO: Remove
+  private _onNeighborhoodCostClick(index: number) {
+    switch(index) {
+      case 0:
+        this._neighborhoodComparisonMockdata = this._neighborhoodComparisonMockdata.map(data => {
+          const { date, line2, line3 } = data;
+
+          return {
+            date,
+            line2,
+            line3
+          }
+        });
+        this._neighborhoodSeries = ["line2", "line3"];
+
+        break;
+      case 1:
+        this._neighborhoodComparisonMockdata = this._neighborhoodComparisonMockdata.map(data => {
+          const { date, line1, line3 } = data;
+
+          return {
+            date,
+            line1,
+            line3
+          }
+        });
+        this._neighborhoodSeries = ["line1", "line3"];
+
+        break;
+      case 2:
+        this._neighborhoodComparisonMockdata = this._neighborhoodComparisonMockdata.map(data => {
+          const { date, line2, line3 } = data;
+
+          return {
+            date,
+            line2,
+            line3
+          }
+        });
+        this._neighborhoodSeries = ["line2", "line3"];
+
+        break;
+      default:
+        break;
+    }
   }
 
 }

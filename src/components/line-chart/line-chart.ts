@@ -18,6 +18,9 @@ export class LineChartComponent implements OnChanges {
   @Input() dateFormat: string = "%m/%d";
   @Input() series: string[] = ["line1", "line2", "line3"];
   @Input() showAreaFill: boolean = true;
+  @Input() legends: string[] = [];
+  @Input() showXAxisLabels: boolean = true;
+  @Input() showYAxisLabels: boolean = true;
 
   private element: any;
   private margin: any = { left: 10, right: 10, top: 10, bottom: 10 };
@@ -101,13 +104,17 @@ export class LineChartComponent implements OnChanges {
       .tickSizeInner(-width)
       .tickFormat(d => d / parseInt(divider));
 
-    svg.append("g")
-      .attr("transform", "translate(20, 10)")
-      .call(yAxis);
+    if (this.showXAxisLabels) {
+      svg.append("g")
+        .attr("transform", "translate(20," + (height + this.margin.top) + ")")
+        .call(xAxis);
+    }
 
-    svg.append("g")
-      .attr("transform", "translate(20," + (height + this.margin.top) + ")")
-      .call(xAxis);
+    if (this.showYAxisLabels) {
+      svg.append("g")
+        .attr("transform", "translate(20, 10)")
+        .call(yAxis);
+    }
   }
 
   private _getLineFunc(x: (date: any) => any, y: (val: number) => any, colName: string): any {

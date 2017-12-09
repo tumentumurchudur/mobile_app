@@ -17,7 +17,7 @@
         <div
           class="card-content"
           *ngIf="_currentNavigationItems[i] === _navigationItems.ARC_CHART"
-          [@arcChartState]
+          [@cardState]
         >
           <div *ngIf="meter._actualUsageCost > 0">
             <arc-tween-chart
@@ -53,7 +53,7 @@
         <div
           class="card-content"
           *ngIf="_currentNavigationItems[i] === _navigationItems.LINE_CHART"
-          [@lineChartState]
+          [@cardState]
         >
           <timespan-selector
             [selectedTimeSpan]="_selectedDateRanges[i].timeSpan"
@@ -91,8 +91,33 @@
         <div
           class="card-content"
           *ngIf="_currentNavigationItems[i] === _navigationItems.COMPARISON"
+          [@cardState]
         >
-          Neigborhood comparison
+          <timespan-selector
+            [selectedTimeSpan]="_selectedDateRanges[i].timeSpan"
+          ></timespan-selector>
+
+          <div>{{ _showDateRange(i) }}</div>
+
+          <line-chart
+            [data]="_neighborhoodComparisonMockdata"
+            [lineColors]="_lineColors"
+            [loading]="false"
+            [animate]="_currentMeterIndex === i"
+            [series]="_neighborhoodSeries"
+            [showAreaFill]="false"
+            [legends]="['You', 'Average', 'Efficient']"
+            [showXAxisLabels]="false"
+          ></line-chart>
+
+          <!-- TODO: Remove -->
+          <div class="neighborhoodCosts">
+            <div *ngFor="let cost of _neighborhoodCosts; let i = index">
+              <span [ngStyle]="{ 'color': _lineColors[i] }" (click)="_onNeighborhoodCostClick(i)">
+                {{ cost | currency:'USD': true: '1.2-2'}}
+              </span>
+            </div>
+          </div>
         </div>
 
         <!-- Device Edit -->
