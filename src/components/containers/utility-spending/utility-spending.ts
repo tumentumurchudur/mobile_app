@@ -39,12 +39,18 @@ export class UtilitySpendingComponent implements OnInit {
   private _selectedDateRanges: IDateRange[] = [];
 
   // TODO: Remove when API is implemented.
-  private _neighborhoodComparisonMockdata: any[] = [
+  private _mockData: any[] = [
     { date: new Date("1/1/2017"), line1: 7, line2: 9, line3: 15 },
     { date: new Date("1/4/2017"), line1: 10, line2: 5, line3: 19 },
     { date: new Date("1/10/2017"), line1: 4, line2: 6, line3: 25 },
     { date: new Date("1/15/2017"), line1: 9, line2: 35, line3: 24 }
   ];
+  private _mockSelectedData: any[] = [];
+  private _mockSelectedSeries: any[] = [];
+  private _mockSelectedColors: any[] = [];
+  private _mockLegends: any[] = ["You", "Average", "Efficient"];
+  private _mockUsageData: any[] = ["38 kWh", "59 kWh", "43 kW"];
+
   private _lineColors: string[] = ["orange", "red", "green"];
   private _neighborhoodCosts: any[] = ["15", "25", "10"];
   private _neighborhoodSeries: any[] = ["line1", "line2", "line3"];
@@ -173,50 +179,40 @@ export class UtilitySpendingComponent implements OnInit {
   }
 
   // TODO: Remove
-  private _onNeighborhoodCostClick(index: number) {
-    switch(index) {
-      case 0:
-        this._neighborhoodComparisonMockdata = this._neighborhoodComparisonMockdata.map(data => {
-          const { date, line2, line3 } = data;
+  private _onNeighborhoodCostClick(chartIndex: number, meterIndex: number): void {
+    const index = (chartIndex + 1).toString();
 
-          return {
-            date,
-            line2,
-            line3
-          }
-        });
-        this._neighborhoodSeries = ["line2", "line3"];
+    this._mockSelectedData[meterIndex] = this._mockData.map(data => {
+      const { date } = data;
+      const line = data["line" + index];
 
-        break;
-      case 1:
-        this._neighborhoodComparisonMockdata = this._neighborhoodComparisonMockdata.map(data => {
-          const { date, line1, line3 } = data;
+      if (chartIndex === 0) {
+        return {
+          date,
+          line1: line
+        }
+      } else if (chartIndex === 1) {
+        return {
+          date,
+          line2: line
+        }
+      } else {
+        return {
+          date,
+          line3: line
+        }
+      }
 
-          return {
-            date,
-            line1,
-            line3
-          }
-        });
-        this._neighborhoodSeries = ["line1", "line3"];
+    });
 
-        break;
-      case 2:
-        this._neighborhoodComparisonMockdata = this._neighborhoodComparisonMockdata.map(data => {
-          const { date, line2, line3 } = data;
+    this._mockSelectedSeries[meterIndex] = ["line" + index];
+    this._mockSelectedColors[meterIndex] = [this._lineColors[chartIndex]];
+  }
 
-          return {
-            date,
-            line2,
-            line3
-          }
-        });
-        this._neighborhoodSeries = ["line2", "line3"];
-
-        break;
-      default:
-        break;
-    }
+  private _onShowAll(index: number): void {
+    this._mockSelectedData = [];
+    this._mockSelectedSeries = [];
+    this._mockSelectedColors = [];
   }
 
 }

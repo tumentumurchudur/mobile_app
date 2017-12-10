@@ -18,7 +18,6 @@ export class LineChartComponent implements OnChanges {
   @Input() dateFormat: string = "%m/%d";
   @Input() series: string[] = ["line1", "line2", "line3"];
   @Input() showAreaFill: boolean = true;
-  @Input() legends: string[] = [];
   @Input() showXAxisLabels: boolean = true;
   @Input() showYAxisLabels: boolean = true;
 

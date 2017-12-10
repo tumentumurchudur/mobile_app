@@ -19,25 +19,6 @@ line-chart {
     .area {
       opacity: .2;
     }
-
-    .circle {
-      border-radius: 50%;
-      width: 12px;
-      height: 12px;
-      margin-right: 3px;
-    }
-
-    .legends {
-      display: flex;
-      justify-content: space-around;
-      position: relative;
-      bottom: 20px;
-
-      .legend {
-        display: flex;
-        align-items: center;
-      }
-    }
   }
 
 }

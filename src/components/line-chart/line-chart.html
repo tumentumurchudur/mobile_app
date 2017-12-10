@@ -8,13 +8,4 @@
     <app-spinner [text]="'Please wait while loading...'">
     </app-spinner>
   </div>
-
-  <div class="legends" *ngIf="legends.length">
-    <div *ngFor="let legend of legends; let i = index">
-      <div class="legend">
-        <div class="circle" [ngStyle]="{ 'background': lineColors[i] }"></div>
-        <div>{{ legend }}</div>
-      </div>
-    </div>
-  </div>
 </div>
