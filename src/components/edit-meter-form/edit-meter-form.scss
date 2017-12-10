@@ -1,0 +1,51 @@
+@import "../../styles/variables";
+
+edit-meter-form {
+  .form-header {
+    margin: 0 !important;
+  }
+
+  .cancel-btn {
+    color: $steel-grey;
+    font-size: 1.5rem;
+    width:15vw;
+    text-transform: none;
+  }
+
+  .edit-title{
+    text-align: center;
+  }
+
+  .delete-btn {
+    font-size: 1.5rem;
+    width: 15vw;
+    text-transform: none;
+  }
+
+  ion-content {
+    height: 95%;
+
+    .scroll-content {
+      overflow-y: hidden;
+    }
+  }
+
+  form {
+    padding: 1rem 2.57rem 1rem 1rem;
+    width: 100%;
+
+    .meter-input {
+      margin-bottom: 1rem;
+      font-size: 1.75rem;
+    }
+  }
+
+  .save-btn {
+    font-size: 1.5rem;
+    background-color: $navigation-icon;
+    color: $white;
+    height: 45px;
+    width: 100%;
+  }
+
+}

@@ -135,8 +135,11 @@
         <div
           class="card-content"
           *ngIf="_currentNavigationItems[i] === _navigationItems.EDIT"
+          [@cardState]
         >
-          Device Edit
+          <edit-meter-form
+            (cancelClicked)="_onCancelEditMeter(meter, i)"
+          ></edit-meter-form>
         </div>
 
         <!-- Navigation -->

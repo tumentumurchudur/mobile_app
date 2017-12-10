@@ -11,6 +11,7 @@ import { TimeSpanSelectorComponent } from "./timespan-selector/timespan-selector
 import { LineChartComponent } from './line-chart/line-chart';
 import { AddMeterFormComponent } from './add-meter-form/add-meter-form';
 import { AppSpinnerComponent } from './app-spinner/app-spinner';
+import { EditMeterFormComponent } from './edit-meter-form/edit-meter-form';
 
 @NgModule({
 	declarations: [
@@ -20,7 +21,8 @@ import { AppSpinnerComponent } from './app-spinner/app-spinner';
     TimeSpanSelectorComponent,
     LineChartComponent,
     AddMeterFormComponent,
-    AppSpinnerComponent
+    AppSpinnerComponent,
+    EditMeterFormComponent
 	],
 	imports: [
     CommonModule,
@@ -35,7 +37,8 @@ import { AppSpinnerComponent } from './app-spinner/app-spinner';
     TimeSpanSelectorComponent,
     LineChartComponent,
     AddMeterFormComponent,
-    AppSpinnerComponent
+    AppSpinnerComponent,
+    EditMeterFormComponent
 	]
 })
 export class ComponentsModule {}

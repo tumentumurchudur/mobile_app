@@ -215,4 +215,9 @@ export class UtilitySpendingComponent implements OnInit {
     this._mockSelectedColors = [];
   }
 
+  private _onCancelEditMeter(meter: IMeter, index: number): void {
+    this._onNavigationItemClick(this._navigationItems.ARC_CHART, meter, index);
+    // this._currentNavigationItems[index] = this._navigationItems.ARC_CHART;
+  }
+
 }

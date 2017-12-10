@@ -1,0 +1,64 @@
+<!-- Form Header -->
+<ion-header class="form-header">
+  <ion-navbar color="light" hideBackButton="true">
+    <ion-buttons left>
+      <button
+        ion-button color="button"
+        class="cancel-btn"
+        (click)="_onCancel()"
+      >
+        Cancel
+      </button>
+    </ion-buttons>
+
+    <div class="edit-title">Edit Meter</div>
+
+    <ion-buttons end>
+      <button
+        ion-button
+        color="danger"
+        class="delete-btn"
+        (click)="_onDelete()"
+      >
+        Delete
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<!-- Form content -->
+<ion-content>
+  <form class="flex-11 layout vertical" [formGroup]="_editMeter">
+    <ion-item (keyup.enter)="_keyboardSubmit()" class="meter-input">
+      <ion-label color="text" stacked>Name</ion-label>
+      <ion-input formControlName="name"></ion-input>
+    </ion-item>
+
+    <ion-item class="meter-input">
+      <ion-label color="text" stacked>Billing Start Date</ion-label>
+      <ion-input type="number" formControlName="billingStart" max="28" min="1"></ion-input>
+    </ion-item>
+
+    <ion-item (keyup.enter)="_keyboardSubmit()" class="meter-input">
+      <ion-label color="text" stacked>Goal Amount</ion-label>
+      <ion-input formControlName="goal" class="money" type="number" min="0">
+      </ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label color="text" stacked>Provider</ion-label>
+        <ion-input (tap)="_editProvider()"></ion-input>
+      <!-- <ion-input (tap)="_editProvider()" value="{{providerName}} - {{planName}}"></ion-input> -->
+    </ion-item>
+
+    <ion-item class="meter-input">
+      <ion-label color="text" stacked>Meter Number</ion-label>
+      <ion-input disabled="true" formControlName="meterNumber">
+      </ion-input>
+      <!-- <ion-input disabled="true" value="{{meterData.meterId}}">{{meterData.meterId}}</ion-input> -->
+    </ion-item>
+  </form>
+
+  <!-- <button (tap)="_save()" class="save-btn flex" [disabled]="editMeter.invalid">Save</button> -->
+  <button (tap)="_save()" class="save-btn flex">Save</button>
+</ion-content>
