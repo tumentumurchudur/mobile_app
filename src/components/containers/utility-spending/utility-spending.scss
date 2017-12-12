@@ -1,9 +1,13 @@
 @import "../../../styles/variables";
 
 utility-spending {
+	.no-padding {
+    padding: 0 !important;
+	}
+
 	.chart-card {
-		margin: 12px 12px;
-		width: calc(100% - 24px);
+		margin: 12px 10px 12px 0;
+		width: calc(100% - 10px);
 
 		.header {
 			margin: 10px 0px 10px 20px;
@@ -33,12 +37,6 @@ utility-spending {
 			height: 63vh;
 			text-align: center;
 			position: relative;
-
-			.linechart-status {
-				position: absolute;
-				top: 25%;
-				left: 37%;
-			}
 		}
 
 		.meter-name {
@@ -49,7 +47,7 @@ utility-spending {
 			text-align: center;
 			font-size: 18px;
 			opacity: .7;
-			margin-bottom: 20px
+			margin-bottom: 5px
 		}
 
 		.actual-cost {
@@ -63,6 +61,46 @@ utility-spending {
 			text-align: center;
 			font-size: 48px;
 		}
+
+		.show-all {
+			text-align: right;
+			margin-right: 20px;
+		}
+
+    .legends {
+      display: flex;
+      justify-content: space-around;
+      position: relative;
+      bottom: 20px;
+
+      .legend {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+
+				.circle {
+					border-radius: 50%;
+					width: 12px;
+					height: 12px;
+					margin-right: 3px;
+				}
+
+				.series-label {
+					display: flex;
+					align-items: center;
+				}
+
+				.cost-label {
+					font-size: 20px;
+					margin-top: 20px;
+				}
+
+				.usage-label {
+					display: flex;
+					font-size: 10px;
+				}
+      }
+    }
 	}
 
 }

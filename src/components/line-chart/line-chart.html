@@ -3,7 +3,9 @@
   <div class="no-data" *ngIf="(!data || !data.length) && !loading">
     No data
   </div>
-  <div class="loading" *ngIf="loading">
-    Please wait while loading data...
+
+  <div *ngIf="loading">
+    <app-spinner [text]="'Please wait while loading...'">
+    </app-spinner>
   </div>
 </div>

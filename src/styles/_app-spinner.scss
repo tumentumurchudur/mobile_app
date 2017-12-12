@@ -1,0 +1,59 @@
+@import "variables";
+
+.app-spinner-wrapper {
+  $size: 3.6rem;
+  $top: 1rem;
+
+  padding-top: 1rem;
+  height: $size + $top;
+  text-align: center;
+  overflow: hidden;
+
+  .app-spinner {
+    position: relative;
+    display: inline-block;
+    width: $size;
+    height: $size;
+    font-size: 1rem;
+    background: linear-gradient(to right, $cerulean 10%, rgba($white, 0) 42%);
+    text-indent: -9999em;
+    border-radius: 50%;
+    animation: app-spinner 1.4s infinite linear;
+    transform: translateZ(0);
+
+    &::before {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 50%;
+      height: 50%;
+      background: $cerulean;
+      border-radius: 100% 0 0;
+      content: "";
+    }
+
+    &::after {
+      position: absolute;
+      margin: auto;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      width: 75%;
+      height: 75%;
+      background: $white;
+      border-radius: 50%;
+      content: "";
+    }
+  }
+}
+
+@keyframes app-spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}

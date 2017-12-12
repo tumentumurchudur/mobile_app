@@ -17,13 +17,7 @@ const MAX_NUM_OF_CHARTS: number = 15;
   templateUrl: "utility-spending.html",
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
-    trigger("lineChartState", [
-      transition(":enter", [
-        style({ transform: "rotateY(90deg)" }),
-        animate("500ms 100ms ease-in-out")
-      ])
-    ]),
-    trigger("arcChartState", [
+    trigger("cardState", [
       transition(":enter", [
         style({ transform: "rotateY(90deg)" }),
         animate("500ms 100ms ease-in-out")
@@ -43,6 +37,23 @@ export class UtilitySpendingComponent implements OnInit {
   private _currentNavigationItems: string[] = [];
   private _currentMeterIndex: number = 0;
   private _selectedDateRanges: IDateRange[] = [];
+
+  // TODO: Remove when API is implemented.
+  private _mockData: any[] = [
+    { date: new Date("1/1/2017"), line1: 7, line2: 9, line3: 15 },
+    { date: new Date("1/4/2017"), line1: 10, line2: 5, line3: 19 },
+    { date: new Date("1/10/2017"), line1: 4, line2: 6, line3: 25 },
+    { date: new Date("1/15/2017"), line1: 9, line2: 35, line3: 24 }
+  ];
+  private _mockSelectedData: any[] = [];
+  private _mockSelectedSeries: any[] = [];
+  private _mockSelectedColors: any[] = [];
+  private _mockLegends: any[] = ["You", "Average", "Efficient"];
+  private _mockUsageData: any[] = ["38 kWh", "59 kWh", "43 kW"];
+
+  private _lineColors: string[] = ["orange", "red", "green"];
+  private _neighborhoodCosts: any[] = ["15", "25", "10"];
+  private _neighborhoodSeries: any[] = ["line1", "line2", "line3"];
 
   constructor(
     private _storeServices: StoreServices
@@ -86,9 +97,14 @@ export class UtilitySpendingComponent implements OnInit {
     return meter._actualUsageCost > this._getDailyGoalCost(meter);
   }
 
-  private _updateAllMeters(index: number) {
+  private _updateAllMeters(refresher: any, index: number) {
     this._currentMeterIndex = index;
     this._storeServices.updateAllMetersReads(this._meters$);
+
+    // TODO: Needs improvement.
+    setTimeout(() => {
+      refresher.complete();
+    }, 750);
   }
 
   private _onNavigationItemClick(selectedItem: string, meter: IMeter, index: number) {
@@ -160,6 +176,43 @@ export class UtilitySpendingComponent implements OnInit {
 
   private _showDateRange(index: number): string {
     return ChartHelper.getFormattedDateRange(this._selectedDateRanges[index]);
+  }
+
+  // TODO: Remove
+  private _onNeighborhoodCostClick(chartIndex: number, meterIndex: number): void {
+    const index = (chartIndex + 1).toString();
+
+    this._mockSelectedData[meterIndex] = this._mockData.map(data => {
+      const { date } = data;
+      const line = data["line" + index];
+
+      if (chartIndex === 0) {
+        return {
+          date,
+          line1: line
+        }
+      } else if (chartIndex === 1) {
+        return {
+          date,
+          line2: line
+        }
+      } else {
+        return {
+          date,
+          line3: line
+        }
+      }
+
+    });
+
+    this._mockSelectedSeries[meterIndex] = ["line" + index];
+    this._mockSelectedColors[meterIndex] = [this._lineColors[chartIndex]];
+  }
+
+  private _onShowAll(index: number): void {
+    this._mockSelectedData = [];
+    this._mockSelectedSeries = [];
+    this._mockSelectedColors = [];
   }
 
 }
