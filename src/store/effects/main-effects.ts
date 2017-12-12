@@ -171,15 +171,13 @@ export class MainEffects {
   public updateMeterSettings$ = this._actions$
     .ofType(UPDATE_METER_SETTINGS)
     .map((action: any) => action.payload)
-    .map((data: any) => {
+    .switchMap((data: any) => {
       const { meter = null, user = null } = data;
 
-      console.log("data", meter, user);
-
-      // Database call goes here.
-      this._db.updateMeterSettings(data.meter, data.user);
-
-      return new UpdateMeter(null);
+      return this._db.updateMeterSettings(data.meter, data.user);
+    })
+    .map((meter: IMeter) => {
+      return new UpdateMeter(meter);
     });
 
   @Effect()

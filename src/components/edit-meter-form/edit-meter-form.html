@@ -31,7 +31,7 @@
   <form class="flex-11 layout vertical" [formGroup]="_editMeter">
     <ion-item (keyup.enter)="_keyboardSubmit()">
       <ion-label floating color="text" stacked>Name</ion-label>
-      <ion-input formControlName="name"></ion-input>
+      <ion-input readonly formControlName="name"></ion-input>
     </ion-item>
 
     <ion-item class="meter-input">
@@ -46,12 +46,12 @@
 
     <ion-item class="meter-input">
       <ion-label floating color="text" stacked>Provider</ion-label>
-      <ion-input (tap)="_editProvider()" readonly value="{{ _providerName }} - {{ _planName }}"></ion-input>
+      <ion-input (tap)="_editProvider()" readonly formControlName="provider"></ion-input>
     </ion-item>
 
     <ion-item class="meter-input">
       <ion-label floating color="text" stacked>Meter Number</ion-label>
-      <ion-input readonly formControlName="meterNumber"></ion-input>
+      <ion-input readonly value="{{ meter._meter_id }}"></ion-input>
     </ion-item>
   </form>
 

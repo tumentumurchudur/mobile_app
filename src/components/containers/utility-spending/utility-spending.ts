@@ -217,7 +217,10 @@ export class UtilitySpendingComponent implements OnInit {
 
   private _onCancelEditMeter(meter: IMeter, index: number): void {
     this._onNavigationItemClick(this._navigationItems.ARC_CHART, meter, index);
-    // this._currentNavigationItems[index] = this._navigationItems.ARC_CHART;
+  }
+
+  private _onSaveEditMeter(meter: IMeter, index: number): void {
+    this._onNavigationItemClick(this._navigationItems.ARC_CHART, meter, index);
   }
 
 }

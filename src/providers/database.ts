@@ -273,25 +273,27 @@ export class DatabaseProvider {
   }
 
   public updateMeterSettings(meter: IMeter, user: IUser) {
-    // this._orgsRef
-    //   .child(`${this._userService.currentUser.orgs[0].path}/Building1/_meters/_${meter.utilityType}/${oldMeterName}`)
-    //   .remove();
+    return Observable.create(observer => {
+      const updates = {};
+      const path = `${user.orgPath}/Building1/_meters/_${meter._utilityType}/${meter._name}`;
+      const settings = {
+        _billing_start: meter._billing_start,
+        _goal: meter._goal,
+        _guid: meter._guid,
+        _meter_id: meter._meter_id,
+        _provider: meter._provider,
+        _plan: meter._plan,
+        _type: meter._type
+      };
 
-    const updates = {};
-    const path = `${user.orgPath}/Building1/_meters/_${meter._utilityType}/${meter._name}`;
-    updates[path] = {
-      _billing_start: meter._billing_start,
-      _goal: meter._goal,
-      _guid: meter._guid,
-      _meter_id: meter._meter_id,
-      _provider: meter._provider,
-      _plan: meter._plan,
-      _type: meter._type
-    };
+      updates[path] = settings;
 
-    console.log("updating", path, updates);
-
-    this._orgsRef.update(updates);
+      this._orgsRef.update(updates).then(() => {
+        observer.next(Object.assign({}, meter, settings));
+      }, error => {
+        observer.error(error);
+      });
+    });
   }
 
   /**

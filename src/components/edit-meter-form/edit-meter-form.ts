@@ -13,6 +13,7 @@ export class EditMeterFormComponent implements OnInit {
   @Input() user: IUser | null;
 
   @Output() cancelClicked = new EventEmitter();
+  @Output() saveClicked = new EventEmitter<IMeter>();
 
   private _editMeter: FormGroup;
   private _providerName: string;
@@ -28,14 +29,11 @@ export class EditMeterFormComponent implements OnInit {
     this._planName = this.meter._plan || "No plan";
 
     this._editMeter = this._formBuilder.group({
-      name: ["John"],
-      meterNumber: [123456],
-      provider: ["provider"],
-      planName: ["plan name"],
-      plan: ["plan"],
-      billingStart: [15],
-      goal: [100],
-      billingCycle: ["1 month"]
+      name: [this.meter._name],
+      meterNumber: [this.meter._meter_id],
+      provider: [this._providerName + " - " + this._planName],
+      billingStart: [this.meter._billing_start],
+      goal: [this.meter._goal]
     });
   }
 
@@ -49,13 +47,12 @@ export class EditMeterFormComponent implements OnInit {
 
   private _save(): void {
     const newMeter: IMeter = Object.assign({}, this.meter, {
-      _billing_start: this._editMeter.value["billingStart"],
-      _goal: this._editMeter.value["goal"],
-      _plan: this._planName,
-      _utilityType: this.meter._utilityType
+      _billing_start: parseInt(this._editMeter.value["billingStart"]),
+      _goal: parseInt(this._editMeter.value["goal"])
     });
 
     this._storeServices.updateMeterSettings(newMeter, this.user);
+    this.saveClicked.emit(newMeter);
   }
 
   private _onCancel(): void {
