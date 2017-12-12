@@ -272,6 +272,26 @@ export class DatabaseProvider {
     });
   }
 
+  public updateMeterSettings(meter: IMeter, user: IUser) {
+    // this._orgsRef
+    //   .child(`${this._userService.currentUser.orgs[0].path}/Building1/_meters/_${meter.utilityType}/${oldMeterName}`)
+    //   .remove();
+
+    const updates = {};
+    const path = `${user.orgPath}/Building1/_meters/_${meter._utilityType}/${meter._name}`;
+    // TODO: Pass every property, otherwise it wipes put everything.
+    updates[path] = { _goal: 92 };
+    console.log("updating", path, updates);
+
+    // this._orgsRef.update(updates);
+
+    // this._orgsRef.update(updates);
+    // updates['/posts/' + newPostKey] = postData;
+    // updates['/user-posts/' + uid + '/' + newPostKey] = postData;
+
+    // return firebase.database().ref().update(updates);
+  }
+
   /**
    * Iterates over meterObject containing meters and
    * puts the meters into an array and returns the array.

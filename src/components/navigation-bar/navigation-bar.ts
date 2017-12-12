@@ -8,13 +8,10 @@ import { navigationConfigs  } from "../../configs";
 export class NavigationBarComponent {
   private _navigationItems = navigationConfigs;
 
+  @Input() selectedItem: string = navigationConfigs.ARC_CHART;
   @Output() itemTapped = new EventEmitter<string>();
 
-  private _currentSelection: string = this._navigationItems.ARC_CHART;
-
-  private _onClick(item: string) {
-    this._currentSelection = item;
-
+  private _onClick(item: string): void {
     this.itemTapped.emit(item);
   }
 

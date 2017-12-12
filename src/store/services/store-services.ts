@@ -10,6 +10,7 @@ import {
 	AddUser,
 	UpdateUser,
 	UpdatingMeter,
+	UpdateSettings,
 	AddReads,
 	LoadReadsFromDb,
 	LoadReadsByDateRange,
@@ -17,6 +18,7 @@ import {
 	LoadSummaries,
 	LoadingSummaries
 } from "../actions";
+import { UpdateMeter } from "../actions/meter-actions";
 
 @Injectable()
 export class StoreServices {
@@ -42,6 +44,10 @@ export class StoreServices {
 	public updateMeterReads(meter: IMeter) {
 		// Update reads for given meter.
 		this._store.dispatch(new UpdatingMeter(meter));
+	}
+
+	public updateMeterSettings(meter: IMeter, user: IUser) {
+		this._store.dispatch(new UpdateSettings({ meter, user }));
 	}
 
 	public selectMeterLoading(): Observable<boolean> {

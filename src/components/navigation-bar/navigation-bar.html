@@ -2,7 +2,7 @@
   <ion-icon
     class="icon-item"
     name="radio-button-on"
-    [class.btn-selected]="_currentSelection === _navigationItems.ARC_CHART"
+    [class.btn-selected]="selectedItem === _navigationItems.ARC_CHART"
     (tap)="_onClick(_navigationItems.ARC_CHART)"
   >
   </ion-icon>
@@ -10,7 +10,7 @@
   <ion-icon
     class="icon-item"
     name="pulse"
-    [class.btn-selected]="_currentSelection === _navigationItems.LINE_CHART"
+    [class.btn-selected]="selectedItem === _navigationItems.LINE_CHART"
     (tap)="_onClick(_navigationItems.LINE_CHART)"
   >
   </ion-icon>
@@ -18,7 +18,7 @@
   <ion-icon
     class="icon-item"
     name="ribbon"
-    [class.btn-selected]="_currentSelection === _navigationItems.COMPARISON"
+    [class.btn-selected]="selectedItem === _navigationItems.COMPARISON"
     (tap)="_onClick(_navigationItems.COMPARISON)"
   >
   </ion-icon>
@@ -26,7 +26,7 @@
   <ion-icon
     class="icon-item"
     name="create"
-    [class.btn-selected]="_currentSelection === _navigationItems.EDIT"
+    [class.btn-selected]="selectedItem === _navigationItems.EDIT"
     (tap)="_onClick(_navigationItems.EDIT)"
   >
   </ion-icon>

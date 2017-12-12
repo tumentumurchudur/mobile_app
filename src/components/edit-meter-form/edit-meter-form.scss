@@ -28,15 +28,15 @@ edit-meter-form {
     .scroll-content {
       overflow-y: hidden;
     }
-  }
 
-  form {
-    padding: 1rem 2.57rem 1rem 1rem;
-    width: 100%;
+    form {
+      padding: 1rem 2.57rem 1rem 1rem;
+      width: 100%;
 
-    .meter-input {
-      margin-bottom: 1rem;
-      font-size: 1.75rem;
+      // .meter-input {
+      //   margin-bottom: 1rem;
+      //   font-size: 1.75rem;
+      // }
     }
   }
 
@@ -47,5 +47,4 @@ edit-meter-form {
     height: 45px;
     width: 100%;
   }
-
 }

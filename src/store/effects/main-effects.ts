@@ -17,6 +17,7 @@ import { CostHelper, ChartHelper } from "../../helpers";
 import {
   LOAD_METERS,
   UPDATING_METER,
+  UPDATE_METER_SETTINGS,
   LOAD_FROM_DB,
   LOAD_READS_FROM_DB,
   LOAD_READS_BY_DATE,
@@ -56,13 +57,15 @@ export class MainEffects {
     .map((values: any[]) => {
       const [meters = [], user] = values;
 
+      return new LoadFromDb(user);
+
       // Load data from API.
-      if (!meters.length) {
-        return new LoadFromDb(user);
-      }
+      // if (!meters.length) {
+      //   return new LoadFromDb(user);
+      // }
 
       // Load data from cache.
-      return new AddMeters(meters);
+      // return new AddMeters(meters);
     });
 
   /**
@@ -85,6 +88,7 @@ export class MainEffects {
     .switchMap((values: any[]) => {
       const [orgPath, user] = values;
       const updatedUser = Object.assign({}, user, { orgPath });
+      console.log("updated User", updatedUser);
 
       return Observable.combineLatest([
         this._db.getMetersForOrg(orgPath),
@@ -161,6 +165,21 @@ export class MainEffects {
       });
 
       return new UpdateMeter(newMeter);
+    });
+
+  @Effect()
+  public updateMeterSettings$ = this._actions$
+    .ofType(UPDATE_METER_SETTINGS)
+    .map((action: any) => action.payload)
+    .map((data: any) => {
+      const { meter = null, user = null } = data;
+
+      console.log("data", meter, user);
+
+      // Database call goes here.
+      this._db.updateMeterSettings(data.meter, data.user);
+
+      return new UpdateMeter(null);
     });
 
   @Effect()
