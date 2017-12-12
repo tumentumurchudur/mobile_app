@@ -272,7 +272,7 @@ export class DatabaseProvider {
     });
   }
 
-  public updateMeterSettings(meter: IMeter, user: IUser) {
+  public updateMeterSettings(meter: IMeter, user: IUser): Observable<IMeter> {
     return Observable.create(observer => {
       const updates = {};
       const path = `${user.orgPath}/Building1/_meters/_${meter._utilityType}/${meter._name}`;
