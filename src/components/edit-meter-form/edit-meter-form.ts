@@ -13,7 +13,7 @@ export class EditMeterFormComponent implements OnInit {
   @Input() user: IUser | null;
 
   @Output() cancelClicked = new EventEmitter();
-  @Output() saveClicked = new EventEmitter<IMeter>();
+  @Output() saveClicked = new EventEmitter();
 
   private _editMeter: FormGroup;
   private _providerName: string;
@@ -37,10 +37,12 @@ export class EditMeterFormComponent implements OnInit {
     });
   }
 
+  // TODO: Implement
   private _keyboardSubmit(): void {
 
   }
 
+  // TODO: Implement
   private _editProvider(): void {
 
   }
@@ -52,13 +54,14 @@ export class EditMeterFormComponent implements OnInit {
     });
 
     this._storeServices.updateMeterSettings(newMeter, this.user);
-    this.saveClicked.emit(newMeter);
+    this.saveClicked.emit();
   }
 
   private _onCancel(): void {
     this.cancelClicked.emit();
   }
 
+  // TODO: Implement
   private _onDelete(): void {
 
   }

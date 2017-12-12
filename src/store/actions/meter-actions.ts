@@ -8,7 +8,7 @@ export const ADD_METER: string = "ADD_METER";
 
 export const UPDATE_METER: string = "UPDATE METER";
 export const UPDATING_METER: string = "UPDATING METER";
-export const UPDATE_METER_SETTINGS: string = "UPDATE_METER_SETTINGS";
+export const UPDATE_METER_SETTINGS: string = "UPDATE METER SETTINGS";
 
 export class LoadMeters implements Action {
 	public readonly type = LOAD_METERS;

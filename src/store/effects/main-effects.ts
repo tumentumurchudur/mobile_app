@@ -59,13 +59,16 @@ export class MainEffects {
 
       return new LoadFromDb(user);
 
-      // Load data from API.
-      // if (!meters.length) {
-      //   return new LoadFromDb(user);
-      // }
+      /**
+       * TODO: Figure out a way to sync cache and store.
+       * // Load data from API.
+        if (!meters.length) {
+          return new LoadFromDb(user);
+        }
 
-      // Load data from cache.
-      // return new AddMeters(meters);
+        // Load data from cache.
+        return new AddMeters(meters);
+       */
     });
 
   /**
@@ -88,7 +91,6 @@ export class MainEffects {
     .switchMap((values: any[]) => {
       const [orgPath, user] = values;
       const updatedUser = Object.assign({}, user, { orgPath });
-      console.log("updated User", updatedUser);
 
       return Observable.combineLatest([
         this._db.getMetersForOrg(orgPath),
