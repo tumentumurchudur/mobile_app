@@ -17,7 +17,7 @@
         <div
           class="card-content"
           *ngIf="_currentNavigationItems[i] === _navigationItems.ARC_CHART"
-          [@arcChartState]
+          [@cardState]
         >
           <div *ngIf="meter._actualUsageCost > 0">
             <arc-tween-chart
@@ -53,7 +53,7 @@
         <div
           class="card-content"
           *ngIf="_currentNavigationItems[i] === _navigationItems.LINE_CHART"
-          [@lineChartState]
+          [@cardState]
         >
           <timespan-selector
             [selectedTimeSpan]="_selectedDateRanges[i].timeSpan"
@@ -91,8 +91,44 @@
         <div
           class="card-content"
           *ngIf="_currentNavigationItems[i] === _navigationItems.COMPARISON"
+          [@cardState]
         >
-          Neigborhood comparison
+          <timespan-selector
+            [selectedTimeSpan]="_selectedDateRanges[i].timeSpan"
+          ></timespan-selector>
+
+          <div>{{ _showDateRange(i) }}</div>
+          <div class="show-all"><span (click)="_onShowAll(i)">show all</span></div>
+
+          <line-chart
+            [data]="_mockSelectedData[i] || _mockData"
+            [lineColors]="_mockSelectedColors[i] || _lineColors"
+            [dotColors]="_mockSelectedColors[i] || _lineColors"
+            [loading]="false"
+            [animate]="_currentMeterIndex === i"
+            [series]="_mockSelectedSeries[i] || _neighborhoodSeries"
+            [showAreaFill]="false"
+            [showXAxisLabels]="false"
+          ></line-chart>
+
+          <div class="legends">
+            <div *ngFor="let legend of _mockLegends; let j = index">
+              <div class="legend">
+                <div class="series-label">
+                  <div class="circle" [ngStyle]="{ 'background': _lineColors[j] }"></div>
+                  <div>{{ legend }}</div>
+                </div>
+                <div class="cost-label">
+                  <span [ngStyle]="{ 'color': _lineColors[j] }" (click)="_onNeighborhoodCostClick(j, i)">
+                    {{ _neighborhoodCosts[j] | currency:'USD': true: '1.2-2'}}
+                  </span>
+                </div>
+                <div class="usage-labe">
+                  {{ _mockUsageData[j] }}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Device Edit -->
