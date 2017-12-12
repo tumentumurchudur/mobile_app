@@ -24,8 +24,6 @@ export class EditMeterFormComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    console.log("meter", this.meter, this.user);
-
     this._providerName = this.meter._provider.split('/').pop() || "No provider";
     this._planName = this.meter._plan || "No plan";
 
@@ -50,7 +48,14 @@ export class EditMeterFormComponent implements OnInit {
   }
 
   private _save(): void {
-    this._storeServices.updateMeterSettings(this.meter, this.user);
+    const newMeter: IMeter = Object.assign({}, this.meter, {
+      _billing_start: this._editMeter.value["billingStart"],
+      _goal: this._editMeter.value["goal"],
+      _plan: this._planName,
+      _utilityType: this.meter._utilityType
+    });
+
+    this._storeServices.updateMeterSettings(newMeter, this.user);
   }
 
   private _onCancel(): void {
