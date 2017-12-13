@@ -24,10 +24,10 @@ export {
   AddReads,
   LoadReadsByDateRange,
   LoadingReads,
-  LoadReadsFromDb,
+  LoadReadsByMeters,
 
   ADD_READS,
   LOAD_READS_BY_DATE,
   LOADING_READS,
-  LOAD_READS_FROM_DB
+  LOAD_READS_BY_METERS
 } from "./reads-actions";

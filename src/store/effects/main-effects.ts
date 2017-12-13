@@ -20,7 +20,7 @@ import {
   TRIGGER_UPDATE_METER_READS,
   TRIGGER_UPDATE_METER_SETTINGS,
   LOAD_FROM_DB,
-  LOAD_READS_FROM_DB,
+  LOAD_READS_BY_METERS,
   LOAD_READS_BY_DATE,
 
   AddMeters,
@@ -191,7 +191,7 @@ export class MainEffects {
 
   @Effect()
   public updateAllMetersReads$ = this._actions$
-    .ofType(LOAD_READS_FROM_DB)
+    .ofType(LOAD_READS_BY_METERS)
     .map((action: any) => action.payload)
     .switchMap((meters: IMeter[]) => {
       return Observable.combineLatest([
