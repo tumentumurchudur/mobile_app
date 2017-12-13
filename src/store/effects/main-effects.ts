@@ -16,14 +16,15 @@ import { IMeter, IUser, IReads, IDateRange } from "../../interfaces";
 import { CostHelper, ChartHelper } from "../../helpers";
 import {
   LOAD_METERS,
-  UPDATING_METER,
-  UPDATE_METER_SETTINGS,
+  TRIGGER_UPDATE_METER_READS,
+  TRIGGER_UPDATE_METER_SETTINGS,
   LOAD_FROM_DB,
   LOAD_READS_FROM_DB,
   LOAD_READS_BY_DATE,
   AddMeters,
   UpdateMeter,
-  UpdatingMeter,
+  TriggerUpdateMeterReads,
+  TriggerUpdateMeterSettings,
   LoadFromDb,
   AddReads,
   UpdateUser
@@ -134,7 +135,7 @@ export class MainEffects {
    */
   @Effect()
   public updateMeterReads$ = this._actions$
-    .ofType(UPDATING_METER)
+    .ofType(TRIGGER_UPDATE_METER_READS)
     .map((action: any) => action.payload)
     .switchMap((meter: IMeter) => {
       if (!meter) {
@@ -171,15 +172,18 @@ export class MainEffects {
 
   @Effect()
   public updateMeterSettings$ = this._actions$
-    .ofType(UPDATE_METER_SETTINGS)
+    .ofType(TRIGGER_UPDATE_METER_SETTINGS)
     .map((action: any) => action.payload)
     .switchMap((data: any) => {
       const { meter = null, user = null } = data;
 
       return this._db.updateMeterSettings(data.meter, data.user);
     })
-    .map((meter: IMeter) => {
-      return new UpdateMeter(meter);
+    .flatMap((meter: IMeter) => {
+      return [
+        new UpdateMeter(meter),
+        new TriggerUpdateMeterReads(meter)
+      ];
     });
 
   @Effect()

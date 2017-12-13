@@ -19,7 +19,8 @@ export function meterReducer(state = { data: [], loading: false }, action): any 
 			return Object.assign({}, state, { data: action.payload, loading: false });
 		case ActionTypes.ADD_METER:
 			return Object.assign({}, state, { data: state.data.concat(action.payload), loading: false });
-		case ActionTypes.UPDATING_METER:
+		case ActionTypes.TRIGGER_UPDATE_METER_READS:
+		case ActionTypes.TRIGGER_UPDATE_METER_SETTINGS:
 		  return Object.assign({}, state, { loading: true });
 		case ActionTypes.UPDATE_METER:
 		  if (!action.payload) {
