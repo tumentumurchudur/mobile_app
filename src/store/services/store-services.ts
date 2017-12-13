@@ -10,12 +10,13 @@ import {
 	LoadFromDb,
 	AddUser,
 	UpdateUser,
+	TriggerLoadMeters,
 	TriggerUpdateMeterReads,
 	TriggerUpdateMeterSettings,
 	AddReads,
-	LoadReadsFromDb,
 	LoadReadsByDateRange,
-	LoadingReads
+	LoadingReads,
+	LoadReadsFromDb
 } from "../actions";
 
 @Injectable()
@@ -36,7 +37,7 @@ export class StoreServices {
 	 * @memberof StoreServices
 	 */
 	public loadMeters(user: IUser) {
-		this._store.dispatch(new LoadMeters((user)));
+		this._store.dispatch(new TriggerLoadMeters(user));
 	}
 
 	public updateMeterReads(meter: IMeter) {

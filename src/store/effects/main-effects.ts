@@ -16,11 +16,13 @@ import { IMeter, IUser, IReads, IDateRange } from "../../interfaces";
 import { CostHelper, ChartHelper } from "../../helpers";
 import {
   LOAD_METERS,
+  TRIGGER_LOAD_METERS,
   TRIGGER_UPDATE_METER_READS,
   TRIGGER_UPDATE_METER_SETTINGS,
   LOAD_FROM_DB,
   LOAD_READS_FROM_DB,
   LOAD_READS_BY_DATE,
+
   AddMeters,
   UpdateMeter,
   TriggerUpdateMeterReads,
@@ -29,6 +31,7 @@ import {
   AddReads,
   UpdateUser
 } from "../actions";
+import { LoadMeters } from '../actions/meter-actions';
 
 @Injectable()
 export class MainEffects {
@@ -42,7 +45,7 @@ export class MainEffects {
    */
   @Effect()
   public checkCacheAndThenLoadData = this._actions$
-    .ofType(LOAD_METERS)
+    .ofType(TRIGGER_LOAD_METERS)
     .map((action: any) => action.payload)
     .switchMap((user: IUser) => {
       return Observable.combineLatest(
@@ -58,7 +61,7 @@ export class MainEffects {
     .map((values: any[]) => {
       const [meters = [], user] = values;
 
-      return new LoadFromDb(user);
+      return new LoadMeters(user);
 
       /**
        * TODO: Figure out a way to sync cache and store.
@@ -81,7 +84,7 @@ export class MainEffects {
    */
   @Effect()
   public loadMetersDataFromDb = this._actions$
-    .ofType(LOAD_FROM_DB)
+    .ofType(LOAD_METERS)
     .map((action: any) => action.payload)
     .switchMap((user: IUser) => {
       return Observable.combineLatest([
@@ -204,63 +207,63 @@ export class MainEffects {
       return new AddMeters(newMeters);
     });
 
-    @Effect()
-    public loadReadsByDate = this._actions$
-      .ofType(LOAD_READS_BY_DATE)
-      .map((action: any) => action.payload)
-      .switchMap((values: any) => {
-        const { meter, timeSpan, startDate, endDate } = values;
-        let storeData;
+  @Effect()
+  public loadReadsByDate = this._actions$
+    .ofType(LOAD_READS_BY_DATE)
+    .map((action: any) => action.payload)
+    .switchMap((values: any) => {
+      const { meter, timeSpan, startDate, endDate } = values;
+      let storeData;
 
-        // TODO: Needs improvement.
-        // Get reads data from the store if available.
-        const subscription: Subscription = this._storeServices.selectReadsData().subscribe((data: IReads[]) => {
-          storeData = data.filter(read => {
-            return read.guid === meter._guid &&
-              read.startDate.toString() === startDate.toString() &&
-              read.endDate.toString() === endDate.toString();
-          })[0] || null;
-        });
-
-        const reads = storeData ? Observable.of(storeData.reads) : this._db.getReadsByDateRange(meter._guid, startDate, endDate);
-
-        return Observable.combineLatest([
-          Observable.of(meter),
-          Observable.of(timeSpan),
-          Observable.of(startDate),
-          Observable.of(endDate),
-          reads,
-          // Needs subscription to the store observable,
-          // so it can be unsubscribed to prevent memory leaks.
-          Observable.of(subscription)
-        ]);
-      })
-      .map(values => {
-        const [ meter, timeSpan, startDate, endDate, reads, subscription ] = values;
-
-        if (subscription) {
-          subscription.unsubscribe();
-        }
-
-        const rawDeltas = ChartHelper.getDeltas(reads);
-
-        const dateRange: IDateRange = { timeSpan, startDate, endDate };
-        const normalizedDeltas = ChartHelper.normalizeData(rawDeltas);
-        const deltas = normalizedDeltas.length ? ChartHelper.groupDeltasByTimeSpan(dateRange, normalizedDeltas) : [];
-
-        const cost = normalizedDeltas.length ? CostHelper.calculateCostFromDeltas(meter, normalizedDeltas) : 0;
-
-        const payload = {
-          guid: meter._guid,
-          startDate,
-          endDate,
-          reads: reads,
-          deltas: deltas,
-          cost: cost
-        } as IReads;
-
-        return new AddReads(payload);
+      // TODO: Needs improvement.
+      // Get reads data from the store if available.
+      const subscription: Subscription = this._storeServices.selectReadsData().subscribe((data: IReads[]) => {
+        storeData = data.filter(read => {
+          return read.guid === meter._guid &&
+            read.startDate.toString() === startDate.toString() &&
+            read.endDate.toString() === endDate.toString();
+        })[0] || null;
       });
+
+      const reads = storeData ? Observable.of(storeData.reads) : this._db.getReadsByDateRange(meter._guid, startDate, endDate);
+
+      return Observable.combineLatest([
+        Observable.of(meter),
+        Observable.of(timeSpan),
+        Observable.of(startDate),
+        Observable.of(endDate),
+        reads,
+        // Needs subscription to the store observable,
+        // so it can be unsubscribed to prevent memory leaks.
+        Observable.of(subscription)
+      ]);
+    })
+    .map(values => {
+      const [ meter, timeSpan, startDate, endDate, reads, subscription ] = values;
+
+      if (subscription) {
+        subscription.unsubscribe();
+      }
+
+      const rawDeltas = ChartHelper.getDeltas(reads);
+
+      const dateRange: IDateRange = { timeSpan, startDate, endDate };
+      const normalizedDeltas = ChartHelper.normalizeData(rawDeltas);
+      const deltas = normalizedDeltas.length ? ChartHelper.groupDeltasByTimeSpan(dateRange, normalizedDeltas) : [];
+
+      const cost = normalizedDeltas.length ? CostHelper.calculateCostFromDeltas(meter, normalizedDeltas) : 0;
+
+      const payload = {
+        guid: meter._guid,
+        startDate,
+        endDate,
+        reads: reads,
+        deltas: deltas,
+        cost: cost
+      } as IReads;
+
+      return new AddReads(payload);
+    });
 
     // Calculates actual cost and usage.
     private _calculateCostAndUsage(meters: IMeter[]): IMeter[] {
