@@ -7,8 +7,8 @@ export const ADD_METERS: string = "ADD_METERS";
 export const ADD_METER: string = "ADD_METER";
 
 export const UPDATE_METER: string = "[Meter] UPDATE METER";
-export const TRIGGER_UPDATE_METER_READS: string = "[Meter] UPDATING METER READS";
-export const TRIGGER_UPDATE_METER_SETTINGS: string = "[Meter] UPDATE METER SETTINGS";
+export const TRIGGER_UPDATE_METER_READS: string = "[Meter] TRIGGER UPDATE METER READS";
+export const TRIGGER_UPDATE_METER_SETTINGS: string = "[Meter] TRIGGER UPDATE METER SETTINGS";
 
 export class LoadMeters implements Action {
 	public readonly type = LOAD_METERS;
