@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { IReads, IMeter, IReadSummaries } from '../../interfaces';
+import { IReads, IMeter } from '../../interfaces';
 
 export const ADD_READS: string = "ADD READS";
 export const LOAD_READS_FROM_DB: string = "LOAD READS FROM DB";
