@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import firebase from 'firebase';
 import { HttpClient } from "@angular/common/http";
 
-import { fireBaseConfig, databasePaths } from '../configs';
+import { fireBaseConfig, databasePaths, databaseToken } from '../configs';
 import { IUser, IMeter } from '../interfaces';
 
 import { Observable } from "rxjs/Observable";
@@ -19,7 +19,7 @@ export class DatabaseProvider {
   private _readsRef: firebase.database.Reference;
   private _providersRef: firebase.database.Reference;
 
-  constructor() {
+  constructor(private _http: HttpClient) {
     if (!firebase.apps.length) {
         firebase.initializeApp(fireBaseConfig);
     }
@@ -299,19 +299,17 @@ export class DatabaseProvider {
     });
   }
 
-  public getProvidersTypes(): Observable<any> {
-    return Observable.create(observer => {
-      return this._providersRef
-        .once("value")
-        .then(snapshot => {
-          const data = snapshot.val();
-
-          observer.next(data || []);
-        }, error => {
-          observer.error(error);
-        });
-    });
+  public getShallowList(httpService: any, path: string) {
+    return httpService.get(`${path}.json?auth=${databaseToken.production}&shallow=true`)
+      .map(res => _.keys(res));
   }
+
+  public getProviderTypes(): Observable<any> {
+    return Observable.create(observer => {
+      const data = this.getShallowList(this._http, `${this._providersRef}`);
+      observer.next(data || []);
+      })
+    };
 
   /**
    * Iterates over meterObject containing meters and

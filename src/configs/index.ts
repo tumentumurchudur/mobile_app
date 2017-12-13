@@ -1,4 +1,4 @@
-export { fireBaseConfig, databasePaths } from "./database-configs";
+export { fireBaseConfig, databasePaths, databaseToken } from "./database-configs";
 export { convertConfigs } from "./convert-configs";
 export { chartConfigs } from "./chart-configs";
 export { googleConfig } from "./social-configs";
