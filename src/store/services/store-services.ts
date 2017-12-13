@@ -7,7 +7,6 @@ import {
   AddMeter,
 	LoadMeters,
   AddProviders,
-  GetProviders,
 	LoadFromDb,
 	AddUser,
 	UpdateUser,
@@ -20,7 +19,7 @@ import {
 	LoadSummaries,
 	LoadingSummaries
 } from "../actions";
-import { UpdateMeter } from "../actions/meter-actions";
+import {TriggerAddProviders, UpdateMeter} from "../actions/meter-actions";
 
 @Injectable()
 export class StoreServices {
@@ -104,7 +103,7 @@ export class StoreServices {
 	}
 
   public getProviders() {
-    this._store.dispatch(new AddProviders(null));
+    this._store.dispatch(new TriggerAddProviders());
   }
 
   public selectProviders() {

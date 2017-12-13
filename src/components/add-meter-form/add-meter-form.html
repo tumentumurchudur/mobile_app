@@ -11,7 +11,7 @@
       </ion-item>
     </ion-list>
     <div *ngIf="_providers$ | async as providers">
-      <div>{{ getTypes(providers) }}</div>
+      <div>{{ providers }}</div>
       <!--<div *ngFor="let provider of providers">{{provider}}</div>-->
     </div>
   </section>

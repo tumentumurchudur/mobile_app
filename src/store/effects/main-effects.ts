@@ -138,7 +138,7 @@ export class MainEffects {
   public updateProviders$ = this._actions$
     .ofType(TRIGGER_ADD_PROVIDERS)
     .switchMap(() => {
-     return this._db.getProviderTypes();
+     return this._db.getProviderTypes().subscribe();
     })
     .map((providers:any) => {
       console.log('providers', providers);

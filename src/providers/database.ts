@@ -304,11 +304,8 @@ export class DatabaseProvider {
       .map(res => _.keys(res));
   }
 
-  public getProviderTypes(): Observable<any> {
-    return Observable.create(observer => {
-      const data = this.getShallowList(this._http, `${this._providersRef}`);
-      observer.next(data || []);
-    })
+  public getProviderTypes() {
+     return this.getShallowList(this._http, `${this._providersRef}`);
   }
 
   /**
