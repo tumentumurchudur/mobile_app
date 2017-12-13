@@ -308,8 +308,8 @@ export class DatabaseProvider {
     return Observable.create(observer => {
       const data = this.getShallowList(this._http, `${this._providersRef}`);
       observer.next(data || []);
-      })
-    };
+    })
+  }
 
   /**
    * Iterates over meterObject containing meters and
