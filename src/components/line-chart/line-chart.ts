@@ -1,10 +1,10 @@
-import { Component, Input, ElementRef, OnChanges, ChangeDetectionStrategy, SimpleChanges } from '@angular/core';
-import { ILineItem } from '../../interfaces';
+import { Component, Input, ElementRef, OnChanges, ChangeDetectionStrategy, SimpleChanges } from "@angular/core";
+import { ILineItem } from "../../interfaces";
 import * as d3 from "d3";
 
 @Component({
-  selector: 'line-chart',
-  templateUrl: 'line-chart.html',
+  selector: "line-chart",
+  templateUrl: "line-chart.html",
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LineChartComponent implements OnChanges {
