@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import firebase from 'firebase';
+import { HttpClient } from "@angular/common/http";
 
 import { fireBaseConfig, databasePaths } from '../configs';
 import { IUser, IMeter } from '../interfaces';
@@ -7,6 +8,8 @@ import { IUser, IMeter } from '../interfaces';
 import { Observable } from "rxjs/Observable";
 import "rxjs/add/observable/combineLatest";
 import { IReads } from '../interfaces/reads';
+import * as _ from 'lodash';
+
 
 @Injectable()
 export class DatabaseProvider {
@@ -293,6 +296,20 @@ export class DatabaseProvider {
       }, error => {
         observer.error(error);
       });
+    });
+  }
+
+  public getProvidersTypes(): Observable<any> {
+    return Observable.create(observer => {
+      return this._providersRef
+        .once("value")
+        .then(snapshot => {
+          const data = snapshot.val();
+
+          observer.next(data || []);
+        }, error => {
+          observer.error(error);
+        });
     });
   }
 

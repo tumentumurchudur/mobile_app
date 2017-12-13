@@ -40,11 +40,11 @@
               [ngStyle]="{ 'color': _isUsageCostBehindGoal(meter) ? '#C22A17' : '#969696' }"
               (click)="_updateMeter(meter, i)"
             >
-              {{ meter._actualUsageCost | currency: 'USD': true:'1.2-2' }}
+              {{ meter._actualUsageCost | currency: 'USD': '1.2-2' }}
             </div>
 
             <div class="spending-goal">
-              Spending goal of {{ meter._goal | currency:'USD': true:'1.2-2' }}
+              Spending goal of {{ meter._goal | currency:'USD': '1.2-2' }}
             </div>
           </div>
         </div>

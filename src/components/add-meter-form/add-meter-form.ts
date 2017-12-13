@@ -1,15 +1,17 @@
-import { Component, Inject } from "@angular/core";
+import { Component, Inject, ChangeDetectionStrategy } from "@angular/core";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { AlertController, NavController, LoadingController } from "ionic-angular";
 import { Keyboard } from "@ionic-native/keyboard";
 import * as moment from "moment";
 import { StoreServices } from "../../store/services";
 import { IMeter } from "../../interfaces/meter";
+import {Observable} from "rxjs/Observable";
 
 
 @Component({
   selector: "add-meter-form",
-  templateUrl: "add-meter-form.html"
+  templateUrl: "add-meter-form.html",
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AddMeterFormComponent {
   private _addMeter: FormGroup;
@@ -17,6 +19,7 @@ export class AddMeterFormComponent {
   private _loading: any;
   private _validateMeterStatus: string;
   private _billingStartDate: string = moment().format("YYYY-MM-DD");
+  private _providers$: Observable<any>;
 
   constructor(
     private _storeServices: StoreServices,
@@ -37,6 +40,19 @@ export class AddMeterFormComponent {
       goal: [null, [Validators.min(0)]],
       name: ["", Validators.required]
     });
+
+    this._providers$ = this._storeServices.selectProviders();
+  }
+
+  ngOnInit() {
+    this._storeServices.getProviders();
+  }
+
+  private getTypes(providers: any){
+   return Object.keys(providers).map(provider => {
+      console.log(provider);
+      return provider;
+    })
   }
 
   private _incStep(): void {

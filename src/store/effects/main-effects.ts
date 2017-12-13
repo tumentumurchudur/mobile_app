@@ -18,10 +18,13 @@ import {
   LOAD_METERS,
   UPDATING_METER,
   UPDATE_METER_SETTINGS,
+  ADD_PROVIDERS,
+  TRIGGER_ADD_PROVIDERS,
   LOAD_FROM_DB,
   LOAD_READS_FROM_DB,
   LOAD_READS_BY_DATE,
   AddMeters,
+  AddProviders,
   UpdateMeter,
   UpdatingMeter,
   LoadFromDb,
@@ -128,6 +131,20 @@ export class MainEffects {
         new UpdateUser(user)
       ];
     });
+  /**
+   * Handles GetProviders action.
+   */
+  @Effect()
+  public updateProviders$ = this._actions$
+    .ofType(TRIGGER_ADD_PROVIDERS)
+    .switchMap(() => {
+     return this._db.getProvidersTypes();
+    })
+    .map((providers:any) => {
+      console.log('providers', providers);
+      return new AddProviders(providers);
+    });
+
 
   /**
    * Handles UpdatingMeter action.

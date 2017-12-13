@@ -6,6 +6,8 @@ import { Observable } from "rxjs/Observable";
 import {
   AddMeter,
 	LoadMeters,
+  AddProviders,
+  GetProviders,
 	LoadFromDb,
 	AddUser,
 	UpdateUser,
@@ -100,5 +102,14 @@ export class StoreServices {
 	public selectReadsData() {
 		return this._store.select(state => state.reads.data);
 	}
+
+  public getProviders() {
+    this._store.dispatch(new AddProviders(null));
+  }
+
+  public selectProviders() {
+    return this._store.select(state => state.meters.providers);
+  }
+
 
 }
