@@ -8,6 +8,7 @@ export const ADD_METER: string = "ADD_METER";
 
 export const UPDATE_METER: string = "UPDATE METER";
 export const UPDATING_METER: string = "UPDATING METER";
+export const UPDATE_METER_SETTINGS: string = "UPDATE METER SETTINGS";
 
 export class LoadMeters implements Action {
 	public readonly type = LOAD_METERS;
@@ -50,6 +51,15 @@ export class UpdateMeter implements Action {
 	public payload: IMeter | null = null;
 
 	constructor(private _payload: IMeter | null) {
+		this.payload = _payload;
+	}
+}
+
+export class UpdateSettings implements Action {
+	public readonly type = UPDATE_METER_SETTINGS;
+	public payload: { meter: IMeter, user: IUser } | null;
+
+	constructor(private _payload: any) {
 		this.payload = _payload;
 	}
 }

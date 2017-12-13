@@ -12,13 +12,11 @@ import { IMeter } from "../../interfaces/meter";
   templateUrl: "add-meter-form.html"
 })
 export class AddMeterFormComponent {
-
   private _addMeter: FormGroup;
   private _step: number = 1;
   private _loading: any;
   private _validateMeterStatus: string;
   private _billingStartDate: string = moment().format("YYYY-MM-DD");
-
 
   constructor(
     private _storeServices: StoreServices,
@@ -28,7 +26,6 @@ export class AddMeterFormComponent {
     private _loadingCtrl: LoadingController,
     private _keyboard: Keyboard
   ) {
-
     this._addMeter = _formBuilder.group({
       utilityType: ["", Validators.required],
       meterNumber: ["", Validators.compose([Validators.required, Validators.minLength(7), Validators.maxLength(10), Validators.pattern("[a-zA-Z0-9]*")])],

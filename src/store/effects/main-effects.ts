@@ -17,6 +17,7 @@ import { CostHelper, ChartHelper } from "../../helpers";
 import {
   LOAD_METERS,
   UPDATING_METER,
+  UPDATE_METER_SETTINGS,
   LOAD_FROM_DB,
   LOAD_READS_FROM_DB,
   LOAD_READS_BY_DATE,
@@ -56,13 +57,18 @@ export class MainEffects {
     .map((values: any[]) => {
       const [meters = [], user] = values;
 
-      // Load data from API.
-      if (!meters.length) {
-        return new LoadFromDb(user);
-      }
+      return new LoadFromDb(user);
 
-      // Load data from cache.
-      return new AddMeters(meters);
+      /**
+       * TODO: Figure out a way to sync cache and store.
+       * // Load data from API.
+        if (!meters.length) {
+          return new LoadFromDb(user);
+        }
+
+        // Load data from cache.
+        return new AddMeters(meters);
+       */
     });
 
   /**
@@ -161,6 +167,19 @@ export class MainEffects {
       });
 
       return new UpdateMeter(newMeter);
+    });
+
+  @Effect()
+  public updateMeterSettings$ = this._actions$
+    .ofType(UPDATE_METER_SETTINGS)
+    .map((action: any) => action.payload)
+    .switchMap((data: any) => {
+      const { meter = null, user = null } = data;
+
+      return this._db.updateMeterSettings(data.meter, data.user);
+    })
+    .map((meter: IMeter) => {
+      return new UpdateMeter(meter);
     });
 
   @Effect()

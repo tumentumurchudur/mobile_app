@@ -5,11 +5,13 @@ export {
   AddMeter,
   UpdatingMeter,
   UpdateMeter,
+  UpdateSettings,
   LoadMeters,
   ADD_METERS,
   ADD_METER,
   UPDATING_METER,
   UPDATE_METER,
+  UPDATE_METER_SETTINGS,
   LOAD_METERS
 } from "./meter-actions";
 

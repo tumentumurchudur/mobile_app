@@ -135,12 +135,19 @@
         <div
           class="card-content"
           *ngIf="_currentNavigationItems[i] === _navigationItems.EDIT"
+          [@cardState]
         >
-          Device Edit
+          <edit-meter-form
+            [meter]="meter"
+            [user]="user"
+            (cancelClicked)="_onCancelEditMeter(meter, i)"
+            (saveClicked)="_onSaveEditMeter(meter, i)"
+          ></edit-meter-form>
         </div>
 
         <!-- Navigation -->
         <navigation-bar
+          [selectedItem]="_currentNavigationItems[i]"
           (itemTapped)="_onNavigationItemClick($event, meter, i)"
         ></navigation-bar>
       </ion-card>
