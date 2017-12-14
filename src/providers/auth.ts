@@ -3,22 +3,18 @@ import { AngularFireAuth } from "angularfire2/auth"; //Add FirebaseApp
 import { IUser } from "../interfaces";
 import { googleConfig } from "../configs";
 import { Observable } from "rxjs/Observable";
+import "rxjs/add/observable/fromPromise";
 import firebase from "firebase";
 import { Facebook } from "@ionic-native/facebook";
 import { GooglePlus } from "@ionic-native/google-plus";
 
-
-
 @Injectable()
 export class AuthProvider {
-
   constructor(
       private _af: AngularFireAuth,
       private _facebook: Facebook,
       private _googleplus: GooglePlus
-  ) {
-
-  }
+  ) { }
 
   public loginWithEmail(user: IUser): Observable<IUser> {
     return Observable.create(observer => {
@@ -80,4 +76,15 @@ export class AuthProvider {
         });
     });
   }
+
+  public getTokenId(): Observable<any> {
+    return Observable.create(observer => {
+      return firebase.auth().currentUser.getIdToken().then(token => {
+        observer.next(token);
+      }).catch((error) => {
+        observer.error(error);
+      });
+    });
+  }
+
 }

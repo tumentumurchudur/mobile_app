@@ -1,12 +1,14 @@
-import { Injectable } from '@angular/core';
-import firebase from 'firebase';
+import { Injectable } from "@angular/core";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import firebase from "firebase";
 
-import { fireBaseConfig, databasePaths } from '../configs';
-import { IUser, IMeter } from '../interfaces';
+import { fireBaseConfig, neighborhoodConfigs, databasePaths } from "../configs";
+import { IUser, IMeter } from "../interfaces";
+import { AuthProvider } from "./auth";
 
 import { Observable } from "rxjs/Observable";
 import "rxjs/add/observable/combineLatest";
-import { IReads } from '../interfaces/reads';
+import { IReads } from "../interfaces/reads";
 
 @Injectable()
 export class DatabaseProvider {
@@ -16,7 +18,10 @@ export class DatabaseProvider {
   private _readsRef: firebase.database.Reference;
   private _providersRef: firebase.database.Reference;
 
-  constructor() {
+  constructor(
+    private _authProvider: AuthProvider,
+    private _httpClient: HttpClient
+  ) {
     if (!firebase.apps.length) {
         firebase.initializeApp(fireBaseConfig);
     }
@@ -293,6 +298,16 @@ export class DatabaseProvider {
       }, error => {
         observer.error(error);
       });
+    });
+  }
+
+  public getNeighborhoodGroupIds(meter: IMeter) {
+    this._authProvider.getTokenId().take(1).subscribe(token => {
+      const header = new HttpHeaders().set("Authorization", neighborhoodConfigs.AUTHORIZATION);
+
+      this._httpClient.get(`${neighborhoodConfigs.NEIGHBORHOOD_COMP_DEV_REST_URL}?guid=${meter._guid}&token=${token}&utilityType=${meter._utilityType}`, {headers: header}).subscribe(data => {
+          console.log("data", data);
+        });
     });
   }
 

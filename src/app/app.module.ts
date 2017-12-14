@@ -8,6 +8,7 @@ import { StatusBar } from "@ionic-native/status-bar";
 import { Keyboard } from "@ionic-native/keyboard";
 
 import { AngularFireModule } from "angularfire2";
+import { HttpClientModule } from "@angular/common/http";
 import { AngularFireAuthModule } from "angularfire2/auth"
 import { fireBaseConfig } from "../configs";
 import { AuthProvider, DatabaseProvider } from "../providers"
@@ -44,7 +45,8 @@ import { MyApp } from "./app.component";
     IonicStorageModule.forRoot(),
     AngularFireModule.initializeApp(fireBaseConfig),
     AngularFireAuthModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    HttpClientModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
