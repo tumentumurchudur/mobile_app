@@ -147,7 +147,9 @@ export class MainEffects {
           Observable.of([])
         ]);
       } else {
-        this._db.getNeighborhoodGroupIds(meter);
+        this._db.getNeighborhoodGroupIds(meter).take(1).subscribe(data => {
+          console.log("data", data);
+        });
         return Observable.combineLatest([
           Observable.of(meter),
           // Gets reads from database for given meter.

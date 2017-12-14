@@ -301,13 +301,20 @@ export class DatabaseProvider {
     });
   }
 
-  public getNeighborhoodGroupIds(meter: IMeter) {
-    this._authProvider.getTokenId().take(1).subscribe(token => {
-      const header = new HttpHeaders().set("Authorization", neighborhoodConfigs.AUTHORIZATION);
+  public getNeighborhoodGroupIds(meter: IMeter): Observable<any> {
+    const { _guid, _utilityType } = meter;
 
-      this._httpClient.get(`${neighborhoodConfigs.NEIGHBORHOOD_COMP_DEV_REST_URL}?guid=${meter._guid}&token=${token}&utilityType=${meter._utilityType}`, {headers: header}).subscribe(data => {
-          console.log("data", data);
-        });
+    return Observable.create(observer => {
+      this._authProvider.getTokenId().take(1).subscribe(token => {
+        const header = new HttpHeaders().set("Authorization", neighborhoodConfigs.AUTHORIZATION);
+
+        return this._httpClient.get(`${neighborhoodConfigs.NEIGHBORHOOD_COMP_DEV_REST_URL}?guid=${_guid}&token=${token}&utilityType=${_utilityType}`, { headers: header })
+          .subscribe(data => {
+            observer.next(data);
+          }, error => {
+            observer.error(error);
+          });
+      });
     });
   }
 
