@@ -299,13 +299,13 @@ export class DatabaseProvider {
     });
   }
 
-  public getShallowList(httpService: any, path: string) {
+  private _getShallowList(httpService: any, path: string): Observable<any> {
     return httpService.get(`${path}.json?auth=${databaseToken.production}&shallow=true`)
       .map(res => _.keys(res));
   }
 
-  public getProviderTypes() {
-     return this.getShallowList(this._http, `${this._providersRef}`);
+  public getProviderTypes(): Observable<any> {
+      return this._getShallowList(this._http, `${this._providersRef}`);
   }
 
   /**
