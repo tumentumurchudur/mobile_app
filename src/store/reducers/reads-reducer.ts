@@ -1,5 +1,5 @@
 import { ActionReducerMap } from "@ngrx/store";
-import { IReads, IRead, IReadSummaries } from '../../interfaces';
+import { IReads, IRead } from '../../interfaces';
 import * as ActionTypes from '../actions';
 
 export interface ReadsState {
