@@ -3,15 +3,14 @@ import { IMeter, IUser } from '../../interfaces';
 
 export const LOAD_METERS: string = "LOAD_METERS";
 
+export const ADD_PROVIDERS: string = "ADD_PROVIDERS";
 export const ADD_METERS: string = "ADD_METERS";
 export const ADD_METER: string = "ADD_METER";
 
-export const ADD_PROVIDERS: string = "ADD_PROVIDERS";
+export const UPDATE_METER: string = "[Meter] UPDATE METER";
 export const TRIGGER_ADD_PROVIDERS: string = "TRIGGER_ADD_PROVIDERS";
-
-export const UPDATE_METER: string = "UPDATE METER";
-export const UPDATING_METER: string = "UPDATING METER";
-export const UPDATE_METER_SETTINGS: string = "UPDATE METER SETTINGS";
+export const TRIGGER_UPDATE_METER_READS: string = "[Meter] TRIGGER UPDATE METER READS";
+export const TRIGGER_UPDATE_METER_SETTINGS: string = "[Meter] TRIGGER UPDATE METER SETTINGS";
 
 export class LoadMeters implements Action {
 	public readonly type = LOAD_METERS;
@@ -41,28 +40,20 @@ export class AddMeter implements Action {
 }
 
 export class TriggerAddProviders implements Action {
-  public readonly type = TRIGGER_ADD_PROVIDERS;
-  public payload = null;
-
-}
-
-export class AddProviders implements Action {
-  public readonly type = ADD_PROVIDERS;
-  public payload:any = null;
-
-  constructor(private _payload: any) {
-    this.payload = _payload;
+	public readonly type = TRIGGER_ADD_PROVIDERS;
+	public payload = null;
+  
   }
-}
-
-export class UpdatingMeter implements Action {
-	public readonly type = UPDATING_METER;
-	public payload: IMeter | null = null;
-
-	constructor(private _payload: IMeter | null) {
-		this.payload = _payload;
+  
+  export class AddProviders implements Action {
+	public readonly type = ADD_PROVIDERS;
+	public payload:any = null;
+  
+	constructor(private _payload: any) {
+	  this.payload = _payload;
 	}
-}
+  }
+  
 
 export class UpdateMeter implements Action {
 	public readonly type = UPDATE_METER;
@@ -73,8 +64,17 @@ export class UpdateMeter implements Action {
 	}
 }
 
-export class UpdateSettings implements Action {
-	public readonly type = UPDATE_METER_SETTINGS;
+export class TriggerUpdateMeterReads implements Action {
+	public readonly type = TRIGGER_UPDATE_METER_READS;
+	public payload: IMeter | null = null;
+
+	constructor(private _payload: IMeter | null) {
+		this.payload = _payload;
+	}
+}
+
+export class TriggerUpdateMeterSettings implements Action {
+	public readonly type = TRIGGER_UPDATE_METER_SETTINGS;
 	public payload: { meter: IMeter, user: IUser } | null;
 
 	constructor(private _payload: any) {

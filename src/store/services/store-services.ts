@@ -4,22 +4,21 @@ import { AppState } from "../reducers";
 import { IUser, IReads, IMeter } from "../../interfaces";
 import { Observable } from "rxjs/Observable";
 import {
-  AddMeter,
+	AddMeter,
+	UpdateMeter,
 	LoadMeters,
-  AddProviders,
+  	AddProviders,
 	LoadFromDb,
 	AddUser,
 	UpdateUser,
-	UpdatingMeter,
-	UpdateSettings,
+	TriggerAddProviders,
+	TriggerUpdateMeterReads,
+	TriggerUpdateMeterSettings,
 	AddReads,
 	LoadReadsFromDb,
 	LoadReadsByDateRange,
-	LoadingReads,
-	LoadSummaries,
-	LoadingSummaries
+	LoadingReads
 } from "../actions";
-import {TriggerAddProviders, UpdateMeter} from "../actions/meter-actions";
 
 @Injectable()
 export class StoreServices {
@@ -44,11 +43,11 @@ export class StoreServices {
 
 	public updateMeterReads(meter: IMeter) {
 		// Update reads for given meter.
-		this._store.dispatch(new UpdatingMeter(meter));
+		this._store.dispatch(new TriggerUpdateMeterReads(meter));
 	}
 
 	public updateMeterSettings(meter: IMeter, user: IUser) {
-		this._store.dispatch(new UpdateSettings({ meter, user }));
+		this._store.dispatch(new TriggerUpdateMeterSettings({ meter, user }));
 	}
 
 	public selectMeterLoading(): Observable<boolean> {
@@ -78,10 +77,18 @@ export class StoreServices {
 	public updateAllMetersReads(meters$: Observable<IMeter[]>) {
 		meters$.take(1).subscribe((meters: IMeter[]) => {
 			// Set loading to true in the store.
-			this._store.dispatch(new UpdatingMeter(null));
+			this._store.dispatch(new TriggerUpdateMeterReads(null));
 
 			// Update reads for every meter.
 			this._store.dispatch(new LoadReadsFromDb(meters));
+		});
+	}
+
+	public updateLoaderWhenReadsDone(refresher: any) {
+		this.selectMeterLoading().take(2).subscribe(loading => {
+			if (!loading) {
+				refresher.complete();
+			}
 		});
 	}
 

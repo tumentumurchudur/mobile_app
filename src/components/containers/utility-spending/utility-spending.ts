@@ -99,12 +99,9 @@ export class UtilitySpendingComponent implements OnInit {
 
   private _updateAllMeters(refresher: any, index: number) {
     this._currentMeterIndex = index;
-    this._storeServices.updateAllMetersReads(this._meters$);
 
-    // TODO: Needs improvement.
-    setTimeout(() => {
-      refresher.complete();
-    }, 750);
+    this._storeServices.updateAllMetersReads(this._meters$);
+    this._storeServices.updateLoaderWhenReadsDone(refresher);
   }
 
   private _onNavigationItemClick(selectedItem: string, meter: IMeter, index: number) {
