@@ -6,20 +6,18 @@ import { environment } from '../../environments/environment'; // Angular CLI env
 
 import { meterReducer } from "./meter-reducer";
 import { userReducer } from "./user-reducer";
-import { readsReducer, summariesReducer } from "./reads-reducer";
+import { readsReducer } from "./reads-reducer";
 
 export interface AppState {
 	meters: { data: IMeter[] | null, loading: boolean, providers: any },
 	reads: { data: IReads[] | null, loading: boolean },
-	user: IUser | null,
-	summaries: any | null
+	user: IUser | null
 }
 
 export const reducers: ActionReducerMap<AppState> = {
 	meters: meterReducer,
 	user: userReducer,
 	reads: readsReducer,
-	summaries: summariesReducer
 };
 
 // TODO: We may use this in the future.

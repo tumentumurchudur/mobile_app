@@ -93,7 +93,7 @@
         <variable name="APP_NAME" value="vutiliti" />
     </plugin>
     <plugin name="cordova-plugin-statusbar" spec="^2.2.3" />
-    <plugin name="cordova-plugin-googleplus" spec="git+https://github.com/EddyVerbruggen/cordova-plugin-googleplus.git">
+    <plugin name="cordova-plugin-googleplus" spec="https://github.com/EddyVerbruggen/cordova-plugin-googleplus.git">
         <variable name="REVERSED_CLIENT_ID" value="com.googleusercontent.apps.664713118536-q2649h2j3qqkgekblfk0udqigcuep7ua" />
     </plugin>
 </widget>
