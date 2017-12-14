@@ -5,7 +5,7 @@
 
   <div class="no-padding" *ngIf="_meters$ | async; let meters">
     <div *ngFor="let meter of meters; let i = index">
-      <ion-card class="chart-card layout vertical">
+      <ion-card class="chart-card">
         <!-- Header -->
         <div class="header">
           <div [class.status]="_isUsageCostBehindGoal(meter)"></div>
@@ -141,7 +141,7 @@
             [meter]="meter"
             [user]="user"
             (cancelClicked)="_onCancelEditMeter(meter, i)"
-            (saveClicked)="_onSaveEditMeter(meter, i)"
+            (saveClicked)="_onSaveEditMeter($event, i)"
           ></edit-meter-form>
         </div>
 

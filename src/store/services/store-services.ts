@@ -7,17 +7,18 @@ import {
 	AddMeter,
 	UpdateMeter,
 	LoadMeters,
-  	AddProviders,
+  AddProviders,
 	LoadFromDb,
+	TriggerAddProviders,
 	AddUser,
 	UpdateUser,
-	TriggerAddProviders,
+	TriggerLoadMeters,
 	TriggerUpdateMeterReads,
 	TriggerUpdateMeterSettings,
 	AddReads,
-	LoadReadsFromDb,
 	LoadReadsByDateRange,
-	LoadingReads
+	LoadingReads,
+	LoadReadsByMeters
 } from "../actions";
 
 @Injectable()
@@ -38,7 +39,7 @@ export class StoreServices {
 	 * @memberof StoreServices
 	 */
 	public loadMeters(user: IUser) {
-		this._store.dispatch(new LoadMeters((user)));
+		this._store.dispatch(new TriggerLoadMeters(user));
 	}
 
 	public updateMeterReads(meter: IMeter) {
@@ -52,10 +53,6 @@ export class StoreServices {
 
 	public selectMeterLoading(): Observable<boolean> {
 		return this._store.select(state => state.meters.loading);
-	}
-
-	public loadMetersFromDb(user: IUser) {
-		this._store.dispatch(new LoadFromDb(user));
 	}
 
   public addMeter(meter: IMeter) {
@@ -80,7 +77,7 @@ export class StoreServices {
 			this._store.dispatch(new TriggerUpdateMeterReads(null));
 
 			// Update reads for every meter.
-			this._store.dispatch(new LoadReadsFromDb(meters));
+			this._store.dispatch(new LoadReadsByMeters(meters));
 		});
 	}
 

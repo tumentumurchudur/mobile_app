@@ -17,7 +17,7 @@ export interface AppState {
 export const reducers: ActionReducerMap<AppState> = {
 	meters: meterReducer,
 	user: userReducer,
-	reads: readsReducer,
+	reads: readsReducer
 };
 
 // TODO: We may use this in the future.
