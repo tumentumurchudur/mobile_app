@@ -304,17 +304,13 @@ export class DatabaseProvider {
   public getNeighborhoodGroupIds(meter: IMeter): Observable<any> {
     const { _guid, _utilityType } = meter;
 
-    return Observable.create(observer => {
-      this._authProvider.getTokenId().take(1).subscribe(token => {
-        const header = new HttpHeaders().set("Authorization", neighborhoodConfigs.AUTHORIZATION);
+    return Observable.combineLatest(
+      this._authProvider.getTokenId(),
+    ).switchMap((data: any) => {
+      const [token] = data;
+      const header = new HttpHeaders().set("Authorization", neighborhoodConfigs.AUTHORIZATION);
 
-        return this._httpClient.get(`${neighborhoodConfigs.NEIGHBORHOOD_COMP_DEV_REST_URL}?guid=${_guid}&token=${token}&utilityType=${_utilityType}`, { headers: header })
-          .subscribe(data => {
-            observer.next(data);
-          }, error => {
-            observer.error(error);
-          });
-      });
+      return this._httpClient.get(`${neighborhoodConfigs.NEIGHBORHOOD_COMP_DEV_REST_URL}?guid=${_guid}&token=${token}&utilityType=${_utilityType}`, { headers: header })
     });
   }
 

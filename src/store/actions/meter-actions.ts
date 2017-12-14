@@ -1,5 +1,5 @@
-import { Action } from '@ngrx/store';
-import { IMeter, IUser } from '../../interfaces';
+import { Action } from "@ngrx/store";
+import { IMeter, IUser } from "../../interfaces";
 
 export const TRIGGER_LOAD_METERS: string = "[Meter] TRIGGER LOAD METERS";
 export const LOAD_METERS: string = "[Meter] LOAD_METERS";

@@ -12,6 +12,7 @@ import {
 	TriggerLoadMeters,
 	TriggerUpdateMeterReads,
 	TriggerUpdateMeterSettings,
+	TriggerNeighborhoodReads,
 	AddReads,
 	LoadReadsByDateRange,
 	LoadingReads,
@@ -101,6 +102,10 @@ export class StoreServices {
 
 	public selectReadsData() {
 		return this._store.select(state => state.reads.data);
+	}
+
+	public loadNeighborhoodReads(meter: IMeter) {
+		this._store.dispatch(new TriggerNeighborhoodReads(meter));
 	}
 
 }

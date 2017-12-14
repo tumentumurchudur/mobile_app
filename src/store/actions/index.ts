@@ -1,5 +1,6 @@
 export { LoadFromDb, LOAD_FROM_DB } from "./actions";
 export { ADD_USER, UPDATE_USER, AddUser, UpdateUser } from "./user-actions";
+export { TRIGGER_NEIGHBORHOOD_READS, TriggerNeighborhoodReads } from "./neighborhood-actions";
 export {
   AddMeters,
   AddMeter,
