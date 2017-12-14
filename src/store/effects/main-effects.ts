@@ -25,13 +25,13 @@ import {
 
   AddMeters,
   UpdateMeter,
+  LoadMeters,
   TriggerUpdateMeterReads,
   TriggerUpdateMeterSettings,
   LoadFromDb,
   AddReads,
   UpdateUser
 } from "../actions";
-import { LoadMeters } from '../actions/meter-actions';
 
 @Injectable()
 export class MainEffects {
@@ -182,11 +182,8 @@ export class MainEffects {
 
       return this._db.updateMeterSettings(data.meter, data.user);
     })
-    .flatMap((meter: IMeter) => {
-      return [
-        new UpdateMeter(meter),
-        new TriggerUpdateMeterReads(meter)
-      ];
+    .map((meter: IMeter) => {
+      return new TriggerUpdateMeterReads(meter);
     });
 
   @Effect()

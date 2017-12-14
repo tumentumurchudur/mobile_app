@@ -13,7 +13,7 @@ export class EditMeterFormComponent implements OnInit {
   @Input() user: IUser | null;
 
   @Output() cancelClicked = new EventEmitter();
-  @Output() saveClicked = new EventEmitter();
+  @Output() saveClicked = new EventEmitter<IMeter>();
 
   private _editMeter: FormGroup;
   private _providerName: string;
@@ -53,8 +53,7 @@ export class EditMeterFormComponent implements OnInit {
       _goal: parseInt(this._editMeter.value["goal"])
     });
 
-    this._storeServices.updateMeterSettings(newMeter, this.user);
-    this.saveClicked.emit();
+    this.saveClicked.emit(newMeter);
   }
 
   private _onCancel(): void {

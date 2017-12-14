@@ -141,7 +141,7 @@
             [meter]="meter"
             [user]="user"
             (cancelClicked)="_onCancelEditMeter(meter, i)"
-            (saveClicked)="_onSaveEditMeter(meter, i)"
+            (saveClicked)="_onSaveEditMeter($event, i)"
           ></edit-meter-form>
         </div>
 
