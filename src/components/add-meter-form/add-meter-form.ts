@@ -19,7 +19,7 @@ export class AddMeterFormComponent {
   private _loading: any;
   private _validateMeterStatus: string;
   private _billingStartDate: string = moment().format("YYYY-MM-DD");
-  private _providers$: Observable<any>;
+  private _providerType$: Observable<any>;
 
   constructor(
     private _storeServices: StoreServices,
@@ -41,18 +41,11 @@ export class AddMeterFormComponent {
       name: ["", Validators.required]
     });
 
-    this._providers$ = this._storeServices.selectProviders();
+    this._providerType$ = this._storeServices.selectProviders();
   }
 
   ngOnInit() {
     this._storeServices.getProviders();
-  }
-
-  private getTypes(providers: any){
-   return Object.keys(providers).map(provider => {
-      console.log(provider);
-      return provider;
-    })
   }
 
   private _incStep(): void {

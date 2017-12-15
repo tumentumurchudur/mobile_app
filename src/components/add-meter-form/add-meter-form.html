@@ -2,17 +2,15 @@
   <!--Pick Utility Type-->
   <section *ngIf="_step === 1" class="text-container">
     <h4>What type of utility do you want to add?</h4>
-    <ion-list radio-group formControlName="utilityType" class="list-container">
-      <ion-item *ngFor="let type of utilityTypes">
-        <ion-label>
-          <span class="util-type-title">{{ type }}</span>
-        </ion-label>
-        <ion-radio value="{{ type }}"></ion-radio>
-      </ion-item>
-    </ion-list>
-    <div *ngIf="_providers$ | async as providers">
-      <div>{{ providers }}</div>
-      <!--<div *ngFor="let provider of providers">{{provider}}</div>-->
+    <div *ngIf="_providerType$ | async as utilityType">
+      <ion-list radio-group formControlName="utilityType" class="list-container" (ionChange)="_getProviderCountry()">
+        <ion-item *ngFor="let type of utilityType">
+          <ion-label>
+            <span class="util-type-title">{{ type }}</span>
+          </ion-label>
+          <ion-radio value="{{ type }}"></ion-radio>
+        </ion-item>
+      </ion-list>
     </div>
   </section>
   <!--Meter number and billing start date-->

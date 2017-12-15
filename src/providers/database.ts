@@ -308,6 +308,10 @@ export class DatabaseProvider {
       return this._getShallowList(this._http, `${this._providersRef}`);
   }
 
+  public getProviderCountries(type: string): Observable<any> {
+    return this._getShallowList(this._http, `${this._providersRef}/${type}`);
+  }
+
   /**
    * Iterates over meterObject containing meters and
    * puts the meters into an array and returns the array.
