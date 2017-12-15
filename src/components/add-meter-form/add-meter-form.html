@@ -3,7 +3,7 @@
   <section *ngIf="_step === 1" class="text-container">
     <h4>What type of utility do you want to add?</h4>
     <div *ngIf="_providerType$ | async as utilityType">
-      <ion-list radio-group formControlName="utilityType" class="list-container" (ionChange)="_getProviderCountry()">
+      <ion-list radio-group formControlName="utilityType" class="list-container">
         <ion-item *ngFor="let type of utilityType">
           <ion-label>
             <span class="util-type-title">{{ type }}</span>
