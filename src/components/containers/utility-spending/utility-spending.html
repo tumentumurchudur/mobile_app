@@ -100,7 +100,7 @@
           <div>{{ _showDateRange(i) }}</div>
           <div class="show-all"><span (click)="_onShowAll(i)">show all</span></div>
 
-          <line-chart
+          <!-- <line-chart
             [data]="_mockSelectedData[i] || _mockData"
             [lineColors]="_mockSelectedColors[i] || _lineColors"
             [dotColors]="_mockSelectedColors[i] || _lineColors"
@@ -109,9 +109,9 @@
             [series]="_mockSelectedSeries[i] || _neighborhoodSeries"
             [showAreaFill]="false"
             [showXAxisLabels]="false"
-          ></line-chart>
+          ></line-chart> -->
 
-          <div class="legends">
+          <!-- <div class="legends">
             <div *ngFor="let legend of _mockLegends; let j = index">
               <div class="legend">
                 <div class="series-label">
@@ -128,10 +128,12 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div> -->
 
-          <neighborhood-comparison [comparisonReads]="_comparison$ | async">
-
+          <neighborhood-comparison
+            [comparisonReads]="_comparison$ | async"
+            [timeSpan]="_selectedDateRanges[i].timeSpan"
+          >
           </neighborhood-comparison>
         </div>
 

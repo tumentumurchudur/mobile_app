@@ -6,9 +6,9 @@ export const ADD_COMPARISON_READS: string = "[Comparison] ADD COMPARISON READS";
 
 export class TriggerNeighborhoodReads implements Action {
 	public readonly type = TRIGGER_NEIGHBORHOOD_READS;
-	public payload: IMeter | null;
+	public payload: any | null;
 
-	constructor(private _payload: IMeter) {
+	constructor(private _payload: any) {
 		this.payload = _payload;
 	}
 }

@@ -104,8 +104,8 @@ export class StoreServices {
 		return this._store.select(state => state.reads.data);
 	}
 
-	public loadNeighborhoodReads(meter: IMeter) {
-		this._store.dispatch(new TriggerNeighborhoodReads(meter));
+	public loadNeighborhoodReads(meter: IMeter, timeSpan: string, startDate: Date, endDate: Date) {
+		this._store.dispatch(new TriggerNeighborhoodReads({ meter, timeSpan, startDate, endDate }));
 	}
 
 	public selectComparisonReads() {

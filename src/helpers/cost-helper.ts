@@ -1,4 +1,4 @@
-import { IMeter, ILineItem } from '../interfaces';
+import { IMeter, ILineItem } from "../interfaces";
 import { convertConfigs, meterConfigs } from "../configs";
 
 import * as moment from "moment";

@@ -11,7 +11,8 @@ import { DatabaseProvider } from "../../providers";
 import { neighborhoodConfigs } from "../../configs";
 
 import { TRIGGER_NEIGHBORHOOD_READS, AddComparison } from "../actions";
-import { IMeter, IComparison } from "../../interfaces";
+import { IMeter, IComparison, IDateRange } from "../../interfaces";
+import { ChartHelper } from "../../helpers/chart-helper";
 
 @Injectable()
 export class NeighborhoodEffects {
@@ -19,14 +20,19 @@ export class NeighborhoodEffects {
   public reads$ = this._actions$
     .ofType(TRIGGER_NEIGHBORHOOD_READS)
     .map((action: any) => action.payload)
-    .switchMap((meter: IMeter) => {
+    .switchMap((data: any) => {
+      const { meter, timeSpan, startDate, endDate } = data;
+
       return Observable.combineLatest(
         Observable.of(meter),
+        Observable.of(timeSpan),
+        Observable.of(startDate),
+        Observable.of(endDate),
         this._db.getNeighborhoodGroupIds(meter)
       )
     })
     .switchMap((data: any) => {
-      const [ meter, group ] = data;
+      const [ meter, timeSpan, startDate, endDate, group ] = data;
       const neighborhoodGroupID = group["group_id"];
       const ncmpAvgGuid = `${neighborhoodGroupID}${neighborhoodConfigs.NEIGHBORHOOD_COMP_AVG_GUID}`;
       const ncmpEffGuid = `${neighborhoodGroupID}${neighborhoodConfigs.NEIGHBORHOOD_COMP_EFF_GUID}`;
@@ -35,27 +41,56 @@ export class NeighborhoodEffects {
         _ncmpAvgGuid: ncmpAvgGuid,
         _ncmpEffGuid: ncmpEffGuid
       });
+      console.log(timeSpan, startDate, endDate);
 
       return Observable.combineLatest(
         Observable.of(newMeter),
-        this._db.getReadsByDateRange(meter._guid, new Date("12/1/2017"), new Date("12/31/2017")),
-        this._db.getReadsByNeighborhood(ncmpAvgGuid, new Date("12/1/2017"), new Date("12/31/2017")),
-        this._db.getReadsByNeighborhood(ncmpEffGuid, new Date("12/1/2017"), new Date("12/31/2017"))
+        Observable.of(timeSpan),
+        Observable.of(startDate),
+        Observable.of(endDate),
+        this._db.getReadsByDateRange(meter._guid, startDate, endDate),
+        this._db.getReadsByNeighborhood(ncmpAvgGuid, startDate, endDate),
+        this._db.getReadsByNeighborhood(ncmpEffGuid, startDate, endDate)
       );
     })
     .map((data: any[]) => {
-      const [ meter, usage, avg, eff ] = data;
-      const startDate = new Date("12/1/2017");
-      const endDate = new Date("12/31/2017");
+      const [ meter, timeSpan, startDate, endDate, usage, avg, eff ] = data;
 
-      console.log("data", usage, avg, eff);
+      const dateRange: IDateRange = { timeSpan, startDate, endDate };
+      const avgLineData = avg.map(d => {
+        return {
+          date: d.date,
+          line1: d.delta
+        }
+      });
+      const effLineData = eff.map(d => {
+        return {
+          date: d.date,
+          line1: d.delta
+        }
+      });
+      const avgDeltas = ChartHelper.groupDeltasByTimeSpan(dateRange, avgLineData);
+      const effDeltas = ChartHelper.groupDeltasByTimeSpan(dateRange, effLineData);
+      let combineAvgEff = [];
+
+      for (let i = 0; i < avgDeltas.length; i++) {
+        if (avgDeltas[i].date.toString() === effDeltas[i].date.toString()) {
+          combineAvgEff.push({
+            date: avgDeltas[i].date,
+            line1: avgDeltas[i].line1 || 0,
+            line2: effDeltas[i].line1 || 0
+          });
+        }
+      }
+
+      console.log("data", avgDeltas, effDeltas, combineAvgEff);
 
       const payload: IComparison = {
         guid: meter._guid,
         startDate,
         endDate,
         usage,
-        avg,
+        avg: combineAvgEff,
         eff
       };
 

@@ -130,7 +130,9 @@ export class UtilitySpendingComponent implements OnInit {
         this._selectedDateRanges[index].endDate
       );
     } else if (this._currentNavigationItems[index] === this._navigationItems.COMPARISON) {
-      this._storeServices.loadNeighborhoodReads(meter);
+      const { timeSpan, startDate, endDate } = this._selectedDateRanges[index];
+
+      this._storeServices.loadNeighborhoodReads(meter, timeSpan, startDate, endDate);
     }
   }
 
