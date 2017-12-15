@@ -108,4 +108,8 @@ export class StoreServices {
 		this._store.dispatch(new TriggerNeighborhoodReads(meter));
 	}
 
+	public selectComparisonReads() {
+		return this._store.select(state => state.comparison.data);
+	}
+
 }

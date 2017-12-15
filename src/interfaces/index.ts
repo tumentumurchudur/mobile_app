@@ -5,3 +5,4 @@ export { IRead } from "./read";
 export { IReads } from "./reads";
 export { ILineItem } from "./line-item";
 export { IDateRange } from "./date-range";
+export { IComparison } from "./comparison";

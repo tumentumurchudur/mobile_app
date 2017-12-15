@@ -277,6 +277,35 @@ export class DatabaseProvider {
     });
   }
 
+  public getReadsByNeighborhood(guid: string, startDate: Date, endDate: Date): Observable<IReads[]> {
+    const startAt = startDate.getTime().toString();
+    const endAt = endDate.getTime().toString();
+
+    return Observable.create(observer => {
+      return this._readsRef
+        .child(guid)
+        .child("read_summaries/hours")
+        .orderByKey()
+        .startAt(startAt)
+        .endAt(endAt)
+        .once("value")
+        .then(snapshot => {
+          const data = snapshot.val();
+          let reads = [];
+
+          if (data) {
+            reads = Object.keys(data).map(key => {
+              return { date: key, delta: data[key].delta };
+            });
+          }
+
+          observer.next(reads);
+        }, error => {
+          observer.error(error);
+        });
+    });
+  }
+
   public updateMeterSettings(meter: IMeter, user: IUser): Observable<IMeter> {
     return Observable.create(observer => {
       const updates = {};

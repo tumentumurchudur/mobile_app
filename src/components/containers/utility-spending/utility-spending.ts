@@ -3,10 +3,9 @@ import { Component, OnInit, Input, ChangeDetectionStrategy } from "@angular/core
 import { StoreServices } from "../../../store/services";
 
 import { Observable } from "rxjs/Observable";
-import { IUser, IMeter, IReads, IDateRange } from "../../../interfaces";
+import { IUser, IMeter, IReads, IDateRange, ILineItem, IComparison } from "../../../interfaces";
 import { chartConfigs, navigationConfigs, timeSpanConfigs } from "../../../configs";
 import { ChartHelper } from "../../../helpers";
-import { ILineItem } from "../../../interfaces/line-item";
 
 import { trigger, state, style, animate, transition } from "@angular/animations";
 
@@ -32,6 +31,7 @@ export class UtilitySpendingComponent implements OnInit {
   private _meterLoading$: Observable<boolean>;
   private _reads$: Observable<IReads[] | null>;
   private _loadingReads$: Observable<boolean>;
+  private _comparison$: Observable<IComparison[]>;
 
   private _navigationItems = navigationConfigs;
   private _currentNavigationItems: string[] = [];
@@ -62,6 +62,7 @@ export class UtilitySpendingComponent implements OnInit {
     this._meterLoading$ = this._storeServices.selectMeterLoading();
     this._reads$ = this._storeServices.selectReadsData();
     this._loadingReads$ = this._storeServices.selectReadsLoading();
+    this._comparison$ = this._storeServices.selectComparisonReads();
   }
 
   ngOnInit() {
