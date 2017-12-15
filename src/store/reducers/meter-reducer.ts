@@ -17,13 +17,11 @@ export const meterReducerMap: ActionReducerMap<MeterState> = {
 export function meterReducer(state = { data: [], loading: false }, action): any {
 	switch (action.type) {
 		case ActionTypes.ADD_METERS:
-	      return Object.assign({}, state, { data: action.payload, loading: false });
+	    return Object.assign({}, state, { data: action.payload, loading: false });
 		case ActionTypes.ADD_METER:
 		  return Object.assign({}, state, { data: state.data.concat(action.payload), loading: false });
-    	case ActionTypes.ADD_PROVIDERS:
-      	  return Object.assign({}, state, { providers: action.payload });
-    // case ActionTypes.TRIGGER_UPDATE_PROVIDERS:
-    //   return Object.assign({}, state, { providers: action.payload });
+    case ActionTypes.ADD_PROVIDERS:
+      return Object.assign({}, state, { providers: action.payload });
 		case ActionTypes.TRIGGER_UPDATE_METER_READS:
 		case ActionTypes.TRIGGER_UPDATE_METER_SETTINGS:
 		  return Object.assign({}, state, { loading: true });
