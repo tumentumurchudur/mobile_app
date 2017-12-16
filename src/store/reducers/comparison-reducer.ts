@@ -17,12 +17,15 @@ export function comparisonReducer(state = { data: [], loading: false }, action):
 	switch (action.type) {
 		case ActionTypes.ADD_COMPARISON_READS:
 			const { guid = null, startDate = null, endDate = null } = action.payload;
+
 			const filteredData = state.data.filter(s => {
 				return s.guid !== guid ||
 					s.startDate.toString() !== startDate.toString() ||
 					s.endDate.toString() !== endDate.toString();
 			});
 			return Object.assign({}, state, { data: filteredData.concat(action.payload) }, { loading: false });
+		case ActionTypes.LOADING_COMPARISON_READS:
+			return Object.assign({}, state, { loading: true });
 		default:
 			return state;
 	}

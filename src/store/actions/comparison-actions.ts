@@ -3,6 +3,7 @@ import { IMeter, IComparison } from "../../interfaces";
 
 export const TRIGGER_NEIGHBORHOOD_READS: string = "[Comparison] TRIGGER READS";
 export const ADD_COMPARISON_READS: string = "[Comparison] ADD COMPARISON READS";
+export const LOADING_COMPARISON_READS: string = "[Comparison] LOADING COMPARISON READS";
 
 export class TriggerNeighborhoodReads implements Action {
 	public readonly type = TRIGGER_NEIGHBORHOOD_READS;
@@ -20,4 +21,9 @@ export class AddComparison implements Action {
 	constructor(private _payload: IComparison) {
 		this.payload = _payload;
 	}
+}
+
+export class LoadingComparisonReads implements Action {
+	public readonly type = LOADING_COMPARISON_READS;
+	public payload = null;
 }

@@ -17,10 +17,10 @@ import { GooglePlus } from "@ionic-native/google-plus";
 
 import { StoreDevtoolsModule } from "@ngrx/store-devtools";
 import { StoreModule } from "@ngrx/store";
-import { reducers, metaReducers } from '../store/reducers';
-import { EffectsModule } from '@ngrx/effects';
-import { IonicStorageModule } from '@ionic/storage'
-import { MainEffects, NeighborhoodEffects } from '../store/effects';
+import { reducers, metaReducers } from "../store/reducers";
+import { EffectsModule } from "@ngrx/effects";
+import { IonicStorageModule } from "@ionic/storage"
+import { MainEffects, ComparisonEffects } from "../store/effects";
 import { StoreServices } from "../store/services";
 import { CostHelper } from "../helpers";
 
@@ -41,7 +41,7 @@ import { MyApp } from "./app.component";
     StoreDevtoolsModule.instrument({
       maxAge: 25 //  Retains last 25 states
     }),
-    EffectsModule.forRoot([MainEffects, NeighborhoodEffects]),
+    EffectsModule.forRoot([MainEffects, ComparisonEffects]),
     IonicStorageModule.forRoot(),
     AngularFireModule.initializeApp(fireBaseConfig),
     AngularFireAuthModule,

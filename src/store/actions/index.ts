@@ -35,7 +35,9 @@ export {
 export {
   AddComparison,
   TriggerNeighborhoodReads,
+  LoadingComparisonReads,
 
   ADD_COMPARISON_READS,
-  TRIGGER_NEIGHBORHOOD_READS
+  TRIGGER_NEIGHBORHOOD_READS,
+  LOADING_COMPARISON_READS
 } from "./comparison-actions"
