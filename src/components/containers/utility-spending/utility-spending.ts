@@ -38,6 +38,7 @@ export class UtilitySpendingComponent implements OnInit {
   private _currentNavigationItems: string[] = [];
   private _currentMeterIndex: number = 0;
   private _selectedDateRanges: IDateRange[] = [];
+  private _chartColors: string[] = ["orange", "red", "green"];
 
   constructor(
     private _storeServices: StoreServices

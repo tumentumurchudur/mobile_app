@@ -1,12 +1,12 @@
 import { Action } from "@ngrx/store";
 import { IMeter, IComparison } from "../../interfaces";
 
-export const TRIGGER_NEIGHBORHOOD_READS: string = "[Comparison] TRIGGER READS";
+export const TRIGGER_COMPARISON_READS: string = "[Comparison] TRIGGER READS";
 export const ADD_COMPARISON_READS: string = "[Comparison] ADD COMPARISON READS";
 export const LOADING_COMPARISON_READS: string = "[Comparison] LOADING COMPARISON READS";
 
-export class TriggerNeighborhoodReads implements Action {
-	public readonly type = TRIGGER_NEIGHBORHOOD_READS;
+export class TriggerComparisonReads implements Action {
+	public readonly type = TRIGGER_COMPARISON_READS;
 	public payload: any | null;
 
 	constructor(private _payload: any) {

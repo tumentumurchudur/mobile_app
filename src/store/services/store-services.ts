@@ -12,7 +12,7 @@ import {
 	TriggerLoadMeters,
 	TriggerUpdateMeterReads,
 	TriggerUpdateMeterSettings,
-	TriggerNeighborhoodReads,
+	TriggerComparisonReads,
 	AddReads,
 	LoadReadsByDateRange,
 	LoadingReads,
@@ -107,7 +107,7 @@ export class StoreServices {
 
 	public loadNeighborhoodReads(meter: IMeter, dateRange: IDateRange) {
 		this._store.dispatch(new LoadingComparisonReads());
-		this._store.dispatch(new TriggerNeighborhoodReads({ meter, dateRange }));
+		this._store.dispatch(new TriggerComparisonReads({ meter, dateRange }));
 	}
 
 	public selectComparisonReads() {

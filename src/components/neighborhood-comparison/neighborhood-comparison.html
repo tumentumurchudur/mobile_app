@@ -2,7 +2,6 @@
 <line-chart
   [data]="_selectedData || _data"
   [lineColors]="_selectedColor || lineColors"
-  [dotColors]="_selectedDotColor || dotColors"
   [loading]="loading"
   [animate]="true"
   [series]="_selectedSeries || _series"
@@ -17,7 +16,7 @@
         <div class="circle" [ngStyle]="{ 'background': lineColors[i] }"></div>
         <div>{{ legend }}</div>
       </div>
-      <div class="cost-label" (click)="_clickCostLabel(i)">
+      <div class="cost-label" (click)="_filterChartData(i)">
         <span [ngStyle]="{ 'color': lineColors[i] }">
           {{ _neighborhoodCosts[i] | currency:'USD': true: '1.2-2'}}
         </span>

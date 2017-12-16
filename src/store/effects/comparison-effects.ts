@@ -9,7 +9,7 @@ import "rxjs/add/observable/combineLatest";
 import { DatabaseProvider } from "../../providers";
 import { neighborhoodConfigs } from "../../configs";
 
-import { TRIGGER_NEIGHBORHOOD_READS, AddComparison } from "../actions";
+import { TRIGGER_COMPARISON_READS, AddComparison } from "../actions";
 import { IMeter, IComparison, IDateRange } from "../../interfaces";
 import { ChartHelper } from "../../helpers/chart-helper";
 
@@ -17,7 +17,7 @@ import { ChartHelper } from "../../helpers/chart-helper";
 export class ComparisonEffects {
   @Effect()
   public getNeighborhoodReads$ = this._actions$
-    .ofType(TRIGGER_NEIGHBORHOOD_READS)
+    .ofType(TRIGGER_COMPARISON_READS)
     .map((action: any) => action.payload)
     .switchMap((data: any) => {
       const { meter, dateRange } = data;
@@ -78,6 +78,7 @@ export class ComparisonEffects {
 
       let combinedChartData = [];
 
+      // TODO: Needs improvement.
       for (let i = 0; i < avgDeltas.length; i++) {
         if (avgDeltas[i].date.toString() === effDeltas[i].date.toString() ||
         avgDeltas[i].date.toString() === useDeltas[i].date.toString()) {

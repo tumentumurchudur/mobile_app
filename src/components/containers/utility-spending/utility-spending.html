@@ -105,9 +105,7 @@
             [dateRange]="_selectedDateRanges[i]"
             [guid]="meter._guid"
             [legends]="['You', 'Average', 'Efficient']"
-            [lineColors]="['orange', 'red', 'green']"
-            [dotColors]="['orange', 'red', 'green']"
-            (clickedCost)="_onCostLabelClick($event, i)"
+            [lineColors]="_chartColors"
           >
           </neighborhood-comparison>
         </div>

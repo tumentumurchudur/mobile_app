@@ -34,10 +34,10 @@ export {
 
 export {
   AddComparison,
-  TriggerNeighborhoodReads,
+  TriggerComparisonReads,
   LoadingComparisonReads,
 
   ADD_COMPARISON_READS,
-  TRIGGER_NEIGHBORHOOD_READS,
+  TRIGGER_COMPARISON_READS,
   LOADING_COMPARISON_READS
 } from "./comparison-actions"
