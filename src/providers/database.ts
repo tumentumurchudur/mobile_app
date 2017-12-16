@@ -3,12 +3,11 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import firebase from "firebase";
 
 import { fireBaseConfig, neighborhoodConfigs, databasePaths } from "../configs";
-import { IUser, IMeter } from "../interfaces";
+import { IUser, IMeter, IReads } from "../interfaces";
 import { AuthProvider } from "./auth";
 
 import { Observable } from "rxjs/Observable";
 import "rxjs/add/observable/combineLatest";
-import { IReads } from "../interfaces/reads";
 
 @Injectable()
 export class DatabaseProvider {
