@@ -1,7 +1,7 @@
 import { Action } from "@ngrx/store";
 import { IMeter, IComparison } from "../../interfaces";
 
-export const TRIGGER_COMPARISON_READS: string = "[Comparison] TRIGGER READS";
+export const TRIGGER_COMPARISON_READS: string = "[Comparison] TRIGGER COMPARISON READS";
 export const ADD_COMPARISON_READS: string = "[Comparison] ADD COMPARISON READS";
 export const LOADING_COMPARISON_READS: string = "[Comparison] LOADING COMPARISON READS";
 

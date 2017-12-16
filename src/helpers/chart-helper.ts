@@ -118,7 +118,7 @@ export class ChartHelper {
 
     switch(timeSpan) {
       case timeSpanConfigs.MONTH:
-      return moment(startDate).format("MMM YYYY");
+        return moment(startDate).format("MMM YYYY");
       case timeSpanConfigs.WEEK:
         return moment(startDate).format("MMM DD") + " - " + moment(endDate).format("MMM DD YYYY");
       case timeSpanConfigs.DAY:
@@ -279,27 +279,6 @@ export class ChartHelper {
         data[emptyIndex].line1 = nextVal;
       }
     })
-  }
-
-  public static getLineChartData(data: any[], fieldName: string, series: number) {
-    return data.map(d => {
-      if (series === 1) {
-        return {
-          date: new Date(parseInt(d.date.toString())),
-          line1: d[fieldName]
-        }
-      } else if (series === 2) {
-        return {
-          date: new Date(parseInt(d.date.toString())),
-          line2: d[fieldName]
-        }
-      } else {
-        return {
-          date: new Date(parseInt(d.date.toString())),
-          line3: d[fieldName]
-        }
-      }
-    });
   }
 
 }
