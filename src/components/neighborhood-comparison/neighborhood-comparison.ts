@@ -2,7 +2,6 @@ import { Component, Input, OnChanges, ChangeDetectionStrategy } from "@angular/c
 
 import { ChartHelper  } from "../../helpers";
 import { IRead, IDateRange, IComparison } from "../../interfaces";
-import { ERR_CORDOVA_NOT_AVAILABLE } from "@ionic-native/core";
 
 @Component({
   selector: "neighborhood-comparison",

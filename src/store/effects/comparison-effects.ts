@@ -12,7 +12,6 @@ import { neighborhoodConfigs } from "../../configs";
 import { TRIGGER_COMPARISON_READS, AddComparison } from "../actions";
 import { IMeter, IComparison, IDateRange } from "../../interfaces";
 import { ChartHelper } from "../../helpers/chart-helper";
-import { compareDates } from "ionic-angular/util/datetime-util";
 
 @Injectable()
 export class ComparisonEffects {
