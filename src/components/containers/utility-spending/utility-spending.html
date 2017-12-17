@@ -58,8 +58,8 @@
           <timespan-selector
             [selectedTimeSpan]="_selectedDateRanges[i].timeSpan"
             [disableNextButton]="_shouldDisableNextButton(i)"
-            (timeSpanChanged)="_onTimeSpanClick($event, meter, i)"
-            (itemTapped)="_onTimeTravelClick($event, meter, i)"
+            (timeSpanChanged)="_onTimeSpanClick($event, meter, i, 'timeTravel')"
+            (itemTapped)="_onTimeTravelClick($event, meter, i, 'timeTravel')"
           ></timespan-selector>
 
           <div>{{ _showDateRange(i) }}</div>
@@ -95,6 +95,9 @@
         >
           <timespan-selector
             [selectedTimeSpan]="_selectedDateRanges[i].timeSpan"
+            [disableNextButton]="_shouldDisableNextButton(i)"
+            (timeSpanChanged)="_onTimeSpanClick($event, meter, i, 'comparison')"
+            (itemTapped)="_onTimeTravelClick($event, meter, i, 'comparison')"
           ></timespan-selector>
 
           <div>{{ _showDateRange(i) }}</div>
@@ -104,8 +107,6 @@
             [loading]="_comparisonLoading$ | async"
             [dateRange]="_selectedDateRanges[i]"
             [guid]="meter._guid"
-            [legends]="['You', 'Average', 'Efficient']"
-            [lineColors]="_chartColors"
           >
           </neighborhood-comparison>
         </div>

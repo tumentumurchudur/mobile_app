@@ -2,6 +2,7 @@ import { Component, Input, OnChanges, ChangeDetectionStrategy } from "@angular/c
 
 import { ChartHelper  } from "../../helpers";
 import { IRead, IDateRange, IComparison } from "../../interfaces";
+import { ERR_CORDOVA_NOT_AVAILABLE } from "@ionic-native/core";
 
 @Component({
   selector: "neighborhood-comparison",
@@ -13,11 +14,17 @@ export class NeighborhoodComparisonComponent implements OnChanges {
   @Input() loading: boolean;
   @Input() dateRange: IDateRange;
   @Input() guid: string;
-  @Input() legends: string[];
-  @Input() lineColors: string[];
 
   private _data: any[];
-  private _series: string[] = ["line1", "line2", "line3"];
+  private _series: string[];
+  private _lineColors: string[];
+  private _legends: string[];
+
+  private _options = [
+    { line: "line1", color: "orange", legend: "You" },
+    { line: "line2", color: "red", legend: "Average" },
+    { line: "line3", color: "green", legend: "Efficient" }
+  ];
 
   private _selectedData: any[];
   private _selectedSeries: any[];
@@ -38,6 +45,18 @@ export class NeighborhoodComparisonComponent implements OnChanges {
       });
 
       this._data = filteredReads.length ? filteredReads[0].reads : [];
+
+      if (this._data && this._data.length) {
+        const lines = Object.keys(this._data[0]).filter(d => d.indexOf("line") !== -1);
+
+        const availOptions = this._options.map(option => {
+          return lines.indexOf(option.line) !== -1 ? option : null;
+        }).filter(line => line !== null);
+
+        this._series = availOptions.map(option => option.line);
+        this._lineColors = availOptions.map(option => option.color);
+        this._legends = availOptions.map(option => option.legend);
+      }
     }
   }
 
@@ -66,7 +85,7 @@ export class NeighborhoodComparisonComponent implements OnChanges {
     });
 
     this._selectedSeries = this._series.filter(s => s === "line" + lineIndex);
-    this._selectedColor = [this.lineColors[chartIndex]];
+    this._selectedColor = [this._lineColors[chartIndex]];
   }
 
   private _onShowAll(): void {
