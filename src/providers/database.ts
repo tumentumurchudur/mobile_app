@@ -299,7 +299,7 @@ export class DatabaseProvider {
     });
   }
 
-  private _getShallowList(httpService: any, path: string): Observable<any> {
+  private _getShallowList(httpService: HttpClient, path: string): Observable<any> {
     return httpService.get(`${path}.json?auth=${databaseToken.production}&shallow=true`)
       .map(res => _.keys(res));
   }

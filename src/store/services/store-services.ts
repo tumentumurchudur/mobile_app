@@ -114,8 +114,4 @@ export class StoreServices {
     return this._store.select(state => state.meters.providers);
   }
 
-  public selectProviderCountry() {
-    return this._store.select(state => state.meters.providers);
-  }
-
 }

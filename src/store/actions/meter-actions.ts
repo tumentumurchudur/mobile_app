@@ -9,7 +9,7 @@ export const ADD_METERS: string = "ADD_METERS";
 export const ADD_METER: string = "ADD_METER";
 
 export const UPDATE_METER: string = "[Meter] UPDATE METER";
-export const TRIGGER_ADD_PROVIDERS: string = "TRIGGER_ADD_PROVIDERS";
+export const TRIGGER_ADD_PROVIDERS: string = "TRIGGER ADD PROVIDERS";
 export const TRIGGER_UPDATE_METER_READS: string = "[Meter] TRIGGER UPDATE METER READS";
 export const TRIGGER_UPDATE_METER_SETTINGS: string = "[Meter] TRIGGER UPDATE METER SETTINGS";
 
