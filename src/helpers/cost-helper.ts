@@ -1,5 +1,6 @@
 import { IMeter, ILineItem } from "../interfaces";
 import { convertConfigs, meterConfigs } from "../configs";
+import { ChartHelper } from "./chart-helper";
 
 import * as moment from "moment";
 
@@ -73,6 +74,29 @@ export class CostHelper {
 			billingTotalDays,
 			billingCurrentDays
 		};
+	}
+
+	/**
+	 * Calculates actual cost and usage.
+	 * @param meters
+	 */
+	public static calculateCostAndUsageForMeters(meters: IMeter[]): IMeter[] {
+		for (let i = 0; i < meters.length; i++) {
+			const deltas = ChartHelper.getDeltas(meters[i]._reads);
+			const cost = deltas.length ? CostHelper.calculateCostFromDeltas(meters[i], deltas) : {};
+			const { billingTotalDays, billingCurrentDays } = CostHelper.calculateBillingCycles(meters[i]._billing_start);
+
+			meters[i]._actualUsageCost = cost.totalCost || 0;
+			meters[i]._usage = cost.totalDelta || 0;
+
+			// # of days since billing start date
+			meters[i]._billing_since_start = billingCurrentDays || 0;
+
+			// # of days in billing cycle.
+			meters[i]._billing_total = billingTotalDays || 0;
+		}
+
+		return meters;
 	}
 
 }
