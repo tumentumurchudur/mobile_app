@@ -1,7 +1,10 @@
 import { Injectable } from "@angular/core";
 import { Effect, Actions } from "@ngrx/effects";
 
+import { StoreServices } from "../../store/services";
+
 import { Observable } from "rxjs/rx";
+import { Subscription } from "rxjs/Subscription";
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/switchMap";
 import "rxjs/add/observable/combineLatest";
@@ -10,7 +13,7 @@ import { DatabaseProvider } from "../../providers";
 import { neighborhoodConfigs } from "../../configs";
 
 import { TRIGGER_COMPARISON_READS, AddComparison } from "../actions";
-import { IMeter, IComparison, IDateRange } from "../../interfaces";
+import { IComparison } from "../../interfaces";
 import { ChartHelper } from "../../helpers/chart-helper";
 
 @Injectable()
@@ -22,35 +25,58 @@ export class ComparisonEffects {
     .switchMap((data: any) => {
       const { meter, dateRange } = data;
 
+      let group = null;
+      const subscription: Subscription = this._storeServices.selectComparisonReads()
+        .subscribe((data: IComparison[]) => {
+          group = data && data.length ? data[0].group : null;
+        });
+
       return Observable.combineLatest(
         Observable.of(meter),
         Observable.of(dateRange),
-        this._db.getNeighborhoodGroupIds(meter)
-      )
+        group ? Observable.of(group) : this._db.getNeighborhoodGroupIds(meter),
+        Observable.of(subscription)
+      );
     })
     .switchMap((data: any) => {
-      const [ meter, dateRange, group ] = data;
+      const [ meter, dateRange, group, groupSubscription ] = data;
       const { startDate, endDate } = dateRange;
 
-      const neighborhoodGroupID = group["group_id"];
+      if (groupSubscription) {
+        groupSubscription.unsubscribe();
+      }
+
+      const neighborhoodGroupID = group["group_id"] || null;
       const ncmpAvgGuid = `${neighborhoodGroupID}${neighborhoodConfigs.NEIGHBORHOOD_COMP_AVG_GUID}`;
       const ncmpEffGuid = `${neighborhoodGroupID}${neighborhoodConfigs.NEIGHBORHOOD_COMP_EFF_GUID}`;
 
-      const newMeter = Object.assign({}, meter, {
-        _ncmpAvgGuid: ncmpAvgGuid,
-        _ncmpEffGuid: ncmpEffGuid
+      // Check if data is available in the store.
+      let storeData;
+      const subscription: Subscription = this._storeServices.selectComparisonReads()
+        .subscribe((data: IComparison[]) => {
+          storeData = data.filter(read => {
+            return read.guid === meter._guid &&
+              read.startDate.toString() === startDate.toString() &&
+              read.endDate.toString() === endDate.toString();
+          })[0] || null;
       });
 
       return Observable.combineLatest(
-        Observable.of(newMeter),
+        Observable.of(subscription),
+        Observable.of(group),
+        Observable.of(meter),
         Observable.of(dateRange),
-        this._db.getReadsByDateRange(meter._guid, startDate, endDate),
-        this._db.getReadsByNeighborhood(ncmpAvgGuid, startDate, endDate),
-        this._db.getReadsByNeighborhood(ncmpEffGuid, startDate, endDate)
+        storeData ? Observable.of(storeData.usage) : this._db.getReadsByDateRange(meter._guid, startDate, endDate),
+        storeData ? Observable.of(storeData.avg) : this._db.getReadsByNeighborhood(ncmpAvgGuid, startDate, endDate),
+        storeData ? Observable.of(storeData.eff) : this._db.getReadsByNeighborhood(ncmpEffGuid, startDate, endDate)
       );
     })
     .map((data: any[]) => {
-      const [ meter, dateRange, usage, avg, eff ] = data;
+      const [subscription, group, meter, dateRange, usage, avg, eff] = data;
+
+      if (subscription) {
+        subscription.unsubscribe();
+      }
 
       if (!usage.length && !avg.length && !eff.length) {
         return new AddComparison(null);
@@ -91,7 +117,7 @@ export class ComparisonEffects {
         useDeltas = normalizedDeltas.length ? ChartHelper.groupDeltasByTimeSpan(dateRange, normalizedDeltas) : [];
       }
 
-      let combinedChartData = [];
+      let calcReads = [];
       let loopDeltas;
       if (useDeltas.length) {
         loopDeltas = useDeltas;
@@ -103,25 +129,25 @@ export class ComparisonEffects {
 
       for (let i = 0; i < loopDeltas.length; i++) {
         if (!useDeltas.length) {
-          combinedChartData.push({
+          calcReads.push({
             date: loopDeltas[i].date,
             line2: avgDeltas[i].line1 || 0,
             line3: effDeltas[i].line1 || 0
           });
         } else if (!avgDeltas.length) {
-          combinedChartData.push({
+          calcReads.push({
             date: loopDeltas[i].date,
             line1: useDeltas[i].line1 || 0,
             line3: effDeltas[i].line1 || 0
           });
         } else if (!effDeltas.length) {
-          combinedChartData.push({
+          calcReads.push({
             date: loopDeltas[i].date,
             line1: useDeltas[i].line1 || 0,
             line2: avgDeltas[i].line1 || 0
           });
         } else {
-          combinedChartData.push({
+          calcReads.push({
             date: loopDeltas[i].date,
             line1: useDeltas[i].line1 || 0,
             line2: avgDeltas[i].line1 || 0,
@@ -134,7 +160,11 @@ export class ComparisonEffects {
         guid: meter._guid,
         startDate: dateRange.startDate,
         endDate: dateRange.endDate,
-        reads: combinedChartData
+        group,
+        usage,
+        avg,
+        eff,
+        calcReads
       };
 
       return new AddComparison(payload);
@@ -143,5 +173,6 @@ export class ComparisonEffects {
   constructor(
     private readonly _actions$: Actions,
     private readonly _db: DatabaseProvider,
+    private readonly _storeServices: StoreServices
   ) { }
 }
