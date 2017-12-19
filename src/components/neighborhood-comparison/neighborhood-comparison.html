@@ -1,7 +1,7 @@
 <div class="show-all"><span (click)="_onShowAll()">show all</span></div>
 <line-chart
   [data]="_selectedData || _data"
-  [lineColors]="_selectedColor || lineColors"
+  [lineColors]="_selectedColor || _lineColors"
   [loading]="loading"
   [animate]="true"
   [series]="_selectedSeries || _series"
@@ -10,14 +10,14 @@
 ></line-chart>
 
 <div class="legends">
-  <div *ngFor="let legend of legends; let i = index">
+  <div *ngFor="let legend of _legends; let i = index">
     <div class="legend">
       <div class="series-label">
-        <div class="circle" [ngStyle]="{ 'background': lineColors[i] }"></div>
+        <div class="circle" [ngStyle]="{ 'background': _lineColors[i] }"></div>
         <div>{{ legend }}</div>
       </div>
       <div class="cost-label" (click)="_filterChartData(i)">
-        <span [ngStyle]="{ 'color': lineColors[i] }">
+        <span [ngStyle]="{ 'color': _lineColors[i] }">
           {{ _neighborhoodCosts[i] | currency:'USD': true: '1.2-2'}}
         </span>
       </div>

@@ -52,38 +52,77 @@ export class ComparisonEffects {
     .map((data: any[]) => {
       const [ meter, dateRange, usage, avg, eff ] = data;
 
+      if (!usage.length && !avg.length && !eff.length) {
+        return new AddComparison(null);
+      }
+
       // format data for average
-      const avgLineData = avg.map(d => {
-        return {
-          date: d.date,
-          line1: d.delta
-        }
-      });
-      // group data by time span
-      const avgDeltas = ChartHelper.groupDeltasByTimeSpan(dateRange, avgLineData);
+      let avgDeltas = [];
+      if (avg && avg.length) {
+        const avgLineData = avg.map(d => {
+          return {
+            date: d.date,
+            line1: d.delta
+          }
+        });
+
+        // group data by time span
+        avgDeltas = ChartHelper.groupDeltasByTimeSpan(dateRange, avgLineData);
+      }
 
       // efficiency data
-      const effLineData = eff.map(d => {
-        return {
-          date: d.date,
-          line1: d.delta
-        }
-      });
-      const effDeltas = ChartHelper.groupDeltasByTimeSpan(dateRange, effLineData);
+      let effDeltas = [];
+      if (eff && eff.length) {
+        const effLineData = eff.map(d => {
+          return {
+            date: d.date,
+            line1: d.delta
+          }
+        });
+        effDeltas = ChartHelper.groupDeltasByTimeSpan(dateRange, effLineData);
+      }
 
       // consumption data
-      const rawDeltas = ChartHelper.getDeltas(usage);
-      const normalizedDeltas = ChartHelper.normalizeData(rawDeltas);
-      const useDeltas = normalizedDeltas.length ? ChartHelper.groupDeltasByTimeSpan(dateRange, normalizedDeltas) : [];
+      let useDeltas = [];
+      if (usage && usage.length) {
+        const rawDeltas = ChartHelper.getDeltas(usage);
+        const normalizedDeltas = ChartHelper.normalizeData(rawDeltas);
+
+        useDeltas = normalizedDeltas.length ? ChartHelper.groupDeltasByTimeSpan(dateRange, normalizedDeltas) : [];
+      }
 
       let combinedChartData = [];
+      let loopDeltas;
+      if (useDeltas.length) {
+        loopDeltas = useDeltas;
+      } else if (avgDeltas.length) {
+        loopDeltas = avgDeltas;
+      } else {
+        loopDeltas = effDeltas;
+      }
 
-      // TODO: Needs improvement.
-      for (let i = 0; i < avgDeltas.length; i++) {
-        if (avgDeltas[i].date.toString() === effDeltas[i].date.toString() ||
-        avgDeltas[i].date.toString() === useDeltas[i].date.toString()) {
+      for (let i = 0; i < loopDeltas.length; i++) {
+        if (!useDeltas.length) {
           combinedChartData.push({
-            date: avgDeltas[i].date,
+            date: loopDeltas[i].date,
+            line2: avgDeltas[i].line1 || 0,
+            line3: effDeltas[i].line1 || 0
+          });
+        } else if (!avgDeltas.length) {
+          combinedChartData.push({
+            date: loopDeltas[i].date,
+            line1: useDeltas[i].line1 || 0,
+            line3: effDeltas[i].line1 || 0
+          });
+        } else if (!effDeltas.length) {
+          combinedChartData.push({
+            date: loopDeltas[i].date,
+            line1: useDeltas[i].line1 || 0,
+            line2: avgDeltas[i].line1 || 0
+          });
+        } else {
+          combinedChartData.push({
+            date: loopDeltas[i].date,
             line1: useDeltas[i].line1 || 0,
             line2: avgDeltas[i].line1 || 0,
             line3: effDeltas[i].line1 || 0

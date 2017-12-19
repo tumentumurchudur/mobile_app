@@ -38,7 +38,6 @@ export class UtilitySpendingComponent implements OnInit {
   private _currentNavigationItems: string[] = [];
   private _currentMeterIndex: number = 0;
   private _selectedDateRanges: IDateRange[] = [];
-  private _chartColors: string[] = ["orange", "red", "green"];
 
   constructor(
     private _storeServices: StoreServices
@@ -91,21 +90,26 @@ export class UtilitySpendingComponent implements OnInit {
     this._storeServices.updateLoaderWhenReadsDone(refresher);
   }
 
+  private _setDefaultDateRange(index: number) {
+    const { timeSpan } = this._selectedDateRanges[index];
+    const { startDate, endDate, dateFormat } = ChartHelper.getDefaultDateRange(timeSpan);
+
+    this._selectedDateRanges[index].startDate = startDate;
+    this._selectedDateRanges[index].endDate = endDate;
+    this._selectedDateRanges[index].dateFormat = dateFormat;
+  }
+
   private _onNavigationItemClick(selectedItem: string, meter: IMeter, index: number) {
     this._currentNavigationItems[index] = selectedItem;
     this._currentMeterIndex = index;
 
     // Line chart is selected.
     if (this._currentNavigationItems[index] === this._navigationItems.LINE_CHART) {
-      const { timeSpan } = this._selectedDateRanges[index];
+      const { timeSpan, startDate, endDate } = this._selectedDateRanges[index];
 
-      // Get default dates if start and end dates are empty.
-      if (!this._selectedDateRanges[index].startDate || !this._selectedDateRanges[index].endDate) {
-        const { startDate, endDate, dateFormat } = ChartHelper.getDefaultDateRange(timeSpan);
-
-        this._selectedDateRanges[index].startDate = startDate;
-        this._selectedDateRanges[index].endDate = endDate;
-        this._selectedDateRanges[index].dateFormat = dateFormat;
+      // Set default dates if start and end dates are empty.
+      if (!startDate || !endDate) {
+        this._setDefaultDateRange(index);
       }
 
       // Initiate request to load data from database for given guid, start and end dates.
@@ -118,12 +122,24 @@ export class UtilitySpendingComponent implements OnInit {
     } else if (this._currentNavigationItems[index] === this._navigationItems.COMPARISON) {
       const { timeSpan, startDate, endDate } = this._selectedDateRanges[index];
 
+      // Set default dates if start and end dates are empty.
+      if (!startDate || !endDate) {
+        this._setDefaultDateRange(index);
+      }
+
       // Trigger a request to load neighborhood reads from API.
-      this._storeServices.loadNeighborhoodReads(meter, { timeSpan, startDate, endDate });
+      this._storeServices.loadNeighborhoodReads(
+        meter,
+        {
+          timeSpan,
+          startDate: this._selectedDateRanges[index].startDate,
+          endDate: this._selectedDateRanges[index].endDate
+        }
+      );
     }
   }
 
-  private _onTimeSpanClick(timeSpan: string, meter: IMeter, index: number): void {
+  private _onTimeSpanClick(timeSpan: string, meter: IMeter, index: number, page: string): void {
     // Sets default start and end dates.
     const { startDate, endDate, dateFormat } = ChartHelper.getDefaultDateRange(timeSpan);
 
@@ -134,19 +150,41 @@ export class UtilitySpendingComponent implements OnInit {
 
     this._currentMeterIndex = index;
 
-    this._storeServices.loadReadsByDateRange(meter, timeSpan, startDate, endDate);
+    if (page === "timeTravel") {
+      this._storeServices.loadReadsByDateRange(meter, timeSpan, startDate, endDate);
+    } else {
+      this._storeServices.loadNeighborhoodReads(
+        meter,
+        {
+          timeSpan,
+          startDate: this._selectedDateRanges[index].startDate,
+          endDate: this._selectedDateRanges[index].endDate
+        }
+      );
+    }
   }
 
   private _shouldDisableNextButton(index: number): boolean {
     return this._selectedDateRanges[index].endDate > new Date();
   }
 
-  private _onTimeTravelClick(direction: string, meter: IMeter, index: number) {
+  private _onTimeTravelClick(direction: string, meter: IMeter, index: number, page: string): void {
     this._selectedDateRanges[index] = ChartHelper.getDateRange(direction, this._selectedDateRanges[index]);
 
     const { timeSpan, startDate, endDate } = this._selectedDateRanges[index];
 
-    this._storeServices.loadReadsByDateRange(meter, timeSpan, startDate, endDate);
+    if (page === "timeTravel") {
+      this._storeServices.loadReadsByDateRange(meter, timeSpan, startDate, endDate);
+    } else {
+      this._storeServices.loadNeighborhoodReads(
+        meter,
+        {
+          timeSpan,
+          startDate: this._selectedDateRanges[index].startDate,
+          endDate: this._selectedDateRanges[index].endDate
+        }
+      );
+    }
   }
 
   private _getDataByGuid(reads: IReads[], guid: string, index: number): any {
