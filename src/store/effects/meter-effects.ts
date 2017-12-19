@@ -16,24 +16,13 @@ import {
   LOAD_METERS,
   TRIGGER_LOAD_METERS,
   TRIGGER_UPDATE_METER_SETTINGS,
-  TRIGGER_ADD_PROVIDERS,
-  TRIGGER_UPDATE_PROVIDER_COUNTRIES,
-  TRIGGER_GET_PROVIDERS,
-  TRIGGER_GET_PROVIDER_PLANS,
 
   AddMeters,
   LoadMeters,
   TriggerUpdateMeterReads,
   LoadFromDb,
-  AddProviders,
-  UpdateProvider,
-  UpdateProviders,
-  UpdateProviderPlans,
-  UpdateProviderRegion,
-  TriggerUpdateProviderCountries,
   UpdateUser
 } from "../actions";
-import {TRIGGER_UPDATE_PROVIDER_REGIONS} from "../actions/meter-actions";
 
 @Injectable()
 export class MeterEffects {
@@ -151,64 +140,6 @@ export class MeterEffects {
     .map((meter: IMeter) => {
       return new TriggerUpdateMeterReads(meter);
     });
-
-  /**
-   * Handles GetProviders action.
-   */
-  @Effect()
-  public addProviders$ = this._actions$
-    .ofType(TRIGGER_ADD_PROVIDERS)
-    .switchMap(() => {
-      return this._db.getProviderTypes();
-    })
-    .map((providersType:any) => {
-      return new AddProviders(providersType);
-    });
-
-  @Effect()
-  public updateProviderCountries$ = this._actions$
-    .ofType(TRIGGER_UPDATE_PROVIDER_COUNTRIES)
-    .map((action: any) => action.payload)
-    .switchMap((utilityType) => {
-      return this._db.getProviderCountries(utilityType);
-    })
-    .map((countries:any) => {
-      return new UpdateProvider(countries);
-    });
-
-  @Effect()
-  public updateProviderRegions$ = this._actions$
-    .ofType(TRIGGER_UPDATE_PROVIDER_REGIONS)
-    .map((action: any) => action.payload)
-    .switchMap((path) => {
-      return this._db.getProviderRegions(path);
-    })
-    .map((regions:any) => {
-      return new UpdateProviderRegion(regions);
-    });
-
-  @Effect()
-  public updateProviders$ = this._actions$
-    .ofType(TRIGGER_GET_PROVIDERS)
-    .map((action: any) => action.payload)
-    .switchMap((path) => {
-      return this._db.getProviders(path);
-    })
-    .map((regions:any) => {
-      return new UpdateProviders(regions);
-    });
-
-  @Effect()
-  public updateProviderPlans$ = this._actions$
-    .ofType(TRIGGER_GET_PROVIDER_PLANS)
-    .map((action: any) => action.payload)
-    .switchMap((path) => {
-      return this._db.getProviderPlans(path);
-    })
-    .map((plans:any) => {
-      return new UpdateProviderPlans(plans);
-    });
-
 
   constructor(
     private readonly _actions$: Actions,

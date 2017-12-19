@@ -113,6 +113,7 @@ export class StoreServices {
 	}
 
   public getProviders() {
+	  console.log('step one store');
     this._store.dispatch(new TriggerAddProviders());
   }
 
@@ -137,8 +138,8 @@ export class StoreServices {
   }
 
 
-  public getProviderCountries(utilityType: string) {
-    this._store.dispatch(new TriggerUpdateProviderCountries({utilityType}));
+  public getProviderCountries(path: string) {
+    this._store.dispatch(new TriggerUpdateProviderCountries({path}));
   }
 
   public getProviderRegions(path: string) {

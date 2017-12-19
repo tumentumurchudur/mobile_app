@@ -20,7 +20,7 @@ import { StoreModule } from "@ngrx/store";
 import { reducers, metaReducers } from "../store/reducers";
 import { EffectsModule } from "@ngrx/effects";
 import { IonicStorageModule } from "@ionic/storage"
-import { MeterEffects, ComparisonEffects, ReadsEffects } from "../store/effects";
+import { MeterEffects, ComparisonEffects, ReadsEffects, ProviderEffects } from "../store/effects";
 import { StoreServices } from "../store/services";
 import { CostHelper } from "../helpers";
 
@@ -42,7 +42,7 @@ import { MyApp } from "./app.component";
     StoreDevtoolsModule.instrument({
       maxAge: 25 //  Retains last 25 states
     }),
-    EffectsModule.forRoot([MeterEffects, ComparisonEffects, ReadsEffects]),
+    EffectsModule.forRoot([MeterEffects, ComparisonEffects, ReadsEffects, ProviderEffects]),
     IonicStorageModule.forRoot(),
     AngularFireModule.initializeApp(fireBaseConfig),
     AngularFireAuthModule,
