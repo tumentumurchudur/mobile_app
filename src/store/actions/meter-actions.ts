@@ -10,6 +10,7 @@ export const ADD_METER: string = "ADD_METER";
 
 export const UPDATE_METER: string = "[Meter] UPDATE METER";
 export const TRIGGER_ADD_PROVIDERS: string = "TRIGGER ADD PROVIDERS";
+export const TRIGGER_UPDATE_PROVIDERS: string = "TRIGGER UPDATE PROVIDERS";
 export const TRIGGER_UPDATE_METER_READS: string = "[Meter] TRIGGER UPDATE METER READS";
 export const TRIGGER_UPDATE_METER_SETTINGS: string = "[Meter] TRIGGER UPDATE METER SETTINGS";
 
@@ -54,6 +55,17 @@ export class TriggerAddProviders implements Action {
 	public payload = null;
 
   }
+
+
+export class TriggerUpdateProviders implements Action {
+  public readonly type = TRIGGER_UPDATE_PROVIDERS;
+  public payload = null;
+
+  constructor(private _payload: any) {
+    this.payload = _payload;
+  }
+
+}
 
   export class AddProviders implements Action {
 	public readonly type = ADD_PROVIDERS;

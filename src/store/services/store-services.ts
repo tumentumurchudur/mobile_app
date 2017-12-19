@@ -20,6 +20,7 @@ import {
 	LoadingReads,
 	LoadReadsByMeters
 } from "../actions";
+import {TriggerUpdateProviders} from "../actions/meter-actions";
 
 @Injectable()
 export class StoreServices {
@@ -113,5 +114,10 @@ export class StoreServices {
   public selectProviders() {
     return this._store.select(state => state.meters.providers);
   }
+
+  public updateSelectedProvider(providerPath: any) {
+    this._store.dispatch(new TriggerUpdateProviders({providerPath}));
+  }
+
 
 }
