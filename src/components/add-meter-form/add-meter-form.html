@@ -2,14 +2,16 @@
   <!--Pick Utility Type-->
   <section *ngIf="_step === 1" class="text-container">
     <h4>What type of utility do you want to add?</h4>
-    <ion-list radio-group formControlName="utilityType" class="list-container">
-      <ion-item *ngFor="let type of utilityTypes">
-        <ion-label>
-          <span class="util-type-title">{{ type }}</span>
-        </ion-label>
-        <ion-radio value="{{ type }}"></ion-radio>
-      </ion-item>
-    </ion-list>
+    <div *ngIf="_providerTypes$ | async as utilityTypes">
+      <ion-list radio-group formControlName="utilityType" class="list-container" (ionChange)="_getCountries()">
+        <ion-item *ngFor="let type of utilityTypes">
+          <ion-label>
+            <span class="util-type-title">{{ type }}</span>
+          </ion-label>
+          <ion-radio value="{{ type }}"></ion-radio>
+        </ion-item>
+      </ion-list>
+    </div>
   </section>
   <!--Meter number and billing start date-->
   <section *ngIf="_step === 2" class="text-container">
@@ -34,40 +36,42 @@
   <!--Provider information-->
   <section *ngIf="_step === 3" class="text-container">
     <h4>Select your provider information</h4>
-    <ion-item>
-      <ion-label>Country</ion-label>
-      <ion-select formControlName="country" (ionChange)="getRegions()">
-        <ion-option *ngFor="let country of countries" [value]="country">
-          {{ country }}
-        </ion-option>
-      </ion-select>
-    </ion-item>
-    <div *ngIf="_addMeter.value['country']">
+    <div *ngIf="_providerCountires$ | async as countries">
+      <ion-item>
+        <ion-label>Country</ion-label>
+          <ion-select formControlName="country" (ionChange)="_getRegions()">
+            <ion-option *ngFor="let country of countries" [value]="country">
+              {{ country }}
+            </ion-option>
+          </ion-select>
+      </ion-item>
+    </div>
+    <div *ngIf="_providerRegions$ | async as regions">
       <ion-item>
         <ion-label>Region</ion-label>
-        <ion-select formControlName="region" (ionChange)="getProviders()">
+        <ion-select formControlName="region" (ionChange)="_getProviders()">
           <ion-option *ngFor="let region of regions" [value]="region">
             {{ region }}
           </ion-option>
         </ion-select>
       </ion-item>
     </div>
-    <div *ngIf="_addMeter.value['region']">
+    <div *ngIf="_providerProviders$ | async as providers">
       <ion-item>
         <ion-label>Provider</ion-label>
-        <ion-select formControlName="provider" (ionChange)="getPlans()">
+        <ion-select formControlName="provider" (ionChange)="_getPlans()">
           <ion-option *ngFor="let provider of providers" [value]="provider">
-            {{ provider.name }}
+            {{ provider }}
           </ion-option>
         </ion-select>
       </ion-item>
     </div>
-    <div *ngIf="_addMeter.value['provider']">
+    <div *ngIf="_providerPlans$ | async as plans">
       <ion-item>
         <ion-label>Plan</ion-label>
-        <ion-select formControlName="plan" (ionChange)="proceed()">
+        <ion-select formControlName="plan">
           <ion-option *ngFor="let plan of plans" [value]="plan">
-            {{ plan.name }}
+            {{ plan }}
           </ion-option>
         </ion-select>
       </ion-item>

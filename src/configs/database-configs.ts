@@ -13,3 +13,8 @@ export const databasePaths = {
 	reads: "reads",
 	providers: "providers"
 }
+
+export const databaseToken = {
+  production: "VICdha7cFBew3pqe2xnS6ECuYOj5LKnXQqnjoR9W",
+  dev: "0JBEo6TvuaSdu3mxS2PRNjghQhGOWAVOjN0z2fis"
+}

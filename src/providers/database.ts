@@ -2,12 +2,14 @@ import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import firebase from "firebase";
 
-import { fireBaseConfig, neighborhoodConfigs, databasePaths } from "../configs";
+import { fireBaseConfig, neighborhoodConfigs, databasePaths, databaseToken } from "../configs";
 import { IUser, IMeter, IReads } from "../interfaces";
 import { AuthProvider } from "./auth";
 
 import { Observable } from "rxjs/Observable";
 import "rxjs/add/observable/combineLatest";
+import * as _ from 'lodash';
+
 
 @Injectable()
 export class DatabaseProvider {
@@ -329,7 +331,39 @@ export class DatabaseProvider {
     });
   }
 
-  public getNeighborhoodGroupIds(meter: IMeter): Observable<any> {
+  private _getShallowList(httpService: HttpClient, path: string): Observable<any> {
+    return httpService.get(`${path}.json?auth=${databaseToken.production}&shallow=true`)
+      .map(res => _.keys(res));
+  }
+
+  public getProviderTypes(): Observable<any> {
+      return this._getShallowList(this._httpClient, `${this._providersRef}`);
+  }
+
+  public getProviderCountries(type: any): Observable<any> {
+    const utilityType = type['utilityType'];
+    return this._getShallowList(this._httpClient, `${this._providersRef}/${utilityType}`);
+  }
+
+  public getProviderRegions(path: string): Observable<any> {
+    const urlPath = path['path'];
+
+    return this._getShallowList(this._httpClient, `${this._providersRef}/${urlPath}`);
+  }
+
+  public getProviders(path: string): Observable<any> {
+    const urlPath = path['path'];
+
+    return this._getShallowList(this._httpClient, `${this._providersRef}/${urlPath}`);
+  }
+
+  public getProviderPlans(path: string): Observable<any> {
+    const urlPath = path['path'];
+
+    return this._getShallowList(this._httpClient, `${this._providersRef}/${urlPath}`);
+  }
+
+    public getNeighborhoodGroupIds(meter: IMeter): Observable<any> {
     const { _guid, _utilityType } = meter;
 
     return Observable.combineLatest(

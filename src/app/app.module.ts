@@ -32,6 +32,7 @@ import { MyApp } from "./app.component";
   ],
   imports: [
     BrowserModule,
+    HttpClientModule,
     IonicModule.forRoot(MyApp,
       {
         autoFocusAssist: false,

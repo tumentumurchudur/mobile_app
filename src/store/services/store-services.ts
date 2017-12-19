@@ -7,6 +7,13 @@ import {
 	AddMeter,
 	UpdateMeter,
 	LoadMeters,
+  AddProviders,
+	LoadFromDb,
+	TriggerAddProviders,
+  TriggerUpdateProviderCountries,
+  TriggerUpdateProviderRegions,
+  TriggerGetProviders,
+  TriggerGetProviderPlans,
 	AddUser,
 	UpdateUser,
 	TriggerLoadMeters,
@@ -104,6 +111,47 @@ export class StoreServices {
 	public selectReadsData() {
 		return this._store.select(state => state.reads.data);
 	}
+
+  public getProviders() {
+    this._store.dispatch(new TriggerAddProviders());
+  }
+
+  public selectProviderTypes() {
+    return this._store.select(state => state.meters.providerType);
+  }
+
+  public selectProviderCountries() {
+    return this._store.select(state => state.meters.countries);
+  }
+
+  public selectProviderRegions() {
+    return this._store.select(state => state.meters.regions);
+  }
+
+  public selectProviderProviders() {
+    return this._store.select(state => state.meters.providers);
+  }
+
+  public selectProviderPlans() {
+    return this._store.select(state => state.meters.plans);
+  }
+
+
+  public getProviderCountries(utilityType: string) {
+    this._store.dispatch(new TriggerUpdateProviderCountries({utilityType}));
+  }
+
+  public getProviderRegions(path: string) {
+    this._store.dispatch(new TriggerUpdateProviderRegions({path}));
+  }
+
+  public getProviderProviders(path: string) {
+    this._store.dispatch(new TriggerGetProviders({path}));
+  }
+
+  public getProviderPlans(path: string) {
+    this._store.dispatch(new TriggerGetProviderPlans({path}));
+  }
 
 	public loadNeighborhoodReads(meter: IMeter, dateRange: IDateRange) {
 		this._store.dispatch(new LoadingComparisonReads());
