@@ -2,5 +2,9 @@ export interface IComparison {
   guid: string;
   startDate: Date;
   endDate: Date;
-  reads: any[]
+  group: any;
+  avg: any[];
+  eff: any[];
+  usage: any[];
+  calcReads: any[];
 }

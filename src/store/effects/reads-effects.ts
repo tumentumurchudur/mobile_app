@@ -98,10 +98,9 @@ export class ReadsEffects {
     .map((action: any) => action.payload)
     .switchMap((values: any) => {
       const { meter, timeSpan, startDate, endDate } = values;
-      let storeData;
 
-      // TODO: Needs improvement.
       // Get reads data from the store if available.
+      let storeData;
       const subscription: Subscription = this._storeServices.selectReadsData().subscribe((data: IReads[]) => {
         storeData = data.filter(read => {
           return read.guid === meter._guid &&

@@ -15,9 +15,9 @@ export class NeighborhoodComparisonComponent implements OnChanges {
   @Input() guid: string;
 
   private _data: any[];
-  private _series: string[];
-  private _lineColors: string[];
-  private _legends: string[];
+  private _series: string[] = [];
+  private _lineColors: string[] = [];
+  private _legends: string[] = [];
 
   private _options = [
     { line: "line1", color: "orange", legend: "You" },
@@ -35,6 +35,9 @@ export class NeighborhoodComparisonComponent implements OnChanges {
 
   public ngOnChanges() {
     if (this.comparisonReads && this.comparisonReads.length) {
+      // Reset selected lines in the chart.
+      this._onShowAll();
+
       const { startDate, endDate } = this.dateRange;
 
       const filteredReads = this.comparisonReads.filter(read => {
@@ -43,7 +46,7 @@ export class NeighborhoodComparisonComponent implements OnChanges {
           read.endDate.toString() === endDate.toString();
       });
 
-      this._data = filteredReads.length ? filteredReads[0].reads : [];
+      this._data = filteredReads.length ? filteredReads[0].calcReads : [];
 
       if (this._data && this._data.length) {
         const lines = Object.keys(this._data[0]).filter(d => d.indexOf("line") !== -1);
