@@ -133,19 +133,6 @@ export class MainEffects {
         new UpdateUser(user)
       ];
     });
-  /**
-   * Handles GetProviders action.
-   */
-  @Effect()
-  public updateProviders$ = this._actions$
-    .ofType(TRIGGER_ADD_PROVIDERS)
-    .switchMap(() => {
-     return this._db.getProviderTypes();
-    })
-    .map((providersType:any) => {
-      return new AddProviders(providersType);
-    });
-
 
   /**
    * Handles UpdatingMeter action.

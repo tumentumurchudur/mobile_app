@@ -19,7 +19,11 @@ export class AddMeterFormComponent {
   private _loading: any;
   private _validateMeterStatus: string;
   private _billingStartDate: string = moment().format("YYYY-MM-DD");
-  private _providerType$: Observable<any>;
+  private _providerTypes$: Observable<any>;
+  private _providerCountires$: Observable<any>;
+  private _providerRegions$: Observable<any>;
+  private _providerProviders$: Observable<any>;
+  private _providerPlans$: Observable<any>;
 
   constructor(
     private _storeServices: StoreServices,
@@ -41,7 +45,11 @@ export class AddMeterFormComponent {
       name: ["", Validators.required]
     });
 
-    this._providerType$ = this._storeServices.selectProviders();
+    this._providerTypes$ = this._storeServices.selectProviderTypes();
+    this._providerCountires$ = this._storeServices.selectProviderCountries();
+    this._providerRegions$ = this._storeServices.selectProviderRegions();
+    this._providerProviders$ = this._storeServices.selectProviderProviders();
+    this._providerPlans$ = this._storeServices.selectProviderPlans();
   }
 
   ngOnInit() {
@@ -49,6 +57,15 @@ export class AddMeterFormComponent {
   }
 
   private _incStep(): void {
+    this._step++;
+  }
+
+  nextStep(): void {
+    if (this._step == 2) {
+      this._validateMeter();
+      return;
+    }
+
     this._step++;
   }
 
@@ -87,6 +104,22 @@ export class AddMeterFormComponent {
       }
     });
     //validate meter function would go here
+  }
+
+  private _getCountries() {
+    this._storeServices.getProviderCountries(this._addMeter.value["utilityType"]);
+  }
+
+  private _getRegions() {
+    this._storeServices.getProviderRegions(`${this._addMeter.value["utilityType"]}/${this._addMeter.value["country"]}`);
+  }
+
+  private _getProviders() {
+    this._storeServices.getProviderProviders(`${this._addMeter.value["utilityType"]}/${this._addMeter.value["country"]}/${this._addMeter.value["region"]}`);
+  }
+
+  private _getPlans() {
+    this._storeServices.getProviderPlans(`${this._addMeter.value["utilityType"]}/${this._addMeter.value["country"]}/${this._addMeter.value["region"]}/${this._addMeter.value["provider"]}/plans`);
   }
 
   private _showLoading() {

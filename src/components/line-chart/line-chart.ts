@@ -14,7 +14,6 @@ export class LineChartComponent implements OnChanges {
   @Input() loading: boolean = false;
   @Input() animate: boolean = false;
   @Input() lineColors: string[] = ["orange", "red", "green"];
-  @Input() dotColors: string[] = ["orange", "red", "green"];
   @Input() dateFormat: string = "%m/%d";
   @Input() series: string[] = ["line1", "line2", "line3"];
   @Input() showAreaFill: boolean = true;
@@ -65,7 +64,7 @@ export class LineChartComponent implements OnChanges {
       const path = this._addPath(svg, lineFunc, "path" + index, this.lineColors[index]);
 
       // add dots
-      this._addDots(svg, x, y, colName, this.dotColors[index]);
+      this._addDots(svg, x, y, colName, this.lineColors[index]);
 
       // animate lines.
       this._animatePath(path, delay * (index + 1), 800);
@@ -75,7 +74,7 @@ export class LineChartComponent implements OnChanges {
         svg.append("path")
           .attr("class", "area")
           .attr("d", this._getAreaFunc(x, y, height, this.data, ""))
-          .attr("fill", () => "orange")
+          .attr("fill", () => this.lineColors[index])
           .attr("transform", "translate(20, 10)")
           .transition()
           .delay(800)

@@ -6,7 +6,11 @@ export interface MeterState {
 	meters: {
 		data: IMeter[] | null,
 		loading: boolean,
-    providers: any
+    providerType: any,
+    countries: any,
+    regions: any,
+    providers: any,
+    plans: any
 	}
 }
 
@@ -21,8 +25,16 @@ export function meterReducer(state = { data: [], loading: false }, action): any 
 		case ActionTypes.ADD_METER:
 		  return Object.assign({}, state, { data: state.data.concat(action.payload), loading: false });
     case ActionTypes.ADD_PROVIDERS:
+      return Object.assign({}, state, { providerType: action.payload });
+    case ActionTypes.UPDATE_PROVIDER:
+      return Object.assign({}, state, { countries: action.payload });
+    case ActionTypes.UPDATE_PROVIDER_REGIONS:
+      return Object.assign({}, state, { regions: action.payload });
+    case ActionTypes.UPDATE_PROVIDERS:
       return Object.assign({}, state, { providers: action.payload });
-		case ActionTypes.TRIGGER_UPDATE_METER_READS:
+    case ActionTypes.UPDATE_PROVIDER_PLANS:
+      return Object.assign({}, state, { plans: action.payload });
+    case ActionTypes.TRIGGER_UPDATE_METER_READS:
 		case ActionTypes.TRIGGER_UPDATE_METER_SETTINGS:
 		  return Object.assign({}, state, { loading: true });
 		case ActionTypes.UPDATE_METER:

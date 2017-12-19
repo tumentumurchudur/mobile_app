@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Store } from "@ngrx/store";
 import { AppState } from "../reducers";
-import { IUser, IReads, IMeter } from "../../interfaces";
+import { IUser, IReads, IMeter, IDateRange } from "../../interfaces";
 import { Observable } from "rxjs/Observable";
 import {
 	AddMeter,
@@ -10,17 +10,22 @@ import {
   AddProviders,
 	LoadFromDb,
 	TriggerAddProviders,
+  TriggerUpdateProviderCountries,
+  TriggerUpdateProviderRegions,
+  TriggerGetProviders,
+  TriggerGetProviderPlans,
 	AddUser,
 	UpdateUser,
 	TriggerLoadMeters,
 	TriggerUpdateMeterReads,
 	TriggerUpdateMeterSettings,
+	TriggerComparisonReads,
 	AddReads,
 	LoadReadsByDateRange,
 	LoadingReads,
-	LoadReadsByMeters
+	LoadReadsByMeters,
+	LoadingComparisonReads
 } from "../actions";
-import {TriggerUpdateProviders} from "../actions/meter-actions";
 
 @Injectable()
 export class StoreServices {
@@ -111,13 +116,54 @@ export class StoreServices {
     this._store.dispatch(new TriggerAddProviders());
   }
 
-  public selectProviders() {
+  public selectProviderTypes() {
+    return this._store.select(state => state.meters.providerType);
+  }
+
+  public selectProviderCountries() {
+    return this._store.select(state => state.meters.countries);
+  }
+
+  public selectProviderRegions() {
+    return this._store.select(state => state.meters.regions);
+  }
+
+  public selectProviderProviders() {
     return this._store.select(state => state.meters.providers);
   }
 
-  public updateSelectedProvider(providerPath: any) {
-    this._store.dispatch(new TriggerUpdateProviders({providerPath}));
+  public selectProviderPlans() {
+    return this._store.select(state => state.meters.plans);
   }
 
+
+  public getProviderCountries(utilityType: string) {
+    this._store.dispatch(new TriggerUpdateProviderCountries({utilityType}));
+  }
+
+  public getProviderRegions(path: string) {
+    this._store.dispatch(new TriggerUpdateProviderRegions({path}));
+  }
+
+  public getProviderProviders(path: string) {
+    this._store.dispatch(new TriggerGetProviders({path}));
+  }
+
+  public getProviderPlans(path: string) {
+    this._store.dispatch(new TriggerGetProviderPlans({path}));
+  }
+
+	public loadNeighborhoodReads(meter: IMeter, dateRange: IDateRange) {
+		this._store.dispatch(new LoadingComparisonReads());
+		this._store.dispatch(new TriggerComparisonReads({ meter, dateRange }));
+	}
+
+	public selectComparisonReads() {
+		return this._store.select(state => state.comparison.data);
+	}
+
+	public selectComparisonLoading() {
+		return this._store.select(state => state.comparison.loading);
+	}
 
 }

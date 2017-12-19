@@ -1,23 +1,26 @@
 import { ActionReducerMap, MetaReducer } from "@ngrx/store";
-import { IMeter, IUser, IReads } from '../../interfaces';
+import { IMeter, IUser, IReads, IComparison } from "../../interfaces";
 
-import { storeFreeze } from 'ngrx-store-freeze';
-import { environment } from '../../environments/environment'; // Angular CLI environment
+import { storeFreeze } from "ngrx-store-freeze";
+import { environment } from "../../environments/environment"; // Angular CLI environment
 
 import { meterReducer } from "./meter-reducer";
 import { userReducer } from "./user-reducer";
 import { readsReducer } from "./reads-reducer";
+import { comparisonReducer } from "./comparison-reducer";
 
 export interface AppState {
-	meters: { data: IMeter[] | null, loading: boolean, providers: any },
+	meters: { data: IMeter[] | null, loading: boolean, providerType: any, countries: any, regions: any, providers: any, plans: any},
 	reads: { data: IReads[] | null, loading: boolean },
+	comparison: { data: IComparison[] | null, loading: boolean },
 	user: IUser | null
 }
 
 export const reducers: ActionReducerMap<AppState> = {
 	meters: meterReducer,
 	user: userReducer,
-	reads: readsReducer
+	reads: readsReducer,
+	comparison: comparisonReducer
 };
 
 // TODO: We may use this in the future.

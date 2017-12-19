@@ -118,7 +118,7 @@ export class ChartHelper {
 
     switch(timeSpan) {
       case timeSpanConfigs.MONTH:
-      return moment(startDate).format("MMM YYYY");      
+        return moment(startDate).format("MMM YYYY");
       case timeSpanConfigs.WEEK:
         return moment(startDate).format("MMM DD") + " - " + moment(endDate).format("MMM DD YYYY");
       case timeSpanConfigs.DAY:
