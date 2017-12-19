@@ -12,6 +12,7 @@ import { LineChartComponent } from './line-chart/line-chart';
 import { AddMeterFormComponent } from './add-meter-form/add-meter-form';
 import { AppSpinnerComponent } from './app-spinner/app-spinner';
 import { EditMeterFormComponent } from './edit-meter-form/edit-meter-form';
+import { NeighborhoodComparisonComponent } from './neighborhood-comparison/neighborhood-comparison';
 
 @NgModule({
 	declarations: [
@@ -22,7 +23,8 @@ import { EditMeterFormComponent } from './edit-meter-form/edit-meter-form';
     LineChartComponent,
     AddMeterFormComponent,
     AppSpinnerComponent,
-    EditMeterFormComponent
+    EditMeterFormComponent,
+    NeighborhoodComparisonComponent
 	],
 	imports: [
     CommonModule,
@@ -38,7 +40,8 @@ import { EditMeterFormComponent } from './edit-meter-form/edit-meter-form';
     LineChartComponent,
     AddMeterFormComponent,
     AppSpinnerComponent,
-    EditMeterFormComponent
+    EditMeterFormComponent,
+    NeighborhoodComparisonComponent
 	]
 })
 export class ComponentsModule {}

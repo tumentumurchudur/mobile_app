@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Store } from "@ngrx/store";
 import { AppState } from "../reducers";
-import { IUser, IReads, IMeter } from "../../interfaces";
+import { IUser, IReads, IMeter, IDateRange } from "../../interfaces";
 import { Observable } from "rxjs/Observable";
 import {
 	AddMeter,
@@ -12,10 +12,12 @@ import {
 	TriggerLoadMeters,
 	TriggerUpdateMeterReads,
 	TriggerUpdateMeterSettings,
+	TriggerComparisonReads,
 	AddReads,
 	LoadReadsByDateRange,
 	LoadingReads,
-	LoadReadsByMeters
+	LoadReadsByMeters,
+	LoadingComparisonReads
 } from "../actions";
 
 @Injectable()
@@ -101,6 +103,19 @@ export class StoreServices {
 
 	public selectReadsData() {
 		return this._store.select(state => state.reads.data);
+	}
+
+	public loadNeighborhoodReads(meter: IMeter, dateRange: IDateRange) {
+		this._store.dispatch(new LoadingComparisonReads());
+		this._store.dispatch(new TriggerComparisonReads({ meter, dateRange }));
+	}
+
+	public selectComparisonReads() {
+		return this._store.select(state => state.comparison.data);
+	}
+
+	public selectComparisonLoading() {
+		return this._store.select(state => state.comparison.loading);
 	}
 
 }

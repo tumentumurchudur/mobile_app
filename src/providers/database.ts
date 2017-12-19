@@ -1,12 +1,13 @@
-import { Injectable } from '@angular/core';
-import firebase from 'firebase';
+import { Injectable } from "@angular/core";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import firebase from "firebase";
 
-import { fireBaseConfig, databasePaths } from '../configs';
-import { IUser, IMeter } from '../interfaces';
+import { fireBaseConfig, neighborhoodConfigs, databasePaths } from "../configs";
+import { IUser, IMeter, IReads } from "../interfaces";
+import { AuthProvider } from "./auth";
 
 import { Observable } from "rxjs/Observable";
 import "rxjs/add/observable/combineLatest";
-import { IReads } from '../interfaces/reads';
 
 @Injectable()
 export class DatabaseProvider {
@@ -16,7 +17,10 @@ export class DatabaseProvider {
   private _readsRef: firebase.database.Reference;
   private _providersRef: firebase.database.Reference;
 
-  constructor() {
+  constructor(
+    private _authProvider: AuthProvider,
+    private _httpClient: HttpClient
+  ) {
     if (!firebase.apps.length) {
         firebase.initializeApp(fireBaseConfig);
     }
@@ -272,6 +276,35 @@ export class DatabaseProvider {
     });
   }
 
+  public getReadsByNeighborhood(guid: string, startDate: Date, endDate: Date): Observable<IReads[]> {
+    const startAt = startDate.getTime().toString();
+    const endAt = endDate.getTime().toString();
+
+    return Observable.create(observer => {
+      return this._readsRef
+        .child(guid)
+        .child("read_summaries/hours")
+        .orderByKey()
+        .startAt(startAt)
+        .endAt(endAt)
+        .once("value")
+        .then(snapshot => {
+          const data = snapshot.val();
+          let reads = [];
+
+          if (data) {
+            reads = Object.keys(data).map(key => {
+              return { date: key, delta: data[key].delta };
+            });
+          }
+
+          observer.next(reads);
+        }, error => {
+          observer.error(error);
+        });
+    });
+  }
+
   public updateMeterSettings(meter: IMeter, user: IUser): Observable<IMeter> {
     return Observable.create(observer => {
       const updates = {};
@@ -293,6 +326,19 @@ export class DatabaseProvider {
       }, error => {
         observer.error(error);
       });
+    });
+  }
+
+  public getNeighborhoodGroupIds(meter: IMeter): Observable<any> {
+    const { _guid, _utilityType } = meter;
+
+    return Observable.combineLatest(
+      this._authProvider.getTokenId(),
+    ).switchMap((data: any) => {
+      const [token] = data;
+      const header = new HttpHeaders().set("Authorization", neighborhoodConfigs.AUTHORIZATION);
+
+      return this._httpClient.get(`${neighborhoodConfigs.NEIGHBORHOOD_COMP_DEV_REST_URL}?guid=${_guid}&token=${token}&utilityType=${_utilityType}`, { headers: header })
     });
   }
 

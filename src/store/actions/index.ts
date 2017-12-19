@@ -31,3 +31,13 @@ export {
   LOADING_READS,
   LOAD_READS_BY_METERS
 } from "./reads-actions";
+
+export {
+  AddComparison,
+  TriggerComparisonReads,
+  LoadingComparisonReads,
+
+  ADD_COMPARISON_READS,
+  TRIGGER_COMPARISON_READS,
+  LOADING_COMPARISON_READS
+} from "./comparison-actions"
