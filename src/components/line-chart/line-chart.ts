@@ -34,7 +34,7 @@ export class LineChartComponent implements OnChanges {
     }
   }
 
-  private _draw() {
+  private _draw(): void {
     const delay = 100;
     const viewBoxWithMultiplier = 1.1;
     const width = this.width - this.margin.left - this.margin.right;
