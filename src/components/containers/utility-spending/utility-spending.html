@@ -19,7 +19,7 @@
           *ngIf="_currentNavigationItems[i] === _navigationItems.ARC_CHART"
           [@cardState]
         >
-          <div *ngIf="meter._actualUsageCost > 0">
+          <div *ngIf="meter._actualUsageCost !== null">
             <arc-tween-chart
               [outerArcValue]="meter._actualUsageCost"
               [innerArcValue]="_getDailyGoalCost(meter)"

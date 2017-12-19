@@ -14,7 +14,7 @@ import { neighborhoodConfigs } from "../../configs";
 
 import { TRIGGER_COMPARISON_READS, AddComparison } from "../actions";
 import { IComparison } from "../../interfaces";
-import { ChartHelper } from "../../helpers/chart-helper";
+import { ChartHelper, CostHelper } from "../../helpers";
 
 @Injectable()
 export class ComparisonEffects {
@@ -115,6 +115,8 @@ export class ComparisonEffects {
         const normalizedDeltas = ChartHelper.normalizeData(rawDeltas);
 
         useDeltas = normalizedDeltas.length ? ChartHelper.groupDeltasByTimeSpan(dateRange, normalizedDeltas) : [];
+        const useCost = rawDeltas.length ? CostHelper.calculateCostFromDeltas(meter, rawDeltas) : {};
+        console.log("cost", useCost);
       }
 
       let calcReads = [];
