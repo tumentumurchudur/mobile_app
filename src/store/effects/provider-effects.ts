@@ -45,7 +45,6 @@ export class ProviderEffects {
     .ofType(TRIGGER_UPDATE_PROVIDER_COUNTRIES)
     .map((action: any) => action.payload)
     .switchMap((path) => {
-    console.log(path);
       return this._db.getProviderRequestInfo(path);
     })
     .map((countries:any) => {
