@@ -83,7 +83,6 @@ export class ProviderEffects {
       return new UpdateProviderPlans(plans);
     });
 
-
   constructor(
     private readonly _actions$: Actions,
     private readonly _db: DatabaseProvider,
