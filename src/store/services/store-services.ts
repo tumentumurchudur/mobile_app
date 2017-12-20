@@ -113,7 +113,6 @@ export class StoreServices {
 	}
 
   public getProviders() {
-	  console.log('step one store');
     this._store.dispatch(new TriggerAddProviders());
   }
 
