@@ -26,6 +26,7 @@ import {
 	LoadReadsByMeters,
 	LoadingComparisonReads
 } from "../actions";
+import {IProvider} from "../../interfaces/provider";
 
 @Injectable()
 export class StoreServices {
@@ -121,23 +122,23 @@ export class StoreServices {
   }
 
   public selectProviderCountries() {
-    return this._store.select(state => state.meters.countries);
+    return this._store.select(state => state.meters.provider._country);
   }
 
   public selectProviderRegions() {
-    return this._store.select(state => state.meters.regions);
+    return this._store.select(state => state.meters.provider._region);
   }
 
   public selectProviderProviders() {
-    return this._store.select(state => state.meters.providers);
+    return this._store.select(state => state.meters.provider._provider);
   }
 
   public selectProviderPlans() {
-    return this._store.select(state => state.meters.plans);
+    return this._store.select(state => state.meters.provider._plan);
   }
 
-  public getProviderCountries(path: string) {
-    this._store.dispatch(new TriggerGetProviderCountries({path}));
+  public getProviderCountries(provider: IProvider) {
+    this._store.dispatch(new TriggerGetProviderCountries(provider));
   }
 
   public getProviderRegions(path: string) {

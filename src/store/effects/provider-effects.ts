@@ -1,6 +1,5 @@
 import { Injectable } from "@angular/core";
 import { Effect, Actions } from "@ngrx/effects";
-import { Storage } from "@ionic/storage";
 
 import { DatabaseProvider } from "../../providers";
 
@@ -17,6 +16,7 @@ import {
   UpdateProviderPlans,
   UpdateProviderRegion,
 } from "../actions";
+import {IProvider} from "../../interfaces/provider";
 
 @Injectable()
 export class ProviderEffects {
@@ -30,7 +30,7 @@ export class ProviderEffects {
     .switchMap(() => {
       return this._db.getProviderTypes();
     })
-    .map((providersType:any) => {
+    .map((providersType: any) => {
       return new AddProviders(providersType);
     });
 
@@ -38,10 +38,12 @@ export class ProviderEffects {
   public getProviderCountries$ = this._actions$
     .ofType(TRIGGER_GET_PROVIDER_COUNTRIES)
     .map((action: any) => action.payload)
-    .switchMap((path) => {
-      return this._db.getProviderRequestInfo(path);
+    .switchMap((provider: IProvider) => {
+          return this._db.getProviderRequestInfo(provider._type);
+          //TODO: This needs to pass in a IProvider and update it's state somehow before
     })
     .map((countries:any) => {
+
       return new UpdateProviderCountries(countries);
     });
 
@@ -74,7 +76,7 @@ export class ProviderEffects {
     .switchMap((path) => {
       return this._db.getProviderRequestInfo(path);
     })
-    .map((plans:any) => {
+    .map((plans: any) => {
       return new UpdateProviderPlans(plans);
     });
 

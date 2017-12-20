@@ -1,4 +1,5 @@
 import { Action } from "@ngrx/store";
+import { IProvider } from "../../interfaces/provider";
 
 export const ADD_PROVIDERS: string = "ADD_PROVIDERS";
 
@@ -21,9 +22,9 @@ export class TriggerAddProviders implements Action {
 
 export class TriggerGetProviderCountries implements Action {
   public readonly type = TRIGGER_GET_PROVIDER_COUNTRIES;
-  public payload: any = null;
+  public payload: IProvider = null;
 
-  constructor(private _payload: any) {
+  constructor(private _payload: IProvider) {
     this.payload = _payload;
   }
 }
@@ -66,9 +67,9 @@ export class UpdateProviderPlans implements Action {
 
 export class UpdateProviderCountries implements Action {
   public readonly type = UPDATE_PROVIDER_COUNTRIES;
-  public payload: any = null;
+  public payload: IProvider = null;
 
-  constructor(private _payload: any) {
+  constructor(private _payload: IProvider) {
     this.payload = _payload;
   }
 }
@@ -93,7 +94,7 @@ export class UpdateProviderRegion implements Action {
 
 export class AddProviders implements Action {
   public readonly type = ADD_PROVIDERS;
-  public payload: any = null;
+  public payload: { provider: IProvider } = null;
 
   constructor(private _payload: any) {
     this.payload = _payload;

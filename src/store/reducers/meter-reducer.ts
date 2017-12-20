@@ -1,6 +1,7 @@
 import { ActionReducerMap } from "@ngrx/store";
 import { IMeter } from '../../interfaces';
 import * as ActionTypes from '../actions';
+import {IProvider} from "../../interfaces/provider";
 
 export interface MeterState {
 	meters: {
@@ -9,7 +10,7 @@ export interface MeterState {
     providerType: any,
     countries: any,
     regions: any,
-    providers: any,
+    provider: IProvider,
     plans: any
 	}
 }
@@ -27,7 +28,7 @@ export function meterReducer(state = { data: [], loading: false }, action): any 
     case ActionTypes.ADD_PROVIDERS:
       return Object.assign({}, state, { providerType: action.payload });
     case ActionTypes.UPDATE_PROVIDER_COUNTRIES:
-      return Object.assign({}, state, { countries: action.payload });
+      return Object.assign({}, state, { provider: action.payload });
     case ActionTypes.UPDATE_PROVIDER_REGIONS:
       return Object.assign({}, state, { regions: action.payload });
     case ActionTypes.UPDATE_PROVIDERS:

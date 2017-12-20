@@ -1,7 +1,7 @@
 export interface IProvider {
-  _type: string,
-  _country?: string,
-  _region?: string,
-  _provider?: string,
-  _plan?: string,
+  _type: Array<string>,
+  _country?: Array<string>,
+  _region?: Array<string>,
+  _provider?: Array<string>,
+  _plan?: Array<string>
 }

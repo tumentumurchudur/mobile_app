@@ -6,6 +6,7 @@ import * as moment from "moment";
 import { StoreServices } from "../../store/services";
 import { IMeter } from "../../interfaces/meter";
 import {Observable} from "rxjs/Observable";
+import { IProvider } from "../../interfaces/provider";
 
 
 @Component({
@@ -15,6 +16,7 @@ import {Observable} from "rxjs/Observable";
 })
 export class AddMeterFormComponent {
   private _addMeter: FormGroup;
+  private _provider: IProvider;
   private _step: number = 1;
   private _loading: any;
   private _validateMeterStatus: string;
@@ -107,7 +109,8 @@ export class AddMeterFormComponent {
   }
 
   private _getCountries() {
-    this._storeServices.getProviderCountries(this._addMeter.value["utilityType"]);
+    this._provider._type = this._addMeter.value["utilityType"];
+    this._storeServices.getProviderCountries(this._provider);
   }
 
   private _getRegions() {
