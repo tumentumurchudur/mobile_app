@@ -340,30 +340,14 @@ export class DatabaseProvider {
       return this._getShallowList(this._httpClient, `${this._providersRef}`);
   }
 
-  public getProviderCountries(type: any): Observable<any> {
-    const utilityType = type['utilityType'];
-    return this._getShallowList(this._httpClient, `${this._providersRef}/${utilityType}`);
-  }
-
-  public getProviderRegions(path: string): Observable<any> {
-    const urlPath = path['path'];
+  public getProviderRequestInfo(path: any): Observable<any> {
+    const urlPath = path["path"];
 
     return this._getShallowList(this._httpClient, `${this._providersRef}/${urlPath}`);
   }
 
-  public getProviders(path: string): Observable<any> {
-    const urlPath = path['path'];
 
-    return this._getShallowList(this._httpClient, `${this._providersRef}/${urlPath}`);
-  }
-
-  public getProviderPlans(path: string): Observable<any> {
-    const urlPath = path['path'];
-
-    return this._getShallowList(this._httpClient, `${this._providersRef}/${urlPath}`);
-  }
-
-    public getNeighborhoodGroupIds(meter: IMeter): Observable<any> {
+  public getNeighborhoodGroupIds(meter: IMeter): Observable<any> {
     const { _guid, _utilityType } = meter;
 
     return Observable.combineLatest(
