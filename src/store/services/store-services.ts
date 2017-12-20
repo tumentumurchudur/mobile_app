@@ -136,7 +136,6 @@ export class StoreServices {
     return this._store.select(state => state.meters.plans);
   }
 
-
   public getProviderCountries(path: string) {
     this._store.dispatch(new TriggerUpdateProviderCountries({path}));
   }
