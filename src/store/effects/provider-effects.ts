@@ -9,7 +9,6 @@ import "rxjs/add/observable/fromPromise";
 
 import { DatabaseProvider } from "../../providers";
 
-
 import {
   TRIGGER_ADD_PROVIDERS,
   TRIGGER_UPDATE_PROVIDER_COUNTRIES,
