@@ -30,7 +30,7 @@ export class ProviderEffects {
     .switchMap(() => {
       return this._db.getProviderTypes();
     })
-    .map((providersType:any) => {
+    .map((providersType: any) => {
       return new AddProviders(providersType);
     });
 
@@ -41,7 +41,7 @@ export class ProviderEffects {
     .switchMap((path) => {
       return this._db.getProviderRequestInfo(path);
     })
-    .map((countries:any) => {
+    .map((countries: any) => {
       return new UpdateProviderCountries(countries);
     });
 
@@ -74,7 +74,7 @@ export class ProviderEffects {
     .switchMap((path) => {
       return this._db.getProviderRequestInfo(path);
     })
-    .map((plans:any) => {
+    .map((plans: any) => {
       return new UpdateProviderPlans(plans);
     });
 
