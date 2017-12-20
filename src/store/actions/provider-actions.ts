@@ -13,7 +13,6 @@ export const UPDATE_PROVIDERS: string = "UPDATE PROVIDERS";
 export const UPDATE_PROVIDER_PLANS: string = "UPDATE PROVIDER PLANS";
 export const UPDATE_PROVIDER_REGIONS: string = "UPDATE PROVIDER REGIONS";
 
-
 export class TriggerAddProviders implements Action {
   public readonly type = TRIGGER_ADD_PROVIDERS;
   public payload = null;
