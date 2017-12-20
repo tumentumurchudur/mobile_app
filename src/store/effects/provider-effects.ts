@@ -1,6 +1,5 @@
 import { Injectable } from "@angular/core";
 import { Effect, Actions } from "@ngrx/effects";
-import { Storage } from "@ionic/storage";
 
 import { DatabaseProvider } from "../../providers";
 
