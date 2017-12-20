@@ -26,7 +26,7 @@ export function meterReducer(state = { data: [], loading: false }, action): any 
 		  return Object.assign({}, state, { data: state.data.concat(action.payload), loading: false });
     case ActionTypes.ADD_PROVIDERS:
       return Object.assign({}, state, { providerType: action.payload });
-    case ActionTypes.UPDATE_PROVIDER:
+    case ActionTypes.UPDATE_PROVIDER_COUNTRIES:
       return Object.assign({}, state, { countries: action.payload });
     case ActionTypes.UPDATE_PROVIDER_REGIONS:
       return Object.assign({}, state, { regions: action.payload });

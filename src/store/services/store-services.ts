@@ -10,8 +10,8 @@ import {
   AddProviders,
 	LoadFromDb,
 	TriggerAddProviders,
-  TriggerUpdateProviderCountries,
-  TriggerUpdateProviderRegions,
+  TriggerGetProviderCountries,
+  TriggerGetProviderRegions,
   TriggerGetProviders,
   TriggerGetProviderPlans,
 	AddUser,
@@ -137,11 +137,11 @@ export class StoreServices {
   }
 
   public getProviderCountries(path: string) {
-    this._store.dispatch(new TriggerUpdateProviderCountries({path}));
+    this._store.dispatch(new TriggerGetProviderCountries({path}));
   }
 
   public getProviderRegions(path: string) {
-    this._store.dispatch(new TriggerUpdateProviderRegions({path}));
+    this._store.dispatch(new TriggerGetProviderRegions({path}));
   }
 
   public getProviderProviders(path: string) {

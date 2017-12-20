@@ -340,7 +340,7 @@ export class DatabaseProvider {
       return this._getShallowList(this._httpClient, `${this._providersRef}`);
   }
 
-  public getProviderRequestInfo(path: string): Observable<any> {
+  public getProviderRequestInfo(path: any): Observable<any> {
     const urlPath = path["path"];
 
     return this._getShallowList(this._httpClient, `${this._providersRef}/${urlPath}`);
