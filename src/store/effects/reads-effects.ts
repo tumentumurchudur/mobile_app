@@ -135,7 +135,7 @@ export class ReadsEffects {
       const normalizedDeltas = ChartHelper.normalizeData(rawDeltas);
       const deltas = normalizedDeltas.length ? ChartHelper.groupDeltasByTimeSpan(dateRange, normalizedDeltas) : [];
 
-      const cost = normalizedDeltas.length ? CostHelper.calculateCostFromDeltas(meter, normalizedDeltas) : 0;
+      const cost = rawDeltas.length ? CostHelper.calculateCostFromDeltas(meter, rawDeltas) : 0;
 
       const payload = {
         guid: meter._guid,

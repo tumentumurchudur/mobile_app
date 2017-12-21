@@ -8,6 +8,7 @@ export const ADD_METERS: string = "ADD_METERS";
 export const ADD_METER: string = "ADD_METER";
 
 export const UPDATE_METER: string = "[Meter] UPDATE METER";
+export const TRIGGER_ADD_METER: string = "TRIGGER ADD METER";
 export const TRIGGER_UPDATE_METER_READS: string = "[Meter] TRIGGER UPDATE METER READS";
 export const TRIGGER_UPDATE_METER_SETTINGS: string = "[Meter] TRIGGER UPDATE METER SETTINGS";
 
@@ -54,6 +55,15 @@ export class UpdateMeter implements Action {
 	constructor(private _payload: IMeter | null) {
 		this.payload = _payload;
 	}
+}
+
+export class TriggerAddMeter implements Action {
+  public readonly type = TRIGGER_ADD_METER;
+  public payload: { meter: IMeter, user: IUser } = null;
+
+  constructor(private _payload: any) {
+    this.payload = _payload;
+  }
 }
 
 export class TriggerUpdateMeterReads implements Action {

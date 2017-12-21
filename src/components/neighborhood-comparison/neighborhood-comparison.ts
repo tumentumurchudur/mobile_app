@@ -1,7 +1,8 @@
 import { Component, Input, OnChanges, ChangeDetectionStrategy } from "@angular/core";
 
-import { ChartHelper  } from "../../helpers";
-import { IRead, IDateRange, IComparison } from "../../interfaces";
+import { ChartHelper } from "../../helpers";
+import { IDateRange, IComparison, IMeter, IUsage } from "../../interfaces";
+import { chartConfigs } from "../../configs";
 
 @Component({
   selector: "neighborhood-comparison",
@@ -12,26 +13,25 @@ export class NeighborhoodComparisonComponent implements OnChanges {
   @Input() comparisonReads: IComparison[];
   @Input() loading: boolean;
   @Input() dateRange: IDateRange;
-  @Input() guid: string;
+  @Input() meter: IMeter;
 
-  private _data: any[];
+  private _allData: any[];
   private _series: string[] = [];
   private _lineColors: string[] = [];
   private _legends: string[] = [];
 
   private _options = [
-    { line: "line1", color: "orange", legend: "You" },
-    { line: "line2", color: "red", legend: "Average" },
-    { line: "line3", color: "green", legend: "Efficient" }
+    { line: "line1", color: "#2075CB", legend: "You" },
+    { line: "line2", color: "#EF8E0F", legend: "Average" },
+    { line: "line3", color: "#00B200", legend: "Efficient" }
   ];
 
   private _selectedData: any[];
   private _selectedSeries: any[];
   private _selectedColor: string[];
 
-  // TODO: Calculate these.
-  private _mockUsageData: any[] = ["38 kWh", "59 kWh", "43 kW"];
-  private _neighborhoodCosts: any[] = ["15", "25", "10"];
+  private _costs: number[] = [];
+  private _consumptions: number[] = [];
 
   public ngOnChanges() {
     if (this.comparisonReads && this.comparisonReads.length) {
@@ -41,23 +41,29 @@ export class NeighborhoodComparisonComponent implements OnChanges {
       const { startDate, endDate } = this.dateRange;
 
       const filteredReads = this.comparisonReads.filter(read => {
-        return read.guid === this.guid &&
+        return read.guid === this.meter._guid &&
           read.startDate.toString() === startDate.toString() &&
           read.endDate.toString() === endDate.toString();
       });
 
-      this._data = filteredReads.length ? filteredReads[0].calcReads : [];
+      if (filteredReads.length) {
+        const { calcReads, avgCosts, effCosts, usageCosts } = filteredReads[0];
+        this._allData = calcReads || [];
 
-      if (this._data && this._data.length) {
-        const lines = Object.keys(this._data[0]).filter(d => d.indexOf("line") !== -1);
+        this._costs = [usageCosts.totalCost, avgCosts.totalCost, effCosts.totalCost];
+        this._consumptions = [usageCosts.totalDelta, avgCosts.totalDelta, effCosts.totalDelta];
 
-        const availOptions = this._options.map(option => {
-          return lines.indexOf(option.line) !== -1 ? option : null;
-        }).filter(line => line !== null);
+        if (calcReads && calcReads.length) {
+          const lines = Object.keys(calcReads[0]).filter(d => d.indexOf("line") !== -1);
 
-        this._series = availOptions.map(option => option.line);
-        this._lineColors = availOptions.map(option => option.color);
-        this._legends = availOptions.map(option => option.legend);
+          const availOptions = this._options.map(option => {
+            return lines.indexOf(option.line) !== -1 ? option : null;
+          }).filter(line => line !== null);
+
+          this._series = availOptions.map(option => option.line);
+          this._lineColors = availOptions.map(option => option.color);
+          this._legends = availOptions.map(option => option.legend);
+        }
       }
     }
   }
@@ -65,7 +71,7 @@ export class NeighborhoodComparisonComponent implements OnChanges {
   private _filterChartData(chartIndex: number): void {
     const lineIndex = chartIndex + 1;
 
-    this._selectedData = this._data.map(d => {
+    this._selectedData = this._allData.map(d => {
       const lineData = d["line" + lineIndex];
 
       if (chartIndex === 0) {
@@ -88,6 +94,12 @@ export class NeighborhoodComparisonComponent implements OnChanges {
 
     this._selectedSeries = this._series.filter(s => s === "line" + lineIndex);
     this._selectedColor = [this._lineColors[chartIndex]];
+  }
+
+  private _getUnit(): string {
+    const meterConfig = chartConfigs.filter(config => config.name === this.meter._utilityType)[0] || null;
+
+    return meterConfig ? meterConfig["unit"] : "";
   }
 
   private _onShowAll(): void {

@@ -41,10 +41,8 @@ export class ProviderEffects {
     .switchMap((utilityType: string) => {
           return this._db.getProviderRequestInfo(utilityType);
     })
-    .flatMap((countries: string[]) => {
-      return [
-        new UpdateProviderCountries(countries)
-      ]
+    .map((countries: string[]) => {
+      return new UpdateProviderCountries(countries);
     });
 
   @Effect()

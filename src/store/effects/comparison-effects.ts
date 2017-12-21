@@ -14,7 +14,7 @@ import { neighborhoodConfigs } from "../../configs";
 
 import { TRIGGER_COMPARISON_READS, AddComparison } from "../actions";
 import { IComparison } from "../../interfaces";
-import { ChartHelper } from "../../helpers/chart-helper";
+import { ChartHelper, CostHelper } from "../../helpers";
 
 @Injectable()
 export class ComparisonEffects {
@@ -84,6 +84,7 @@ export class ComparisonEffects {
 
       // format data for average
       let avgDeltas = [];
+      let avgCosts = null;
       if (avg && avg.length) {
         const avgLineData = avg.map(d => {
           return {
@@ -94,10 +95,12 @@ export class ComparisonEffects {
 
         // group data by time span
         avgDeltas = ChartHelper.groupDeltasByTimeSpan(dateRange, avgLineData);
+        avgCosts = avgDeltas.length ? CostHelper.calculateCostFromDeltas(meter, avgDeltas) : null;
       }
 
       // efficiency data
       let effDeltas = [];
+      let effCosts = null;
       if (eff && eff.length) {
         const effLineData = eff.map(d => {
           return {
@@ -106,15 +109,18 @@ export class ComparisonEffects {
           }
         });
         effDeltas = ChartHelper.groupDeltasByTimeSpan(dateRange, effLineData);
+        effCosts = effDeltas.length ? CostHelper.calculateCostFromDeltas(meter, effDeltas) : null;
       }
 
       // consumption data
       let useDeltas = [];
+      let usageCosts = null;
       if (usage && usage.length) {
         const rawDeltas = ChartHelper.getDeltas(usage);
         const normalizedDeltas = ChartHelper.normalizeData(rawDeltas);
 
         useDeltas = normalizedDeltas.length ? ChartHelper.groupDeltasByTimeSpan(dateRange, normalizedDeltas) : [];
+        usageCosts = rawDeltas.length ? CostHelper.calculateCostFromDeltas(meter, rawDeltas) : null;
       }
 
       let calcReads = [];
@@ -162,8 +168,11 @@ export class ComparisonEffects {
         endDate: dateRange.endDate,
         group,
         usage,
+        usageCosts,
         avg,
+        avgCosts,
         eff,
+        effCosts,
         calcReads
       };
 

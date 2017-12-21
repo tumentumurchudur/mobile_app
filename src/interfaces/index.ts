@@ -7,3 +7,4 @@ export { IProvider } from "./provider";
 export { ILineItem } from "./line-item";
 export { IDateRange } from "./date-range";
 export { IComparison } from "./comparison";
+export { IUsage } from "./usage";

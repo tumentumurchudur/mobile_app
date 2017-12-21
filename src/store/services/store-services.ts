@@ -16,6 +16,7 @@ import {
   TriggerGetProviderPlans,
 	AddUser,
 	UpdateUser,
+	TriggerAddMeter,
 	TriggerLoadMeters,
 	TriggerUpdateMeterReads,
 	TriggerUpdateMeterSettings,
@@ -63,8 +64,8 @@ export class StoreServices {
 		return this._store.select(state => state.meters.loading);
 	}
 
-  public addMeter(meter: IMeter) {
-    this._store.dispatch(new AddMeter(meter));
+  public addMeter(meter: IMeter, user: IUser) {
+    this._store.dispatch(new TriggerAddMeter(meter, user));
   }
 
 	public selectMeters() : Observable<IMeter[]> {

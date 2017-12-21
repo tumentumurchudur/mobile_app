@@ -14,9 +14,11 @@ import { IMeter, IUser } from "../../interfaces";
 import { CostHelper } from "../../helpers";
 import {
   LOAD_METERS,
+  TRIGGER_ADD_METERS,
   TRIGGER_LOAD_METERS,
   TRIGGER_UPDATE_METER_SETTINGS,
 
+  AddMeter,
   AddMeters,
   LoadMeters,
   TriggerUpdateMeterReads,
@@ -140,6 +142,16 @@ export class MeterEffects {
     .map((meter: IMeter) => {
       return new TriggerUpdateMeterReads(meter);
     });
+
+  /**
+   * Handles ADD_METER action and
+   * adds meter to the store.
+   */
+
+  @Effect()
+  public addMeter$ = this._actions$
+    .ofType(TRIGGER_ADD_METER)
+
 
   constructor(
     private readonly _actions$: Actions,

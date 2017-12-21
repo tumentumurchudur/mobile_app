@@ -6,10 +6,12 @@ export {
   UpdateMeter,
   LoadMeters,
 
+  TriggerAddMeter,
   TriggerLoadMeters,
   TriggerUpdateMeterReads,
   TriggerUpdateMeterSettings,
 
+  TRIGGER_ADD_METER,
   TRIGGER_LOAD_METERS,
   TRIGGER_UPDATE_METER_READS,
   TRIGGER_UPDATE_METER_SETTINGS,

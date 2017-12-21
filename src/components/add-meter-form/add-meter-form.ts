@@ -6,7 +6,6 @@ import * as moment from "moment";
 import { StoreServices } from "../../store/services";
 import { IMeter } from "../../interfaces/meter";
 import {Observable} from "rxjs/Observable";
-import { IProvider } from "../../interfaces/provider";
 
 
 @Component({
@@ -16,13 +15,12 @@ import { IProvider } from "../../interfaces/provider";
 })
 export class AddMeterFormComponent {
   private _addMeter: FormGroup;
-  private _provider: IProvider;
   private _step: number = 1;
   private _loading: any;
   private _validateMeterStatus: string;
   private _billingStartDate: string = moment().format("YYYY-MM-DD");
   private _providerTypes$: Observable<any>;
-  private _providerCountries$: Observable<any>;
+  private _providerCountires$: Observable<any>;
   private _providerRegions$: Observable<any>;
   private _providerProviders$: Observable<any>;
   private _providerPlans$: Observable<any>;
@@ -48,7 +46,7 @@ export class AddMeterFormComponent {
     });
 
     this._providerTypes$ = this._storeServices.selectProviderTypes();
-    this._providerCountries$ = this._storeServices.selectProviderCountries();
+    this._providerCountires$ = this._storeServices.selectProviderCountries();
     this._providerRegions$ = this._storeServices.selectProviderRegions();
     this._providerProviders$ = this._storeServices.selectProviderProviders();
     this._providerPlans$ = this._storeServices.selectProviderPlans();
@@ -59,11 +57,6 @@ export class AddMeterFormComponent {
   }
 
   private _incStep(): void {
-    if (this._step == 2) {
-      this._validateMeter();
-      return;
-    }
-
     this._step++;
   }
 
@@ -77,11 +70,6 @@ export class AddMeterFormComponent {
   }
 
   private _decStep(): void {
-    if (this._step === 2){
-      this._storeServices.resetProvider();
-      this._addMeter.reset();
-    }
-
     this._step--;
   }
 
@@ -119,7 +107,6 @@ export class AddMeterFormComponent {
   }
 
   private _getCountries() {
-    this._addMeter.value["country"] = "";
     this._storeServices.getProviderCountries(this._addMeter.value["utilityType"]);
   }
 
