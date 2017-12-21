@@ -28,7 +28,6 @@ export function meterReducer(state = { data: [], provider: {}, loading: false}, 
       return Object.assign({}, state, { providerType: action.payload });
     case ActionTypes.UPDATE_PROVIDER_COUNTRIES:
       const { provider } = state;
-
       const newProviderCountries = Object.assign({}, provider, { countries: action.payload });
 
       return Object.assign({}, state, { provider: newProviderCountries });
