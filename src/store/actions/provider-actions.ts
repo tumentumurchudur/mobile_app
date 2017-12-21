@@ -11,6 +11,7 @@ export const TRIGGER_GET_PROVIDER_PLANS: string = "TRIGGER GET PROVIDER PLANS";
 
 export const UPDATE_PROVIDER_COUNTRIES: string = "UPDATE PROVIDER COUNTRIES";
 export const UPDATE_PROVIDERS: string = "UPDATE PROVIDERS";
+export const RESET_PROVIDER: string = "RESET PROVIDER";
 export const UPDATE_PROVIDER_PLANS: string = "UPDATE PROVIDER PLANS";
 export const UPDATE_PROVIDER_REGIONS: string = "UPDATE PROVIDER REGIONS";
 
@@ -22,9 +23,9 @@ export class TriggerAddProviders implements Action {
 
 export class TriggerGetProviderCountries implements Action {
   public readonly type = TRIGGER_GET_PROVIDER_COUNTRIES;
-  public payload: IProvider = null;
+  public payload: string = null;
 
-  constructor(private _payload: IProvider) {
+  constructor(private _payload: string) {
     this.payload = _payload;
   }
 }
@@ -56,20 +57,38 @@ export class TriggerGetProviderPlans implements Action {
   }
 }
 
+export class UpdateProviderCountries implements Action {
+  public readonly type = UPDATE_PROVIDER_COUNTRIES;
+  public payload: string[] = [];
+
+  constructor(private _payload: string[]) {
+    this.payload = _payload;
+  }
+}
+
+export class UpdateProviderRegion implements Action {
+  public readonly type = UPDATE_PROVIDER_REGIONS;
+  public payload: string[] = [];
+
+  constructor(private _payload: string[]) {
+    this.payload = _payload;
+  }
+}
+
+export class AddProviders implements Action {
+  public readonly type = ADD_PROVIDERS;
+  public payload: string[] = [];
+
+  constructor(private _payload: string[]) {
+    this.payload = _payload;
+  }
+}
+
 export class UpdateProviderPlans implements Action {
   public readonly type = UPDATE_PROVIDER_PLANS;
   public payload: any = null;
 
   constructor(private _payload: any) {
-    this.payload = _payload;
-  }
-}
-
-export class UpdateProviderCountries implements Action {
-  public readonly type = UPDATE_PROVIDER_COUNTRIES;
-  public payload: IProvider = null;
-
-  constructor(private _payload: IProvider) {
     this.payload = _payload;
   }
 }
@@ -83,21 +102,9 @@ export class UpdateProviders implements Action {
   }
 }
 
-export class UpdateProviderRegion implements Action {
-  public readonly type = UPDATE_PROVIDER_REGIONS;
+export class ResetProvider implements Action {
+  public readonly type = RESET_PROVIDER;
   public payload: any = null;
 
-  constructor(private _payload: any) {
-    this.payload = _payload;
-  }
-}
-
-export class AddProviders implements Action {
-  public readonly type = ADD_PROVIDERS;
-  public payload: { provider: IProvider } = null;
-
-  constructor(private _payload: any) {
-    this.payload = _payload;
-  }
 }
 

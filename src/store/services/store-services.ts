@@ -27,6 +27,7 @@ import {
 	LoadingComparisonReads
 } from "../actions";
 import {IProvider} from "../../interfaces/provider";
+import {ResetProvider} from "../actions/provider-actions";
 
 @Injectable()
 export class StoreServices {
@@ -122,35 +123,39 @@ export class StoreServices {
   }
 
   public selectProviderCountries() {
-    return this._store.select(state => state.meters.provider._country);
+    return this._store.select(state => state.meters.provider.countries);
   }
 
   public selectProviderRegions() {
-    return this._store.select(state => state.meters.provider._region);
+    return this._store.select(state => state.meters.provider.regions);
   }
 
   public selectProviderProviders() {
-    return this._store.select(state => state.meters.provider._provider);
+    return this._store.select(state => state.meters.provider.providers);
   }
 
   public selectProviderPlans() {
-    return this._store.select(state => state.meters.provider._plan);
+    return this._store.select(state => state.meters.provider.plans);
   }
 
-  public getProviderCountries(provider: IProvider) {
-    this._store.dispatch(new TriggerGetProviderCountries(provider));
+  public getProviderCountries(utilityType: string) {
+    this._store.dispatch(new TriggerGetProviderCountries(utilityType));
   }
 
   public getProviderRegions(path: string) {
-    this._store.dispatch(new TriggerGetProviderRegions({path}));
+    this._store.dispatch(new TriggerGetProviderRegions(path));
   }
 
   public getProviderProviders(path: string) {
-    this._store.dispatch(new TriggerGetProviders({path}));
+    this._store.dispatch(new TriggerGetProviders(path));
   }
 
   public getProviderPlans(path: string) {
-    this._store.dispatch(new TriggerGetProviderPlans({path}));
+    this._store.dispatch(new TriggerGetProviderPlans(path));
+  }
+
+  public resetProvider() {
+	  this._store.dispatch(new ResetProvider());
   }
 
 	public loadNeighborhoodReads(meter: IMeter, dateRange: IDateRange) {

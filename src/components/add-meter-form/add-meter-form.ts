@@ -22,7 +22,7 @@ export class AddMeterFormComponent {
   private _validateMeterStatus: string;
   private _billingStartDate: string = moment().format("YYYY-MM-DD");
   private _providerTypes$: Observable<any>;
-  private _providerCountires$: Observable<any>;
+  private _providerCountries$: Observable<any>;
   private _providerRegions$: Observable<any>;
   private _providerProviders$: Observable<any>;
   private _providerPlans$: Observable<any>;
@@ -48,7 +48,7 @@ export class AddMeterFormComponent {
     });
 
     this._providerTypes$ = this._storeServices.selectProviderTypes();
-    this._providerCountires$ = this._storeServices.selectProviderCountries();
+    this._providerCountries$ = this._storeServices.selectProviderCountries();
     this._providerRegions$ = this._storeServices.selectProviderRegions();
     this._providerProviders$ = this._storeServices.selectProviderProviders();
     this._providerPlans$ = this._storeServices.selectProviderPlans();
@@ -72,6 +72,11 @@ export class AddMeterFormComponent {
   }
 
   private _decStep(): void {
+    if (this._step === 2){
+      this._storeServices.resetProvider();
+      this._addMeter.reset();
+    }
+
     this._step--;
   }
 
@@ -109,8 +114,8 @@ export class AddMeterFormComponent {
   }
 
   private _getCountries() {
-    this._provider._type = this._addMeter.value["utilityType"];
-    this._storeServices.getProviderCountries(this._provider);
+    this._addMeter.value["country"] = "";
+    this._storeServices.getProviderCountries(this._addMeter.value["utilityType"]);
   }
 
   private _getRegions() {

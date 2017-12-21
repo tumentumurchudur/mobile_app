@@ -36,7 +36,7 @@
   <!--Provider information-->
   <section *ngIf="_step === 3" class="text-container">
     <h4>Select your provider information</h4>
-    <div *ngIf="_providerCountires$ | async as countries">
+    <div *ngIf="_providerCountries$ | async as countries">
       <ion-item>
         <ion-label>Country</ion-label>
           <ion-select formControlName="country" (ionChange)="_getRegions()">

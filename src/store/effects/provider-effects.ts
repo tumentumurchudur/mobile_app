@@ -11,12 +11,12 @@ import {
   TRIGGER_GET_PROVIDER_PLANS,
 
   AddProviders,
+  ResetProvider,
   UpdateProviderCountries,
   UpdateProviders,
   UpdateProviderPlans,
   UpdateProviderRegion,
 } from "../actions";
-import {IProvider} from "../../interfaces/provider";
 
 @Injectable()
 export class ProviderEffects {
@@ -38,23 +38,23 @@ export class ProviderEffects {
   public getProviderCountries$ = this._actions$
     .ofType(TRIGGER_GET_PROVIDER_COUNTRIES)
     .map((action: any) => action.payload)
-    .switchMap((provider: IProvider) => {
-          return this._db.getProviderRequestInfo(provider._type);
-          //TODO: This needs to pass in a IProvider and update it's state somehow before
+    .switchMap((utilityType: string) => {
+          return this._db.getProviderRequestInfo(utilityType);
     })
-    .map((countries:any) => {
-
-      return new UpdateProviderCountries(countries);
+    .flatMap((countries: string[]) => {
+      return [
+        new UpdateProviderCountries(countries)
+      ]
     });
 
   @Effect()
   public getProviderRegions$ = this._actions$
     .ofType(TRIGGER_GET_PROVIDER_REGIONS)
     .map((action: any) => action.payload)
-    .switchMap((path) => {
+    .switchMap((path: string) => {
       return this._db.getProviderRequestInfo(path);
     })
-    .map((regions: any) => {
+    .map((regions: string[]) => {
       return new UpdateProviderRegion(regions);
     });
 
@@ -62,7 +62,7 @@ export class ProviderEffects {
   public getProviders$ = this._actions$
     .ofType(TRIGGER_GET_PROVIDERS)
     .map((action: any) => action.payload)
-    .switchMap((path) => {
+    .switchMap((path: string) => {
       return this._db.getProviderRequestInfo(path);
     })
     .map((regions: any) => {
@@ -73,7 +73,7 @@ export class ProviderEffects {
   public getProviderPlans$ = this._actions$
     .ofType(TRIGGER_GET_PROVIDER_PLANS)
     .map((action: any) => action.payload)
-    .switchMap((path) => {
+    .switchMap((path: string) => {
       return this._db.getProviderRequestInfo(path);
     })
     .map((plans: any) => {
