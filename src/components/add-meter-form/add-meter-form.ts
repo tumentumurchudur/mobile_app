@@ -59,6 +59,11 @@ export class AddMeterFormComponent {
   }
 
   private _incStep(): void {
+    if (this._step == 2) {
+      this._validateMeter();
+      return;
+    }
+
     this._step++;
   }
 

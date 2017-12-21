@@ -69,7 +69,7 @@
     <div *ngIf="_providerPlans$ | async as plans">
       <ion-item>
         <ion-label>Plan</ion-label>
-        <ion-select formControlName="plan" (ionChange)="proceed()">
+        <ion-select formControlName="plan">
           <ion-option *ngFor="let plan of plans" [value]="plan">
             {{ plan }}
           </ion-option>
