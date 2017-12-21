@@ -14,7 +14,7 @@ import { IMeter, IUser } from "../../interfaces";
 import { CostHelper } from "../../helpers";
 import {
   LOAD_METERS,
-  // TRIGGER_ADD_METERS,
+  TRIGGER_ADD_METER,
   TRIGGER_LOAD_METERS,
   TRIGGER_UPDATE_METER_SETTINGS,
 
@@ -25,6 +25,7 @@ import {
   LoadFromDb,
   UpdateUser
 } from "../actions";
+import {UpdateMeter} from "../actions/meter-actions";
 
 @Injectable()
 export class MeterEffects {
@@ -147,10 +148,23 @@ export class MeterEffects {
    * Handles ADD_METER action and
    * adds meter to the store.
    */
-  //
-  // @Effect()
-  // public addMeter$ = this._actions$
-  //   .ofType(TRIGGER_ADD_METER)
+
+  @Effect()
+  public addMeter$ = this._actions$
+    .ofType(TRIGGER_ADD_METER)
+    .map((action: any) => action.payload)
+    .switchMap((data: any) => {
+      const { meter = null, user = null } = data;
+      console.log('data', data);
+
+      return this._db.addMeter(data.meter, data.user);
+    }).
+      flatMap((meter: IMeter) => {
+      return [
+        new AddMeter(meter)
+        // new UpdateMeter(meter)
+      ]
+    });
 
 
   constructor(

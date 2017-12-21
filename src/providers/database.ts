@@ -306,6 +306,32 @@ export class DatabaseProvider {
         });
     });
   }
+  public addMeter(meter: IMeter, user: IUser): Observable<IMeter> {
+
+    return Observable.create(observer => {
+      const updates = {};
+      const path = `${user.orgPath}/Building1/_meters/_${meter._utilityType}/${meter._name}`;
+      const settings = {
+        _billing_start: meter._billing_start,
+        _goal: meter._goal,
+        _meter_id: meter._meter_id,
+        _plan: meter._plan,
+        _provider: meter._provider,
+        _type: meter._utilityType
+      };
+
+      console.log('path', path);
+      console.log('settings', settings);
+
+      updates[path] = settings;
+
+      this._orgsRef.child(path).set(settings).then(() => {
+        observer.next(Object.assign({}, meter, settings));
+      }, error => {
+        observer.error(error);
+      });
+    });
+  }
 
   public updateMeterSettings(meter: IMeter, user: IUser): Observable<IMeter> {
     return Observable.create(observer => {

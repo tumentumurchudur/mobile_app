@@ -4,8 +4,10 @@ import { AlertController, NavController, LoadingController } from "ionic-angular
 import { Keyboard } from "@ionic-native/keyboard";
 import * as moment from "moment";
 import { StoreServices } from "../../store/services";
-import { IMeter } from "../../interfaces/meter";
+import { IMeter, IUser } from "../../interfaces/index";
 import {Observable} from "rxjs/Observable";
+import { Subscription } from 'rxjs/Subscription';
+
 
 
 @Component({
@@ -15,15 +17,17 @@ import {Observable} from "rxjs/Observable";
 })
 export class AddMeterFormComponent {
   private _addMeter: FormGroup;
-  private _step: number = 1;
+  private _user: IUser;
+  private _subscriptions: Subscription[] = [];  private _step: number = 1;
   private _loading: any;
   private _validateMeterStatus: string;
-  private _billingStartDate: string = moment().format("YYYY-MM-DD");
+  private _billingStartDate = moment().format("YYYY-MM-DD");
   private _providerTypes$: Observable<any>;
   private _providerCountries$: Observable<any>;
   private _providerRegions$: Observable<any>;
   private _providerProviders$: Observable<any>;
   private _providerPlans$: Observable<any>;
+  private _user$: Observable<any>;
 
   constructor(
     private _storeServices: StoreServices,
@@ -54,7 +58,20 @@ export class AddMeterFormComponent {
 
   ngOnInit() {
     this._storeServices.getProviders();
+    const subscription = this._storeServices.selectUser()
+      .subscribe((user: IUser) => {
+        this._user = user;
+      });
+
+    this._subscriptions.push(subscription);
   }
+
+  ngOnDestroy() {
+    for (const subscription of this._subscriptions) {
+      subscription.unsubscribe();
+    }
+  }
+
 
   private _incStep(): void {
     this._step++;
@@ -135,17 +152,21 @@ export class AddMeterFormComponent {
   }
 
   private _saveMeter() {
-      const utilityType = this._addMeter.value["utilityType"];
-      const meterId = this._addMeter.value["meterNumber"];
-      const country = this._addMeter.value["country"];
-      const region = this._addMeter.value["region"];
-      const meterProvider = this._addMeter.value["provider"].name;
-      const provider = `${utilityType}/${country}/${region}/${meterProvider}`;
-      const plan = this._addMeter.value["plan"].name;
-      const meterGoal = this._addMeter.value["goal"];
-      const goal = meterGoal ? parseFloat(meterGoal) : null;
-      const billingStart = this._addMeter.value["billingStart"];
-      const name = this._addMeter.value["name"];
+    const user = this._user;
+    console.log('user', user);
+
+    const utilityType = this._addMeter.value["utilityType"];
+    const meterId = this._addMeter.value["meterNumber"];
+    const country = this._addMeter.value["country"];
+    const region = this._addMeter.value["region"];
+    const meterProvider = this._addMeter.value["provider"];
+    const provider = `${utilityType}/${country}/${region}/${meterProvider}`;
+    const plan = this._addMeter.value["plan"];
+    const meterGoal = this._addMeter.value["goal"];
+    const goal = meterGoal ? parseFloat(meterGoal) : null;
+    const billingStart = parseInt(moment(this._addMeter.value["billingStart"]).format("DD"));
+    const name = this._addMeter.value["name"];
+
 
     const meter: IMeter = {
       _utilityType: utilityType,
@@ -157,7 +178,9 @@ export class AddMeterFormComponent {
       _name: name
     };
 
-    this._storeServices.addMeter(meter);
+    console.log('meter', meter);
+
+    this._storeServices.addMeter(meter, user);
   }
 
 }

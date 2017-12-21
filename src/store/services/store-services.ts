@@ -64,13 +64,17 @@ export class StoreServices {
 		return this._store.select(state => state.meters.loading);
 	}
 
-  public addMeter(meter: IMeter) {
-    this._store.dispatch(new TriggerAddMeter(meter));
+  public addMeter(meter: IMeter, user: IUser) {
+    this._store.dispatch(new TriggerAddMeter({ meter, user }));
   }
 
 	public selectMeters() : Observable<IMeter[]> {
 		return this._store.select(state => state.meters.data)
 	}
+
+  public selectUser() {
+    return this._store.select(state => state.user)
+  }
 
 	public addUser(user: IUser) {
 		this._store.dispatch(new AddUser(user));
