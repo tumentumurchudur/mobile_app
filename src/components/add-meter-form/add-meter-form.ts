@@ -6,7 +6,6 @@ import * as moment from "moment";
 import { StoreServices } from "../../store/services";
 import { IMeter } from "../../interfaces/meter";
 import {Observable} from "rxjs/Observable";
-import { IProvider } from "../../interfaces/provider";
 
 
 @Component({
@@ -16,7 +15,6 @@ import { IProvider } from "../../interfaces/provider";
 })
 export class AddMeterFormComponent {
   private _addMeter: FormGroup;
-  private _provider: IProvider;
   private _step: number = 1;
   private _loading: any;
   private _validateMeterStatus: string;
@@ -56,23 +54,10 @@ export class AddMeterFormComponent {
 
   ngOnInit() {
     this._storeServices.getProviders();
+    this._addMeter.reset();
   }
 
   private _incStep(): void {
-    if (this._step == 2) {
-      this._validateMeter();
-      return;
-    }
-
-    this._step++;
-  }
-
-  nextStep(): void {
-    if (this._step == 2) {
-      this._validateMeter();
-      return;
-    }
-
     this._step++;
   }
 
@@ -119,7 +104,6 @@ export class AddMeterFormComponent {
   }
 
   private _getCountries() {
-    this._addMeter.value["country"] = "";
     this._storeServices.getProviderCountries(this._addMeter.value["utilityType"]);
   }
 

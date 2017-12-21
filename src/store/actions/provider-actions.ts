@@ -1,5 +1,4 @@
 import { Action } from "@ngrx/store";
-import { IProvider } from "../../interfaces/provider";
 
 export const ADD_PROVIDERS: string = "ADD_PROVIDERS";
 
