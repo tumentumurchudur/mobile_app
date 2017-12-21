@@ -1,6 +1,6 @@
 <div class="show-all"><span (click)="_onShowAll()">show all</span></div>
 <line-chart
-  [data]="_selectedData || _data"
+  [data]="_selectedData || _allData"
   [lineColors]="_selectedColor || _lineColors"
   [loading]="loading"
   [animate]="true"
@@ -18,11 +18,11 @@
       </div>
       <div class="cost-label" (click)="_filterChartData(i)">
         <span [ngStyle]="{ 'color': _lineColors[i] }">
-          {{ _neighborhoodCosts[i] | currency:'USD': true: '1.2-2'}}
+          {{ _costs[i] | currency:'USD': true: '1.2-2'}}
         </span>
       </div>
       <div class="usage-labe">
-        {{ _mockUsageData[i] }}
+        {{ _consumptions[i] / 1000 | number: '.1-2' }} {{ _getUnit() }}
       </div>
     </div>
   </div>

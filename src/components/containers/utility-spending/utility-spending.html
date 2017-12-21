@@ -76,12 +76,12 @@
               ></line-chart>
 
               <div *ngIf="data.cost">
-                  <div class="timespan-cost">
-                    {{ data.cost.totalCost | currency:'USD': true: '1.2-2' }}
-                  </div>
-                  <div>
-                    {{ data.cost.totalDelta / 1000 | number: '.1-2' }} {{ _getMeterConfig(meter, 'unit') }}
-                  </div>
+                <div class="timespan-cost">
+                  {{ data.cost.totalCost | currency:'USD': true: '1.2-2' }}
+                </div>
+                <div>
+                  {{ data.cost.totalDelta / 1000 | number: '.1-2' }} {{ _getMeterConfig(meter, 'unit') }}
+                </div>
               </div>
             </div>
           </div>
@@ -106,7 +106,7 @@
             [comparisonReads]="_comparison$ | async"
             [loading]="_comparisonLoading$ | async"
             [dateRange]="_selectedDateRanges[i]"
-            [guid]="meter._guid"
+            [meter]="meter"
           >
           </neighborhood-comparison>
         </div>
