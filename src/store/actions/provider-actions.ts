@@ -65,7 +65,7 @@ export class UpdateProviderCountries implements Action {
   }
 }
 
-export class UpdateProviderRegion implements Action {
+export class UpdateProviderRegions implements Action {
   public readonly type = UPDATE_PROVIDER_REGIONS;
   public payload: string[] = [];
 
