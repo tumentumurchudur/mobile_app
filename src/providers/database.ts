@@ -15,6 +15,7 @@ import * as _ from 'lodash';
 export class DatabaseProvider {
   private _db: firebase.database.Database;
   private _usersRef: firebase.database.Reference;
+  private _metersRef: firebase.database.Reference;
   private _orgsRef: firebase.database.Reference;
   private _readsRef: firebase.database.Reference;
   private _providersRef: firebase.database.Reference;
@@ -30,6 +31,7 @@ export class DatabaseProvider {
     this._db = firebase.database();
 
     this._usersRef = this._db.ref(databasePaths.users);
+    this._metersRef = this._db.ref(databasePaths.meters);
     this._orgsRef = this._db.ref(databasePaths.orgs);
     this._readsRef = this._db.ref(databasePaths.reads);
     this._providersRef = this._db.ref(databasePaths.providers);
@@ -351,6 +353,18 @@ export class DatabaseProvider {
 
       this._orgsRef.update(updates).then(() => {
         observer.next(Object.assign({}, meter, settings));
+      }, error => {
+        observer.error(error);
+      });
+    });
+  }
+
+  public findMeterById(meterId): Observable<any> {
+    return Observable.create(observer => {
+      this._metersRef.orderByChild('meter_id').equalTo(meterId).once('value').then((snapshot) => {
+        const meterGuid = snapshot.val();
+
+        observer.next(meterGuid);
       }, error => {
         observer.error(error);
       });

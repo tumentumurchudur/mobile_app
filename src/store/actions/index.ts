@@ -3,6 +3,7 @@ export { ADD_USER, UPDATE_USER, AddUser, UpdateUser } from "./user-actions";
 export {
   AddMeters,
   AddMeter,
+  AddMeterGuid,
   UpdateMeter,
   LoadMeters,
 
@@ -10,14 +11,19 @@ export {
   TriggerLoadMeters,
   TriggerUpdateMeterReads,
   TriggerUpdateMeterSettings,
+  TriggerValidateMeter,
+  ValidateMeterFail,
 
   TRIGGER_ADD_METER,
   TRIGGER_LOAD_METERS,
   TRIGGER_UPDATE_METER_READS,
   TRIGGER_UPDATE_METER_SETTINGS,
+  TRIGGER_VALIDATE_METER,
+  VALIDATE_METER_FAIL,
 
   ADD_METERS,
   ADD_METER,
+  ADD_METER_GUID,
   UPDATE_METER,
   LOAD_METERS
 } from "./meter-actions";

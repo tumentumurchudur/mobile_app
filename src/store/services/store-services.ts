@@ -21,6 +21,7 @@ import {
 	TriggerLoadMeters,
 	TriggerUpdateMeterReads,
 	TriggerUpdateMeterSettings,
+  TriggerValidateMeter,
 	TriggerComparisonReads,
 	AddReads,
 	LoadReadsByDateRange,
@@ -160,6 +161,10 @@ export class StoreServices {
 
   public resetProvider() {
 	  this._store.dispatch(new ResetProvider());
+  }
+
+  public validateMeter(meterNumber: string) {
+	  this._store.dispatch(new TriggerValidateMeter(meterNumber));
   }
 
 	public loadNeighborhoodReads(meter: IMeter, dateRange: IDateRange) {

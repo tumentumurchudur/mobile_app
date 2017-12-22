@@ -71,6 +71,11 @@ export class AddMeterFormComponent {
   }
 
   private _incStep(): void {
+    if (this._step === 2){
+      this._validateMeter();
+      return;
+    }
+
     this._step++;
   }
 
@@ -108,7 +113,7 @@ export class AddMeterFormComponent {
         timeoutAlert.present();
       }
     });
-    //validate meter function would go here
+   this._storeServices.validateMeter(this._addMeter.value["meterNumber"]);
   }
 
   private _getCountries() {

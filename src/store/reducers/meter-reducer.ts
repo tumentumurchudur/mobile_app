@@ -24,6 +24,10 @@ export function meterReducer(state = { data: [], provider: {}, loading: false}, 
 	    return Object.assign({}, state, { data: action.payload, loading: false });
 		case ActionTypes.ADD_METER:
 		  return Object.assign({}, state, { data: state.data.concat(action.payload), loading: false });
+    case ActionTypes.ADD_METER_GUID:
+      const newValidMeter = Object.assign({}, state.provider, { guid: action.payload });
+
+      return Object.assign({}, state, { provider: newValidMeter});
     case ActionTypes.ADD_PROVIDERS:
       return Object.assign({}, state, { providerType: action.payload });
     case ActionTypes.UPDATE_PROVIDER_COUNTRIES:
