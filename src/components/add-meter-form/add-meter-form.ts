@@ -54,7 +54,6 @@ export class AddMeterFormComponent {
 
   ngOnInit() {
     this._storeServices.getProviders();
-    this._addMeter.reset();
   }
 
   private _incStep(): void {
