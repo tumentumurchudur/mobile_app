@@ -9,6 +9,7 @@ import {
 	LoadMeters,
   AddProviders,
 	LoadFromDb,
+  ResetProvider,
 	TriggerAddProviders,
   TriggerGetProviderCountries,
   TriggerGetProviderRegions,
@@ -27,8 +28,6 @@ import {
 	LoadReadsByMeters,
 	LoadingComparisonReads
 } from "../actions";
-import {IProvider} from "../../interfaces/provider";
-import {ResetProvider} from "../actions/provider-actions";
 
 @Injectable()
 export class StoreServices {

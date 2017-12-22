@@ -26,7 +26,7 @@ export {
   AddProviders,
   TriggerAddProviders,
   ResetProvider,
-  UpdateProviderRegion,
+  UpdateProviderRegions,
   UpdateProviderCountries,
   UpdateProviders,
   UpdateProviderPlans,

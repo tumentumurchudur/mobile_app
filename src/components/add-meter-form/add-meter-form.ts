@@ -8,8 +8,6 @@ import { IMeter, IUser } from "../../interfaces/index";
 import {Observable} from "rxjs/Observable";
 import { Subscription } from 'rxjs/Subscription';
 
-
-
 @Component({
   selector: "add-meter-form",
   templateUrl: "add-meter-form.html",
@@ -19,6 +17,7 @@ export class AddMeterFormComponent {
   private _addMeter: FormGroup;
   private _user: IUser;
   private _subscriptions: Subscription[] = [];  private _step: number = 1;
+  private _step: number = 1;
   private _loading: any;
   private _validateMeterStatus: string;
   private _billingStartDate = moment().format("YYYY-MM-DD");
@@ -27,7 +26,6 @@ export class AddMeterFormComponent {
   private _providerRegions$: Observable<any>;
   private _providerProviders$: Observable<any>;
   private _providerPlans$: Observable<any>;
-  private _user$: Observable<any>;
 
   constructor(
     private _storeServices: StoreServices,
@@ -72,7 +70,6 @@ export class AddMeterFormComponent {
     }
   }
 
-
   private _incStep(): void {
     this._step++;
   }
@@ -83,6 +80,7 @@ export class AddMeterFormComponent {
       return;
     }
 
+  private _incStep(): void {
     this._step++;
   }
 

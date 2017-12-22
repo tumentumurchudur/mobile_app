@@ -1,5 +1,4 @@
 import { Action } from "@ngrx/store";
-import { IProvider } from "../../interfaces/provider";
 
 export const ADD_PROVIDERS: string = "ADD_PROVIDERS";
 
@@ -66,7 +65,7 @@ export class UpdateProviderCountries implements Action {
   }
 }
 
-export class UpdateProviderRegion implements Action {
+export class UpdateProviderRegions implements Action {
   public readonly type = UPDATE_PROVIDER_REGIONS;
   public payload: string[] = [];
 

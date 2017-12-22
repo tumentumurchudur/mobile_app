@@ -15,7 +15,7 @@ import {
   UpdateProviderCountries,
   UpdateProviders,
   UpdateProviderPlans,
-  UpdateProviderRegion,
+  UpdateProviderRegions,
 } from "../actions";
 
 @Injectable()
@@ -53,7 +53,7 @@ export class ProviderEffects {
       return this._db.getProviderRequestInfo(path);
     })
     .map((regions: string[]) => {
-      return new UpdateProviderRegion(regions);
+      return new UpdateProviderRegions(regions);
     });
 
   @Effect()
