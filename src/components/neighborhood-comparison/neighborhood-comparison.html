@@ -1,4 +1,6 @@
-<div *ngIf="!!_selectedData" class="show-all"><span (click)="_onShowAll()">show all</span></div>
+<div *ngIf="_selectedData" class="show-all">
+  <span (click)="_onShowAll()">show all</span>
+</div>
 <line-chart
   [data]="_selectedData || _allData"
   [lineColors]="_selectedColor || _lineColors"

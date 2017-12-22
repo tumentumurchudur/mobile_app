@@ -16,7 +16,7 @@ import { Subscription } from 'rxjs/Subscription';
 export class AddMeterFormComponent {
   private _addMeter: FormGroup;
   private _user: IUser;
-  private _subscriptions: Subscription[] = [];  private _step: number = 1;
+  private _subscriptions: Subscription[] = [];
   private _step: number = 1;
   private _loading: any;
   private _validateMeterStatus: string;
@@ -69,16 +69,6 @@ export class AddMeterFormComponent {
       subscription.unsubscribe();
     }
   }
-
-  private _incStep(): void {
-    this._step++;
-  }
-
-  nextStep(): void {
-    if (this._step == 2) {
-      this._validateMeter();
-      return;
-    }
 
   private _incStep(): void {
     this._step++;
