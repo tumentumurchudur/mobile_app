@@ -11,10 +11,11 @@ import {
   TRIGGER_GET_PROVIDER_PLANS,
 
   AddProviders,
+  ResetProvider,
   UpdateProviderCountries,
   UpdateProviders,
   UpdateProviderPlans,
-  UpdateProviderRegion,
+  UpdateProviderRegions,
 } from "../actions";
 
 @Injectable()
@@ -37,8 +38,8 @@ export class ProviderEffects {
   public getProviderCountries$ = this._actions$
     .ofType(TRIGGER_GET_PROVIDER_COUNTRIES)
     .map((action: any) => action.payload)
-    .switchMap((path) => {
-      return this._db.getProviderRequestInfo(path);
+    .switchMap((utilityType: string) => {
+          return this._db.getProviderRequestInfo(utilityType);
     })
     .map((countries: any) => {
       return new UpdateProviderCountries(countries);
@@ -48,18 +49,18 @@ export class ProviderEffects {
   public getProviderRegions$ = this._actions$
     .ofType(TRIGGER_GET_PROVIDER_REGIONS)
     .map((action: any) => action.payload)
-    .switchMap((path) => {
+    .switchMap((path: string) => {
       return this._db.getProviderRequestInfo(path);
     })
-    .map((regions: any) => {
-      return new UpdateProviderRegion(regions);
+    .map((regions: string[]) => {
+      return new UpdateProviderRegions(regions);
     });
 
   @Effect()
   public getProviders$ = this._actions$
     .ofType(TRIGGER_GET_PROVIDERS)
     .map((action: any) => action.payload)
-    .switchMap((path) => {
+    .switchMap((path: string) => {
       return this._db.getProviderRequestInfo(path);
     })
     .map((regions: any) => {
@@ -70,7 +71,7 @@ export class ProviderEffects {
   public getProviderPlans$ = this._actions$
     .ofType(TRIGGER_GET_PROVIDER_PLANS)
     .map((action: any) => action.payload)
-    .switchMap((path) => {
+    .switchMap((path: string) => {
       return this._db.getProviderRequestInfo(path);
     })
     .map((plans: any) => {
