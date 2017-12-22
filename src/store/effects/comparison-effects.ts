@@ -73,12 +73,15 @@ export class ComparisonEffects {
     })
     .map((data: any[]) => {
       const [subscription, group, meter, dateRange, usage, avg, eff] = data;
+      console.log(dateRange, usage, avg, eff);
 
       if (subscription) {
         subscription.unsubscribe();
       }
+      console.log(usage.length, avg.length, eff.length);
 
       if (!usage.length && !avg.length && !eff.length) {
+        console.log("empty");
         return new AddComparison(null);
       }
 

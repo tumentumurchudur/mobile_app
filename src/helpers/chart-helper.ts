@@ -222,6 +222,7 @@ export class ChartHelper {
   }
 
   private static _fillEmptyHoles(data: ILineItem[], indices: number[]) {
+    // Iterate over every index of an empty data in the data array.
     indices.forEach(emptyIndex => {
       // Moves back to find the first non-zero value in data array.
       let backIndex = emptyIndex > 0 ? emptyIndex - 1 : 0;
@@ -273,9 +274,9 @@ export class ChartHelper {
 
       if (prevVal && nextVal) {
         data[emptyIndex].line1 = (prevVal + nextVal) / 2;
-      } else if (prevVal && !nextVal) {
+      } else if (prevVal && nextVal !== 0) {
         data[emptyIndex].line1 = prevVal;
-      } else if (!prevVal && nextVal) {
+      } else if (prevVal !== 0 && nextVal) {
         data[emptyIndex].line1 = nextVal;
       }
     })

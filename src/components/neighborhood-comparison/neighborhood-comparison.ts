@@ -15,7 +15,7 @@ export class NeighborhoodComparisonComponent implements OnChanges {
   @Input() dateRange: IDateRange;
   @Input() meter: IMeter;
 
-  private _allData: any[];
+  private _allData: any[] = [];
   private _series: string[] = [];
   private _lineColors: string[] = [];
   private _legends: string[] = [];
@@ -65,6 +65,8 @@ export class NeighborhoodComparisonComponent implements OnChanges {
           this._legends = availOptions.map(option => option.legend);
         }
       }
+    } else {
+      this._allData = [];
     }
   }
 

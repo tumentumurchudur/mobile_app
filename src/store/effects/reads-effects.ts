@@ -134,7 +134,6 @@ export class ReadsEffects {
       const dateRange: IDateRange = { timeSpan, startDate, endDate };
       const normalizedDeltas = ChartHelper.normalizeData(rawDeltas);
       const deltas = normalizedDeltas.length ? ChartHelper.groupDeltasByTimeSpan(dateRange, normalizedDeltas) : [];
-
       const cost = rawDeltas.length ? CostHelper.calculateCostFromDeltas(meter, rawDeltas) : 0;
 
       const payload = {
