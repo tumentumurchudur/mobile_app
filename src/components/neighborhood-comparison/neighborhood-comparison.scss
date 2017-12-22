@@ -1,7 +1,10 @@
 neighborhood-comparison {
   .show-all {
+    position: absolute;
     text-align: right;
+    right: 10px;
     margin-right: 20px;
+    z-index: 10;
   }
 
   .legends {

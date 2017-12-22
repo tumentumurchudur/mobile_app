@@ -21,9 +21,9 @@ export class NeighborhoodComparisonComponent implements OnChanges {
   private _legends: string[] = [];
 
   private _options = [
-    { line: "line1", color: "orange", legend: "You" },
-    { line: "line2", color: "red", legend: "Average" },
-    { line: "line3", color: "green", legend: "Efficient" }
+    { line: "line1", color: "#2075CB", legend: "You" },
+    { line: "line2", color: "#EF8E0F", legend: "Average" },
+    { line: "line3", color: "#00B200", legend: "Efficient" }
   ];
 
   private _selectedData: any[];
