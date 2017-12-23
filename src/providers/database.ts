@@ -319,7 +319,8 @@ export class DatabaseProvider {
         _meter_id: meter._meter_id,
         _plan: meter._plan,
         _provider: meter._provider,
-        _type: meter._utilityType
+        _type: meter._utilityType,
+        _guid: meter._guid,
       };
 
       console.log('path', path);
