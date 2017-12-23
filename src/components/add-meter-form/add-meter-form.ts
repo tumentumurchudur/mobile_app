@@ -131,8 +131,8 @@ export class AddMeterFormComponent {
         });
         alert.present();
       } else {
-        this._step++;
         this._meterGuid = guidState.guid;
+        this._step++;
       }
     });
    this._storeServices.validateMeter(this._addMeter.value["meterNumber"]);
