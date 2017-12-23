@@ -20,7 +20,6 @@ export class AddMeterFormComponent {
   private _subscriptions: Subscription[] = [];
   private _step: number = 1;
   private _loading: any;
-  private _validateMeterResponse: boolean = false;
   private _billingStartDate = moment().format("YYYY-MM-DD");
   private _providerTypes$: Observable<any>;
   private _providerCountries$: Observable<any>;
@@ -107,7 +106,6 @@ export class AddMeterFormComponent {
               text: "Cancel",
               role: "cancel",
               handler: () => {
-                this._validateMeterResponse = false;
                 timeoutAlert.dismiss();
               }
             },
@@ -137,11 +135,6 @@ export class AddMeterFormComponent {
       }
     });
    this._storeServices.validateMeter(this._addMeter.value["meterNumber"]);
-  }
-
-  private _meterIsInvalid() {
-    this._loading.dismiss();
-
   }
 
   private _getCountries() {
