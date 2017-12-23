@@ -24,7 +24,6 @@ import {
   AddMeterGuid,
   LoadMeters,
   TriggerUpdateMeterReads,
-  ValidateMeterFail,
   LoadFromDb,
   UpdateUser,
   UpdateMeter
@@ -180,14 +179,8 @@ export class MeterEffects {
       return this._db.findMeterById(meterId);
     })
     .map((meterGuid) => {
-      console.log('meterGUID', meterGuid);
-      if (!meterGuid){
-        return new ValidateMeterFail();
-      }
       return new AddMeterGuid(meterGuid);
     });
-
-
 
   constructor(
     private readonly _actions$: Actions,

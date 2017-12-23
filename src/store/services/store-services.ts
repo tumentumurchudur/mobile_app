@@ -143,6 +143,10 @@ export class StoreServices {
     return this._store.select(state => state.meters.provider.plans);
   }
 
+  public selectAddMeterGuid() {
+    return this._store.select(state => state.meters.provider.guid);
+  }
+
   public getProviderCountries(utilityType: string) {
     this._store.dispatch(new TriggerGetProviderCountries(utilityType));
   }

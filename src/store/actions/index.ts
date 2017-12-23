@@ -12,14 +12,12 @@ export {
   TriggerUpdateMeterReads,
   TriggerUpdateMeterSettings,
   TriggerValidateMeter,
-  ValidateMeterFail,
 
   TRIGGER_ADD_METER,
   TRIGGER_LOAD_METERS,
   TRIGGER_UPDATE_METER_READS,
   TRIGGER_UPDATE_METER_SETTINGS,
   TRIGGER_VALIDATE_METER,
-  VALIDATE_METER_FAIL,
 
   ADD_METERS,
   ADD_METER,

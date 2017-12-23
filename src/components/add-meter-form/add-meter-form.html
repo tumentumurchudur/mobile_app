@@ -15,6 +15,8 @@
   </section>
   <!--Meter number and billing start date-->
   <section *ngIf="_step === 2" class="text-container">
+    <div *ngIf="_addMeterGuid$ | async as guid">{{guid}}</div>
+
     <h4>What is this utility's meter number and billing start date?</h4>
     <ion-item (keyup.enter)="_keyboardSubmit()" class="meter-number">
       <ion-label stacked>Meter Number (no spaces or hyphens)</ion-label>

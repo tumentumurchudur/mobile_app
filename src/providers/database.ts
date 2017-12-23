@@ -8,7 +8,7 @@ import { AuthProvider } from "./auth";
 
 import { Observable } from "rxjs/Observable";
 import "rxjs/add/observable/combineLatest";
-import * as _ from 'lodash';
+import * as _ from "lodash";
 
 
 @Injectable()
@@ -362,9 +362,14 @@ export class DatabaseProvider {
   public findMeterById(meterId): Observable<any> {
     return Observable.create(observer => {
       this._metersRef.orderByChild('meter_id').equalTo(meterId).once('value').then((snapshot) => {
-        const meterGuid = snapshot.val();
+        const meterGuidObj = snapshot.val();
 
-        observer.next(meterGuid);
+        if (meterGuidObj) {
+          const meterGuid = Object.keys(meterGuidObj)[0];
+          observer.next(meterGuid);
+        } else {
+          observer.next(null);
+        }
       }, error => {
         observer.error(error);
       });

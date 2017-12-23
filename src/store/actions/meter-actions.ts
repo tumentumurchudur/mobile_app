@@ -13,7 +13,6 @@ export const TRIGGER_ADD_METER: string = "TRIGGER ADD METER";
 export const TRIGGER_UPDATE_METER_READS: string = "[Meter] TRIGGER UPDATE METER READS";
 export const TRIGGER_UPDATE_METER_SETTINGS: string = "[Meter] TRIGGER UPDATE METER SETTINGS";
 export const TRIGGER_VALIDATE_METER: string = "TRIGGER VALIDATE METER";
-export const VALIDATE_METER_FAIL: string = "VALIDATE METER FAIL";
 
 export class TriggerLoadMeters implements Action {
 	public readonly type = TRIGGER_LOAD_METERS;
@@ -103,12 +102,6 @@ export class TriggerValidateMeter implements Action {
   constructor(private _payload: string) {
     this.payload = _payload;
   }
-}
-
-export class ValidateMeterFail implements Action {
-  public readonly type = VALIDATE_METER_FAIL;
-  public payload: any = null;
-
 }
 
 

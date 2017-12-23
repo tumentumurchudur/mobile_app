@@ -6,7 +6,7 @@ import * as moment from "moment";
 import { StoreServices } from "../../store/services";
 import { IMeter, IUser } from "../../interfaces/index";
 import {Observable} from "rxjs/Observable";
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from "rxjs/Subscription";
 
 @Component({
   selector: "add-meter-form",
@@ -16,16 +16,18 @@ import { Subscription } from 'rxjs/Subscription';
 export class AddMeterFormComponent {
   private _addMeter: FormGroup;
   private _user: IUser;
+  private _meterGuid: string;
   private _subscriptions: Subscription[] = [];
   private _step: number = 1;
   private _loading: any;
-  private _validateMeterStatus: string;
+  private _validateMeterResponse: boolean = false;
   private _billingStartDate = moment().format("YYYY-MM-DD");
   private _providerTypes$: Observable<any>;
   private _providerCountries$: Observable<any>;
   private _providerRegions$: Observable<any>;
   private _providerProviders$: Observable<any>;
   private _providerPlans$: Observable<any>;
+  private _addMeterGuid$: Observable<any>;
 
   constructor(
     private _storeServices: StoreServices,
@@ -52,6 +54,7 @@ export class AddMeterFormComponent {
     this._providerRegions$ = this._storeServices.selectProviderRegions();
     this._providerProviders$ = this._storeServices.selectProviderProviders();
     this._providerPlans$ = this._storeServices.selectProviderPlans();
+    this._addMeterGuid$ = this._storeServices.selectAddMeterGuid();
   }
 
   ngOnInit() {
@@ -62,6 +65,15 @@ export class AddMeterFormComponent {
       });
 
     this._subscriptions.push(subscription);
+
+    const meterSubscription = this._addMeterGuid$.subscribe((guid) => {
+      if (this._loading) {
+        this._loading.dismiss({guid});
+      }
+    })
+
+    this._subscriptions.push(meterSubscription);
+
   }
 
   ngOnDestroy() {
@@ -84,12 +96,10 @@ export class AddMeterFormComponent {
   }
 
   private _validateMeter() {
-    this._showLoading();
+    this._showLoadingController();
+    this._loading.onDidDismiss((guidState) => {
 
-    this._loading.onDidDismiss(() => {
-      // No meter data came back, this timed out, so show the alert.
-      if (!this._validateMeterStatus) {
-
+      if (!guidState) {
         const timeoutAlert = this.alertCtrl.create({
           message: "Connection is weak. Would you like to keep trying?",
           buttons: [
@@ -97,23 +107,41 @@ export class AddMeterFormComponent {
               text: "Cancel",
               role: "cancel",
               handler: () => {
-                this._validateMeterStatus = "cancel";
+                this._validateMeterResponse = false;
                 timeoutAlert.dismiss();
               }
             },
             {
               text: "Continue",
               handler: () => {
-                this._showLoading();
+                this._showLoadingController();
                 timeoutAlert.dismiss();
               }
             }
           ]
         });
         timeoutAlert.present();
+      } else if (!guidState.guid) {
+        const alert = this.alertCtrl.create({
+          message: "Unfortunately, we are not collecting data for this meter yet.",
+          buttons: [
+            {
+              text: "Ok",
+              role: "cancel"
+            }
+          ]
+        });
+        alert.present();
+      } else {
+        this._meterGuid = guidState.guid;
       }
     });
    this._storeServices.validateMeter(this._addMeter.value["meterNumber"]);
+  }
+
+  private _meterIsInvalid() {
+    this._loading.dismiss();
+
   }
 
   private _getCountries() {
@@ -132,7 +160,7 @@ export class AddMeterFormComponent {
     this._storeServices.getProviderPlans(`${this._addMeter.value["utilityType"]}/${this._addMeter.value["country"]}/${this._addMeter.value["region"]}/${this._addMeter.value["provider"]}/plans`);
   }
 
-  private _showLoading() {
+  private _showLoadingController() {
     this._loading = this._loadingCtrl.create({
       content: "Verifying Meter",
       duration: 10000
@@ -146,7 +174,6 @@ export class AddMeterFormComponent {
 
   private _saveMeter() {
     const user = this._user;
-    console.log('user', user);
 
     const utilityType = this._addMeter.value["utilityType"];
     const meterId = this._addMeter.value["meterNumber"];
@@ -168,10 +195,9 @@ export class AddMeterFormComponent {
       _plan: plan,
       _goal: goal,
       _billing_start: billingStart,
-      _name: name
+      _name: name,
+      _guid: this._meterGuid
     };
-
-    console.log('meter', meter);
 
     this._storeServices.addMeter(meter, user);
   }
