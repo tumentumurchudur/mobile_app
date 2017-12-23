@@ -131,6 +131,7 @@ export class AddMeterFormComponent {
         });
         alert.present();
       } else {
+        this._step++;
         this._meterGuid = guidState.guid;
       }
     });
