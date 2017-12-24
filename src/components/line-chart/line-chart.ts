@@ -60,27 +60,42 @@ export class LineChartComponent implements OnChanges {
       // make line function
       const lineFunc = this._getLineFunc(x, y, colName);
 
-      const normalizedData = [];
+      const averagedData = [];
       const actualData = this.data.map((d, i) => {
 
-        // Check if data is normalized due to missing value.
-        let isNormalizedValue;
+        let isValueAveraged;
 
+        // Check if consumption data is normalized due to missing value.
         if (d.line1) {
-          isNormalizedValue = this._isNormalizedValue(d.line1);
+          isValueAveraged = this._isValueAveraged(d.line1);
 
-          if (isNormalizedValue) {
-            const prev = { date: this.data[i - 1].date, line1: this.data[i - 1].line1, line2: null, line3: null };
-            const next = { date: this.data[i + 1].date, line1: this.data[i + 1].line1, line2: null, line3: null };
-            const curr = { date: d.date, line1: d.line1, line2: null, line3: null };
+          if (isValueAveraged) {
+            const prev = {
+              date: this.data[i - 1].date,
+              line1: this.data[i - 1].line1,
+              line2: null,
+              line3: null
+            };
+            const next = {
+              date: this.data[i + 1].date,
+              line1: this.data[i + 1].line1,
+              line2: null,
+              line3: null
+            };
+            const curr = {
+              date: d.date,
+              line1: d.line1,
+              line2: null,
+              line3: null
+            };
 
-            normalizedData.push(prev, curr, next);
+            averagedData.push(prev, curr, next);
           }
         }
 
         return {
           date: d.date,
-          line1: isNormalizedValue ? null : d.line1,
+          line1: isValueAveraged ? null : d.line1,
           line2: d.line2,
           line3: d.line3
         };
@@ -89,9 +104,9 @@ export class LineChartComponent implements OnChanges {
       // add line paths using the line functions.
       const path = this._addPath(svg, lineFunc, actualData, this.lineColors[index], "solid-line");
 
-      // add line paths for normalized data.
-      if (normalizedData && normalizedData.length) {
-        this._addPath(svg, lineFunc, normalizedData, this.lineColors[index], "dashed-line");
+      // add dashed line paths for normalized data.
+      if (averagedData && averagedData.length) {
+        this._addPath(svg, lineFunc, averagedData, this.lineColors[index], "dashed-line");
       }
 
       // add dots
@@ -172,7 +187,7 @@ export class LineChartComponent implements OnChanges {
       .attr("cy", (d) => y(d[colName]))
       .style("stroke", color)
       .attr("fill", d => {
-        return this._isNormalizedValue(d.line1) ? "none" : color;
+        return this._isValueAveraged(d.line1) ? "none" : color;
       });
   }
 
@@ -208,7 +223,7 @@ export class LineChartComponent implements OnChanges {
     svg.selectAll("*").remove();
   }
 
-  private _isNormalizedValue(value: number | undefined): boolean {
+  private _isValueAveraged(value: number | undefined): boolean {
     if (!value) {
       return false;
     }
