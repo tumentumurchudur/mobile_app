@@ -63,39 +63,49 @@ export class LineChartComponent implements OnChanges {
       const averagedData = [];
       const actualData = this.data.map((d, i) => {
 
-        let isValueAveraged;
+        let isCurrAveraged;
 
-        // Check if consumption data is normalized due to missing value.
+        // Check if consumption data is averaged due to missing value.
         if (d.line1) {
-          isValueAveraged = this._isValueAveraged(d.line1);
+          isCurrAveraged = this._isValueAveraged(d.line1);
 
-          if (isValueAveraged) {
-            const prev = {
-              date: this.data[i - 1].date,
-              line1: this.data[i - 1].line1,
-              line2: null,
-              line3: null
-            };
-            const next = {
-              date: this.data[i + 1].date,
-              line1: this.data[i + 1].line1,
-              line2: null,
-              line3: null
-            };
+          if (isCurrAveraged) {
             const curr = {
               date: d.date,
               line1: d.line1,
               line2: null,
               line3: null
             };
+            const isPrevAveraged = this._isValueAveraged(this.data[i - 1].line1);
+            const isNextAveraged = this._isValueAveraged(this.data[i + 1].line1);
 
-            averagedData.push(prev, curr, next);
+            if (!isPrevAveraged) {
+              const prev = {
+                date: this.data[i - 1].date,
+                line1: this.data[i - 1].line1,
+                line2: null,
+                line3: null
+              };
+
+              averagedData.push(prev, curr);
+            } else if (!isNextAveraged && i < this.data.length - 1) {
+              const next = {
+                date: this.data[i + 1].date,
+                line1: this.data[i + 1].line1,
+                line2: null,
+                line3: null
+              };
+
+              averagedData.push(curr, next);
+            } else {
+              averagedData.push(curr);
+            }
           }
         }
 
         return {
           date: d.date,
-          line1: isValueAveraged ? null : d.line1,
+          line1: isCurrAveraged ? null : d.line1,
           line2: d.line2,
           line3: d.line3
         };
