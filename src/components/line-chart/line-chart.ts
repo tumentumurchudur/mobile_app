@@ -76,10 +76,9 @@ export class LineChartComponent implements OnChanges {
               line2: null,
               line3: null
             };
-            const isPrevAveraged = this._isValueAveraged(this.data[i - 1].line1);
-            const isNextAveraged = this._isValueAveraged(this.data[i + 1].line1);
 
-            if (!isPrevAveraged) {
+            // Check if prev value is averaged.
+            if (i > 0 && !this._isValueAveraged(this.data[i - 1].line1)) {
               const prev = {
                 date: this.data[i - 1].date,
                 line1: this.data[i - 1].line1,
@@ -88,15 +87,17 @@ export class LineChartComponent implements OnChanges {
               };
 
               averagedData.push(prev, curr);
-            } else if (!isNextAveraged && i < this.data.length - 1) {
-              const next = {
-                date: this.data[i + 1].date,
-                line1: this.data[i + 1].line1,
-                line2: null,
-                line3: null
-              };
+            }
+            // Check if next value is averaged.
+              else if (i < this.data.length - 1 && !this._isValueAveraged(this.data[i + 1].line1)) {
+                const next = {
+                  date: this.data[i + 1].date,
+                  line1: this.data[i + 1].line1,
+                  line2: null,
+                  line3: null
+                };
 
-              averagedData.push(curr, next);
+                averagedData.push(curr, next);
             } else {
               averagedData.push(curr);
             }
