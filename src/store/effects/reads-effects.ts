@@ -132,7 +132,11 @@ export class ReadsEffects {
       const rawDeltas = ChartHelper.getDeltas(reads);
 
       const dateRange: IDateRange = { timeSpan, startDate, endDate };
+
+      // Removes abnormally large values.
       const normalizedDeltas = ChartHelper.normalizeData(rawDeltas);
+
+      // Puts values into date buckets by time span.
       const deltas = normalizedDeltas.length ? ChartHelper.groupDeltasByTimeSpan(dateRange, normalizedDeltas) : [];
       const cost = rawDeltas.length ? CostHelper.calculateCostFromDeltas(meter, rawDeltas) : 0;
 

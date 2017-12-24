@@ -12,7 +12,13 @@ line-chart {
       opacity: .1;
     }
 
-    .line-path {
+    .solid-line {
+      fill: none;
+    }
+
+    .dashed-line {
+      opacity: .5;
+      stroke-dasharray: 5,5;
       fill: none;
     }
 

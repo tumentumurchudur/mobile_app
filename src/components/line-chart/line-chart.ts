@@ -13,7 +13,7 @@ export class LineChartComponent implements OnChanges {
   @Input() data: ILineItem[] = [];
   @Input() loading: boolean = false;
   @Input() animate: boolean = false;
-  @Input() lineColors: string[] = ["orange", "red", "green"];
+  @Input() lineColors: string[] = ["#2075CB", "#EF8E0F", "#00B200"];
   @Input() dateFormat: string = "%m/%d";
   @Input() series: string[] = ["line1", "line2", "line3"];
   @Input() showAreaFill: boolean = true;
@@ -60,8 +60,39 @@ export class LineChartComponent implements OnChanges {
       // make line function
       const lineFunc = this._getLineFunc(x, y, colName);
 
+      const normalizedData = [];
+      const actualData = this.data.map((d, i) => {
+
+        // Check if data is normalized due to missing value.
+        let isNormalizedValue;
+
+        if (d.line1) {
+          isNormalizedValue = this._isNormalizedValue(d.line1);
+
+          if (isNormalizedValue) {
+            const prev = { date: this.data[i - 1].date, line1: this.data[i - 1].line1, line2: null, line3: null };
+            const next = { date: this.data[i + 1].date, line1: this.data[i + 1].line1, line2: null, line3: null };
+            const curr = { date: d.date, line1: d.line1, line2: null, line3: null };
+
+            normalizedData.push(prev, curr, next);
+          }
+        }
+
+        return {
+          date: d.date,
+          line1: isNormalizedValue ? null : d.line1,
+          line2: d.line2,
+          line3: d.line3
+        };
+      });
+
       // add line paths using the line functions.
-      const path = this._addPath(svg, lineFunc, "path" + index, this.lineColors[index]);
+      const path = this._addPath(svg, lineFunc, actualData, this.lineColors[index], "solid-line");
+
+      // add line paths for normalized data.
+      if (normalizedData && normalizedData.length) {
+        this._addPath(svg, lineFunc, normalizedData, this.lineColors[index], "dashed-line");
+      }
 
       // add dots
       this._addDots(svg, x, y, colName, this.lineColors[index]);
@@ -118,14 +149,14 @@ export class LineChartComponent implements OnChanges {
   private _getLineFunc(x: (date: any) => any, y: (val: number) => any, colName: string): any {
     return d3.line()
       .x(d => x(d.date))
-      .y(d => y(d[colName]));
+      .y(d => y(d[colName]))
+      .defined(d => d[colName] !== null)
   }
 
-  private _addPath(svg: any, lineFunc: (data: any) => any, id: string, color: string) {
+  private _addPath(svg: any, lineFunc: (data: any) => any, lineData: ILineItem[], color: string, className: string) {
     return svg.append("path")
-      .attr("class", "line-path")
-      .attr("id", id)
-      .attr("d", lineFunc(this.data))
+      .attr("class", className)
+      .attr("d", lineFunc(lineData))
       .attr("transform", "translate(20, 10)")
       .attr("stroke", color)
       .attr("stroke-width", "2");
@@ -139,7 +170,10 @@ export class LineChartComponent implements OnChanges {
       .attr("r", 3)
       .attr("cx", (d) => x(d.date))
       .attr("cy", (d) => y(d[colName]))
-      .style("fill", color);
+      .style("stroke", color)
+      .attr("fill", d => {
+        return this._isNormalizedValue(d.line1) ? "none" : color;
+      });
   }
 
   private _animatePath(path: any, delay: number = 0, duration: number = 0) {
@@ -172,6 +206,16 @@ export class LineChartComponent implements OnChanges {
     const svg = d3.select(this.element).select("svg")
 
     svg.selectAll("*").remove();
+  }
+
+  private _isNormalizedValue(value: number | undefined): boolean {
+    if (!value) {
+      return false;
+    }
+
+    const decimalValue = value % 1;
+
+    return parseFloat(decimalValue.toString()).toFixed(5) === "0.00099";
   }
 
 }

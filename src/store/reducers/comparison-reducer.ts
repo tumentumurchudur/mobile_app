@@ -18,7 +18,6 @@ export function comparisonReducer(state = { data: [], loading: false }, action):
 	switch (action.type) {
 		case ActionTypes.ADD_COMPARISON_READS:
 			if (!action.payload) {
-				console.log("reducer", action.payload);
 				return Object.assign({}, state, { data: [], loading: false });
 			}
 

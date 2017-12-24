@@ -34,39 +34,39 @@ export class NeighborhoodComparisonComponent implements OnChanges {
   private _consumptions: number[] = [];
 
   public ngOnChanges() {
-    if (this.comparisonReads && this.comparisonReads.length) {
-      // Reset selected lines in the chart.
-      this._onShowAll();
-
-      const { startDate, endDate } = this.dateRange;
-
-      const filteredReads = this.comparisonReads.filter(read => {
-        return read.guid === this.meter._guid &&
-          read.startDate.toString() === startDate.toString() &&
-          read.endDate.toString() === endDate.toString();
-      });
-
-      if (filteredReads.length) {
-        const { calcReads, avgCosts, effCosts, usageCosts } = filteredReads[0];
-        this._allData = calcReads || [];
-
-        this._costs = [usageCosts.totalCost, avgCosts.totalCost, effCosts.totalCost];
-        this._consumptions = [usageCosts.totalDelta, avgCosts.totalDelta, effCosts.totalDelta];
-
-        if (calcReads && calcReads.length) {
-          const lines = Object.keys(calcReads[0]).filter(d => d.indexOf("line") !== -1);
-
-          const availOptions = this._options.map(option => {
-            return lines.indexOf(option.line) !== -1 ? option : null;
-          }).filter(line => line !== null);
-
-          this._series = availOptions.map(option => option.line);
-          this._lineColors = availOptions.map(option => option.color);
-          this._legends = availOptions.map(option => option.legend);
-        }
-      }
-    } else {
+    if (!this.comparisonReads || !this.comparisonReads.length) {
       this._allData = [];
+      return;
+    }
+
+    this._onShowAll();
+
+    const { startDate, endDate } = this.dateRange;
+
+    const filteredReads = this.comparisonReads.filter(read => {
+      return read.guid === this.meter._guid &&
+        read.startDate.toString() === startDate.toString() &&
+        read.endDate.toString() === endDate.toString();
+    });
+
+    if (filteredReads.length) {
+      const { calcReads, avgCosts, effCosts, usageCosts } = filteredReads[0];
+      this._allData = calcReads || [];
+
+      this._costs = [usageCosts.totalCost, avgCosts.totalCost, effCosts.totalCost];
+      this._consumptions = [usageCosts.totalDelta, avgCosts.totalDelta, effCosts.totalDelta];
+
+      if (calcReads && calcReads.length) {
+        const lines = Object.keys(calcReads[0]).filter(d => d.indexOf("line") !== -1);
+
+        const availOptions = this._options.map(option => {
+          return lines.indexOf(option.line) !== -1 ? option : null;
+        }).filter(line => line !== null);
+
+        this._series = availOptions.map(option => option.line);
+        this._lineColors = availOptions.map(option => option.color);
+        this._legends = availOptions.map(option => option.legend);
+      }
     }
   }
 
