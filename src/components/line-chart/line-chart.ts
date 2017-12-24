@@ -77,7 +77,8 @@ export class LineChartComponent implements OnChanges {
               line3: null
             };
 
-            // Check if prev value is averaged.
+            // Check if prev value is averaged. If it is not averaged, then add it to
+            // averagedData array, so a line can be drawn from it to averaged value.
             if (i > 0 && !this._isValueAveraged(this.data[i - 1].line1)) {
               const prev = {
                 date: this.data[i - 1].date,
@@ -88,7 +89,7 @@ export class LineChartComponent implements OnChanges {
 
               averagedData.push(prev, curr);
             }
-            // Check if next value is averaged.
+            // Check if next value is averaged. Draw a line from the averaged point to actual data point.
               else if (i < this.data.length - 1 && !this._isValueAveraged(this.data[i + 1].line1)) {
                 const next = {
                   date: this.data[i + 1].date,
