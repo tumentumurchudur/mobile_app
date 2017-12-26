@@ -4,7 +4,6 @@ export interface IComparison {
   guid: string;
   startDate: Date;
   endDate: Date;
-  group: any;
   avg: any[];
   avgCosts: IUsage;
   eff: any[];

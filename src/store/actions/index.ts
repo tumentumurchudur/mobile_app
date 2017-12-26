@@ -64,8 +64,10 @@ export {
   AddComparison,
   TriggerComparisonReads,
   LoadingComparisonReads,
+  AddNeighborhoodGroup,
 
   ADD_COMPARISON_READS,
   TRIGGER_COMPARISON_READS,
-  LOADING_COMPARISON_READS
+  LOADING_COMPARISON_READS,
+  ADD_NEIGHBORHOOD_GROUP
 } from "./comparison-actions"

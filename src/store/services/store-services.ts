@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Store } from "@ngrx/store";
 import { AppState } from "../reducers";
-import { IUser, IReads, IMeter, IDateRange } from "../../interfaces";
+import { IUser, IReads, IMeter, IDateRange, IComparison } from "../../interfaces";
 import { Observable } from "rxjs/Observable";
 import {
 	AddMeter,
@@ -164,6 +164,10 @@ export class StoreServices {
 
 	public selectComparisonReads() {
 		return this._store.select(state => state.comparison.data);
+	}
+
+	public selectComparisonGroup() {
+		return this._store.select(state => state.comparison.neighborhoodGroup);
 	}
 
 	public selectComparisonLoading() {

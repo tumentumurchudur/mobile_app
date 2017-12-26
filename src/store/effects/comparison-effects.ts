@@ -12,7 +12,7 @@ import "rxjs/add/observable/combineLatest";
 import { DatabaseProvider } from "../../providers";
 import { neighborhoodConfigs } from "../../configs";
 
-import { TRIGGER_COMPARISON_READS, AddComparison } from "../actions";
+import { TRIGGER_COMPARISON_READS, AddComparison, AddNeighborhoodGroup } from "../actions";
 import { IComparison } from "../../interfaces";
 import { ChartHelper, CostHelper } from "../../helpers";
 
@@ -26,15 +26,15 @@ export class ComparisonEffects {
       const { meter, dateRange } = data;
 
       let group = null;
-      const subscription: Subscription = this._storeServices.selectComparisonReads()
-        .subscribe((data: IComparison[]) => {
-          group = data && data.length ? data[0].group : null;
+      const subscription: Subscription = this._storeServices.selectComparisonGroup()
+        .subscribe((group: any) => {
+          group = group;
         });
 
       return Observable.combineLatest(
         Observable.of(meter),
         Observable.of(dateRange),
-        group ? Observable.of(group) : this._db.getNeighborhoodGroupIds(meter),
+        group ? Observable.of(group) : this._db.getNeighborhoodGroup(meter),
         Observable.of(subscription)
       );
     })
@@ -71,7 +71,7 @@ export class ComparisonEffects {
         storeData ? Observable.of(storeData.eff) : this._db.getReadsByNeighborhood(ncmpEffGuid, startDate, endDate)
       );
     })
-    .map((data: any[]) => {
+    .flatMap((data: any[]) => {
       const [subscription, group, meter, dateRange, usage, avg, eff] = data;
 
       if (subscription) {
@@ -79,7 +79,10 @@ export class ComparisonEffects {
       }
 
       if (!usage.length && !avg.length && !eff.length) {
-        return new AddComparison(null);
+        return [
+          new AddNeighborhoodGroup(group),
+          new AddComparison(null)
+        ];
       }
 
       // format data for average
@@ -134,25 +137,34 @@ export class ComparisonEffects {
       }
 
       for (let i = 0; i < loopDeltas.length; i++) {
+        // Check if consumption data is available.
+        // If not available, show average and efficiency data in chart only.
         if (!useDeltas.length) {
           calcReads.push({
             date: loopDeltas[i].date,
             line2: avgDeltas[i].line1 || 0,
             line3: effDeltas[i].line1 || 0
           });
-        } else if (!avgDeltas.length) {
+        }
+        // Check average data.
+        else if (!avgDeltas.length) {
           calcReads.push({
             date: loopDeltas[i].date,
             line1: useDeltas[i].line1 || 0,
             line3: effDeltas[i].line1 || 0
           });
-        } else if (!effDeltas.length) {
+        }
+        // Check efficiency data.
+        else if (!effDeltas.length) {
           calcReads.push({
             date: loopDeltas[i].date,
             line1: useDeltas[i].line1 || 0,
             line2: avgDeltas[i].line1 || 0
           });
-        } else {
+        }
+        // All data is available.
+        // Consumption, average and efficiency
+        else {
           calcReads.push({
             date: loopDeltas[i].date,
             line1: useDeltas[i].line1 || 0,
@@ -166,7 +178,6 @@ export class ComparisonEffects {
         guid: meter._guid,
         startDate: dateRange.startDate,
         endDate: dateRange.endDate,
-        group,
         usage,
         usageCosts,
         avg,
@@ -176,7 +187,10 @@ export class ComparisonEffects {
         calcReads
       };
 
-      return new AddComparison(payload);
+      return [
+        new AddNeighborhoodGroup(group),
+        new AddComparison(payload)
+      ];
     });
 
   constructor(

@@ -34,7 +34,7 @@
               [loading]="_meterLoading$ | async"
             ></arc-tween-chart>
 
-            <!-- TODO: Remove (click) once add meter is implemented -->
+            <!-- Updates meter when clicked -->
             <div
               class="actual-cost"
               [ngStyle]="{ 'color': _isUsageCostBehindGoal(meter) ? '#C22A17' : '#969696' }"

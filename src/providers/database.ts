@@ -344,7 +344,7 @@ export class DatabaseProvider {
     return this._getShallowList(this._httpClient, `${this._providersRef}/${path}`);
   }
 
-  public getNeighborhoodGroupIds(meter: IMeter): Observable<any> {
+  public getNeighborhoodGroup(meter: IMeter): Observable<any> {
     const { _guid, _utilityType } = meter;
 
     return Observable.combineLatest(
