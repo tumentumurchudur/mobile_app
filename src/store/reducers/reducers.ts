@@ -8,19 +8,22 @@ import { meterReducer } from "./meter-reducer";
 import { userReducer } from "./user-reducer";
 import { readsReducer } from "./reads-reducer";
 import { comparisonReducer } from "./comparison-reducer";
+import {providerReducer} from "./provider-reducer";
 
 export interface AppState {
-	meters: { data: IMeter[] | null, loading: boolean, providerType: any, provider: IProvider},
+	meters: { data: IMeter[] | null, loading: boolean },
 	reads: { data: IReads[] | null, loading: boolean },
 	comparison: { data: IComparison[] | null, loading: boolean },
-	user: IUser | null
+	user: IUser | null,
+  providers: { providerTypes: string[], provider: IProvider}
 }
 
 export const reducers: ActionReducerMap<AppState> = {
 	meters: meterReducer,
 	user: userReducer,
 	reads: readsReducer,
-	comparison: comparisonReducer
+	comparison: comparisonReducer,
+  providers: providerReducer
 };
 
 // TODO: We may use this in the future.
