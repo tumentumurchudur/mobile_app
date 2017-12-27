@@ -156,14 +156,13 @@ export class MeterEffects {
     .map((action: any) => action.payload)
     .switchMap((data: any) => {
       const { meter = null, user = null } = data;
-      console.log('data', data);
 
       return this._db.addMeter(data.meter, data.user);
-    }).
-      flatMap((meter: IMeter) => {
+    })
+    .flatMap((meter: IMeter) => {
       return [
-        new AddMeter(meter)
-        // new UpdateMeter(meter)
+        new AddMeter(meter),
+        new UpdateMeter(meter)
       ]
     });
 
@@ -178,7 +177,7 @@ export class MeterEffects {
     .switchMap((meterId: string) => {
       return this._db.findMeterById(meterId);
     })
-    .map((meterGuid) => {
+    .map((meterGuid: string) => {
       return new AddMeterGuid(meterGuid);
     });
 

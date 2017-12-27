@@ -308,6 +308,7 @@ export class DatabaseProvider {
         });
     });
   }
+
   public addMeter(meter: IMeter, user: IUser): Observable<IMeter> {
 
     return Observable.create(observer => {
@@ -322,9 +323,6 @@ export class DatabaseProvider {
         _type: meter._utilityType,
         _guid: meter._guid,
       };
-
-      console.log('path', path);
-      console.log('settings', settings);
 
       updates[path] = settings;
 
@@ -360,9 +358,9 @@ export class DatabaseProvider {
     });
   }
 
-  public findMeterById(meterId): Observable<any> {
+  public findMeterById(meterId: string): Observable<any> {
     return Observable.create(observer => {
-      this._metersRef.orderByChild('meter_id').equalTo(meterId).once('value').then((snapshot) => {
+      this._metersRef.orderByChild("meter_id").equalTo(meterId).once("value").then((snapshot) => {
         const meterGuidObj = snapshot.val();
 
         if (meterGuidObj) {

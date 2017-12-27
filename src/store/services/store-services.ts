@@ -72,7 +72,7 @@ export class StoreServices {
 		return this._store.select(state => state.meters.data)
 	}
 
-  public selectUser() {
+  public selectUser(): Observable<IUser> {
     return this._store.select(state => state.user)
   }
 
@@ -143,7 +143,7 @@ export class StoreServices {
     return this._store.select(state => state.meters.provider.plans);
   }
 
-  public selectAddMeterGuid() {
+  public selectAddMeterGuid(): Observable<string> {
     return this._store.select(state => state.meters.provider.guid);
   }
 

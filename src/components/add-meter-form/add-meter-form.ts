@@ -4,7 +4,7 @@ import { AlertController, NavController, LoadingController } from "ionic-angular
 import { Keyboard } from "@ionic-native/keyboard";
 import * as moment from "moment";
 import { StoreServices } from "../../store/services";
-import { IMeter, IUser } from "../../interfaces/index";
+import { IMeter, IUser } from "../../interfaces";
 import {Observable} from "rxjs/Observable";
 import { Subscription } from "rxjs/Subscription";
 
@@ -67,12 +67,10 @@ export class AddMeterFormComponent {
 
     const meterSubscription = this._addMeterGuid$.subscribe((guid) => {
       if (this._loading) {
-        this._loading.dismiss({guid});
+        this._loading.dismiss({ guid });
       }
     })
-
     this._subscriptions.push(meterSubscription);
-
   }
 
   ngOnDestroy() {
@@ -97,7 +95,7 @@ export class AddMeterFormComponent {
   private _validateMeter() {
     this._showLoadingController();
     this._loading.onDidDismiss((guidState) => {
-
+      // If there is no guidState returned from request on loading dismissal, request has timed out
       if (!guidState) {
         const timeoutAlert = this.alertCtrl.create({
           message: "Connection is weak. Would you like to keep trying?",
@@ -119,7 +117,9 @@ export class AddMeterFormComponent {
           ]
         });
         timeoutAlert.present();
-      } else if (!guidState.guid) {
+      }
+      // request returned guidState but no guid was found
+      else if (!guidState.guid) {
         const alert = this.alertCtrl.create({
           message: "Unfortunately, we are not collecting data for this meter yet.",
           buttons: [
@@ -130,7 +130,9 @@ export class AddMeterFormComponent {
           ]
         });
         alert.present();
-      } else {
+      }
+      // request successfully returned guid and meter was validated
+      else {
         this._meterGuid = guidState.guid;
         this._step++;
       }
