@@ -168,12 +168,12 @@ export class MeterEffects {
     })
     .switchMap((meter: any[]) => {
         // Gets reads from database for given meter.
-       return this._db.getReadsForMeters(meter)
+       return this._db.getReadsForMeters(meter);
     })
     .map((meter: IMeter[]) => {
       const newMeter = CostHelper.calculateCostAndUsageForMeters([meter[0]]);
 
-      return new AddMeter(newMeter[0])
+      return new AddMeter(newMeter[0]);
     });
 
   /**
