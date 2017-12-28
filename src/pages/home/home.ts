@@ -1,17 +1,17 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
-import { Subscription } from "rxjs/Subscription";
+import { Component, OnInit, OnDestroy, } from '@angular/core';
+import { Subscription } from 'rxjs/Subscription';
 
-import { IonicPage, NavController } from "ionic-angular";
-import { IUser } from "../../interfaces";
-import { Store } from "@ngrx/store";
-import { AppState } from "../../store/reducers";
+import { IonicPage, NavController } from 'ionic-angular';
+import { IUser } from '../../interfaces';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../store/reducers';
 
 @IonicPage({
-  name: "HomePage"
+  name: 'HomePage'
 })
 @Component({
-  selector: "page-home",
-  templateUrl: "home.html"
+  selector: 'page-home',
+  templateUrl: 'home.html'
 })
 export class HomePage implements OnInit, OnDestroy {
   private _user: IUser;

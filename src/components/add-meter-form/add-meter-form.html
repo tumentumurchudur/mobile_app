@@ -104,11 +104,20 @@
       Back
     </button>
     <button ion-button
-      *ngIf="_step <= 4"
+      *ngIf="_step <= 4 && _step !== 2"
       class="form-nav-button"
       color="primary"
       (tap)="_incStep()"
       type="submit"
+    >
+      Next
+    </button>
+    <button ion-button
+            *ngIf="_step === 2"
+            class="form-nav-button"
+            color="primary"
+            (tap)="_validateMeter()"
+            type="submit"
     >
       Next
     </button>

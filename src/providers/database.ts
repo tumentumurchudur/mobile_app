@@ -381,6 +381,7 @@ export class DatabaseProvider {
   }
 
   public getProviderTypes(): Observable<any> {
+    console.log('request in dbService');
       return this._getShallowList(this._httpClient, `${this._providersRef}`);
   }
 

@@ -5,7 +5,7 @@ import { IProvider } from "../../interfaces/provider";
 export interface ProviderState {
   providers: {
     providerTypes: string[],
-    provider: IProvider
+    provider: IProvider | null
   }
 }
 
@@ -39,5 +39,7 @@ export function providerReducer(state = { providerTypes: [], provider: {} }, act
       return Object.assign({}, state, {provider: newProviderPlans});
     case ActionTypes.RESET_PROVIDER:
       return Object.assign({}, state, {provider: {}});
+    default:
+      return state;
   }
 }

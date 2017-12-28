@@ -1,7 +1,6 @@
 import { ActionReducerMap } from "@ngrx/store";
 import { IMeter } from '../../interfaces';
 import * as ActionTypes from '../actions';
-import { IProvider } from "../../interfaces/provider";
 
 export interface MeterState {
 	meters: {

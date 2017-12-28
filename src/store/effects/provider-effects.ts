@@ -28,9 +28,12 @@ export class ProviderEffects {
   public addProviders$ = this._actions$
     .ofType(TRIGGER_ADD_PROVIDERS)
     .switchMap(() => {
+      console.log('request');
       return this._db.getProviderTypes();
     })
     .map((providersType: any) => {
+      console.log('providersType', providersType);
+
       return new AddProviders(providersType);
     });
 

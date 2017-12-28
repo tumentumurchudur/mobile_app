@@ -156,13 +156,21 @@ export class MeterEffects {
     .map((action: any) => action.payload)
     .switchMap((data: any) => {
       const { meter = null, user = null } = data;
-
-      return this._db.addMeter(data.meter, data.user);
+      return Observable.combineLatest([
+        this._db.addMeter(meter, user),
+        Observable.of(user)
+      ])
     })
-    .flatMap((meter: IMeter) => {
+    .switchMap((data: any[]) => {
+      const [ meter, user ] = data;
+
+      return this._db.getProviderForMeters([meter]);
+    })
+    .flatMap((meter: any[]) => {
+    const newMeter = Object.assign({}, meter[0], { _billing_total: 30, _billing_since_start: 5 });
       return [
-        new AddMeter(meter),
-        new UpdateMeter(meter)
+        new AddMeter(newMeter),
+        new TriggerUpdateMeterReads(newMeter)
       ]
     });
 

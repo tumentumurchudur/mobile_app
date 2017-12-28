@@ -1,4 +1,4 @@
-import { Component, Inject, ChangeDetectionStrategy } from "@angular/core";
+import { Component, Inject } from "@angular/core";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { AlertController, NavController, LoadingController } from "ionic-angular";
 import { Keyboard } from "@ionic-native/keyboard";
@@ -10,8 +10,7 @@ import { Subscription } from "rxjs/Subscription";
 
 @Component({
   selector: "add-meter-form",
-  templateUrl: "add-meter-form.html",
-  changeDetection: ChangeDetectionStrategy.OnPush
+  templateUrl: "add-meter-form.html"
 })
 export class AddMeterFormComponent {
   private _addMeter: FormGroup;
@@ -80,11 +79,6 @@ export class AddMeterFormComponent {
   }
 
   private _incStep(): void {
-    if (this._step === 2){
-      this._validateMeter();
-      return;
-    }
-
     this._step++;
   }
 
@@ -134,7 +128,7 @@ export class AddMeterFormComponent {
       // request successfully returned guid and meter was validated
       else {
         this._meterGuid = guidState.guid;
-        this._step++;
+        this._incStep();
       }
     });
    this._storeServices.validateMeter(this._addMeter.value["meterNumber"]);
@@ -182,7 +176,6 @@ export class AddMeterFormComponent {
     const goal = meterGoal ? parseFloat(meterGoal) : null;
     const billingStart = parseInt(moment(this._addMeter.value["billingStart"]).format("DD"));
     const name = this._addMeter.value["name"];
-
 
     const meter: IMeter = {
       _utilityType: utilityType,

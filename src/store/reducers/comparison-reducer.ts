@@ -1,5 +1,4 @@
 import { ActionReducerMap } from "@ngrx/store";
-
 import { IComparison } from "../../interfaces";
 import * as ActionTypes from "../actions";
 
