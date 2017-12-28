@@ -60,17 +60,16 @@ export class LineChartComponent implements OnChanges {
       // make line function
       const lineFunc = this._getLineFunc(x, y, colName);
 
-      const averagedData = [];
-      const actualData = this.data.map((d, i) => {
+      const dottedLineData = [];
+      const solidLineData = this.data.map((d, i) => {
 
-        let isCurrAveraged;
-
+        let isDataPointAveraged;
         // Check if consumption data is averaged due to missing value.
         if (d.line1) {
-          isCurrAveraged = this._isValueAveraged(d.line1);
+          isDataPointAveraged = this._isDataPointAveraged(d.line1);
 
-          if (isCurrAveraged) {
-            const curr = {
+          if (isDataPointAveraged) {
+            const currDataPoint = {
               date: d.date,
               line1: d.line1,
               line2: null,
@@ -78,47 +77,52 @@ export class LineChartComponent implements OnChanges {
             };
 
             // Check if prev value is averaged. If it is not averaged, then add it to
-            // averagedData array, so a line can be drawn from it to averaged value.
-            if (i > 0 && !this._isValueAveraged(this.data[i - 1].line1)) {
-              const prev = {
+            // dottedLineData array, so a line can be drawn from it to averaged value.
+            if (i > 0 && !this._isDataPointAveraged(this.data[i - 1].line1)) {
+              const prevDataPoint = {
                 date: this.data[i - 1].date,
                 line1: this.data[i - 1].line1,
                 line2: null,
                 line3: null
               };
 
-              averagedData.push(prev, curr);
+              dottedLineData.push(prevDataPoint);
             }
+
+            dottedLineData.push(currDataPoint);
+
             // Check if next value is averaged. Draw a line from the averaged point to actual data point.
-              else if (i < this.data.length - 1 && !this._isValueAveraged(this.data[i + 1].line1)) {
-                const next = {
+            if (i < this.data.length - 1 && !this._isDataPointAveraged(this.data[i + 1].line1)) {
+                const nextDataPoint = {
                   date: this.data[i + 1].date,
                   line1: this.data[i + 1].line1,
                   line2: null,
                   line3: null
                 };
 
-                averagedData.push(curr, next);
-            } else {
-              averagedData.push(curr);
+                dottedLineData.push(nextDataPoint);
             }
+
+          } else {
+            dottedLineData.push({ date: this.data[i].date, line1: null, line2: null, line3: null });
           }
         }
 
         return {
           date: d.date,
-          line1: isCurrAveraged ? null : d.line1,
+          line1: isDataPointAveraged ? null : d.line1,
           line2: d.line2,
           line3: d.line3
         };
       });
 
       // add line paths using the line functions.
-      const path = this._addPath(svg, lineFunc, actualData, this.lineColors[index], "solid-line");
+      const path = this._addPath(svg, lineFunc, solidLineData, this.lineColors[index], "solid-line");
 
-      // add dashed line paths for normalized data.
-      if (averagedData && averagedData.length) {
-        this._addPath(svg, lineFunc, averagedData, this.lineColors[index], "dashed-line");
+      // add dashed line paths for averaged data.
+      const dottedLineHasData = dottedLineData.filter(d => d.line1 !== null).length > 0;
+      if (dottedLineHasData) {
+        this._addPath(svg, lineFunc, dottedLineData, this.lineColors[index], "dotted-line");
       }
 
       // add dots
@@ -199,7 +203,9 @@ export class LineChartComponent implements OnChanges {
       .attr("cy", (d) => y(d[colName]))
       .style("stroke", color)
       .attr("fill", d => {
-        return this._isValueAveraged(d.line1) ? "none" : color;
+        // add a dot with border for line1 data points which is usage/consumption data.
+        // For everything else, all dots should be filled in with given color.
+        return colName === "line1" && this._isDataPointAveraged(d[colName]) ? "none" : color;
       });
   }
 
@@ -235,7 +241,7 @@ export class LineChartComponent implements OnChanges {
     svg.selectAll("*").remove();
   }
 
-  private _isValueAveraged(value: number | undefined): boolean {
+  private _isDataPointAveraged(value: number | undefined): boolean {
     if (!value) {
       return false;
     }
