@@ -27,7 +27,7 @@
               [centerValue]="meter._usage / 1000 | number: '.1-2'"
               [centerLabel]="_getMeterConfig(meter, 'unit')"
               [textColor]="_getMeterConfig(meter, 'textColor')"
-              [colors]="_getMeterConfig(meter, 'color')"
+              [colors]="_getMeterConfig(meter, 'arcChartColors')"
               [meterIcon]="_getMeterConfig(meter, 'imgSrc')"
               [meterIconColor]="_getMeterConfig(meter, 'imgColor')"
               [animate]="i === 0 || i === _currentMeterIndex"
@@ -68,6 +68,7 @@
             <div *ngIf="_getDataByGuid(reads, meter._guid, i) as data">
               <line-chart
                 [data]="data.deltas"
+                [lineColors]="_getMeterConfig(meter, 'lineChartColors')"
                 [loading]="_loadingReads$ | async"
                 [animate]="_currentMeterIndex === i"
                 [series]="['line1']"
