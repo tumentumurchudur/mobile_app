@@ -320,7 +320,7 @@ export class DatabaseProvider {
         _meter_id: meter._meter_id,
         _plan: meter._plan,
         _provider: meter._provider,
-        _type: meter._utilityType,
+        _type: meter._type,
         _guid: meter._guid,
       };
 
@@ -381,7 +381,6 @@ export class DatabaseProvider {
   }
 
   public getProviderTypes(): Observable<any> {
-    console.log('request in dbService');
       return this._getShallowList(this._httpClient, `${this._providersRef}`);
   }
 

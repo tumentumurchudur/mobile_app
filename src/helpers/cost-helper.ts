@@ -81,6 +81,7 @@ export class CostHelper {
 	 * @param meters
 	 */
 	public static calculateCostAndUsageForMeters(meters: IMeter[]): IMeter[] {
+	  console.log('meters', meters);
 		for (let i = 0; i < meters.length; i++) {
 			const deltas = ChartHelper.getDeltas(meters[i]._reads);
 			const cost = deltas.length ? CostHelper.calculateCostFromDeltas(meters[i], deltas) : {};

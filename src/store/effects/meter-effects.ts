@@ -166,12 +166,14 @@ export class MeterEffects {
 
       return this._db.getProviderForMeters([meter]);
     })
-    .flatMap((meter: any[]) => {
-    const newMeter = Object.assign({}, meter[0], { _billing_total: 30, _billing_since_start: 5 });
-      return [
-        new AddMeter(newMeter),
-        new TriggerUpdateMeterReads(newMeter)
-      ]
+    .switchMap((meter: any[]) => {
+        // Gets reads from database for given meter.
+       return this._db.getReadsForMeters(meter)
+    })
+    .map((meter: IMeter[]) => {
+      const newMeter = CostHelper.calculateCostAndUsageForMeters([meter[0]]);
+
+      return new AddMeter(newMeter[0])
     });
 
   /**

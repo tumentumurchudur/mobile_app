@@ -179,6 +179,7 @@ export class AddMeterFormComponent {
 
     const meter: IMeter = {
       _utilityType: utilityType,
+      _type: 'ert',
       _meter_id: meterId,
       _provider: provider,
       _plan: plan,
