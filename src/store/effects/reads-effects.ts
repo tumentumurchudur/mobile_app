@@ -56,16 +56,12 @@ export class ReadsEffects {
       }
 
       const deltas = ChartHelper.getDeltas(reads);
-      console.log('deltas', deltas);
-      console.log('reads', reads);
       const cost = deltas.length ? CostHelper.calculateCostFromDeltas(meter, deltas) : {};
 
       const newMeter = Object.assign({}, meter, {
         _actualUsageCost: cost.totalCost || 0,
         _usage: cost.totalDelta || 0
       });
-
-      console.log('newMeter', newMeter);
 
       return new UpdateMeter(newMeter);
     });

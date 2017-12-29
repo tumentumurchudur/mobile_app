@@ -22,5 +22,5 @@ export interface IMeter {
   _facilityFee?: number,
   _summer?: ITier,
   _winter?: ITier,
-  _actualUsageCost?: number,
+  _actualUsageCost?: number
 }

@@ -56,7 +56,7 @@
         </ion-select>
       </ion-item>
     </div>
-    <div *ngIf="_providerProviders$ | async as providers">
+    <div *ngIf="_providerServiceProviders$ | async as providers">
       <ion-item>
         <ion-label>Provider</ion-label>
         <ion-select formControlName="provider" (ionChange)="_getPlans()">

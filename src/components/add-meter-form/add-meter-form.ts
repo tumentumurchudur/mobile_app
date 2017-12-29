@@ -23,7 +23,7 @@ export class AddMeterFormComponent {
   private _providerTypes$: Observable<any>;
   private _providerCountries$: Observable<any>;
   private _providerRegions$: Observable<any>;
-  private _providerProviders$: Observable<any>;
+  private _providerServiceProviders$: Observable<any>;
   private _providerPlans$: Observable<any>;
   private _addMeterGuid$: Observable<any>;
 
@@ -50,7 +50,7 @@ export class AddMeterFormComponent {
     this._providerTypes$ = this._storeServices.selectProviderTypes();
     this._providerCountries$ = this._storeServices.selectProviderCountries();
     this._providerRegions$ = this._storeServices.selectProviderRegions();
-    this._providerProviders$ = this._storeServices.selectProviderProviders();
+    this._providerServiceProviders$ = this._storeServices.selectProviderServiceProviders();
     this._providerPlans$ = this._storeServices.selectProviderPlans();
     this._addMeterGuid$ = this._storeServices.selectAddMeterGuid();
   }

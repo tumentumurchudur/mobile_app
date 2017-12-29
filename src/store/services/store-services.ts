@@ -135,8 +135,8 @@ export class StoreServices {
     return this._store.select(state => state.providers.provider.regions);
   }
 
-  public selectProviderProviders() {
-    return this._store.select(state => state.providers.provider.providers);
+  public selectProviderServiceProviders() {
+    return this._store.select(state => state.providers.provider.serviceProviders);
   }
 
   public selectProviderPlans() {

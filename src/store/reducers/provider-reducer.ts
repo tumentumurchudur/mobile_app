@@ -30,7 +30,7 @@ export function providerReducer(state = { providerTypes: [], provider: {} }, act
 
       return Object.assign({}, state, {provider: newProviderRegions});
     case ActionTypes.UPDATE_PROVIDERS:
-      const newProviderProviders = Object.assign({}, state.provider, {providers: action.payload});
+      const newProviderProviders = Object.assign({}, state.provider, {serviceProviders: action.payload});
 
       return Object.assign({}, state, {provider: newProviderProviders});
     case ActionTypes.UPDATE_PROVIDER_PLANS:
