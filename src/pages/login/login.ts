@@ -14,8 +14,8 @@ import { StoreServices } from "../../store/services";
 })
 export class LoginPage {
   private _user: IUser = {
-    email: "james@james.com", //"spark@vutiliti.com",
-    password: "james123", //"spark123",
+    email: "spark@vutiliti.com",
+    password: "spark123",
     uid: null
   };
   private _isNewUser: boolean = false;

@@ -14,14 +14,19 @@ import { IMeter, IUser } from "../../interfaces";
 import { CostHelper } from "../../helpers";
 import {
   LOAD_METERS,
+  TRIGGER_ADD_METER,
   TRIGGER_LOAD_METERS,
   TRIGGER_UPDATE_METER_SETTINGS,
+  TRIGGER_VALIDATE_METER,
 
+  AddMeter,
   AddMeters,
+  AddMeterGuid,
   LoadMeters,
   TriggerUpdateMeterReads,
   LoadFromDb,
-  UpdateUser
+  UpdateUser,
+  UpdateMeter
 } from "../actions";
 
 @Injectable()
@@ -139,6 +144,41 @@ export class MeterEffects {
     })
     .map((meter: IMeter) => {
       return new TriggerUpdateMeterReads(meter);
+    });
+
+  /**
+   * Handles ADD_METER action and
+   * adds meter to the store.
+   */
+  @Effect()
+  public addMeter$ = this._actions$
+    .ofType(TRIGGER_ADD_METER)
+    .map((action: any) => action.payload)
+    .switchMap((data: any) => {
+      const { meter = null, user = null } = data;
+
+      return this._db.addMeter(data.meter, data.user);
+    })
+    .flatMap((meter: IMeter) => {
+      return [
+        new AddMeter(meter),
+        new UpdateMeter(meter)
+      ]
+    });
+
+  /**
+   * Handles VALIDATE_METER actions and
+   * adds meterGuid to the state.provider.
+   */
+  @Effect()
+  public validateMeter$ = this._actions$
+    .ofType(TRIGGER_VALIDATE_METER)
+    .map((action: any) => action.payload)
+    .switchMap((meterId: string) => {
+      return this._db.findMeterById(meterId);
+    })
+    .map((meterGuid: string) => {
+      return new AddMeterGuid(meterGuid);
     });
 
   constructor(
