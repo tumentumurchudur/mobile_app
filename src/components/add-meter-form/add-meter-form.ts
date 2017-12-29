@@ -190,6 +190,7 @@ export class AddMeterFormComponent {
     };
 
     this._storeServices.addMeter(meter, user);
+    this._navCtrl.pop();
   }
 
 }
