@@ -8,7 +8,6 @@ import { AuthProvider } from "./auth";
 
 import { Observable } from "rxjs/Observable";
 import "rxjs/add/observable/combineLatest";
-import * as _ from "lodash";
 
 
 @Injectable()
@@ -377,7 +376,7 @@ export class DatabaseProvider {
 
   private _getShallowList(httpService: HttpClient, path: string): Observable<any> {
     return httpService.get(`${path}.json?auth=${databaseToken.production}&shallow=true`)
-      .map(res => _.keys(res));
+      .map(res => Object.keys(res));
   }
 
   public getProviderTypes(): Observable<any> {
