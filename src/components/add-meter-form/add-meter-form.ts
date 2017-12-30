@@ -177,9 +177,10 @@ export class AddMeterFormComponent {
     const billingStart = parseInt(moment(this._addMeter.value["billingStart"]).format("DD"));
     const name = this._addMeter.value["name"];
 
+    // TODO: Research cases where _type will not be "ert"
     const meter: IMeter = {
       _utilityType: utilityType,
-      _type: 'ert',
+      _type: "ert",
       _meter_id: meterId,
       _provider: provider,
       _plan: plan,
