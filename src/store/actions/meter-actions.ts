@@ -69,9 +69,9 @@ export class UpdateMeter implements Action {
 
 export class TriggerUpdateMeterReads implements Action {
 	public readonly type = TRIGGER_UPDATE_METER_READS;
-	public payload: IMeter | null = null;
+	public payload: { meter: IMeter, user: IUser } = null;
 
-	constructor(private _payload: IMeter | null) {
+	constructor(private _payload: { meter: IMeter, user: IUser }) {
 		this.payload = _payload;
 	}
 }

@@ -76,7 +76,7 @@ export class UtilitySpendingComponent implements OnInit {
 
   private _updateMeter(meter: IMeter, index: number) {
     this._currentMeterIndex = index;
-    this._storeServices.updateMeterReads(meter);
+    this._storeServices.updateMeterReads(meter, this.user);
   }
 
   private _isUsageCostBehindGoal(meter: IMeter) {
@@ -86,7 +86,7 @@ export class UtilitySpendingComponent implements OnInit {
   private _updateAllMeters(refresher: any, index: number) {
     this._currentMeterIndex = index;
 
-    this._storeServices.updateAllMetersReads(this._meters$);
+    this._storeServices.updateAllMetersReads(this._meters$, this.user);
     this._storeServices.updateLoaderWhenReadsDone(refresher);
   }
 

@@ -22,7 +22,6 @@ import {
   RemoveMeter,
   LoadMeters,
   TriggerUpdateMeterReads,
-  LoadFromDb,
   UpdateUser
 } from "../actions";
 
@@ -52,20 +51,17 @@ export class MeterEffects {
       );
     })
     .map((values: any[]) => {
-      const [meters = [], user] = values;
+      const [meters = [], user = null] = values;
 
-      return new LoadMeters(user);
+      // Load data from API.
+      if (!meters.length) {
+        console.log("loading from database.");
+        return new LoadMeters(user);
+      }
 
-      /**
-       * TODO: Figure out a way to sync cache and store.
-       * // Load data from API.
-        if (!meters.length) {
-          return new LoadFromDb(user);
-        }
-
-        // Load data from cache.
-        return new AddMeters(meters);
-       */
+      console.log("loading from cache.");
+      // Load data from cache.
+      return new AddMeters(meters);
     });
 
   /**
