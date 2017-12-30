@@ -20,6 +20,7 @@ import {
 	TriggerLoadMeters,
 	TriggerUpdateMeterReads,
 	TriggerUpdateMeterSettings,
+	TriggerRemoveMeter,
 	TriggerComparisonReads,
 	AddReads,
 	LoadReadsByDateRange,
@@ -27,6 +28,7 @@ import {
 	LoadReadsByMeters,
 	LoadingComparisonReads
 } from "../actions";
+
 
 @Injectable()
 export class StoreServices {
@@ -64,7 +66,11 @@ export class StoreServices {
 
   public addMeter(meter: IMeter) {
     this._store.dispatch(new AddMeter(meter));
-  }
+	}
+
+	public removeMeter(meter: IMeter, user: IUser) {
+		this._store.dispatch(new TriggerRemoveMeter({ meter, user }));
+	}
 
 	public selectMeters() : Observable<IMeter[]> {
 		return this._store.select(state => state.meters.data)
