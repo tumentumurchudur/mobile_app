@@ -6,19 +6,20 @@ import * as ActionTypes from "../actions";
 export interface ComparisonState {
 	comparison: {
 		loading: boolean,
-		data: IComparison[] | null
+		data: IComparison[] | null,
+		neighborhoodGroup: any
 	}
 }
 
-export const readsReducerMap: ActionReducerMap<ComparisonState> = {
+export const comparisonReducerMap: ActionReducerMap<ComparisonState> = {
 	comparison: comparisonReducer
 }
 
-export function comparisonReducer(state = { data: [], loading: false }, action): any {
+export function comparisonReducer(state = { data: [], loading: false, neighborhoodGroup: {} }, action): any {
 	switch (action.type) {
 		case ActionTypes.ADD_COMPARISON_READS:
 			if (!action.payload) {
-				return Object.assign({}, state, { loading: false });
+				return Object.assign({}, state, { data: [], loading: false });
 			}
 
 			const { guid = null, startDate = null, endDate = null } = action.payload;
@@ -32,6 +33,8 @@ export function comparisonReducer(state = { data: [], loading: false }, action):
 			return Object.assign({}, state, { data: filteredData.concat(action.payload) }, { loading: false });
 		case ActionTypes.LOADING_COMPARISON_READS:
 			return Object.assign({}, state, { loading: true });
+		case ActionTypes.ADD_NEIGHBORHOOD_GROUP:
+			return Object.assign({}, state, { neighborhoodGroup: action.payload });
 		default:
 			return state;
 	}

@@ -20,12 +20,16 @@ export class ChartHelper {
     return chartData;
   }
 
+  /**
+   * Removes values that are significantly larger than most values.
+   * @param data
+   */
   public static normalizeData(data: ILineItem[]): ILineItem[] {
     const tolerance = .5;
 
     const allValues = data.map((d: ILineItem) => d.line1);
-    const max = Math.max.apply(0, allValues);
-    const largeValues = allValues.filter(val => val <= max && val >= max * tolerance);
+    const maxValue = Math.max.apply(0, allValues);
+    const largeValues = allValues.filter(val => val <= maxValue && val >= maxValue * tolerance);
 
     // Check if abnormal values are less than 10% of all values.
     if (largeValues.length < allValues.length * .1) {
@@ -35,6 +39,11 @@ export class ChartHelper {
     return data;
   }
 
+  /**
+   * Puts values into date buckets determined by time span.
+   * @param dateRange
+   * @param data
+   */
   public static groupDeltasByTimeSpan(dateRange: IDateRange, data: ILineItem[]): ILineItem[] {
     let { startDate, endDate, timeSpan } = dateRange;
     const dataPoints = [];
@@ -221,7 +230,13 @@ export class ChartHelper {
     };
   }
 
+  /**
+   * Fill in average value if value is missing at given indices.
+   * @param data
+   * @param indices
+   */
   private static _fillEmptyHoles(data: ILineItem[], indices: number[]) {
+    // Iterate over every index of an empty data in the data array.
     indices.forEach(emptyIndex => {
       // Moves back to find the first non-zero value in data array.
       let backIndex = emptyIndex > 0 ? emptyIndex - 1 : 0;
@@ -268,17 +283,20 @@ export class ChartHelper {
             frwdIndex++;
           }
         }
-
       }
 
+      // fill in averaged data points.
       if (prevVal && nextVal) {
-        data[emptyIndex].line1 = (prevVal + nextVal) / 2;
-      } else if (prevVal && !nextVal) {
+        const avg = (prevVal + nextVal) / 2;
+
+        // To differentiate missing values, adding the following decimal.
+        data[emptyIndex].line1 = parseInt(avg.toString()) + 0.00099;
+      } else if (prevVal && nextVal !== 0) {
         data[emptyIndex].line1 = prevVal;
-      } else if (!prevVal && nextVal) {
+      } else if (prevVal !== 0 && nextVal) {
         data[emptyIndex].line1 = nextVal;
       }
-    })
+    });
   }
 
 }

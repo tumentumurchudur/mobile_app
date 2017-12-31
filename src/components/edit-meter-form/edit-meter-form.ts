@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnInit } from "@angular/core";
-import { FormGroup, FormBuilder, Validators } from "@angular/forms";
+import { AlertController } from "ionic-angular";
+import { FormGroup, FormBuilder } from "@angular/forms";
 
 import { IMeter, IUser } from "../../interfaces";
 import { StoreServices } from "../../store/services";
@@ -21,11 +22,12 @@ export class EditMeterFormComponent implements OnInit {
 
   constructor(
     private _formBuilder: FormBuilder,
-    private _storeServices: StoreServices
+    private _storeServices: StoreServices,
+    private _alertCtrl: AlertController
   ) { }
 
   ngOnInit() {
-    this._providerName = this.meter._provider.split('/').pop() || "No provider";
+    this._providerName = this.meter._provider.split("/").pop() || "No provider";
     this._planName = this.meter._plan || "No plan";
 
     this._editMeter = this._formBuilder.group({
@@ -35,16 +37,6 @@ export class EditMeterFormComponent implements OnInit {
       billingStart: [this.meter._billing_start],
       goal: [this.meter._goal]
     });
-  }
-
-  // TODO: Implement
-  private _keyboardSubmit(): void {
-
-  }
-
-  // TODO: Implement
-  private _editProvider(): void {
-
   }
 
   private _save(): void {
@@ -60,9 +52,29 @@ export class EditMeterFormComponent implements OnInit {
     this.cancelClicked.emit();
   }
 
-  // TODO: Implement
-  private _onDelete(): void {
+  private _onDeleteClick(): void {
+    this._presentConfirm();
+  }
 
+  private _presentConfirm(): void {
+    this._alertCtrl.create({
+      title: "Confirm delete",
+      message: "Are you sure that you want to delete this meter?",
+      buttons: [
+        {
+          text: "Cancel",
+          role: "cancel"
+        },
+        {
+          text: "Delete",
+          handler: () => {
+            this._storeServices.removeMeter(this.meter, this.user);
+
+            this.cancelClicked.emit();
+          }
+        }
+      ]
+    }).present();
   }
 
 }
