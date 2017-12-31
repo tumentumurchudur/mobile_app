@@ -46,10 +46,7 @@ export class MeterEffects {
         Observable.fromPromise(
           // Check if meter data is stored locally by uid as key.
           this._storage.get(user.uid).then(cachedData => {
-            if (!cachedData) {
-              return {};
-            }
-            return cachedData;
+            return cachedData || {};
           })
         ),
         Observable.of(user)

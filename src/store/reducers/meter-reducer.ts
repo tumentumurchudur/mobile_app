@@ -64,8 +64,6 @@ export function meterReducer(state = { data: [], provider: {}, loading: false}, 
 			const allMeters = sortByKey(Object.assign([], filteredMeters.concat(action.payload)), "_name");
 
 			return Object.assign({}, state, { data: allMeters, loading: false });
-		case ActionTypes.UPDATE_LAST_UPDATED_DATE:
-			return Object.assign({}, state, { lastUpdatedDate: action.payload });
 		default:
 			return state;
 	}
