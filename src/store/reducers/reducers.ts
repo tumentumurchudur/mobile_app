@@ -10,13 +10,7 @@ import { readsReducer } from "./reads-reducer";
 import { comparisonReducer } from "./comparison-reducer";
 
 export interface AppState {
-	meters: {
-		data: IMeter[] | null,
-		loading: boolean,
-		lastUpdatedDate: Date | null,
-		providerType: any,
-		provider: IProvider
-	},
+	meters: { data: IMeter[] | null, loading: boolean, providerType: any, provider: IProvider },
 	reads: { data: IReads[] | null, loading: boolean },
 	comparison: { data: IComparison[] | null, loading: boolean, neighborhoodGroup: any },
 	user: IUser | null
