@@ -3,6 +3,7 @@ export { ADD_USER, UPDATE_USER, AddUser, UpdateUser } from "./user-actions";
 export {
   AddMeters,
   AddMeter,
+  RemoveMeter,
   AddMeterGuid,
   UpdateMeter,
   LoadMeters,
@@ -23,6 +24,7 @@ export {
 
   ADD_METERS,
   ADD_METER,
+  REMOVE_METER,
   ADD_METER_GUID,
   UPDATE_METER,
   LOAD_METERS

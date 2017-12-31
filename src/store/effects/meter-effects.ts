@@ -17,11 +17,14 @@ import { CostHelper } from "../../helpers";
 import {
   LOAD_METERS,
   TRIGGER_ADD_METER,
+  TRIGGER_REMOVE_METER,
   TRIGGER_LOAD_METERS,
   TRIGGER_UPDATE_METER_SETTINGS,
   TRIGGER_VALIDATE_METER,
 
   AddMeter,
+  RemoveMeter,
+  TriggerRemoveMeter,
   AddMeters,
   AddMeterGuid,
   LoadMeters,
@@ -194,6 +197,17 @@ export class MeterEffects {
     })
     .map((meterGuid: string) => {
       return new AddMeterGuid(meterGuid);
+    });
+
+  @Effect()
+  public removeMeter$ = this._actions$
+    .ofType(TRIGGER_REMOVE_METER)
+    .map((action: any) => action.payload)
+    .switchMap(({ meter, user }) => {
+      return this._db.deleteMeter(meter, user);
+    })
+    .map((meter: IMeter) => {
+      return new RemoveMeter(meter);
     });
 
   constructor(
