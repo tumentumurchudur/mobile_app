@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Effect, Actions } from "@ngrx/effects";
+import { Storage } from "@ionic/storage";
 
 import { StoreServices } from "../../store/services";
 
@@ -33,22 +34,26 @@ export class ReadsEffects {
   public updateReadsForAMeter$ = this._actions$
     .ofType(TRIGGER_UPDATE_METER_READS)
     .map((action: any) => action.payload)
-    .switchMap((meter: IMeter) => {
-      if (!meter) {
+    .switchMap((data: any) => {
+      if (!data || !data.meter) {
         return Observable.combineLatest([
           Observable.of(null),
-          Observable.of([])
+          Observable.of([]),
+          Observable.of(null)
         ]);
       } else {
+        const { meter = null, user = null } = data;
+
         return Observable.combineLatest([
           Observable.of(meter),
           // Gets reads from database for given meter.
-          this._db.getReadsForMeter(meter._guid, meter._billing_start)
+          this._db.getReadsForMeter(meter._guid, meter._billing_start),
+          Observable.of(user)
         ]);
       }
     })
     .map((values: any[]) => {
-      const [ meter, reads ] = values;
+      const [ meter = null, reads = [], user = null ] = values;
 
       if (!meter) {
         // Nothing gets updated.
@@ -63,6 +68,20 @@ export class ReadsEffects {
         _usage: cost.totalDelta || 0
       });
 
+      // Update local storage.
+      this._storage.get(user.uid).then(cachedData => {
+        const { meters = [] } = cachedData;
+
+        for (let meter of meters) {
+          if (meter._guid === newMeter._guid && meter._name === newMeter._name) {
+            meter = newMeter;
+
+            break;
+          }
+        }
+        this._storage.set(user.uid, { meters });
+      });
+
       return new UpdateMeter(newMeter);
     });
 
@@ -74,16 +93,20 @@ export class ReadsEffects {
   public updateReadsForAllMeters$ = this._actions$
     .ofType(LOAD_READS_BY_METERS)
     .map((action: any) => action.payload)
-    .switchMap((meters: IMeter[]) => {
+    .switchMap(({ meters, user }) => {
       return Observable.combineLatest([
-        this._db.getReadsForMeters(meters)
+        this._db.getReadsForMeters(meters),
+        Observable.of(user)
       ]);
     })
     .map((values: any[]) => {
-      const [ meters = [] ] = values;
+      const [ meters = [], user = null ] = values;
 
       // Calculates actual cost and usage.
       const newMeters = CostHelper.calculateCostAndUsageForMeters(meters);
+
+      // Updates local storage with new meters data.
+      this._storage.set(user.uid, { meters: newMeters, lastUpdatedDate: new Date() });
 
       return new AddMeters(newMeters);
     });
@@ -155,6 +178,7 @@ export class ReadsEffects {
     constructor(
       private readonly _actions$: Actions,
       private readonly _db: DatabaseProvider,
-      private readonly _storeServices: StoreServices
+      private readonly _storeServices: StoreServices,
+      private readonly _storage: Storage
     ) { }
 }

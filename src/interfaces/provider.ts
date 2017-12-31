@@ -3,5 +3,6 @@ export interface IProvider {
   countries?: string[],
   regions?: string[],
   providers?: string[],
-  plans?: string[]
+  plans?: string[],
+  guid?: string
 }

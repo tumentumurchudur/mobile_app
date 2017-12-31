@@ -3,23 +3,25 @@ export { ADD_USER, UPDATE_USER, AddUser, UpdateUser } from "./user-actions";
 export {
   AddMeters,
   AddMeter,
-  RemoveMeter,
+  AddMeterGuid,
   UpdateMeter,
   LoadMeters,
 
+  TriggerAddMeter,
   TriggerLoadMeters,
   TriggerUpdateMeterReads,
   TriggerUpdateMeterSettings,
-  TriggerRemoveMeter,
+  TriggerValidateMeter,
 
+  TRIGGER_ADD_METER,
   TRIGGER_LOAD_METERS,
   TRIGGER_UPDATE_METER_READS,
   TRIGGER_UPDATE_METER_SETTINGS,
-  TRIGGER_REMOVE_METER,
+  TRIGGER_VALIDATE_METER,
 
   ADD_METERS,
   ADD_METER,
-  REMOVE_METER,
+  ADD_METER_GUID,
   UPDATE_METER,
   LOAD_METERS
 } from "./meter-actions";

@@ -7,7 +7,7 @@ export interface IMeter {
   _billing_total?: number | null,
   _billing_since_start?: number | null,
   _goal: number | null,
-  _guid?: string | null,
+  _guid: string | null,
   _meter_id: string | null,
   _plan: string | null,
   _provider: string | null,

@@ -8,13 +8,14 @@ import { AuthProvider } from "./auth";
 
 import { Observable } from "rxjs/Observable";
 import "rxjs/add/observable/combineLatest";
-import * as _ from 'lodash';
+import * as _ from "lodash";
 
 
 @Injectable()
 export class DatabaseProvider {
   private _db: firebase.database.Database;
   private _usersRef: firebase.database.Reference;
+  private _metersRef: firebase.database.Reference;
   private _orgsRef: firebase.database.Reference;
   private _readsRef: firebase.database.Reference;
   private _providersRef: firebase.database.Reference;
@@ -30,6 +31,7 @@ export class DatabaseProvider {
     this._db = firebase.database();
 
     this._usersRef = this._db.ref(databasePaths.users);
+    this._metersRef = this._db.ref(databasePaths.meters);
     this._orgsRef = this._db.ref(databasePaths.orgs);
     this._readsRef = this._db.ref(databasePaths.reads);
     this._providersRef = this._db.ref(databasePaths.providers);
@@ -314,6 +316,31 @@ export class DatabaseProvider {
     });
   }
 
+  public addMeter(meter: IMeter, user: IUser): Observable<IMeter> {
+
+    return Observable.create(observer => {
+      const updates = {};
+      const path = `${user.orgPath}/Building1/_meters/_${meter._utilityType}/${meter._name}`;
+      const settings = {
+        _billing_start: meter._billing_start,
+        _goal: meter._goal,
+        _meter_id: meter._meter_id,
+        _plan: meter._plan,
+        _provider: meter._provider,
+        _type: meter._utilityType,
+        _guid: meter._guid,
+      };
+
+      updates[path] = settings;
+
+      this._orgsRef.child(path).set(settings).then(() => {
+        observer.next(Object.assign({}, meter, settings));
+      }, error => {
+        observer.error(error);
+      });
+    });
+  }
+
   public updateMeterSettings(meter: IMeter, user: IUser): Observable<IMeter> {
     return Observable.create(observer => {
       const updates = {};
@@ -334,6 +361,23 @@ export class DatabaseProvider {
         observer.next(Object.assign({}, meter, settings));
       })
       .catch(error => {
+        observer.error(error);
+      });
+    });
+  }
+
+  public findMeterById(meterId: string): Observable<any> {
+    return Observable.create(observer => {
+      this._metersRef.orderByChild("meter_id").equalTo(meterId).once("value").then((snapshot) => {
+        const meterGuidObj = snapshot.val();
+
+        if (meterGuidObj) {
+          const meterGuid = Object.keys(meterGuidObj)[0];
+          observer.next(meterGuid);
+        } else {
+          observer.next(null);
+        }
+      }, error => {
         observer.error(error);
       });
     });

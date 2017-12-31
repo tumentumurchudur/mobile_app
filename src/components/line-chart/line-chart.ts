@@ -193,7 +193,7 @@ export class LineChartComponent implements OnChanges {
       .data(this.data)
       .enter().append("svg:circle")
       .attr("transform", "translate(20, 10)")
-      .attr("r", 3)
+      .attr("r", 2.5)
       .attr("cx", (d) => x(d.date))
       .attr("cy", (d) => y(d[colName]))
       .style("stroke", color)
