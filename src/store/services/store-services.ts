@@ -18,14 +18,11 @@ import {
 	AddUser,
 	UpdateUser,
 	TriggerAddMeter,
+	TriggerRemoveMeter,
 	TriggerLoadMeters,
 	TriggerUpdateMeterReads,
 	TriggerUpdateMeterSettings,
-<<<<<<< HEAD
-	TriggerRemoveMeter,
-=======
   TriggerValidateMeter,
->>>>>>> master
 	TriggerComparisonReads,
 	AddReads,
 	LoadReadsByDateRange,
@@ -69,19 +66,13 @@ export class StoreServices {
 		return this._store.select(state => state.meters.loading);
 	}
 
-<<<<<<< HEAD
-  public addMeter(meter: IMeter) {
-    this._store.dispatch(new AddMeter(meter));
+  public addMeter(meter: IMeter, user: IUser) {
+    this._store.dispatch(new TriggerAddMeter({ meter, user }));
 	}
 
 	public removeMeter(meter: IMeter, user: IUser) {
 		this._store.dispatch(new TriggerRemoveMeter({ meter, user }));
 	}
-=======
-  public addMeter(meter: IMeter, user: IUser) {
-    this._store.dispatch(new TriggerAddMeter({ meter, user }));
-  }
->>>>>>> master
 
 	public selectMeters() : Observable<IMeter[]> {
 		return this._store.select(state => state.meters.data)
