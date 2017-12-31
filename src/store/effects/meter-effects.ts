@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Effect, Actions } from "@ngrx/effects";
 import { Storage } from "@ionic/storage";
+import * as moment from "moment";
 
 import { Observable } from "rxjs/rx";
 import "rxjs/add/operator/map";
@@ -10,6 +11,7 @@ import "rxjs/add/observable/fromPromise";
 
 import { DatabaseProvider } from "../../providers";
 import { IMeter, IUser } from "../../interfaces";
+import { environment } from "../../environments";
 
 import { CostHelper } from "../../helpers";
 import {
@@ -22,8 +24,7 @@ import {
   RemoveMeter,
   LoadMeters,
   TriggerUpdateMeterReads,
-  UpdateUser,
-  UpdateLastUpdatedDate
+  UpdateUser
 } from "../actions";
 
 @Injectable()
@@ -44,30 +45,35 @@ export class MeterEffects {
       return Observable.combineLatest([
         Observable.fromPromise(
           // Check if meter data is stored locally by uid as key.
-          this._storage.get(user.uid).then(meters => {
-            return meters && meters.length ? meters : [];
+          this._storage.get(user.uid).then(cachedData => {
+            if (!cachedData) {
+              return {};
+            }
+            return cachedData;
           })
         ),
         Observable.of(user)
       ]);
     })
-    .flatMap((values: any[]) => {
-      const [meters = [], user = null] = values;
+    .map((values: any[]) => {
+      const [ cachedData = null, user = null ] = values;
+      const { meters = [], lastUpdatedDate = null } = cachedData;
 
-      // Load data from API.
-      if (!meters.length) {
-        console.log("loading from database.");
-        return [
-          new LoadMeters(user),
-          new UpdateLastUpdatedDate(new Date())
-        ];
+      // Check if retention policy is expired.
+      let cachePolicyExpired = false;
+      if (lastUpdatedDate) {
+        const { cacheDuration } = environment;
+
+        cachePolicyExpired = moment(lastUpdatedDate).add(cacheDuration, "m").toDate() < new Date();
       }
 
-      console.log("loading from cache.");
+      // Load data from API.
+      if (!meters.length || !lastUpdatedDate || cachePolicyExpired) {
+        return new LoadMeters(user);
+      }
+
       // Load data from cache.
-      return [
-        new AddMeters(meters)
-      ];
+      return new AddMeters(meters);
     });
 
   /**
@@ -119,7 +125,10 @@ export class MeterEffects {
       const newMeters = CostHelper.calculateCostAndUsageForMeters(meters);
 
       // Store meter data locally by uid as key.
-      this._storage.set(user.uid, newMeters);
+      this._storage.set(user.uid, {
+        meters: newMeters,
+        lastUpdatedDate: new Date()
+      });
 
       // Dispatch actions to update the store.
       return [
