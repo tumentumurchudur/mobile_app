@@ -21,7 +21,8 @@ import {
 
   AddMeters,
   UpdateMeter,
-  AddReads
+  AddReads,
+  UpdateLastUpdatedDate
 } from "../actions";
 
 @Injectable()
@@ -34,14 +35,16 @@ export class ReadsEffects {
   public updateReadsForAMeter$ = this._actions$
     .ofType(TRIGGER_UPDATE_METER_READS)
     .map((action: any) => action.payload)
-    .switchMap(({ meter, user }) => {
-      if (!meter) {
+    .switchMap((data: any) => {
+      if (!data || !data.meter) {
         return Observable.combineLatest([
           Observable.of(null),
           Observable.of([]),
-          Observable.of(user)
+          Observable.of(null)
         ]);
       } else {
+        const { meter = null, user = null } = data;
+
         return Observable.combineLatest([
           Observable.of(meter),
           // Gets reads from database for given meter.
@@ -50,12 +53,12 @@ export class ReadsEffects {
         ]);
       }
     })
-    .map((values: any[]) => {
-      const [ meter, reads, user ] = values;
+    .flatMap((values: any[]) => {
+      const [ meter = null, reads = [], user = null ] = values;
 
       if (!meter) {
         // Nothing gets updated.
-        return new UpdateMeter(null);
+        return [new UpdateMeter(null)];
       }
 
       const deltas = ChartHelper.getDeltas(reads);
@@ -68,20 +71,20 @@ export class ReadsEffects {
 
       // Update local storage.
       this._storage.get(user.uid).then((meters: IMeter[]) => {
-        if (!meters || !meters.length) {
-
-        }
-
         for (let meter of meters) {
           if (meter._guid === newMeter._guid && meter._name === newMeter._name) {
             meter = newMeter;
+
             break;
           }
         }
         this._storage.set(user.uid, meters);
       });
 
-      return new UpdateMeter(newMeter);
+      return [
+        new UpdateMeter(newMeter),
+        new UpdateLastUpdatedDate(new Date())
+      ];
     });
 
   /**
@@ -98,7 +101,7 @@ export class ReadsEffects {
         Observable.of(user)
       ]);
     })
-    .map((values: any[]) => {
+    .flatMap((values: any[]) => {
       const [ meters = [], user = null ] = values;
 
       // Calculates actual cost and usage.
@@ -107,7 +110,10 @@ export class ReadsEffects {
       // Updates local storage with new meters data.
       this._storage.set(user.uid, newMeters);
 
-      return new AddMeters(newMeters);
+      return [
+        new AddMeters(newMeters),
+        new UpdateLastUpdatedDate(new Date())
+      ];
     });
 
   /**

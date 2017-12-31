@@ -22,7 +22,8 @@ import {
   RemoveMeter,
   LoadMeters,
   TriggerUpdateMeterReads,
-  UpdateUser
+  UpdateUser,
+  UpdateLastUpdatedDate
 } from "../actions";
 
 @Injectable()
@@ -40,7 +41,7 @@ export class MeterEffects {
     .ofType(TRIGGER_LOAD_METERS)
     .map((action: any) => action.payload)
     .switchMap((user: IUser) => {
-      return Observable.combineLatest(
+      return Observable.combineLatest([
         Observable.fromPromise(
           // Check if meter data is stored locally by uid as key.
           this._storage.get(user.uid).then(meters => {
@@ -48,20 +49,25 @@ export class MeterEffects {
           })
         ),
         Observable.of(user)
-      );
+      ]);
     })
-    .map((values: any[]) => {
+    .flatMap((values: any[]) => {
       const [meters = [], user = null] = values;
 
       // Load data from API.
       if (!meters.length) {
         console.log("loading from database.");
-        return new LoadMeters(user);
+        return [
+          new LoadMeters(user),
+          new UpdateLastUpdatedDate(new Date())
+        ];
       }
 
       console.log("loading from cache.");
       // Load data from cache.
-      return new AddMeters(meters);
+      return [
+        new AddMeters(meters)
+      ];
     });
 
   /**
@@ -133,10 +139,16 @@ export class MeterEffects {
     .switchMap((data: any) => {
       const { meter = null, user = null } = data;
 
-      return this._db.updateMeterSettings(data.meter, data.user);
+      return Observable.combineLatest([
+        this._db.updateMeterSettings(data.meter, data.user),
+        Observable.of(user)
+      ]);
     })
-    .map((meter: IMeter) => {
-      return new TriggerUpdateMeterReads(meter);
+    .map((data: any[]) => {
+      const [meter, user] = data;
+
+      // Refreshes reads for this meter.
+      return new TriggerUpdateMeterReads({ meter, user });
     });
 
   @Effect()
