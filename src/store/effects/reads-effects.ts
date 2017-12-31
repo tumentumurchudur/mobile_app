@@ -52,12 +52,12 @@ export class ReadsEffects {
         ]);
       }
     })
-    .flatMap((values: any[]) => {
+    .map((values: any[]) => {
       const [ meter = null, reads = [], user = null ] = values;
 
       if (!meter) {
         // Nothing gets updated.
-        return [new UpdateMeter(null)];
+        return new UpdateMeter(null);
       }
 
       const deltas = ChartHelper.getDeltas(reads);
@@ -69,7 +69,9 @@ export class ReadsEffects {
       });
 
       // Update local storage.
-      this._storage.get(user.uid).then((meters: IMeter[]) => {
+      this._storage.get(user.uid).then(cachedData => {
+        const { meters = [] } = cachedData;
+
         for (let meter of meters) {
           if (meter._guid === newMeter._guid && meter._name === newMeter._name) {
             meter = newMeter;
@@ -77,12 +79,11 @@ export class ReadsEffects {
             break;
           }
         }
-        this._storage.set(user.uid, meters);
+
+        this._storage.set(user.uid, { meters });
       });
 
-      return [
-        new UpdateMeter(newMeter)
-      ];
+      return new UpdateMeter(newMeter);
     });
 
   /**
@@ -99,18 +100,16 @@ export class ReadsEffects {
         Observable.of(user)
       ]);
     })
-    .flatMap((values: any[]) => {
+    .map((values: any[]) => {
       const [ meters = [], user = null ] = values;
 
       // Calculates actual cost and usage.
       const newMeters = CostHelper.calculateCostAndUsageForMeters(meters);
 
       // Updates local storage with new meters data.
-      this._storage.set(user.uid, newMeters);
+      this._storage.set(user.uid, { meters: newMeters, lastUpdatedDate: new Date() });
 
-      return [
-        new AddMeters(newMeters)
-      ];
+      return new AddMeters(newMeters);
     });
 
   /**
