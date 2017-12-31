@@ -16,8 +16,10 @@ import {
   LOAD_METERS,
   TRIGGER_LOAD_METERS,
   TRIGGER_UPDATE_METER_SETTINGS,
+  TRIGGER_REMOVE_METER,
 
   AddMeters,
+  RemoveMeter,
   LoadMeters,
   TriggerUpdateMeterReads,
   LoadFromDb,
@@ -139,6 +141,17 @@ export class MeterEffects {
     })
     .map((meter: IMeter) => {
       return new TriggerUpdateMeterReads(meter);
+    });
+
+  @Effect()
+  public removeMeter$ = this._actions$
+    .ofType(TRIGGER_REMOVE_METER)
+    .map((action: any) => action.payload)
+    .switchMap(({ meter, user }) => {
+      return this._db.deleteMeter(meter, user);
+    })
+    .map((meter: IMeter) => {
+      return new RemoveMeter(meter);
     });
 
   constructor(

@@ -52,7 +52,8 @@ export class DatabaseProvider {
         } else {
           observer.next(orgs[0].path);
         }
-      }, error => {
+      })
+      .catch(error => {
         observer.error(error);
       });
     });
@@ -89,7 +90,8 @@ export class DatabaseProvider {
         });
 
         observer.next(meters);
-      }, error => {
+      })
+      .catch(error => {
         observer.error(error);
       });
     });
@@ -174,9 +176,10 @@ export class DatabaseProvider {
         const providerData = snapshot.val();
 
         observer.next(providerData);
-        }, error => {
-          observer.error(error);
-        });
+      })
+      .catch(error => {
+        observer.error(error);
+      });
     });
   }
 
@@ -217,7 +220,8 @@ export class DatabaseProvider {
           }
 
           observer.next(reads);
-        }, error => {
+        })
+        .catch(error => {
           observer.error(error);
         });
     });
@@ -243,7 +247,8 @@ export class DatabaseProvider {
           });
         }
         observer.next(reads);
-      }, error => {
+      })
+      .catch(error => {
         observer.error(error);
       });
     });
@@ -272,7 +277,8 @@ export class DatabaseProvider {
           }
 
           observer.next(reads);
-        }, error => {
+        })
+        .catch(error => {
           observer.error(error);
         });
     });
@@ -301,7 +307,8 @@ export class DatabaseProvider {
           }
 
           observer.next(reads);
-        }, error => {
+        })
+        .catch(error => {
           observer.error(error);
         });
     });
@@ -325,15 +332,11 @@ export class DatabaseProvider {
 
       this._orgsRef.update(updates).then(() => {
         observer.next(Object.assign({}, meter, settings));
-      }, error => {
+      })
+      .catch(error => {
         observer.error(error);
       });
     });
-  }
-
-  private _getShallowList(httpService: HttpClient, path: string): Observable<any> {
-    return httpService.get(`${path}.json?auth=${databaseToken.production}&shallow=true`)
-      .map(res => _.keys(res));
   }
 
   public getProviderTypes(): Observable<any> {
@@ -344,7 +347,7 @@ export class DatabaseProvider {
     return this._getShallowList(this._httpClient, `${this._providersRef}/${path}`);
   }
 
-  public getNeighborhoodGroupIds(meter: IMeter): Observable<any> {
+  public getNeighborhoodGroup(meter: IMeter): Observable<any> {
     const { _guid, _utilityType } = meter;
 
     return Observable.combineLatest(
@@ -354,6 +357,22 @@ export class DatabaseProvider {
       const header = new HttpHeaders().set("Authorization", neighborhoodConfigs.AUTHORIZATION);
 
       return this._httpClient.get(`${neighborhoodConfigs.NEIGHBORHOOD_COMP_DEV_REST_URL}?guid=${_guid}&token=${token}&utilityType=${_utilityType}`, { headers: header })
+    });
+  }
+
+  public deleteMeter(meter: IMeter, user: IUser): Observable<IMeter> {
+    return Observable.create(observer => {
+      const path = `${user.orgPath}/Building1/_meters/_${meter._utilityType}/${meter._name}`;
+
+      // TODO: Remove and replace it by commented out code below.
+      observer.next(meter);
+
+      // this._orgsRef.child(path).remove().then(() => {
+      //   observer.next(meter);
+      // })
+      // .catch(error => {
+      //   observer.error(error);
+      // });
     });
   }
 
@@ -373,6 +392,11 @@ export class DatabaseProvider {
     return Object.keys(meterObject).map(key => {
       return Object.assign({}, meterObject[key], { _name: key, _utilityType: meterType });
     });
+  }
+
+  private _getShallowList(httpService: HttpClient, path: string): Observable<any> {
+    return httpService.get(`${path}.json?auth=${databaseToken.production}&shallow=true`)
+      .map(res => _.keys(res));
   }
 
 }

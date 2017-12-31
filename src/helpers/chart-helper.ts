@@ -285,6 +285,7 @@ export class ChartHelper {
         }
       }
 
+      // fill in averaged data points.
       if (prevVal && nextVal) {
         const avg = (prevVal + nextVal) / 2;
 
@@ -295,7 +296,7 @@ export class ChartHelper {
       } else if (prevVal !== 0 && nextVal) {
         data[emptyIndex].line1 = nextVal;
       }
-    })
+    });
   }
 
 }
