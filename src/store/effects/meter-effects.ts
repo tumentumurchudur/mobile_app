@@ -146,12 +146,12 @@ export class MeterEffects {
       const { meter = null, user = null } = data;
 
       return Observable.combineLatest([
-        this._db.updateMeterSettings(data.meter, data.user),
+        this._db.updateMeterSettings(meter, user),
         Observable.of(user)
       ]);
     })
     .map((data: any[]) => {
-      const [meter, user] = data;
+      const [ meter = [], user = null ] = data;
 
       // Refreshes reads for this meter.
       return new TriggerUpdateMeterReads({ meter, user });
