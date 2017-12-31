@@ -6,7 +6,6 @@ export {
   RemoveMeter,
   UpdateMeter,
   LoadMeters,
-  UpdateLastUpdatedDate,
 
   TriggerLoadMeters,
   TriggerUpdateMeterReads,
@@ -22,8 +21,7 @@ export {
   ADD_METER,
   REMOVE_METER,
   UPDATE_METER,
-  LOAD_METERS,
-  UPDATE_LAST_UPDATED_DATE
+  LOAD_METERS
 } from "./meter-actions";
 
 export {

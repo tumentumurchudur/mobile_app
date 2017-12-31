@@ -3,7 +3,6 @@ import { IMeter, IUser } from "../../interfaces";
 
 export const TRIGGER_LOAD_METERS: string = "[Meter] TRIGGER LOAD METERS";
 export const LOAD_METERS: string = "[Meter] LOAD METERS";
-export const UPDATE_LAST_UPDATED_DATE: string = "[Meter] UPDATE LAST UPDATED DATE";
 
 export const ADD_METERS: string = "[Meter] ADD METERS";
 export const ADD_METER: string = "[Meter] ADD METER";
@@ -64,15 +63,6 @@ export class UpdateMeter implements Action {
 	public payload: IMeter | null = null;
 
 	constructor(private _payload: IMeter | null) {
-		this.payload = _payload;
-	}
-}
-
-export class UpdateLastUpdatedDate implements Action {
-	public readonly type = UPDATE_LAST_UPDATED_DATE;
-	public payload: Date | null = null;
-
-	constructor(private _payload: Date | null) {
 		this.payload = _payload;
 	}
 }

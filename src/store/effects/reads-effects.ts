@@ -21,8 +21,7 @@ import {
 
   AddMeters,
   UpdateMeter,
-  AddReads,
-  UpdateLastUpdatedDate
+  AddReads
 } from "../actions";
 
 @Injectable()
@@ -82,8 +81,7 @@ export class ReadsEffects {
       });
 
       return [
-        new UpdateMeter(newMeter),
-        new UpdateLastUpdatedDate(new Date())
+        new UpdateMeter(newMeter)
       ];
     });
 
@@ -111,8 +109,7 @@ export class ReadsEffects {
       this._storage.set(user.uid, newMeters);
 
       return [
-        new AddMeters(newMeters),
-        new UpdateLastUpdatedDate(new Date())
+        new AddMeters(newMeters)
       ];
     });
 
