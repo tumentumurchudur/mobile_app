@@ -41,7 +41,7 @@ export class ProviderEffects {
     .switchMap((utilityType: string) => {
           return this._db.getProviderRequestInfo(utilityType);
     })
-    .map((countries: any) => {
+    .map((countries: string[]) => {
       return new UpdateProviderCountries(countries);
     });
 

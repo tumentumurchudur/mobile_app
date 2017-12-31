@@ -79,7 +79,6 @@ export class ReadsEffects {
             break;
           }
         }
-
         this._storage.set(user.uid, { meters });
       });
 

@@ -17,10 +17,11 @@ import {
   TriggerGetProviderPlans,
 	AddUser,
 	UpdateUser,
+	TriggerAddMeter,
 	TriggerLoadMeters,
 	TriggerUpdateMeterReads,
 	TriggerUpdateMeterSettings,
-	TriggerRemoveMeter,
+  TriggerValidateMeter,
 	TriggerComparisonReads,
 	AddReads,
 	LoadReadsByDateRange,
@@ -64,17 +65,17 @@ export class StoreServices {
 		return this._store.select(state => state.meters.loading);
 	}
 
-  public addMeter(meter: IMeter) {
-    this._store.dispatch(new AddMeter(meter));
-	}
-
-	public removeMeter(meter: IMeter, user: IUser) {
-		this._store.dispatch(new TriggerRemoveMeter({ meter, user }));
-	}
+  public addMeter(meter: IMeter, user: IUser) {
+    this._store.dispatch(new TriggerAddMeter({ meter, user }));
+  }
 
 	public selectMeters() : Observable<IMeter[]> {
 		return this._store.select(state => state.meters.data)
 	}
+
+  public selectUser(): Observable<IUser> {
+    return this._store.select(state => state.user)
+  }
 
 	public addUser(user: IUser) {
 		this._store.dispatch(new AddUser(user));
@@ -143,6 +144,10 @@ export class StoreServices {
     return this._store.select(state => state.meters.provider.plans);
   }
 
+  public selectAddMeterGuid(): Observable<string> {
+    return this._store.select(state => state.meters.provider.guid);
+  }
+
   public getProviderCountries(utilityType: string) {
     this._store.dispatch(new TriggerGetProviderCountries(utilityType));
   }
@@ -161,6 +166,10 @@ export class StoreServices {
 
   public resetProvider() {
 	  this._store.dispatch(new ResetProvider());
+  }
+
+  public validateMeter(meterNumber: string) {
+	  this._store.dispatch(new TriggerValidateMeter(meterNumber));
   }
 
 	public loadNeighborhoodReads(meter: IMeter, dateRange: IDateRange) {
