@@ -8,12 +8,14 @@ export {
   LoadMeters,
 
   TriggerAddMeter,
+  TriggerRemoveMeter,
   TriggerLoadMeters,
   TriggerUpdateMeterReads,
   TriggerUpdateMeterSettings,
   TriggerValidateMeter,
 
   TRIGGER_ADD_METER,
+  TRIGGER_REMOVE_METER,
   TRIGGER_LOAD_METERS,
   TRIGGER_UPDATE_METER_READS,
   TRIGGER_UPDATE_METER_SETTINGS,
