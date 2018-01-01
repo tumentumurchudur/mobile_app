@@ -27,7 +27,7 @@ export class TriggerLoadMeters implements Action {
 
 export class LoadMeters implements Action {
 	public readonly type = LOAD_METERS;
-	public payload: IUser | null;
+	public payload: IUser;
 
 	constructor(private _payload: IUser) {
 		this.payload = _payload;
