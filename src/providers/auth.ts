@@ -11,7 +11,6 @@ import { Storage } from "@ionic/storage";
 
 @Injectable()
 export class AuthProvider {
-  private _credential: any;
 
   constructor(
       private _af: AngularFireAuth,
@@ -23,8 +22,8 @@ export class AuthProvider {
 
   public loginWithEmail(user: IUser): Observable<IUser> {
     return Observable.create(observer => {
-      this._credential = firebase.auth.EmailAuthProvider.credential(user.email, user.password);
-      this._signInWithCredential(this._credential).then((authData) => {
+      const credential = firebase.auth.EmailAuthProvider.credential(user.email, user.password);
+      this._signInWithCredential(credential).then((authData) => {
           observer.next(authData);
         }).catch((error) => {
           observer.error(error);
