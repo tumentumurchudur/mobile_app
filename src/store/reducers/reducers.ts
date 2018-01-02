@@ -13,7 +13,7 @@ import { providerReducer } from "./provider-reducer";
 export interface AppState {
 	meters: { data: IMeter[] | null, loading: boolean },
 	reads: { data: IReads[] | null, loading: boolean },
-	comparison: { data: IComparison[] | null, loading: boolean },
+	comparison: { data: IComparison[] | null, loading: boolean, neighborhoodGroup: any },
 	user: IUser | null,
   providers: {  provider: IProvider, providerTypes: string[] }
 

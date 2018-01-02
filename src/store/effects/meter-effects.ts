@@ -160,16 +160,15 @@ export class MeterEffects {
     .switchMap((data: any) => {
       const { meter = null, user = null } = data;
       return Observable.combineLatest([
-        this._db.addMeter(meter, user),
-        Observable.of(user)
+        this._db.addMeter(meter, user)
       ])
     })
     .switchMap((data: any[]) => {
-      const [ meter, user ] = data;
+      const [ meter ] = data;
 
       return this._db.getProviderForMeters([meter]);
     })
-    .switchMap((meter: any[]) => {
+    .switchMap((meter: IMeter[]) => {
         // Gets reads from database for given meter.
        return this._db.getReadsForMeters(meter);
     })
