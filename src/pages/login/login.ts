@@ -1,6 +1,7 @@
 import { Component } from "@angular/core";
 import { IonicPage, NavController } from "ionic-angular";
 
+import { Storage } from "@ionic/storage";
 import { IUser } from "../../interfaces";
 import { AuthProvider } from "../../providers"
 import { StoreServices } from "../../store/services";
@@ -14,8 +15,8 @@ import { StoreServices } from "../../store/services";
 })
 export class LoginPage {
   private _user: IUser = {
-    email: "spark@vutiliti.com",
-    password: "spark123",
+    email: null,
+    password: null,
     uid: null
   };
   private _isNewUser: boolean = false;
@@ -23,8 +24,16 @@ export class LoginPage {
   constructor(
     private _storeServices: StoreServices,
     private _auth: AuthProvider,
-    public navCtrl: NavController
-  ) {}
+    public navCtrl: NavController,
+    private _storage: Storage
+  ) {
+    this._storage.get('userInfo').then((val) => {
+      if (val["providerId"] === "password") {
+        this._user.email = val["a"];
+        this._user.password = val["f"];
+      }
+    });
+  }
 
   private _onLoginOptionClick() {
     this._isNewUser = false;

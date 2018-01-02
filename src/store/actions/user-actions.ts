@@ -21,3 +21,12 @@ export class UpdateUser implements Action {
 		this.payload = _payload;
 	}
 }
+
+export class TriggerCheckUser implements Action {
+  public readonly type = UPDATE_USER;
+  public payload: IUser | null;
+
+  constructor(private _payload: IUser) {
+    this.payload = _payload;
+  }
+}

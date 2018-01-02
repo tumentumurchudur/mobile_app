@@ -3,5 +3,6 @@ export interface IUser {
   email: string | null,
   password: string | null,
   uid: string | null,
-  orgPath?: string | null
+  orgPath?: string | null,
+  providerId?: string | null
 }
