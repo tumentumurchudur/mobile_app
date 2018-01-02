@@ -18,7 +18,14 @@ export function meterReducer(state = { data: [], loading: false}, action): any {
 		case ActionTypes.ADD_METERS:
 	    return Object.assign({}, state, { data: action.payload, loading: false });
 		case ActionTypes.ADD_METER:
-		  return Object.assign({}, state, { data: state.data.concat(action.payload), loading: false });
+			return Object.assign({}, state, { data: state.data.concat(action.payload), loading: false });
+		case ActionTypes.REMOVE_METER:
+			const meterToRemove = action.payload;
+			const meters = state.data.filter((meter: IMeter) => {
+				return meter._guid !== meterToRemove._guid || meter._name !== meterToRemove._name;
+			});
+
+			return Object.assign({}, state, { data: meters });
     case ActionTypes.TRIGGER_UPDATE_METER_READS:
 		case ActionTypes.TRIGGER_UPDATE_METER_SETTINGS:
 		  return Object.assign({}, state, { loading: true });

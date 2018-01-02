@@ -27,14 +27,14 @@
               [centerValue]="meter._usage / 1000 | number: '.1-2'"
               [centerLabel]="_getMeterConfig(meter, 'unit')"
               [textColor]="_getMeterConfig(meter, 'textColor')"
-              [colors]="_getMeterConfig(meter, 'color')"
+              [colors]="_getMeterConfig(meter, 'arcChartColors')"
               [meterIcon]="_getMeterConfig(meter, 'imgSrc')"
               [meterIconColor]="_getMeterConfig(meter, 'imgColor')"
               [animate]="i === 0 || i === _currentMeterIndex"
               [loading]="_meterLoading$ | async"
             ></arc-tween-chart>
 
-            <!-- TODO: Remove (click) once add meter is implemented -->
+            <!-- Updates meter when clicked -->
             <div
               class="actual-cost"
               [ngStyle]="{ 'color': _isUsageCostBehindGoal(meter) ? '#C22A17' : '#969696' }"
@@ -68,6 +68,7 @@
             <div *ngIf="_getDataByGuid(reads, meter._guid, i) as data">
               <line-chart
                 [data]="data.deltas"
+                [lineColors]="_getMeterConfig(meter, 'lineChartColors')"
                 [loading]="_loadingReads$ | async"
                 [animate]="_currentMeterIndex === i"
                 [series]="['line1']"

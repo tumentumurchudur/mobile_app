@@ -16,6 +16,7 @@ export interface AppState {
 	comparison: { data: IComparison[] | null, loading: boolean },
 	user: IUser | null,
   providers: {  provider: IProvider, providerTypes: string[] }
+
 }
 
 export const reducers: ActionReducerMap<AppState> = {

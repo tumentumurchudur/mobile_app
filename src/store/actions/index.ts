@@ -3,17 +3,20 @@ export { ADD_USER, UPDATE_USER, AddUser, UpdateUser } from "./user-actions";
 export {
   AddMeters,
   AddMeter,
+  RemoveMeter,
   AddMeterGuid,
   UpdateMeter,
   LoadMeters,
 
   TriggerAddMeter,
+  TriggerRemoveMeter,
   TriggerLoadMeters,
   TriggerUpdateMeterReads,
   TriggerUpdateMeterSettings,
   TriggerValidateMeter,
 
   TRIGGER_ADD_METER,
+  TRIGGER_REMOVE_METER,
   TRIGGER_LOAD_METERS,
   TRIGGER_UPDATE_METER_READS,
   TRIGGER_UPDATE_METER_SETTINGS,
@@ -21,6 +24,7 @@ export {
 
   ADD_METERS,
   ADD_METER,
+  REMOVE_METER,
   ADD_METER_GUID,
   UPDATE_METER,
   LOAD_METERS
@@ -70,8 +74,10 @@ export {
   AddComparison,
   TriggerComparisonReads,
   LoadingComparisonReads,
+  AddNeighborhoodGroup,
 
   ADD_COMPARISON_READS,
   TRIGGER_COMPARISON_READS,
-  LOADING_COMPARISON_READS
+  LOADING_COMPARISON_READS,
+  ADD_NEIGHBORHOOD_GROUP
 } from "./comparison-actions"

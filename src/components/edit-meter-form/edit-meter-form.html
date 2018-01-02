@@ -18,7 +18,7 @@
         ion-button
         color="danger"
         class="delete-btn"
-        (click)="_onDelete()"
+        (click)="_onDeleteClick()"
       >
         Delete
       </button>
@@ -29,7 +29,7 @@
 <!-- Form content -->
 <ion-content>
   <form class="flex-11 layout vertical" [formGroup]="_editMeter">
-    <ion-item (keyup.enter)="_keyboardSubmit()">
+    <ion-item>
       <ion-label floating color="text" stacked>Name</ion-label>
       <ion-input readonly formControlName="name"></ion-input>
     </ion-item>
@@ -39,14 +39,14 @@
       <ion-input type="number" formControlName="billingStart" max="28" min="1"></ion-input>
     </ion-item>
 
-    <ion-item class="meter-input" (keyup.enter)="_keyboardSubmit()">
+    <ion-item class="meter-input">
       <ion-label floating color="text" stacked>Goal Amount</ion-label>
       <ion-input formControlName="goal" class="money" type="number" min="0"></ion-input>
     </ion-item>
 
     <ion-item class="meter-input">
       <ion-label floating color="text" stacked>Provider</ion-label>
-      <ion-input (tap)="_editProvider()" readonly formControlName="provider"></ion-input>
+      <ion-input readonly formControlName="provider"></ion-input>
     </ion-item>
 
     <ion-item class="meter-input">
