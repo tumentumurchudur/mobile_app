@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Effect, Actions } from "@ngrx/effects";
 import { Storage } from "@ionic/storage";
+import * as moment from "moment";
 
 import { Observable } from "rxjs/rx";
 import "rxjs/add/operator/map";
@@ -10,6 +11,7 @@ import "rxjs/add/observable/fromPromise";
 
 import { DatabaseProvider } from "../../providers";
 import { IMeter, IUser } from "../../interfaces";
+import { environment } from "../../environments";
 
 import { CostHelper } from "../../helpers";
 import {
@@ -22,12 +24,10 @@ import {
 
   AddMeter,
   RemoveMeter,
-  TriggerRemoveMeter,
   AddMeters,
   AddMeterGuid,
   LoadMeters,
   TriggerUpdateMeterReads,
-  LoadFromDb,
   UpdateUser,
   UpdateMeter
 } from "../actions";
@@ -47,31 +47,35 @@ export class MeterEffects {
     .ofType(TRIGGER_LOAD_METERS)
     .map((action: any) => action.payload)
     .switchMap((user: IUser) => {
-      return Observable.combineLatest(
+      return Observable.combineLatest([
         Observable.fromPromise(
           // Check if meter data is stored locally by uid as key.
-          this._storage.get(user.uid).then(meters => {
-            return meters && meters.length ? meters : [];
+          this._storage.get(user.uid).then(cachedData => {
+            return cachedData || {};
           })
         ),
         Observable.of(user)
-      );
+      ]);
     })
     .map((values: any[]) => {
-      const [meters = [], user] = values;
+      const [ cachedData, user = null ] = values;
+      const { meters = [], lastUpdatedDate = null } = cachedData;
 
-      return new LoadMeters(user);
+      // Check if retention policy is expired.
+      let cachePolicyExpired = false;
+      if (lastUpdatedDate) {
+        const { cacheDuration } = environment;
 
-      /**
-       * TODO: Figure out a way to sync cache and store.
-       * // Load data from API.
-        if (!meters.length) {
-          return new LoadFromDb(user);
-        }
+        cachePolicyExpired = moment(lastUpdatedDate).add(cacheDuration, "m").toDate() < new Date();
+      }
 
-        // Load data from cache.
-        return new AddMeters(meters);
-       */
+      // Load data from database.
+      if (!meters.length || !lastUpdatedDate || cachePolicyExpired) {
+        return new LoadMeters(user);
+      }
+
+      // Load data from cache.
+      return new AddMeters(meters);
     });
 
   /**
@@ -82,7 +86,7 @@ export class MeterEffects {
    * @memberof MainEffects
    */
   @Effect()
-  public loadMetersDataFromDb$ = this._actions$
+  public loadMetersFromDatabase$ = this._actions$
     .ofType(LOAD_METERS)
     .map((action: any) => action.payload)
     .switchMap((user: IUser) => {
@@ -92,7 +96,7 @@ export class MeterEffects {
       ]);
     })
     .switchMap((values: any[]) => {
-      const [orgPath, user] = values;
+      const [ orgPath, user ] = values;
       const updatedUser = Object.assign({}, user, { orgPath });
 
       return Observable.combineLatest([
@@ -101,7 +105,7 @@ export class MeterEffects {
       ]);
     })
     .switchMap((values: any[]) => {
-      const [meters, user] = values;
+      const [ meters = [], user ] = values;
 
       return Observable.combineLatest([
         this._db.getReadsForMeters(meters),
@@ -109,7 +113,7 @@ export class MeterEffects {
       ]);
     })
     .switchMap((values: any[]) => {
-      const [meters, user] = values;
+      const [ meters = [], user ] = values;
 
       return Observable.combineLatest([
         this._db.getProviderForMeters(meters),
@@ -117,17 +121,23 @@ export class MeterEffects {
       ]);
     })
     .flatMap((values: any[]) => {
-      const [meters, user] = values;
+      const [ meters = [], user ] = values;
 
       // Calculates actual cost and usage.
-      const newMeters = CostHelper.calculateCostAndUsageForMeters(meters);
+      const newMeters = meters.length ? CostHelper.calculateCostAndUsageForMeters(meters) : [];
 
       // Store meter data locally by uid as key.
-      this._storage.set(user.uid, newMeters);
+      this._storage.set(user.uid, {
+        meters: newMeters,
+        lastUpdatedDate: new Date()
+      });
 
       // Dispatch actions to update the store.
       return [
+        // Add meters to store.
         new AddMeters(newMeters),
+
+        // Update user in store
         new UpdateUser(user)
       ];
     });
@@ -143,10 +153,16 @@ export class MeterEffects {
     .switchMap((data: any) => {
       const { meter = null, user = null } = data;
 
-      return this._db.updateMeterSettings(data.meter, data.user);
+      return Observable.combineLatest([
+        this._db.updateMeterSettings(meter, user),
+        Observable.of(user)
+      ]);
     })
-    .map((meter: IMeter) => {
-      return new TriggerUpdateMeterReads(meter);
+    .map((data: any[]) => {
+      const [ meter = [], user ] = data;
+
+      // Refreshes reads for this meter.
+      return new TriggerUpdateMeterReads({ meter, user });
     });
 
   /**
@@ -161,17 +177,14 @@ export class MeterEffects {
       const { meter = null, user = null } = data;
       return  this._db.addMeter(meter, user);
     })
-    .switchMap((meter: IMeter) => {
-      return this._db.getProviderForMeters([meter]);
-    })
-    .switchMap((meter: IMeter[]) => {
-        // Gets reads from database for given meter.
-       return this._db.getReadsForMeters(meter);
-    })
-    .map((meter: IMeter[]) => {
-      const newMeter = CostHelper.calculateCostAndUsageForMeters([meter[0]]);
+    .flatMap((meter: IMeter) => {
+      return [
+        // Adds meter to store.
+        new AddMeter(meter),
 
-      return new AddMeter(newMeter[0]);
+        // Update reads for this meter.
+        new UpdateMeter(meter)
+      ]
     });
 
   /**
@@ -189,14 +202,21 @@ export class MeterEffects {
       return new AddMeterGuid(meterGuid);
     });
 
+  /**
+   * Removes meter from database and store.
+   */
   @Effect()
   public removeMeter$ = this._actions$
     .ofType(TRIGGER_REMOVE_METER)
     .map((action: any) => action.payload)
-    .switchMap(({ meter, user }) => {
+    .switchMap((data: any) => {
+      const { meter, user } = data;
+
+      // Removes meter from database.
       return this._db.deleteMeter(meter, user);
     })
     .map((meter: IMeter) => {
+      // Removes meter from store.
       return new RemoveMeter(meter);
     });
 

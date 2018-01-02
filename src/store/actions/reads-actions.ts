@@ -1,5 +1,5 @@
 import { Action } from "@ngrx/store";
-import { IReads, IMeter } from "../../interfaces";
+import { IReads, IMeter, IUser } from "../../interfaces";
 
 export const ADD_READS: string = "[Reads] ADD READS";
 export const LOAD_READS_BY_METERS: string = "[Reads] LOAD READS BY METERS";
@@ -31,9 +31,9 @@ export class LoadingReads implements Action {
 
 export class LoadReadsByMeters implements Action {
 	public readonly type = LOAD_READS_BY_METERS;
-	public payload: IMeter[] | null;
+	public payload: { meters: IMeter[], user: IUser };
 
-	constructor(private _payload: IMeter[]) {
+	constructor(private _payload: { meters: IMeter[], user: IUser }) {
 		this.payload = _payload;
 	}
 }
