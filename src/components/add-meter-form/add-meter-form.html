@@ -56,7 +56,7 @@
         </ion-select>
       </ion-item>
     </div>
-    <div *ngIf="_providerProviders$ | async as providers">
+    <div *ngIf="_providerServiceProviders$ | async as providers">
       <ion-item>
         <ion-label>Provider</ion-label>
         <ion-select formControlName="provider" (ionChange)="_getPlans()">
@@ -104,11 +104,20 @@
       Back
     </button>
     <button ion-button
-      *ngIf="_step <= 4"
+      *ngIf="_step <= 4 && _step !== 2"
       class="form-nav-button"
       color="primary"
       (tap)="_incStep()"
       type="submit"
+    >
+      Next
+    </button>
+    <button ion-button
+            *ngIf="_step === 2"
+            class="form-nav-button"
+            color="primary"
+            (tap)="_validateMeter()"
+            type="submit"
     >
       Next
     </button>

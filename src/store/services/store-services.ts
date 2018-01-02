@@ -130,27 +130,27 @@ export class StoreServices {
   }
 
   public selectProviderTypes() {
-    return this._store.select(state => state.meters.providerType);
+    return this._store.select(state => state.providers.providerTypes);
   }
 
   public selectProviderCountries() {
-    return this._store.select(state => state.meters.provider.countries);
+    return this._store.select(state => state.providers.provider.countries);
   }
 
   public selectProviderRegions() {
-    return this._store.select(state => state.meters.provider.regions);
+    return this._store.select(state => state.providers.provider.regions);
   }
 
-  public selectProviderProviders() {
-    return this._store.select(state => state.meters.provider.providers);
+  public selectProviderServiceProviders() {
+    return this._store.select(state => state.providers.provider.serviceProviders);
   }
 
   public selectProviderPlans() {
-    return this._store.select(state => state.meters.provider.plans);
+    return this._store.select(state => state.providers.provider.plans);
   }
 
   public selectAddMeterGuid(): Observable<string> {
-    return this._store.select(state => state.meters.provider.guid);
+    return this._store.select(state => state.providers.provider.guid);
   }
 
   public getProviderCountries(utilityType: string) {

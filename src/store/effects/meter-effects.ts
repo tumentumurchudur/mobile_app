@@ -174,14 +174,19 @@ export class MeterEffects {
     .map((action: any) => action.payload)
     .switchMap((data: any) => {
       const { meter = null, user = null } = data;
-
-      return this._db.addMeter(data.meter, data.user);
+      return  this._db.addMeter(meter, user);
     })
-    .flatMap((meter: IMeter) => {
-      return [
-        new AddMeter(meter),
-        new UpdateMeter(meter)
-      ]
+    .switchMap((meter: IMeter) => {
+      return this._db.getProviderForMeters([meter]);
+    })
+    .switchMap((meter: IMeter[]) => {
+        // Gets reads from database for given meter.
+       return this._db.getReadsForMeters(meter);
+    })
+    .map((meter: IMeter[]) => {
+      const newMeter = CostHelper.calculateCostAndUsageForMeters([meter[0]]);
+
+      return new AddMeter(newMeter[0]);
     });
 
   /**
