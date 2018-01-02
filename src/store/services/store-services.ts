@@ -30,6 +30,7 @@ import {
 	LoadReadsByMeters,
 	LoadingComparisonReads
 } from "../actions";
+import {LogoutUser} from "../actions/user-actions";
 
 
 @Injectable()
@@ -89,6 +90,10 @@ export class StoreServices {
 	public updateUser(user: IUser) {
 		this._store.dispatch(new UpdateUser(user));
 	}
+
+	public logOutUser() {
+	  this._store.dispatch(new LogoutUser());
+  }
 
 	public updateAllMetersReads(meters$: Observable<IMeter[]>) {
 		meters$.take(1).subscribe((meters: IMeter[]) => {

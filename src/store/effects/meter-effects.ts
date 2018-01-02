@@ -43,10 +43,6 @@ export class MeterEffects {
    * @memberof MainEffects
    */
   @Effect()
-  public persistUser$ = this._actions$
-    .ofType()
-
-  @Effect()
   public checkCacheAndThenLoadData$ = this._actions$
     .ofType(TRIGGER_LOAD_METERS)
     .map((action: any) => action.payload)

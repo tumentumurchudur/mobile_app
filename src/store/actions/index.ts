@@ -1,5 +1,18 @@
 export { LoadFromDb, LOAD_FROM_DB } from "./actions";
-export { ADD_USER, UPDATE_USER, AddUser, UpdateUser } from "./user-actions";
+export {
+  ADD_USER,
+  UPDATE_USER,
+  LOGOUT_USER,
+  TRIGGER_PREP_FOR_LOGOUT,
+  TRIGGER_USER_CHECK,
+
+  AddUser,
+  UpdateUser,
+  LogoutUser,
+  TriggerPrepForLogout ,
+  TriggerUserCheck
+} from "./user-actions";
+
 export {
   AddMeters,
   AddMeter,

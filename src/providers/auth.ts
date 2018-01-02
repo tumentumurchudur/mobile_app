@@ -73,8 +73,9 @@ export class AuthProvider {
   }
 
   private _signInWithCredential(credential) {
-    this._storage.set("userInfo", credential);
-    return this._af.auth.signInWithCredential(credential);
+   return this._storage.set("userInfo", credential).then(() => {
+      return this._af.auth.signInWithCredential(credential);
+    });
   }
 
   public resetPassword(emailAddr: string): Observable<IUser> {
@@ -104,6 +105,17 @@ export class AuthProvider {
       }).catch(error => {
         observer.error(error);
       });
+    });
+  }
+
+  public logoutUser(): Observable<IUser> {
+    return Observable.create(observer => {
+      return this._af.auth.signOut().then(() => {
+        this._storage.remove("userInfo");
+        observer.next();
+     }).catch((error) => {
+      observer.error(error);
+     });
     });
   }
 

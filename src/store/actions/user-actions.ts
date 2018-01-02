@@ -3,7 +3,9 @@ import { IUser } from '../../interfaces';
 
 export const ADD_USER: string = "ADD USER";
 export const UPDATE_USER: string = "UPDATE USER";
-export const TRIGGER_LOGOUT_USER: string = "TRIGGER LOGOUT USER";
+export const LOGOUT_USER: string = "LOGOUT USER";
+export const TRIGGER_PREP_FOR_LOGOUT: string = "TRIGGER PREP FOR LOGOUT";
+export const TRIGGER_USER_CHECK: string = "TRIGGER USER CHECK";
 
 export class AddUser implements Action {
 	public readonly type = ADD_USER;
@@ -23,8 +25,8 @@ export class UpdateUser implements Action {
 	}
 }
 
-export class TriggerCheckUser implements Action {
-  public readonly type = UPDATE_USER;
+export class TriggerUserCheck implements Action {
+  public readonly type = TRIGGER_USER_CHECK;
   public payload: IUser | null;
 
   constructor(private _payload: IUser) {
@@ -32,13 +34,15 @@ export class TriggerCheckUser implements Action {
   }
 }
 
+export class TriggerPrepForLogout implements Action {
+  public readonly type = TRIGGER_PREP_FOR_LOGOUT;
+  public payload: any;
 
-export class TriggerLogoutUser implements Action {
-  public readonly type = TRIGGER_LOGOUT_USER;
-  public payload: IUser | null;
+}
 
-  constructor(private _payload: IUser) {
-    this.payload = _payload;
-  }
+export class LogoutUser implements Action {
+  public readonly type = LOGOUT_USER;
+  public payload: any;
+
 }
 
