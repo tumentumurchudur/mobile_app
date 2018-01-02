@@ -155,7 +155,7 @@ export class ArcTweenChartComponent implements OnInit {
   }
 
   private _getSvg(): string {
-    return this.meterIcon;
+    return `url(../${this.meterIcon}) no-repeat 50% 50%`;
   }
 
   /**

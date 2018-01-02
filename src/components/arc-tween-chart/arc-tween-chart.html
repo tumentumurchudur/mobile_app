@@ -17,7 +17,10 @@
   </svg>
   <div
     class="svg-icon"
-    [ngStyle]="{ fill: meterIconColor }"
-    [inlineSVG]="_getSvg()"
-  ></div>
+    [ngStyle]="{
+      '-webkit-mask': _getSvg(), 'background-color': meterIconColor,
+      'mask': _getSvg(), 'background-color': meterIconColor
+    }"
+  >
+  </div>
 </div>
