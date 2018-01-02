@@ -8,7 +8,6 @@ import { AuthProvider } from "./auth";
 
 import { Observable } from "rxjs/Observable";
 import "rxjs/add/observable/combineLatest";
-import * as _ from "lodash";
 
 
 @Injectable()
@@ -327,7 +326,7 @@ export class DatabaseProvider {
         _meter_id: meter._meter_id,
         _plan: meter._plan,
         _provider: meter._provider,
-        _type: meter._utilityType,
+        _type: meter._type,
         _guid: meter._guid,
       };
 
@@ -381,6 +380,11 @@ export class DatabaseProvider {
         observer.error(error);
       });
     });
+  }
+
+  private _getShallowList(httpService: HttpClient, path: string): Observable<any> {
+    return httpService.get(`${path}.json?auth=${databaseToken.production}&shallow=true`)
+      .map(res => Object.keys(res));
   }
 
   public getProviderTypes(): Observable<any> {
@@ -437,10 +441,4 @@ export class DatabaseProvider {
       return Object.assign({}, meterObject[key], { _name: key, _utilityType: meterType });
     });
   }
-
-  private _getShallowList(httpService: HttpClient, path: string): Observable<any> {
-    return httpService.get(`${path}.json?auth=${databaseToken.production}&shallow=true`)
-      .map(res => _.keys(res));
-  }
-
 }

@@ -1,16 +1,11 @@
 import { ActionReducerMap } from "@ngrx/store";
 import { IMeter } from '../../interfaces';
 import * as ActionTypes from '../actions';
-import { IProvider } from "../../interfaces/provider";
 
 export interface MeterState {
 	meters: {
 		data: IMeter[] | null,
-		loading: boolean,
-    providerType: any,
-    regions: any,
-    provider: IProvider,
-    plans: any
+		loading: boolean
 	}
 }
 
@@ -18,7 +13,7 @@ export const meterReducerMap: ActionReducerMap<MeterState> = {
 	meters: meterReducer
 }
 
-export function meterReducer(state = { data: [], provider: {}, loading: false}, action): any {
+export function meterReducer(state = { data: [], loading: false}, action): any {
 	switch (action.type) {
 		case ActionTypes.ADD_METERS:
 	    return Object.assign({}, state, { data: action.payload, loading: false });
@@ -31,30 +26,6 @@ export function meterReducer(state = { data: [], provider: {}, loading: false}, 
 			});
 
 			return Object.assign({}, state, { data: meters });
-    case ActionTypes.ADD_METER_GUID:
-      const newValidMeter = Object.assign({}, state.provider, { guid: action.payload });
-
-      return Object.assign({}, state, { provider: newValidMeter});
-    case ActionTypes.ADD_PROVIDERS:
-      return Object.assign({}, state, { providerType: action.payload });
-    case ActionTypes.UPDATE_PROVIDER_COUNTRIES:
-      const newProviderCountries = Object.assign({}, state.provider, { countries: action.payload });
-
-      return Object.assign({}, state, { provider: newProviderCountries });
-    case ActionTypes.UPDATE_PROVIDER_REGIONS:
-      const newProviderRegions = Object.assign({}, state.provider, { regions: action.payload });
-
-      return Object.assign({}, state, { provider: newProviderRegions });
-    case ActionTypes.UPDATE_PROVIDERS:
-      const newProviderProviders = Object.assign({}, state.provider, { providers: action.payload });
-
-      return Object.assign({}, state, { provider: newProviderProviders });
-    case ActionTypes.UPDATE_PROVIDER_PLANS:
-      const newProviderPlans = Object.assign({}, state.provider, { plans: action.payload });
-
-      return Object.assign({}, state, { provider: newProviderPlans });
-    case ActionTypes.RESET_PROVIDER:
-      return Object.assign({}, state, { provider: {} });
     case ActionTypes.TRIGGER_UPDATE_METER_READS:
 		case ActionTypes.TRIGGER_UPDATE_METER_SETTINGS:
 		  return Object.assign({}, state, { loading: true });
