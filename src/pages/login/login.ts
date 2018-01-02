@@ -28,6 +28,7 @@ export class LoginPage {
     private _storage: Storage
   ) {
     this._storage.get('userInfo').then((val) => {
+      console.log('userInfo', val);
       if (val["providerId"] === "password") {
         this._user.email = val["a"];
         this._user.password = val["f"];

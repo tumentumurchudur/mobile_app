@@ -25,11 +25,6 @@ export class AuthProvider {
     return Observable.create(observer => {
       this._credential = firebase.auth.EmailAuthProvider.credential(user.email, user.password);
       this._signInWithCredential(this._credential).then((authData) => {
-        this._storage.get('userInfo').then((val) => {
-          console.log('userInfo', val);
-        });
-
-        console.log('authData', authData);
           observer.next(authData);
         }).catch((error) => {
           observer.error(error);
@@ -79,7 +74,7 @@ export class AuthProvider {
   }
 
   private _signInWithCredential(credential) {
-    this._storage.set('userInfo', credential);
+    this._storage.set("userInfo", credential);
     return this._af.auth.signInWithCredential(credential);
   }
 
