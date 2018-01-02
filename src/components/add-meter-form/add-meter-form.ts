@@ -1,4 +1,4 @@
-import { Component, Inject, ChangeDetectionStrategy } from "@angular/core";
+import { Component, Inject } from "@angular/core";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { AlertController, NavController, LoadingController } from "ionic-angular";
 import { Keyboard } from "@ionic-native/keyboard";
@@ -10,8 +10,7 @@ import { Subscription } from "rxjs/Subscription";
 
 @Component({
   selector: "add-meter-form",
-  templateUrl: "add-meter-form.html",
-  changeDetection: ChangeDetectionStrategy.OnPush
+  templateUrl: "add-meter-form.html"
 })
 export class AddMeterFormComponent {
   private _addMeter: FormGroup;
@@ -24,7 +23,7 @@ export class AddMeterFormComponent {
   private _providerTypes$: Observable<any>;
   private _providerCountries$: Observable<any>;
   private _providerRegions$: Observable<any>;
-  private _providerProviders$: Observable<any>;
+  private _providerServiceProviders$: Observable<any>;
   private _providerPlans$: Observable<any>;
   private _addMeterGuid$: Observable<any>;
 
@@ -51,7 +50,7 @@ export class AddMeterFormComponent {
     this._providerTypes$ = this._storeServices.selectProviderTypes();
     this._providerCountries$ = this._storeServices.selectProviderCountries();
     this._providerRegions$ = this._storeServices.selectProviderRegions();
-    this._providerProviders$ = this._storeServices.selectProviderProviders();
+    this._providerServiceProviders$ = this._storeServices.selectProviderServiceProviders();
     this._providerPlans$ = this._storeServices.selectProviderPlans();
     this._addMeterGuid$ = this._storeServices.selectAddMeterGuid();
   }
@@ -80,11 +79,6 @@ export class AddMeterFormComponent {
   }
 
   private _incStep(): void {
-    if (this._step === 2){
-      this._validateMeter();
-      return;
-    }
-
     this._step++;
   }
 
@@ -134,7 +128,7 @@ export class AddMeterFormComponent {
       // request successfully returned guid and meter was validated
       else {
         this._meterGuid = guidState.guid;
-        this._step++;
+        this._incStep();
       }
     });
    this._storeServices.validateMeter(this._addMeter.value["meterNumber"]);
@@ -183,9 +177,10 @@ export class AddMeterFormComponent {
     const billingStart = parseInt(moment(this._addMeter.value["billingStart"]).format("DD"));
     const name = this._addMeter.value["name"];
 
-
+    // TODO: Research cases where _type will not be "ert"
     const meter: IMeter = {
       _utilityType: utilityType,
+      _type: "ert",
       _meter_id: meterId,
       _provider: provider,
       _plan: plan,
@@ -196,6 +191,7 @@ export class AddMeterFormComponent {
     };
 
     this._storeServices.addMeter(meter, user);
+    this._navCtrl.pop();
   }
 
 }
