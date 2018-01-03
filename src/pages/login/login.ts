@@ -27,11 +27,14 @@ export class LoginPage {
     public navCtrl: NavController,
     private _storage: Storage
   ) {
+  }
+
+  ionViewWillEnter(){
     this._storage.get('userInfo').then((val) => {
-      console.log('userInfo', val);
-      if (val["providerId"] === "password") {
-        this._user.email = val["a"];
-        this._user.password = val["f"];
+      if (val) {
+        this._auth.loginUserFromStorage(val).subscribe(userData => {
+
+        });
       }
     });
   }

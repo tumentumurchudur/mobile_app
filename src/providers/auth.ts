@@ -11,6 +11,7 @@ import { Storage } from "@ionic/storage";
 
 @Injectable()
 export class AuthProvider {
+  private _credential: any;
 
   constructor(
       private _af: AngularFireAuth,
@@ -58,6 +59,24 @@ export class AuthProvider {
     });
   }
 
+  public googleSilentLogin() {
+    return Observable.create(observer => {
+      this._googleplus.trySilentLogin({
+      'webClientId': '664713118536-hughg731mofacehql9kbqu09pjbeheui.apps.googleusercontent.com',
+      'offline': true
+    }).then((response) => {
+      const googleCredential = firebase.auth.GoogleAuthProvider.credential(response.idToken);
+
+      this._signInWithCredential(googleCredential).then((authData) => {
+        observer.next(authData);
+      });
+    }).catch((error) => {
+      observer.error(error);
+      });
+    });
+
+  }
+
   public loginWithFacebook(): Observable<IUser> {
     return Observable.create(observer => {
       this._facebook.login(["email"]).then((response) => {
@@ -69,6 +88,15 @@ export class AuthProvider {
       }).catch((error) => {
         observer.error(error);
       });
+    });
+  }
+
+  private _getFacebookToken(credential) {
+    this._facebook.getAccessToken().then(token => {
+      if (credential['accessToken'] != token) {
+        return this._credential = token;
+      }
+      return token;
     });
   }
 
@@ -98,15 +126,31 @@ export class AuthProvider {
     });
   }
 
-  public getUserFromStorage() : Observable<any> {
+  public loginUserFromStorage(userInfo) : Observable<any> {
     return Observable.create(observer => {
-      return firebase.auth().currentUser.getIdToken().then(token => {
-        observer.next(token);
-      }).catch(error => {
-        observer.error(error);
-      });
-    });
+      if (userInfo) {
+        let credential;
+        switch (userInfo["providerId"]) {
+          case "google.com":
+            this.googleSilentLogin();
+            break;
+          case "facebook.com":
+            this._getFacebookToken(userInfo);
+            credential = firebase.auth.FacebookAuthProvider.credential(this._credential);
+            break;
+          case 'password':
+            credential = firebase.auth.EmailAuthProvider.credential(this._credential['Lb'], this._credential['Id']);
+            break;
+        }
+        this._signInWithCredential(credential).then((authData) => {
+          observer.next(authData);
+        }).catch(error => {
+          observer.error(error);
+        });
+      }
+    })
   }
+
 
   public logoutUser(): Observable<IUser> {
     return Observable.create(observer => {
