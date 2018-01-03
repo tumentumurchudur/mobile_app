@@ -53,8 +53,17 @@ export class NeighborhoodComparisonComponent implements OnChanges {
       const { calcReads, avgCosts, effCosts, usageCosts } = filteredReads[0];
       this._allData = calcReads || [];
 
-      this._costs = [usageCosts.totalCost, avgCosts.totalCost, effCosts.totalCost];
-      this._consumptions = [usageCosts.totalDelta, avgCosts.totalDelta, effCosts.totalDelta];
+      this._costs = [
+        usageCosts ? usageCosts.totalCost : 0,
+        avgCosts ? avgCosts.totalCost : 0,
+        effCosts ? effCosts.totalCost : 0
+      ];
+
+      this._consumptions = [
+        usageCosts ? usageCosts.totalDelta : 0,
+        avgCosts ? avgCosts.totalDelta : 0,
+        effCosts ? effCosts.totalDelta : 0
+      ];
 
       if (calcReads && calcReads.length) {
         const lines = Object.keys(calcReads[0]).filter(d => d.indexOf("line") !== -1);

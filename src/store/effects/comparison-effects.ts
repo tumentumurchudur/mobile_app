@@ -78,7 +78,8 @@ export class ComparisonEffects {
         subscription.unsubscribe();
       }
 
-      if (!usage.length && !avg.length && !eff.length) {
+      // No need to display chart if avg and eff data is not available.
+      if (!avg.length && !eff.length) {
         return [
           new AddNeighborhoodGroup(group),
           new AddComparison(null)
