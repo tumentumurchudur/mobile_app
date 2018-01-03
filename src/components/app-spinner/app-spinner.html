@@ -1,5 +1,11 @@
 <div class="app-spinner-wrapper spinner">
   <div class="app-spinner"></div>
   <div>{{ text }}</div>
-  <div class="svg-logo" [inlineSVG]="'assets/imgs/vutiliti_logo.svg'"></div>
+  <div
+    class="svg-logo"
+    [ngStyle]="{
+      '-webkit-mask': _getSvg(), 'background-color': '#008dbf',
+      'mask': _getSvg(), 'background-color': '#008dbf'
+    }"
+  ></div>
 </div>
