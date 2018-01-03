@@ -28,8 +28,9 @@ export class LineChartComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
+    this._clear();
+
     if (changes.data && changes.data.currentValue !== changes.data.previousValue) {
-      this._clear();
       this._draw();
     }
   }
@@ -78,26 +79,26 @@ export class LineChartComponent implements OnChanges {
             // Adds a placeholder if data point is not averaged.
             dottedLineData.push({ date: this.data[i].date, line1: null, line2: null, line3: null });
           }
+          // Data point is averaged
+          else {
+            // Check if prev value is averaged. If it is not averaged, then add it to
+            // dottedLineData array, so a line can be drawn from it to current averaged data point.
+            if (i > 0 && !this._isDataPointAveraged(this.data[i - 1].line1)) {
+              const prevDataPoint = {
+                date: this.data[i - 1].date,
+                line1: this.data[i - 1].line1,
+                line2: null,
+                line3: null
+              };
 
-          const currDataPoint = { date: d.date, line1: d.line1, line2: null, line3: null };
+              dottedLineData.push(prevDataPoint);
+            }
 
-          // Check if prev value is averaged. If it is not averaged, then add it to
-          // dottedLineData array, so a line can be drawn from it to averaged value.
-          if (i > 0 && !this._isDataPointAveraged(this.data[i - 1].line1)) {
-            const prevDataPoint = {
-              date: this.data[i - 1].date,
-              line1: this.data[i - 1].line1,
-              line2: null,
-              line3: null
-            };
+            // Push current averaged data point.
+            dottedLineData.push({ date: d.date, line1: d.line1, line2: null, line3: null });
 
-            dottedLineData.push(prevDataPoint);
-          }
-
-          dottedLineData.push(currDataPoint);
-
-          // Check if next value is averaged. Draw a line from the averaged point to actual data point.
-          if (i < this.data.length - 1 && !this._isDataPointAveraged(this.data[i + 1].line1)) {
+            // Check if next value is averaged. Draw a line from the averaged point to actual data point.
+            if (i < this.data.length - 1 && !this._isDataPointAveraged(this.data[i + 1].line1)) {
               const nextDataPoint = {
                 date: this.data[i + 1].date,
                 line1: this.data[i + 1].line1,
@@ -106,6 +107,7 @@ export class LineChartComponent implements OnChanges {
               };
 
               dottedLineData.push(nextDataPoint);
+            }
           }
         }
 
