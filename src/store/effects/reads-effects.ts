@@ -11,7 +11,7 @@ import "rxjs/add/operator/switchMap";
 import "rxjs/add/observable/combineLatest";
 
 import { DatabaseProvider } from "../../providers";
-import { IMeter, IReads, IDateRange } from "../../interfaces";
+import { IReads, IDateRange } from "../../interfaces";
 
 import { CostHelper, ChartHelper } from "../../helpers";
 import {
@@ -93,7 +93,9 @@ export class ReadsEffects {
   public updateReadsForAllMeters$ = this._actions$
     .ofType(LOAD_READS_BY_METERS)
     .map((action: any) => action.payload)
-    .switchMap(({ meters, user }) => {
+    .switchMap((data: any) => {
+      const { meters = [], user = null } = data;
+
       return Observable.combineLatest([
         this._db.getReadsForMeters(meters),
         Observable.of(user)
@@ -103,7 +105,7 @@ export class ReadsEffects {
       const [ meters = [], user = null ] = values;
 
       // Calculates actual cost and usage.
-      const newMeters = CostHelper.calculateCostAndUsageForMeters(meters);
+      const newMeters = meters.length ? CostHelper.calculateCostAndUsageForMeters(meters) : [];
 
       // Updates local storage with new meters data.
       this._storage.set(user.uid, { meters: newMeters, lastUpdatedDate: new Date() });
@@ -146,18 +148,18 @@ export class ReadsEffects {
       ]);
     })
     .map(values => {
-      const [ meter, timeSpan, startDate, endDate, reads, subscription ] = values;
+      const [ meter, timeSpan, startDate, endDate, reads = [], subscription ] = values;
 
       if (subscription) {
         subscription.unsubscribe();
       }
 
-      const rawDeltas = ChartHelper.getDeltas(reads);
+      const rawDeltas = reads.length ? ChartHelper.getDeltas(reads) : [];
 
       const dateRange: IDateRange = { timeSpan, startDate, endDate };
 
       // Removes abnormally large values.
-      const normalizedDeltas = ChartHelper.normalizeData(rawDeltas);
+      const normalizedDeltas = rawDeltas.length ? ChartHelper.normalizeData(rawDeltas) : [];
 
       // Puts values into date buckets by time span.
       const deltas = normalizedDeltas.length ? ChartHelper.groupDeltasByTimeSpan(dateRange, normalizedDeltas) : [];
@@ -167,9 +169,9 @@ export class ReadsEffects {
         guid: meter._guid,
         startDate,
         endDate,
-        reads: reads,
-        deltas: deltas,
-        cost: cost
+        reads,
+        deltas,
+        cost
       } as IReads;
 
       return new AddReads(payload);

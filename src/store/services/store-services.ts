@@ -54,9 +54,9 @@ export class StoreServices {
 		this._store.dispatch(new TriggerLoadMeters(user));
 	}
 
-	public updateMeterReads(meter: IMeter) {
+	public updateMeterReads(meter: IMeter, user: IUser) {
 		// Update reads for given meter.
-		this._store.dispatch(new TriggerUpdateMeterReads(meter));
+		this._store.dispatch(new TriggerUpdateMeterReads({ meter, user }));
 	}
 
 	public updateMeterSettings(meter: IMeter, user: IUser) {
@@ -91,17 +91,14 @@ export class StoreServices {
 		this._store.dispatch(new UpdateUser(user));
 	}
 
-	public logOutUser() {
-	  this._store.dispatch(new LogoutUser());
-  }
 
-	public updateAllMetersReads(meters$: Observable<IMeter[]>) {
+	public updateAllMetersReads(meters$: Observable<IMeter[]>, user: IUser) {
 		meters$.take(1).subscribe((meters: IMeter[]) => {
 			// Set loading to true in the store.
 			this._store.dispatch(new TriggerUpdateMeterReads(null));
 
 			// Update reads for every meter.
-			this._store.dispatch(new LoadReadsByMeters(meters));
+			this._store.dispatch(new LoadReadsByMeters({ meters, user }));
 		});
 	}
 

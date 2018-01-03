@@ -35,35 +35,41 @@ export class LineChartComponent implements OnChanges {
   }
 
   private _draw(): void {
-    const delay = 100;
+    const initialDelay = 100;
     const viewBoxWithMultiplier = 1.1;
     const width = this.width - this.margin.left - this.margin.right;
     const height = this.height - this.margin.top - this.margin.bottom;
 
+    // Position svg using given margins
     const svg = d3.select(this.element).select("svg")
       .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")")
       .attr("viewBox", "0 0 " + this.width * viewBoxWithMultiplier + " " + this.height * viewBoxWithMultiplier);
 
-    // set the domain and ranges for x axis
+    // Set the domain and range for values on the x-axis
     const x = d3.scaleTime()
       .domain(d3.extent(this.data, (d: ILineItem) => d.date))
       .range([0, width]);
 
-    const maxYDomain = d3.max(this.data, d => Math.max(d["line1"] || 0, d["line2"] || 0, d["line3"] || 0));
+    // Calculate max y value from the data array
+    const maxYDomain = d3.max(this.data, d => Math.max(d.line1 || 0, d.line2 || 0, d.line3 || 0));
 
-    // set the domain and ranges for y axis
+    // Set the domain and range for values on the y axis
     const y = d3.scaleLinear()
       .domain([0, maxYDomain])
       .range([height, 0]);
 
+    // Iterate over series array and draw line charts.
+    // series has pre-determined values [line1, line2, line3] for each line chart.
     this.series.forEach((colName, index) => {
       // make line function
       const lineFunc = this._getLineFunc(x, y, colName);
 
+      // Iterate over data array and generate two arrays; solid and dotted lines.
+      // dotted line is for averaged points.
       const dottedLineData = [];
       const solidLineData = this.data.map((d, i) => {
-
         let isDataPointAveraged;
+
         // Check if consumption data is averaged due to missing value.
         if (d.line1) {
           isDataPointAveraged = this._isDataPointAveraged(d.line1);
@@ -72,26 +78,26 @@ export class LineChartComponent implements OnChanges {
             // Adds a placeholder if data point is not averaged.
             dottedLineData.push({ date: this.data[i].date, line1: null, line2: null, line3: null });
           }
+          // Data point is averaged
+          else {
+            // Check if prev value is averaged. If it is not averaged, then add it to
+            // dottedLineData array, so a line can be drawn from it to current averaged data point.
+            if (i > 0 && !this._isDataPointAveraged(this.data[i - 1].line1)) {
+              const prevDataPoint = {
+                date: this.data[i - 1].date,
+                line1: this.data[i - 1].line1,
+                line2: null,
+                line3: null
+              };
 
-          const currDataPoint = { date: d.date, line1: d.line1, line2: null, line3: null };
+              dottedLineData.push(prevDataPoint);
+            }
 
-          // Check if prev value is averaged. If it is not averaged, then add it to
-          // dottedLineData array, so a line can be drawn from it to averaged value.
-          if (i > 0 && !this._isDataPointAveraged(this.data[i - 1].line1)) {
-            const prevDataPoint = {
-              date: this.data[i - 1].date,
-              line1: this.data[i - 1].line1,
-              line2: null,
-              line3: null
-            };
+            // Push current averaged data point.
+            dottedLineData.push({ date: d.date, line1: d.line1, line2: null, line3: null });
 
-            dottedLineData.push(prevDataPoint);
-          }
-
-          dottedLineData.push(currDataPoint);
-
-          // Check if next value is averaged. Draw a line from the averaged point to actual data point.
-          if (i < this.data.length - 1 && !this._isDataPointAveraged(this.data[i + 1].line1)) {
+            // Check if next value is averaged. Draw a line from the averaged point to actual data point.
+            if (i < this.data.length - 1 && !this._isDataPointAveraged(this.data[i + 1].line1)) {
               const nextDataPoint = {
                 date: this.data[i + 1].date,
                 line1: this.data[i + 1].line1,
@@ -100,21 +106,23 @@ export class LineChartComponent implements OnChanges {
               };
 
               dottedLineData.push(nextDataPoint);
+            }
           }
         }
 
         return {
           date: d.date,
+          // Leave a hole if value of line1 is averaged.
           line1: isDataPointAveraged ? null : d.line1,
           line2: d.line2,
           line3: d.line3
         };
       });
 
-      // add line paths using the line functions.
+      // add solid line paths.
       const path = this._addPath(svg, lineFunc, solidLineData, this.lineColors[index], "solid-line");
 
-      // add dashed line paths for averaged data.
+      // add dotted line paths for averaged data.
       const dottedLineHasData = dottedLineData.filter(d => d.line1 !== null).length > 0;
       if (dottedLineHasData) {
         this._addPath(svg, lineFunc, dottedLineData, this.lineColors[index], "dotted-line");
@@ -124,7 +132,7 @@ export class LineChartComponent implements OnChanges {
       this._addDots(svg, x, y, colName, this.lineColors[index]);
 
       // animate lines.
-      this._animatePath(path, delay * (index + 1), 800);
+      this._animatePath(path, initialDelay * (index + 1), 800);
 
       // add area under line chart
       if (this.showAreaFill) {

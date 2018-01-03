@@ -27,7 +27,7 @@ export class TriggerLoadMeters implements Action {
 
 export class LoadMeters implements Action {
 	public readonly type = LOAD_METERS;
-	public payload: IUser | null;
+	public payload: IUser;
 
 	constructor(private _payload: IUser) {
 		this.payload = _payload;
@@ -90,9 +90,9 @@ export class TriggerAddMeter implements Action {
 
 export class TriggerUpdateMeterReads implements Action {
 	public readonly type = TRIGGER_UPDATE_METER_READS;
-	public payload: IMeter | null = null;
+	public payload: { meter: IMeter, user: IUser } = null;
 
-	constructor(private _payload: IMeter | null) {
+	constructor(private _payload: { meter: IMeter, user: IUser }) {
 		this.payload = _payload;
 	}
 }
