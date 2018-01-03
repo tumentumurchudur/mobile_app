@@ -58,6 +58,15 @@ export class LoginPage {
 
   private _onFacebookClick(): void {
     this._auth.loginWithFacebook().subscribe(userData => {
+      const user: IUser = {
+        email: userData.email,
+        uid: userData.uid,
+        password: null,
+        orgPath: null
+      };
+
+      this._storeServices.addUser(user);
+
       this.navCtrl.push("HomePage", { user: userData });
     }, (error) => {
       console.log("Login failed:", error);
@@ -66,6 +75,15 @@ export class LoginPage {
 
   private _onGoogleClick(): void {
     this._auth.loginWithGoogle().subscribe(userData => {
+      const user: IUser = {
+        email: userData.email,
+        uid: userData.uid,
+        password: null,
+        orgPath: null
+      };
+
+      this._storeServices.addUser(user);
+
       this.navCtrl.push("HomePage", { user: userData });
     }, (error) => {
       console.log("Login failed:", error);
