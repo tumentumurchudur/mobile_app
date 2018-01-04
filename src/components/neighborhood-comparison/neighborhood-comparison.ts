@@ -49,39 +49,52 @@ export class NeighborhoodComparisonComponent implements OnChanges {
         read.endDate.toString() === endDate.toString();
     });
 
-    if (filteredReads.length) {
-      const { calcReads, avgCosts, effCosts, usageCosts } = filteredReads[0];
-      this._allData = calcReads || [];
+    if (!filteredReads.length) {
+      return;
+    }
 
-      this._costs = [usageCosts.totalCost, avgCosts.totalCost, effCosts.totalCost];
-      this._consumptions = [usageCosts.totalDelta, avgCosts.totalDelta, effCosts.totalDelta];
+    const { calcReads, avgCosts, effCosts, usageCosts } = filteredReads[0];
+    this._allData = calcReads || [];
 
-      if (calcReads && calcReads.length) {
-        const lines = Object.keys(calcReads[0]).filter(d => d.indexOf("line") !== -1);
+    if (usageCosts) {
+      this._costs.push(usageCosts.totalCost);
+      this._consumptions.push(usageCosts.totalDelta);
+    }
 
-        const availOptions = this._options.map(option => {
-          return lines.indexOf(option.line) !== -1 ? option : null;
-        }).filter(line => line !== null);
+    if (avgCosts) {
+      this._costs.push(avgCosts.totalCost);
+      this._consumptions.push(avgCosts.totalDelta);
+    }
 
-        this._series = availOptions.map(option => option.line);
-        this._lineColors = availOptions.map(option => option.color);
-        this._legends = availOptions.map(option => option.legend);
-      }
+    if (effCosts) {
+      this._costs.push(effCosts.totalCost);
+      this._consumptions.push(effCosts.totalDelta);
+    }
+
+    if (calcReads && calcReads.length) {
+      // Find available lines such as line1, line2, etc for chart
+      const lines = Object.keys(calcReads[0]).filter(d => d.indexOf("line") !== -1);
+
+      const availOptions = this._options.map(option => {
+        return lines.indexOf(option.line) !== -1 ? option : null;
+      }).filter(line => line !== null);
+
+      this._series = availOptions.map(option => option.line);
+      this._lineColors = availOptions.map(option => option.color);
+      this._legends = availOptions.map(option => option.legend);
     }
   }
 
-  private _filterChartData(chartIndex: number): void {
-    const lineIndex = chartIndex + 1;
-
+  private _filterChartData(chartIndex: number, series: string): void {
     this._selectedData = this._allData.map(d => {
-      const lineData = d["line" + lineIndex];
+      const lineData = d[series];
 
-      if (chartIndex === 0) {
+      if (series === "line1") {
         return {
           date: d.date,
           line1: lineData
         }
-      } else if (chartIndex === 1) {
+      } else if (series === "line2") {
         return {
           date: d.date,
           line2: lineData
@@ -94,7 +107,7 @@ export class NeighborhoodComparisonComponent implements OnChanges {
       }
     });
 
-    this._selectedSeries = this._series.filter(s => s === "line" + lineIndex);
+    this._selectedSeries = this._series.filter(s => s === series);
     this._selectedColor = [this._lineColors[chartIndex]];
   }
 

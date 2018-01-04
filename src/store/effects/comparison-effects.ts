@@ -13,8 +13,9 @@ import { DatabaseProvider } from "../../providers";
 import { neighborhoodConfigs } from "../../configs";
 
 import { TRIGGER_COMPARISON_READS, AddComparison, AddNeighborhoodGroup } from "../actions";
-import { IComparison } from "../../interfaces";
+import { IComparison, IMeter } from "../../interfaces";
 import { ChartHelper, CostHelper } from "../../helpers";
+import { IDateRange } from "../../interfaces/date-range";
 
 @Injectable()
 export class ComparisonEffects {
@@ -54,11 +55,11 @@ export class ComparisonEffects {
       let storeData;
       const subscription: Subscription = this._storeServices.selectComparisonReads()
         .subscribe((data: IComparison[]) => {
-          storeData = data.filter(read => {
+          storeData = data.find(read => {
             return read.guid === meter._guid &&
               read.startDate.toString() === startDate.toString() &&
               read.endDate.toString() === endDate.toString();
-          })[0] || null;
+          });
       });
 
       return Observable.combineLatest(
@@ -72,53 +73,34 @@ export class ComparisonEffects {
       );
     })
     .flatMap((data: any[]) => {
-      const [subscription, group, meter, dateRange, usage, avg, eff] = data;
+      const [ subscription, group, meter, dateRange, usage = [], avg = [], eff = [] ] = data;
 
       if (subscription) {
         subscription.unsubscribe();
       }
 
-      if (!usage.length && !avg.length && !eff.length) {
+      // No need to display chart if avg and eff data is not available.
+      if (!avg.length && !eff.length) {
         return [
           new AddNeighborhoodGroup(group),
           new AddComparison(null)
         ];
       }
 
-      // format data for average
-      let avgDeltas = [];
-      let avgCosts = null;
-      if (avg && avg.length) {
-        const avgLineData = avg.map(d => {
-          return {
-            date: d.date,
-            line1: d.delta
-          }
-        });
+      // Calculate deltas and costs of average data.
+      const avgResult = this._calculateDeltasAndCosts(avg, dateRange, meter);
+      const avgDeltas = avgResult.deltas;
+      const avgCosts = avgResult.costs;
 
-        // group data by time span
-        avgDeltas = ChartHelper.groupDeltasByTimeSpan(dateRange, avgLineData);
-        avgCosts = avgDeltas.length ? CostHelper.calculateCostFromDeltas(meter, avgDeltas) : null;
-      }
-
-      // efficiency data
-      let effDeltas = [];
-      let effCosts = null;
-      if (eff && eff.length) {
-        const effLineData = eff.map(d => {
-          return {
-            date: d.date,
-            line1: d.delta
-          }
-        });
-        effDeltas = ChartHelper.groupDeltasByTimeSpan(dateRange, effLineData);
-        effCosts = effDeltas.length ? CostHelper.calculateCostFromDeltas(meter, effDeltas) : null;
-      }
+      // Calculate deltas and costs of efficiency data.
+      const effResult = this._calculateDeltasAndCosts(eff, dateRange, meter);
+      const effDeltas = effResult.deltas;
+      const effCosts = effResult.costs;
 
       // consumption data
       let useDeltas = [];
       let usageCosts = null;
-      if (usage && usage.length) {
+      if (usage.length) {
         const rawDeltas = ChartHelper.getDeltas(usage);
         const normalizedDeltas = ChartHelper.normalizeData(rawDeltas);
 
@@ -198,4 +180,35 @@ export class ComparisonEffects {
     private readonly _db: DatabaseProvider,
     private readonly _storeServices: StoreServices
   ) { }
+
+  /**
+   * Calculates deltas and costs from given array containing reads.
+   *
+   * TODO: Needs to declare an interface for the return type.
+   * @param data
+   * @param dateRange
+   * @param meter
+   */
+  private _calculateDeltasAndCosts(data: any[], dateRange: IDateRange, meter: IMeter): { deltas: any[], costs: any } {
+    let deltas = [];
+    let costs = null;
+
+    if (!data.length) {
+      return { deltas: [], costs: null };
+    }
+
+    const lineData = data.map(d => {
+      return {
+        date: d.date,
+        line1: d.delta
+      }
+    });
+
+    // group efficiency data by time span
+    deltas = ChartHelper.groupDeltasByTimeSpan(dateRange, lineData);
+    costs = deltas.length ? CostHelper.calculateCostFromDeltas(meter, deltas) : null;
+
+    return { deltas, costs };
+  }
+
 }

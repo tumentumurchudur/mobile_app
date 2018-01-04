@@ -1,4 +1,5 @@
 import { IUsage } from "./usage";
+import { ILineItem } from "./line-item";
 
 export interface IComparison {
   guid: string;
@@ -10,5 +11,5 @@ export interface IComparison {
   effCosts: IUsage;
   usage: any[];
   usageCosts: IUsage;
-  calcReads: any[];
+  calcReads: ILineItem[];
 }

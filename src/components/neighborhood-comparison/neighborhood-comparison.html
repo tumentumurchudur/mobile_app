@@ -19,7 +19,7 @@
         <div class="circle" [ngStyle]="{ 'background': _lineColors[i] }"></div>
         <div>{{ legend }}</div>
       </div>
-      <div class="cost-label" (click)="_filterChartData(i)">
+      <div class="cost-label" (click)="_filterChartData(i, _series[i])">
         <span [ngStyle]="{ 'color': _lineColors[i] }">
           {{ _costs[i] | currency:'USD': true: '1.2-2'}}
         </span>
