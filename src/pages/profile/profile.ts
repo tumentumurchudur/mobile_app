@@ -21,12 +21,9 @@ export class ProfilePage {
   }
 
   private _onLogoutClick(): void {
-  //   this._auth.loginWithFacebook().subscribe(userData => {
-  //     this.navCtrl.push("HomePage", { user: userData });
-  //   }, (error) => {
-  //     console.log("Login failed:", error);
-  //   })
-  //   this._storeServices.logOutUser();
+    this._auth.logoutUser().subscribe(() => {
+      this.navCtrl.pop();
+    })
   }
 
 }

@@ -32,7 +32,9 @@ export class LoginPage {
   }
 
   ngOnInit() {
-    this._storage.get('userInfo').then((val) => {
+    console.log("NGInit");
+    this._storage.get("userInfo").then((val) => {
+      console.log('UserInfo', val);
       if (val["providerId"]) {
         this._auth.loginUserFromStorage(val).subscribe(userData => {
           if (userData) {
@@ -46,17 +48,16 @@ export class LoginPage {
             // Update the store with current user.
             this._storeServices.addUser(user);
 
-            this.navCtrl.push("HomePage");
+            this.navCtrl.push("HomePage").then(() => {
+              this._splashScreen.hide();
+            });
           } else return;
 
         }, (error) => {
           console.log("Login failed:", error);
         });
-      } else return;
-
+      } else this._splashScreen.hide();
     });
-
-    this._splashScreen.hide();
   }
 
   private _onLoginOptionClick() {

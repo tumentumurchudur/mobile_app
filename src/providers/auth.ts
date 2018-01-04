@@ -59,7 +59,7 @@ export class AuthProvider {
     });
   }
 
-  private _googleSilentLogin() {
+  private _googleSilentLogin(): Observable<any> {
     return Observable.create(observer => {
       this._googleplus.trySilentLogin({
       "webClientId": googleConfig.webClientId,
@@ -88,7 +88,7 @@ export class AuthProvider {
     });
   }
 
-  private _getFacebookToken(credential) {
+  private _getFacebookToken(credential): Observable<any> {
     return Observable.create(observer => {
       this._facebook.getAccessToken().then((token) => {
         if (credential["accessToken"] != token) {
@@ -146,6 +146,7 @@ export class AuthProvider {
             credential = firebase.auth.EmailAuthProvider.credential(userInfo['a'], userInfo['f']);
             break;
         }
+        console.log('Credential', credential);
         this._signInWithCredential(credential).then((authData) => {
           observer.next(authData);
         }).catch(error => {
@@ -155,7 +156,6 @@ export class AuthProvider {
       else observer.next();
     })
   }
-
 
   public logoutUser(): Observable<IUser> {
     return Observable.create(observer => {
