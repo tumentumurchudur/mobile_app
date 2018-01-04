@@ -4,14 +4,8 @@ import { Effect, Actions } from "@ngrx/effects";
 import { AuthProvider } from "../../providers/auth";
 import { TRIGGER_PREP_FOR_LOGOUT, LogoutUser, TRIGGER_USER_CHECK } from "../actions";
 
-
 @Injectable()
 export class ProviderEffects {
-
-  @Effect()
-  public loadUserFromStorage$ = this._actions$
-    .ofType(TRIGGER_USER_CHECK)
-
 
   @Effect()
   public logoutUser$ = this._actions$
