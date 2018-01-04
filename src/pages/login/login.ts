@@ -33,7 +33,6 @@ export class LoginPage {
 
   ngOnInit() {
     this._storage.get('userInfo').then((val) => {
-      console.log('UserInfo', val);
       if (val["providerId"]) {
         this._auth.loginUserFromStorage(val).subscribe(userData => {
           if (userData) {

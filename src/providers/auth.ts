@@ -89,12 +89,16 @@ export class AuthProvider {
   }
 
   private _getFacebookToken(credential) {
-    this._facebook.getAccessToken().then(token => {
-      if (credential['accessToken'] != token) {
-        return this._credential = token;
-      }
-      return token;
-    });
+    return Observable.create(observer => {
+      this._facebook.getAccessToken().then((token) => {
+        if (credential["accessToken"] != token) {
+          credential["accessToken"] = token;
+        }
+        observer.next(credential["accessToken"]);
+      }).catch((error) => {
+        observer.error(error);
+      });
+    })
   }
 
   private _signInWithCredential(credential) {
@@ -135,9 +139,9 @@ export class AuthProvider {
             });
             break;
           case "facebook.com":
-            this._getFacebookToken(userInfo);
-            credential = firebase.auth.FacebookAuthProvider.credential(this._credential);
-            break;
+            this._getFacebookToken(userInfo).subscribe((val) => {
+              credential = val;
+            });
           case 'password':
             credential = firebase.auth.EmailAuthProvider.credential(userInfo['a'], userInfo['f']);
             break;
@@ -148,9 +152,7 @@ export class AuthProvider {
           observer.error(error);
         });
       }
-      else {
-        observer.next();
-      }
+      else observer.next();
     })
   }
 
