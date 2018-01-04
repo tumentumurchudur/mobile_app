@@ -67,7 +67,7 @@ export class AuthProvider {
       "webClientId": googleConfig.webClientId,
       "offline": true
     }).then((response) => {
-      const credential = firebase.auth.GoogleAuthProvider.credential(response.idToken);
+        const credential = firebase.auth.GoogleAuthProvider.credential(response.idToken);
 
         observer.next(credential);
     }).catch((error) => {
@@ -92,19 +92,18 @@ export class AuthProvider {
 
   private _getFacebookToken(credential): Observable<any> {
     return Observable.create(observer => {
-      this._facebook.getAccessToken().then((token) => {
-        if (credential["accessToken"] != token) {
-          credential["accessToken"] = token;
-        }
-        observer.next(credential["accessToken"]);
+      this._facebook.login(["email"]).then((response) => {
+        const facebookCredential = firebase.auth.FacebookAuthProvider.credential(response.authResponse.accessToken);
+
+        observer.next(facebookCredential);
       }).catch((error) => {
         observer.error(error);
       });
     })
   }
 
-  private _signInWithCredential(credential) {
-   return this._nativeStorage.setItem("userInfo", credential).then(() => {
+  private _signInWithCredential(credential): Promise<any> {
+   return this._storage.set("userInfo", credential).then(() => {
       return this._af.auth.signInWithCredential(credential);
     });
   }
@@ -130,38 +129,42 @@ export class AuthProvider {
   }
 
   public loginUserFromStorage(userInfo) : Observable<any> {
-    return Observable.create(observer => {
-      if (userInfo) {
-        let credential;
+    return Observable.combineLatest([
+        this._returnUserCredentials(userInfo)
+    ])
+      .switchMap((credential: any) => {
+        return this._signInWithCredential(credential[0]).then((authData) => {
+          return authData;
+        })
+       })
+  }
 
-        switch (userInfo["providerId"]) {
-          case "google.com":
-            this._googleSilentLogin().subscribe((val) => {
-              credential = val;
-            });
-            break;
-          case "facebook.com":
-            this._getFacebookToken(userInfo).subscribe((val) => {
-              credential = val;
-            });
-          case 'password':
-            credential = firebase.auth.EmailAuthProvider.credential(userInfo['a'], userInfo['f']);
-            break;
-        }
-        this._signInWithCredential(credential).then((authData) => {
-          observer.next(authData);
-        }).catch(error => {
-          observer.error(error);
-        });
+  private _returnUserCredentials(userInfo): Observable<any>{
+    return Observable.create(observer => {
+      let credential;
+      switch (userInfo["providerId"]) {
+        case "google.com":
+          this._googleSilentLogin().subscribe((val) => {
+            observer.next(val);
+          });
+          break;
+        case "facebook.com":
+          this._getFacebookToken(userInfo).subscribe((val) => {
+            observer.next(val);
+          });
+          break;
+        case 'password':
+          credential = firebase.auth.EmailAuthProvider.credential(userInfo['a'], userInfo['f']);
+          observer.next(credential);
+          break;
       }
-      else observer.next();
     })
   }
 
   public logoutUser(): Observable<IUser> {
     return Observable.create(observer => {
       return this._af.auth.signOut().then(() => {
-        this._nativeStorage.remove("userInfo");
+        this._storage.remove("userInfo");
         observer.next();
      }).catch((error) => {
       observer.error(error);

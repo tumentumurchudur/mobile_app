@@ -35,7 +35,7 @@ export class LoginPage {
   }
 
   ngOnInit() {
-    this._nativeStorage.getItem("userInfo").then((val) => {
+    this._storage.get("userInfo").then((val) => {
       if (val["providerId"]) {
         this._auth.loginUserFromStorage(val).subscribe(userData => {
           if (userData) {
