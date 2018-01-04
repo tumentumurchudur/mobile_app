@@ -26,7 +26,7 @@ export class ProfilePage {
   //   }, (error) => {
   //     console.log("Login failed:", error);
   //   })
-    this._storeServices.logOutUser();
+  //   this._storeServices.logOutUser();
   }
 
 }

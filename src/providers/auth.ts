@@ -62,19 +62,16 @@ export class AuthProvider {
   public googleSilentLogin() {
     return Observable.create(observer => {
       this._googleplus.trySilentLogin({
-      'webClientId': '664713118536-hughg731mofacehql9kbqu09pjbeheui.apps.googleusercontent.com',
-      'offline': true
+      "webClientId": googleConfig.webClientId,
+      "offline": true
     }).then((response) => {
-      const googleCredential = firebase.auth.GoogleAuthProvider.credential(response.idToken);
+      const credential = firebase.auth.GoogleAuthProvider.credential(response.idToken);
 
-      this._signInWithCredential(googleCredential).then((authData) => {
-        observer.next(authData);
-      });
+        observer.next(credential);
     }).catch((error) => {
       observer.error(error);
       });
-    });
-
+    })
   }
 
   public loginWithFacebook(): Observable<IUser> {
@@ -130,16 +127,19 @@ export class AuthProvider {
     return Observable.create(observer => {
       if (userInfo) {
         let credential;
+
         switch (userInfo["providerId"]) {
           case "google.com":
-            this.googleSilentLogin();
+            this.googleSilentLogin().subscribe((val) => {
+              credential = val;
+            });
             break;
           case "facebook.com":
             this._getFacebookToken(userInfo);
             credential = firebase.auth.FacebookAuthProvider.credential(this._credential);
             break;
           case 'password':
-            credential = firebase.auth.EmailAuthProvider.credential(this._credential['Lb'], this._credential['Id']);
+            credential = firebase.auth.EmailAuthProvider.credential(userInfo['a'], userInfo['f']);
             break;
         }
         this._signInWithCredential(credential).then((authData) => {
@@ -147,6 +147,9 @@ export class AuthProvider {
         }).catch(error => {
           observer.error(error);
         });
+      }
+      else {
+        observer.next();
       }
     })
   }

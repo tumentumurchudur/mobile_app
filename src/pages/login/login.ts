@@ -1,7 +1,8 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { IonicPage, NavController } from "ionic-angular";
 
 import { Storage } from "@ionic/storage";
+import { SplashScreen } from "@ionic-native/splash-screen";
 import { IUser } from "../../interfaces";
 import { AuthProvider } from "../../providers"
 import { StoreServices } from "../../store/services";
@@ -25,18 +26,38 @@ export class LoginPage {
     private _storeServices: StoreServices,
     private _auth: AuthProvider,
     public navCtrl: NavController,
-    private _storage: Storage
+    private _storage: Storage,
+    private _splashScreen: SplashScreen
   ) {
   }
 
-  ionViewWillEnter(){
+  ngOnInit() {
     this._storage.get('userInfo').then((val) => {
-      if (val) {
+      console.log('UserInfo', val);
+      if (val["providerId"]) {
         this._auth.loginUserFromStorage(val).subscribe(userData => {
+          if (userData) {
+            const user: IUser = {
+              email: userData.email,
+              uid: userData.uid,
+              password: null,
+              orgPath: null
+            };
 
+            // Update the store with current user.
+            this._storeServices.addUser(user);
+
+            this.navCtrl.push("HomePage");
+          } else return;
+
+        }, (error) => {
+          console.log("Login failed:", error);
         });
-      }
+      } else return;
+
     });
+
+    this._splashScreen.hide();
   }
 
   private _onLoginOptionClick() {
@@ -80,7 +101,7 @@ export class LoginPage {
 
       this._storeServices.addUser(user);
 
-      this.navCtrl.push("HomePage", { user: userData });
+      this.navCtrl.push("HomePage");
     }, (error) => {
       console.log("Login failed:", error);
     })
@@ -97,7 +118,7 @@ export class LoginPage {
 
       this._storeServices.addUser(user);
 
-      this.navCtrl.push("HomePage", { user: userData });
+      this.navCtrl.push("HomePage");
     }, (error) => {
       console.log("Login failed:", error);
     })
