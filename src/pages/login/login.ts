@@ -6,6 +6,8 @@ import { SplashScreen } from "@ionic-native/splash-screen";
 import { IUser } from "../../interfaces";
 import { AuthProvider } from "../../providers"
 import { StoreServices } from "../../store/services";
+import { NativeStorage } from "@ionic-native/native-storage";
+
 
 @IonicPage({
   name: "LoginPage"
@@ -27,12 +29,13 @@ export class LoginPage {
     private _auth: AuthProvider,
     public navCtrl: NavController,
     private _storage: Storage,
-    private _splashScreen: SplashScreen
+    private _splashScreen: SplashScreen,
+    private _nativeStorage: NativeStorage
   ) {
   }
 
   ngOnInit() {
-    this._storage.get("userInfo").then((val) => {
+    this._nativeStorage.getItem("userInfo").then((val) => {
       if (val["providerId"]) {
         this._auth.loginUserFromStorage(val).subscribe(userData => {
           if (userData) {

@@ -6,6 +6,7 @@ import { Observable } from "rxjs/Observable";
 import firebase from "firebase";
 import { Facebook } from "@ionic-native/facebook";
 import { GooglePlus } from "@ionic-native/google-plus";
+import { NativeStorage } from "@ionic-native/native-storage";
 import { Storage } from "@ionic/storage";
 
 
@@ -17,7 +18,8 @@ export class AuthProvider {
       private _af: AngularFireAuth,
       private _facebook: Facebook,
       private _googleplus: GooglePlus,
-      private _storage: Storage
+      private _storage: Storage,
+      private _nativeStorage: NativeStorage
 
 ) { }
 
@@ -102,7 +104,7 @@ export class AuthProvider {
   }
 
   private _signInWithCredential(credential) {
-   return this._storage.set("userInfo", credential).then(() => {
+   return this._nativeStorage.setItem("userInfo", credential).then(() => {
       return this._af.auth.signInWithCredential(credential);
     });
   }
@@ -159,7 +161,7 @@ export class AuthProvider {
   public logoutUser(): Observable<IUser> {
     return Observable.create(observer => {
       return this._af.auth.signOut().then(() => {
-        this._storage.remove("userInfo");
+        this._nativeStorage.remove("userInfo");
         observer.next();
      }).catch((error) => {
       observer.error(error);

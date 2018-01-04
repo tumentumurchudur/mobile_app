@@ -6,6 +6,7 @@ import { IonicApp, IonicErrorHandler, IonicModule } from "ionic-angular";
 import { SplashScreen } from "@ionic-native/splash-screen";
 import { StatusBar } from "@ionic-native/status-bar";
 import { Keyboard } from "@ionic-native/keyboard";
+import { NativeStorage } from "@ionic-native/native-storage";
 
 import { AngularFireModule } from "angularfire2";
 import { HttpClientModule } from "@angular/common/http";
@@ -54,6 +55,7 @@ import { MyApp } from "./app.component";
     MyApp
   ],
   providers: [
+    NativeStorage,
     StatusBar,
     SplashScreen,
     Keyboard,
