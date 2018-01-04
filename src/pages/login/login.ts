@@ -34,9 +34,9 @@ export class LoginPage {
   }
 
   ngOnInit() {
-    this._storage.get("userInfo").then((val: IFbToken) => {
-      if (val.providerId) {
-       const subscription$ = this._auth.loginUserFromStorage(val).subscribe(userData => {
+    this._storage.get("userInfo").then((userInfo: IFbToken) => {
+      if (userInfo.providerId) {
+       const subscription$ = this._auth.loginUserFromStorage(userInfo).subscribe(userData => {
           if (userData) {
             const user: IUser = {
               email: userData.email,

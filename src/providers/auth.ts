@@ -132,17 +132,17 @@ export class AuthProvider {
     return Observable.create(observer => {
       switch (userInfo.providerId) {
         case "google.com":
-          this._googleSilentLogin().then((val) => {
-            observer.next(val);
+          this._googleSilentLogin().then((credential: IFbToken) => {
+            observer.next(credential);
           });
           break;
         case "facebook.com":
-          this._getFacebookToken(userInfo).then((val) => {
-            observer.next(val);
+          this._getFacebookToken(userInfo).then((credential: IFbToken) => {
+            observer.next(credential);
           });
           break;
         case "password":
-          const credential = firebase.auth.EmailAuthProvider.credential(userInfo.a, userInfo.f);
+          const credential:IFbToken = firebase.auth.EmailAuthProvider.credential(userInfo.a, userInfo.f);
 
           observer.next(credential);
           break;
