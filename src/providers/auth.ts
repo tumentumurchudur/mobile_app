@@ -115,16 +115,13 @@ export class AuthProvider {
     });
   }
 
-  // TODO: Add interface for authProvider info
   public loginUserFromStorage(userInfo: any): Observable<any> {
     return this._getUserCredentials(userInfo)
       .switchMap((credential: IFbToken) => {
       this._storage.set("userInfo", credential);
-
       return this._af.auth.signInWithCredential(credential).then((authData) => {
           return authData;
         });
-
       })
   }
 
