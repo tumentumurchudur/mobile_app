@@ -146,7 +146,6 @@ export class AuthProvider {
             credential = firebase.auth.EmailAuthProvider.credential(userInfo['a'], userInfo['f']);
             break;
         }
-        console.log('Credential', credential);
         this._signInWithCredential(credential).then((authData) => {
           observer.next(authData);
         }).catch(error => {
