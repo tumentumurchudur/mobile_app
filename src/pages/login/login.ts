@@ -1,13 +1,11 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { IonicPage, NavController } from "ionic-angular";
-
 import { Storage } from "@ionic/storage";
 import { SplashScreen } from "@ionic-native/splash-screen";
 import { IUser, IFbToken } from "../../interfaces";
 import { AuthProvider } from "../../providers"
 import { StoreServices } from "../../store/services";
 import { Subscription } from "rxjs/Subscription";
-
 
 
 @IonicPage({
@@ -38,7 +36,7 @@ export class LoginPage {
   ngOnInit() {
     this._storage.get("userInfo").then((val: IFbToken) => {
       if (val.providerId) {
-       const subscription = this._auth.loginUserFromStorage(val).subscribe(userData => {
+       const subscription$ = this._auth.loginUserFromStorage(val).subscribe(userData => {
           if (userData) {
             const user: IUser = {
               email: userData.email,
@@ -58,7 +56,7 @@ export class LoginPage {
         }, (error) => {
           console.log("Login failed:", error);
         });
-        this._subscriptions.push(subscription);
+        this._subscriptions.push(subscription$);
 
       } else this._splashScreen.hide();
     });

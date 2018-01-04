@@ -8,7 +8,6 @@ import { Facebook } from "@ionic-native/facebook";
 import { GooglePlus } from "@ionic-native/google-plus";
 import { Storage } from "@ionic/storage";
 
-
 @Injectable()
 export class AuthProvider {
   private _credential: any;
