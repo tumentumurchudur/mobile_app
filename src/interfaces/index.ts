@@ -8,3 +8,4 @@ export { ILineItem } from "./line-item";
 export { IDateRange } from "./date-range";
 export { IComparison } from "./comparison";
 export { IUsage } from "./usage";
+export { IFbToken } from "./fb-token";

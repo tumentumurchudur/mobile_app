@@ -1,12 +1,13 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import { IonicPage, NavController } from "ionic-angular";
 
 import { Storage } from "@ionic/storage";
 import { SplashScreen } from "@ionic-native/splash-screen";
-import { IUser } from "../../interfaces";
+import { IUser, IFbToken } from "../../interfaces";
 import { AuthProvider } from "../../providers"
 import { StoreServices } from "../../store/services";
-import { NativeStorage } from "@ionic-native/native-storage";
+import { Subscription } from "rxjs/Subscription";
+
 
 
 @IonicPage({
@@ -23,21 +24,21 @@ export class LoginPage {
     uid: null
   };
   private _isNewUser: boolean = false;
+  private _subscriptions: Subscription[] = [];
 
   constructor(
     private _storeServices: StoreServices,
     private _auth: AuthProvider,
     public navCtrl: NavController,
     private _storage: Storage,
-    private _splashScreen: SplashScreen,
-    private _nativeStorage: NativeStorage
+    private _splashScreen: SplashScreen
   ) {
   }
 
   ngOnInit() {
-    this._storage.get("userInfo").then((val) => {
-      if (val["providerId"]) {
-        this._auth.loginUserFromStorage(val).subscribe(userData => {
+    this._storage.get("userInfo").then((val: IFbToken) => {
+      if (val.providerId) {
+       const subscription = this._auth.loginUserFromStorage(val).subscribe(userData => {
           if (userData) {
             const user: IUser = {
               email: userData.email,
@@ -57,8 +58,16 @@ export class LoginPage {
         }, (error) => {
           console.log("Login failed:", error);
         });
+        this._subscriptions.push(subscription);
+
       } else this._splashScreen.hide();
     });
+  }
+
+  ngOnDestroy() {
+    for (const subscription of this._subscriptions) {
+      subscription.unsubscribe();
+    }
   }
 
   private _onLoginOptionClick() {
