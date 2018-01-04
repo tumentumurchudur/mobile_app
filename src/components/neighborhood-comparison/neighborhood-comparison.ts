@@ -49,36 +49,39 @@ export class NeighborhoodComparisonComponent implements OnChanges {
         read.endDate.toString() === endDate.toString();
     });
 
-    if (filteredReads.length) {
-      const { calcReads, avgCosts, effCosts, usageCosts } = filteredReads[0];
-      this._allData = calcReads || [];
+    if (!filteredReads.length) {
+      return;
+    }
 
-      if (usageCosts) {
-        this._costs.push(usageCosts.totalCost);
-        this._consumptions.push(usageCosts.totalDelta);
-      }
+    const { calcReads, avgCosts, effCosts, usageCosts } = filteredReads[0];
+    this._allData = calcReads || [];
 
-      if (avgCosts) {
-        this._costs.push(avgCosts.totalCost);
-        this._consumptions.push(avgCosts.totalDelta);
-      }
+    if (usageCosts) {
+      this._costs.push(usageCosts.totalCost);
+      this._consumptions.push(usageCosts.totalDelta);
+    }
 
-      if (effCosts) {
-        this._costs.push(effCosts.totalCost);
-        this._consumptions.push(effCosts.totalDelta);
-      }
+    if (avgCosts) {
+      this._costs.push(avgCosts.totalCost);
+      this._consumptions.push(avgCosts.totalDelta);
+    }
 
-      if (calcReads && calcReads.length) {
-        const lines = Object.keys(calcReads[0]).filter(d => d.indexOf("line") !== -1);
+    if (effCosts) {
+      this._costs.push(effCosts.totalCost);
+      this._consumptions.push(effCosts.totalDelta);
+    }
 
-        const availOptions = this._options.map(option => {
-          return lines.indexOf(option.line) !== -1 ? option : null;
-        }).filter(line => line !== null);
+    if (calcReads && calcReads.length) {
+      // Find available lines such as line1, line2, etc for chart
+      const lines = Object.keys(calcReads[0]).filter(d => d.indexOf("line") !== -1);
 
-        this._series = availOptions.map(option => option.line);
-        this._lineColors = availOptions.map(option => option.color);
-        this._legends = availOptions.map(option => option.legend);
-      }
+      const availOptions = this._options.map(option => {
+        return lines.indexOf(option.line) !== -1 ? option : null;
+      }).filter(line => line !== null);
+
+      this._series = availOptions.map(option => option.line);
+      this._lineColors = availOptions.map(option => option.color);
+      this._legends = availOptions.map(option => option.legend);
     }
   }
 
