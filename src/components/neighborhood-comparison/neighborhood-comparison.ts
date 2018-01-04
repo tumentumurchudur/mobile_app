@@ -53,17 +53,20 @@ export class NeighborhoodComparisonComponent implements OnChanges {
       const { calcReads, avgCosts, effCosts, usageCosts } = filteredReads[0];
       this._allData = calcReads || [];
 
-      this._costs = [
-        usageCosts ? usageCosts.totalCost : 0,
-        avgCosts ? avgCosts.totalCost : 0,
-        effCosts ? effCosts.totalCost : 0
-      ];
+      if (usageCosts) {
+        this._costs.push(usageCosts.totalCost);
+        this._consumptions.push(usageCosts.totalDelta);
+      }
 
-      this._consumptions = [
-        usageCosts ? usageCosts.totalDelta : 0,
-        avgCosts ? avgCosts.totalDelta : 0,
-        effCosts ? effCosts.totalDelta : 0
-      ];
+      if (avgCosts) {
+        this._costs.push(avgCosts.totalCost);
+        this._consumptions.push(avgCosts.totalDelta);
+      }
+
+      if (effCosts) {
+        this._costs.push(effCosts.totalCost);
+        this._consumptions.push(effCosts.totalDelta);
+      }
 
       if (calcReads && calcReads.length) {
         const lines = Object.keys(calcReads[0]).filter(d => d.indexOf("line") !== -1);
@@ -79,18 +82,16 @@ export class NeighborhoodComparisonComponent implements OnChanges {
     }
   }
 
-  private _filterChartData(chartIndex: number): void {
-    const lineIndex = chartIndex + 1;
-
+  private _filterChartData(chartIndex: number, series: string): void {
     this._selectedData = this._allData.map(d => {
-      const lineData = d["line" + lineIndex];
+      const lineData = d[series];
 
-      if (chartIndex === 0) {
+      if (series === "line1") {
         return {
           date: d.date,
           line1: lineData
         }
-      } else if (chartIndex === 1) {
+      } else if (series === "line2") {
         return {
           date: d.date,
           line2: lineData
@@ -103,7 +104,7 @@ export class NeighborhoodComparisonComponent implements OnChanges {
       }
     });
 
-    this._selectedSeries = this._series.filter(s => s === "line" + lineIndex);
+    this._selectedSeries = this._series.filter(s => s === series);
     this._selectedColor = [this._lineColors[chartIndex]];
   }
 
