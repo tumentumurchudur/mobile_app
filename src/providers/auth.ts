@@ -59,7 +59,7 @@ export class AuthProvider {
     });
   }
 
-  public googleSilentLogin() {
+  private _googleSilentLogin() {
     return Observable.create(observer => {
       this._googleplus.trySilentLogin({
       "webClientId": googleConfig.webClientId,
@@ -134,7 +134,7 @@ export class AuthProvider {
 
         switch (userInfo["providerId"]) {
           case "google.com":
-            this.googleSilentLogin().subscribe((val) => {
+            this._googleSilentLogin().subscribe((val) => {
               credential = val;
             });
             break;
