@@ -20,7 +20,7 @@ export const chartConfigs = [
 	},
 	{
 		name: "water",
-		arcChartColors: ["#ddd", "#2075CB", "#1847E2"],
+		arcChartColors: ["#ddd", "#2075CB", "#134679"],
 		lineChartColors: ["#2075CB"],
 		unit: "gal",
 		imgSrc: "./assets/imgs/icon_water.svg",
