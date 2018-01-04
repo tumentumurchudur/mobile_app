@@ -10,7 +10,6 @@ import { Storage } from "@ionic/storage";
 
 @Injectable()
 export class AuthProvider {
-  private _credential: any;
 
   constructor(
       private _af: AngularFireAuth,
@@ -47,7 +46,7 @@ export class AuthProvider {
         "webClientId": googleConfig.webClientId,
         "offline": true
       }).then((response) => {
-        const googleCredential = firebase.auth.GoogleAuthProvider.credential(response.idToken);
+        const googleCredential: IFbToken = firebase.auth.GoogleAuthProvider.credential(response.idToken);
 
         this._signInWithCredential(googleCredential).then((authData) => {
           observer.next(authData);
@@ -84,7 +83,7 @@ export class AuthProvider {
 
   private _getFacebookToken(credential): Promise<any> {
      return this._facebook.login(["email"]).then((response) => {
-        const facebookCredential = firebase.auth.FacebookAuthProvider.credential(response.authResponse.accessToken);
+        const facebookCredential: IFbToken = firebase.auth.FacebookAuthProvider.credential(response.authResponse.accessToken);
        return Promise.resolve(facebookCredential);
 
      })
@@ -119,7 +118,7 @@ export class AuthProvider {
   // TODO: Add interface for authProvider info
   public loginUserFromStorage(userInfo: any): Observable<any> {
     return this._getUserCredentials(userInfo)
-      .switchMap((credential: any) => {
+      .switchMap((credential: IFbToken) => {
       this._storage.set("userInfo", credential);
 
       return this._af.auth.signInWithCredential(credential).then((authData) => {
