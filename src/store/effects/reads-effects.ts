@@ -9,6 +9,7 @@ import { Subscription } from "rxjs/Subscription";
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/switchMap";
 import "rxjs/add/observable/combineLatest";
+import "rxjs/add/operator/debounceTime";
 
 import { DatabaseProvider } from "../../providers";
 import { IReads, IDateRange } from "../../interfaces";
@@ -121,6 +122,7 @@ export class ReadsEffects {
   public updateReadsByDate$ = this._actions$
     .ofType(LOAD_READS_BY_DATE)
     .map((action: any) => action.payload)
+    .debounceTime(250)
     .switchMap((values: any) => {
       const { meter, timeSpan, startDate, endDate } = values;
 

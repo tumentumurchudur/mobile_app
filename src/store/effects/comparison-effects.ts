@@ -8,6 +8,7 @@ import { Subscription } from "rxjs/Subscription";
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/switchMap";
 import "rxjs/add/observable/combineLatest";
+import "rxjs/add/operator/debounceTime";
 
 import { DatabaseProvider } from "../../providers";
 import { neighborhoodConfigs } from "../../configs";
@@ -23,6 +24,7 @@ export class ComparisonEffects {
   public getNeighborhoodReads$ = this._actions$
     .ofType(TRIGGER_COMPARISON_READS)
     .map((action: any) => action.payload)
+    .debounceTime(250)
     .switchMap((data: any) => {
       const { meter, dateRange } = data;
 
