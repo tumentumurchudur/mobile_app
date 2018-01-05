@@ -96,7 +96,7 @@ export class AuthProvider {
     return Observable.create(observer => {
       this._af.auth.sendPasswordResetEmail(emailAddr).then(success => {
           observer.next(success);
-        }, error => {
+        }).catch(error => {
           observer.error(error);
         });
     });
@@ -115,11 +115,12 @@ export class AuthProvider {
   public loginUserFromStorage(userInfo: IFbToken): Observable<any> {
     return this._getUserCredentials(userInfo)
       .switchMap((credential: IFbToken) => {
-      this._storage.set("userInfo", credential);
-      return this._af.auth.signInWithCredential(credential).then((authData) => {
+        this._storage.set("userInfo", credential);
+
+        return this._af.auth.signInWithCredential(credential).then((authData) => {
           return authData;
         });
-      })
+      });
   }
 
   private _getUserCredentials(userInfo: IFbToken): Observable<IFbToken> {
@@ -141,7 +142,7 @@ export class AuthProvider {
           observer.next(credential);
           break;
       }
-    })
+    });
   }
 
   public logoutUser(): void {
