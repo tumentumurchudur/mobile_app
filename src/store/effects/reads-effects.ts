@@ -9,6 +9,8 @@ import { Subscription } from "rxjs/Subscription";
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/switchMap";
 import "rxjs/add/observable/combineLatest";
+import "rxjs/add/operator/debounceTime";
+import "rxjs/add/operator/throttleTime";
 
 import { DatabaseProvider } from "../../providers";
 import { IReads, IDateRange } from "../../interfaces";
@@ -16,12 +18,14 @@ import { IReads, IDateRange } from "../../interfaces";
 import { CostHelper, ChartHelper } from "../../helpers";
 import {
   TRIGGER_UPDATE_METER_READS,
+  TRIGGER_LOAD_READS_BY_DATE_RANGE,
   LOAD_READS_BY_METERS,
   LOAD_READS_BY_DATE,
 
   AddMeters,
   UpdateMeter,
-  AddReads
+  AddReads,
+  LoadReadsByDateRange
 } from "../actions";
 
 @Injectable()
@@ -111,6 +115,17 @@ export class ReadsEffects {
       this._storage.set(user.uid, { meters: newMeters, lastUpdatedDate: new Date() });
 
       return new AddMeters(newMeters);
+    });
+
+  @Effect()
+  public triggerLoadReads$ = this._actions$
+    .ofType(TRIGGER_LOAD_READS_BY_DATE_RANGE)
+    .map((action: any) => action.payload)
+    .debounceTime(250)
+    .map((data: any) => {
+      const { meter, timeSpan, startDate, endDate } = data;
+
+      return new LoadReadsByDateRange({ meter, timeSpan, startDate, endDate });
     });
 
   /**

@@ -63,11 +63,13 @@ export {
   LoadReadsByDateRange,
   LoadingReads,
   LoadReadsByMeters,
+  TriggerLoadReadsByDateRange,
 
   ADD_READS,
   LOAD_READS_BY_DATE,
   LOADING_READS,
-  LOAD_READS_BY_METERS
+  LOAD_READS_BY_METERS,
+  TRIGGER_LOAD_READS_BY_DATE_RANGE
 } from "./reads-actions";
 
 export {
