@@ -63,7 +63,7 @@ export class AuthProvider {
       "offline": true
     }).then((response) => {
         const googleCredential: IFbToken = firebase.auth.GoogleAuthProvider.credential(response.idToken);
-        return googleCredential
+        return googleCredential;
      })
   }
 
