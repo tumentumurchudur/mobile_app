@@ -45,7 +45,7 @@ export class LoginPage {
 
   private _loginReturningUser() {
     this._storage.get("userInfo").then((userInfo: IFbToken) => {
-      if (!userInfo.providerId) {
+      if (!userInfo) {
         this._splashScreen.hide();
         return;
       }
