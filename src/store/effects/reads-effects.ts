@@ -10,7 +10,6 @@ import "rxjs/add/operator/map";
 import "rxjs/add/operator/switchMap";
 import "rxjs/add/observable/combineLatest";
 import "rxjs/add/operator/debounceTime";
-import "rxjs/add/operator/throttleTime";
 
 import { DatabaseProvider } from "../../providers";
 import { IReads, IDateRange } from "../../interfaces";
@@ -118,7 +117,7 @@ export class ReadsEffects {
     });
 
   @Effect()
-  public triggerLoadReads$ = this._actions$
+  public triggerLoadReadsByDateRange$ = this._actions$
     .ofType(TRIGGER_LOAD_READS_BY_DATE_RANGE)
     .map((action: any) => action.payload)
     .debounceTime(250)
