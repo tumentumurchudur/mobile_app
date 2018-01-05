@@ -23,8 +23,7 @@ edit-meter-form {
   }
 
   ion-content {
-    height: 95%;
-
+    position: relative;
     .scroll-content {
       overflow-y: hidden;
     }
@@ -35,6 +34,10 @@ edit-meter-form {
   }
 
   .save-btn {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
     font-size: 1.5rem;
     background-color: $navigation-icon;
     color: $white;

@@ -1,33 +1,33 @@
 <!-- Form Header -->
-<ion-header class="form-header">
-  <ion-navbar color="light" hideBackButton="true">
-    <ion-buttons left>
-      <button
-        ion-button color="button"
-        class="cancel-btn"
-        (click)="_onCancel()"
-      >
-        Cancel
-      </button>
-    </ion-buttons>
-
-    <div class="edit-title">Edit Meter</div>
-
-    <ion-buttons end>
-      <button
-        ion-button
-        color="danger"
-        class="delete-btn"
-        (click)="_onDeleteClick()"
-      >
-        Delete
-      </button>
-    </ion-buttons>
-  </ion-navbar>
-</ion-header>
 
 <!-- Form content -->
 <ion-content>
+  <ion-header class="form-header">
+    <ion-navbar color="light" hideBackButton="true">
+      <ion-buttons left>
+        <button
+          ion-button color="button"
+          class="cancel-btn"
+          (click)="_onCancel()"
+        >
+          Cancel
+        </button>
+      </ion-buttons>
+
+      <div class="edit-title">Edit Meter</div>
+
+      <ion-buttons end>
+        <button
+          ion-button
+          color="danger"
+          class="delete-btn"
+          (click)="_onDeleteClick()"
+        >
+          Delete
+        </button>
+      </ion-buttons>
+    </ion-navbar>
+  </ion-header>
   <form class="flex-11 layout vertical" [formGroup]="_editMeter">
     <ion-item>
       <ion-label floating color="text" stacked>Name</ion-label>

@@ -8,7 +8,7 @@
       <ion-card class="chart-card">
         <!-- Header -->
         <div class="header">
-          <div [class.status]="_isUsageCostBehindGoal(meter)"></div>
+          <div *ngIf="_currentNavigationItems[i] === _navigationItems.ARC_CHART"  [class.status]="_isUsageCostBehindGoal(meter)"></div>
           <img class="exclamation-icon" src="assets/exclamation.svg">
           <div class="meter-name">{{ meter._name }}</div>
         </div>
@@ -37,7 +37,7 @@
             <!-- Updates meter when clicked -->
             <div
               class="actual-cost"
-              [ngStyle]="{ 'color': _isUsageCostBehindGoal(meter) ? '#C22A17' : '#969696' }"
+              [ngStyle]="{ 'color': _isUsageCostBehindGoal(meter) ? '#C22A17' : _getMeterConfig(meter, 'textColor') }"
               (click)="_updateMeter(meter, i)"
             >
               {{ meter._actualUsageCost | currency: 'USD': true: '1.2-2' }}
@@ -77,7 +77,10 @@
               ></line-chart>
 
               <div *ngIf="data.cost">
-                <div class="timespan-cost">
+                <div
+                  class="timespan-cost"
+                  [ngStyle]="{ 'color': _getMeterConfig(meter, 'textColor') }"
+                >
                   {{ data.cost.totalCost | currency:'USD': true: '1.2-2' }}
                 </div>
                 <div>
