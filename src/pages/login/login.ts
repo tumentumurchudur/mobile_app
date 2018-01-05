@@ -34,37 +34,41 @@ export class LoginPage {
   }
 
   ngOnInit() {
-    this._storage.get("userInfo").then((userInfo: IFbToken) => {
-      if (!userInfo.providerId) {
-        this._splashScreen.hide();
-        return;
-      }
-       const subscription = this._auth.loginUserFromStorage(userInfo).subscribe(userData => {
-          if (!userData) return;
-            const user: IUser = {
-              email: userData.email,
-              uid: userData.uid,
-              password: null,
-              orgPath: null
-            };
-
-            // Update the store with current user.
-            this._storeServices.addUser(user);
-
-            this.navCtrl.push("HomePage").then(() => {
-              this._splashScreen.hide();
-            });
-        }, (error) => {
-          console.log("Login failed:", error);
-        });
-        this._subscriptions.push(subscription);
-    });
+    this._loginReturningUser();
   }
 
   ngOnDestroy() {
     for (const subscription of this._subscriptions) {
       subscription.unsubscribe();
     }
+  }
+
+  private _loginReturningUser() {
+    this._storage.get("userInfo").then((userInfo: IFbToken) => {
+      if (!userInfo.providerId) {
+        this._splashScreen.hide();
+        return;
+      }
+      const subscription = this._auth.loginUserFromStorage(userInfo).subscribe(userData => {
+        if (!userData) return;
+        const user: IUser = {
+          email: userData.email,
+          uid: userData.uid,
+          password: null,
+          orgPath: null
+        };
+
+        // Update the store with current user.
+        this._storeServices.addUser(user);
+
+        this.navCtrl.push("HomePage").then(() => {
+          this._splashScreen.hide();
+        });
+      }, (error) => {
+        console.log("Login failed:", error);
+      });
+      this._subscriptions.push(subscription);
+    });
   }
 
   private _onLoginOptionClick() {

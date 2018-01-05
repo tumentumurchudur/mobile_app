@@ -57,13 +57,12 @@ export class AuthProvider {
     });
   }
 
-  private _googleSilentLogin(): Promise<any> {
+  private _googleSilentLogin(): Promise<IFbToken> {
      return this._googleplus.trySilentLogin({
       "webClientId": googleConfig.webClientId,
       "offline": true
     }).then((response) => {
-        const googleCredential: IFbToken = firebase.auth.GoogleAuthProvider.credential(response.idToken);
-        return googleCredential;
+        return firebase.auth.GoogleAuthProvider.credential(response.idToken);
      })
   }
 
@@ -81,11 +80,9 @@ export class AuthProvider {
     });
   }
 
-  private _getFacebookToken(credential): Promise<any> {
+  private _getFacebookToken(credential): Promise<IFbToken> {
      return this._facebook.login(["email"]).then((response) => {
-        const facebookCredential: IFbToken = firebase.auth.FacebookAuthProvider.credential(response.authResponse.accessToken);
-       return facebookCredential;
-
+        return firebase.auth.FacebookAuthProvider.credential(response.authResponse.accessToken);
      })
   }
 
@@ -119,14 +116,13 @@ export class AuthProvider {
     return this._getUserCredentials(userInfo)
       .switchMap((credential: IFbToken) => {
       this._storage.set("userInfo", credential);
-
       return this._af.auth.signInWithCredential(credential).then((authData) => {
           return authData;
         });
       })
   }
 
-  private _getUserCredentials(userInfo: IFbToken): Observable<any>{
+  private _getUserCredentials(userInfo: IFbToken): Observable<IFbToken> {
     return Observable.create(observer => {
       switch (userInfo.providerId) {
         case "google.com":
@@ -151,7 +147,7 @@ export class AuthProvider {
   public logoutUser(): void {
     this._af.auth.signOut().then(() => {
       this._storage.remove("userInfo");
-    })
+    });
   }
 
 }
