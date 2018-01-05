@@ -4,6 +4,11 @@ page-home {
   .content-md, .content-ios {
     background-color: $background-color;
   }
+
+  .navbar {
+    height: 8vh;
+  }
+
   .cog {
     margin:auto;
     height: 20px;
