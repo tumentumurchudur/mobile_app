@@ -8,7 +8,7 @@
       <ion-card class="chart-card">
         <!-- Header -->
         <div class="header">
-          <div [class.status]="_isUsageCostBehindGoal(meter)"></div>
+          <div *ngIf="_currentNavigationItems[i] === _navigationItems.ARC_CHART"  [class.status]="_isUsageCostBehindGoal(meter)"></div>
           <img class="exclamation-icon" src="assets/exclamation.svg">
           <div class="meter-name">{{ meter._name }}</div>
         </div>
