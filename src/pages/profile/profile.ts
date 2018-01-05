@@ -21,11 +21,11 @@ export class ProfilePage {
   }
 
   private _onLogoutClick(): void {
-   const logout$ = this._auth.logoutUser().subscribe(() => {
+   const logout = this._auth.logoutUser().subscribe(() => {
       this.navCtrl.pop();
     })
 
-    this._subscriptions.push(logout$);
+    this._subscriptions.push(logout);
   }
 
   ngOnDestroy() {

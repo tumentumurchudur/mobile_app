@@ -5,16 +5,13 @@ import { AuthProvider } from "../../providers/auth";
 import { TRIGGER_PREP_FOR_LOGOUT, LogoutUser, TRIGGER_USER_CHECK } from "../actions";
 
 @Injectable()
-export class ProviderEffects {
+export class UserEffects {
 
-  @Effect()
+  @Effect({ dispatch: false })
   public logoutUser$ = this._actions$
     .ofType(TRIGGER_PREP_FOR_LOGOUT)
-    .switchMap(() => {
-      return this._auth.logoutUser();
-    })
     .map(() => {
-      return new LogoutUser();
+      return this._auth.logoutUser();
     });
 
   constructor(

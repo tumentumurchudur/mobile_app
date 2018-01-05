@@ -35,9 +35,12 @@ export class LoginPage {
 
   ngOnInit() {
     this._storage.get("userInfo").then((userInfo: IFbToken) => {
-      if (userInfo.providerId) {
-       const subscription$ = this._auth.loginUserFromStorage(userInfo).subscribe(userData => {
-          if (userData) {
+      if (!userInfo.providerId) {
+        this._splashScreen.hide();
+        return;
+      }
+       const subscription = this._auth.loginUserFromStorage(userInfo).subscribe(userData => {
+          if (!userData) return;
             const user: IUser = {
               email: userData.email,
               uid: userData.uid,
@@ -51,14 +54,10 @@ export class LoginPage {
             this.navCtrl.push("HomePage").then(() => {
               this._splashScreen.hide();
             });
-          } else return;
-
         }, (error) => {
           console.log("Login failed:", error);
         });
-        this._subscriptions.push(subscription$);
-
-      } else this._splashScreen.hide();
+        this._subscriptions.push(subscription);
     });
   }
 

@@ -63,8 +63,8 @@ export class AuthProvider {
       "offline": true
     }).then((response) => {
         const googleCredential: IFbToken = firebase.auth.GoogleAuthProvider.credential(response.idToken);
-        return Promise.resolve(googleCredential);
-      })
+        return googleCredential
+     })
   }
 
   public loginWithFacebook(): Observable<IUser> {
@@ -84,15 +84,15 @@ export class AuthProvider {
   private _getFacebookToken(credential): Promise<any> {
      return this._facebook.login(["email"]).then((response) => {
         const facebookCredential: IFbToken = firebase.auth.FacebookAuthProvider.credential(response.authResponse.accessToken);
-       return Promise.resolve(facebookCredential);
+       return facebookCredential;
 
      })
   }
 
   private _signInWithCredential(credential: IFbToken): Promise<any> {
-   return this._storage.set("userInfo", credential).then(() => {
-      return this._af.auth.signInWithCredential(credential);
-    });
+   this._storage.set("userInfo", credential);
+
+   return this._af.auth.signInWithCredential(credential);
   }
 
   public resetPassword(emailAddr: string): Observable<IUser> {
@@ -115,10 +115,11 @@ export class AuthProvider {
     });
   }
 
-  public loginUserFromStorage(userInfo: any): Observable<any> {
+  public loginUserFromStorage(userInfo: IFbToken): Observable<any> {
     return this._getUserCredentials(userInfo)
       .switchMap((credential: IFbToken) => {
       this._storage.set("userInfo", credential);
+
       return this._af.auth.signInWithCredential(credential).then((authData) => {
           return authData;
         });

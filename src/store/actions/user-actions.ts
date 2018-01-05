@@ -37,12 +37,10 @@ export class TriggerUserCheck implements Action {
 export class TriggerPrepForLogout implements Action {
   public readonly type = TRIGGER_PREP_FOR_LOGOUT;
   public payload: any;
-
 }
 
 export class LogoutUser implements Action {
   public readonly type = LOGOUT_USER;
   public payload: any;
-
 }
 
