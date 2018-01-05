@@ -25,6 +25,9 @@ export function userReducer(state: IUser = userDefault, action): IUser {
 		case ActionTypes.UPDATE_USER: {
 			return Object.assign({}, state, action.payload);
 		}
+    case ActionTypes.LOGOUT_USER: {
+      return Object.assign({}, state, userDefault);
+    }
 		default:
 			return state;
 	}

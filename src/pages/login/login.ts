@@ -1,9 +1,12 @@
-import { Component } from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import { IonicPage, NavController } from "ionic-angular";
-
-import { IUser } from "../../interfaces";
+import { Storage } from "@ionic/storage";
+import { SplashScreen } from "@ionic-native/splash-screen";
+import { IUser, IFbToken } from "../../interfaces";
 import { AuthProvider } from "../../providers"
 import { StoreServices } from "../../store/services";
+import { Subscription } from "rxjs/Subscription";
+
 
 @IonicPage({
   name: "LoginPage"
@@ -16,15 +19,59 @@ export class LoginPage {
   private _user: IUser = {
     email: "spark@vutiliti.com",
     password: "spark123",
+    // email: null,
+    // password: null,
     uid: null
   };
   private _isNewUser: boolean = false;
+  private _subscriptions: Subscription[] = [];
 
   constructor(
     private _storeServices: StoreServices,
     private _auth: AuthProvider,
-    public navCtrl: NavController
-  ) {}
+    public navCtrl: NavController,
+    private _storage: Storage,
+    private _splashScreen: SplashScreen
+  ) {
+  }
+
+  ngOnInit() {
+    this._loginReturningUser();
+  }
+
+  ngOnDestroy() {
+    for (const subscription of this._subscriptions) {
+      subscription.unsubscribe();
+    }
+  }
+
+  private _loginReturningUser() {
+    this._storage.get("userInfo").then((userInfo: IFbToken) => {
+      if (!userInfo.providerId) {
+        this._splashScreen.hide();
+        return;
+      }
+      const subscription = this._auth.loginUserFromStorage(userInfo).subscribe(userData => {
+        if (!userData) return;
+        const user: IUser = {
+          email: userData.email,
+          uid: userData.uid,
+          password: null,
+          orgPath: null
+        };
+
+        // Update the store with current user.
+        this._storeServices.addUser(user);
+
+        this.navCtrl.push("HomePage").then(() => {
+          this._splashScreen.hide();
+        });
+      }, (error) => {
+        console.log("Login failed:", error);
+      });
+      this._subscriptions.push(subscription);
+    });
+  }
 
   private _onLoginOptionClick() {
     this._isNewUser = false;
@@ -67,7 +114,7 @@ export class LoginPage {
 
       this._storeServices.addUser(user);
 
-      this.navCtrl.push("HomePage", { user: userData });
+      this.navCtrl.push("HomePage");
     }, (error) => {
       console.log("Login failed:", error);
     })
@@ -84,7 +131,7 @@ export class LoginPage {
 
       this._storeServices.addUser(user);
 
-      this.navCtrl.push("HomePage", { user: userData });
+      this.navCtrl.push("HomePage");
     }, (error) => {
       console.log("Login failed:", error);
     })
