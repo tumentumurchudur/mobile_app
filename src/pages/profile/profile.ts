@@ -1,5 +1,7 @@
-import { Component } from "@angular/core";
+import { Component, OnDestroy } from "@angular/core";
 import { IonicPage, NavController, NavParams } from "ionic-angular";
+import { AuthProvider } from "../../providers";
+import { StoreServices } from "../../store/services";
 
 @IonicPage()
 @Component({
@@ -8,6 +10,16 @@ import { IonicPage, NavController, NavParams } from "ionic-angular";
 })
 export class ProfilePage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(
+    private _storeServices: StoreServices,
+    public navCtrl: NavController,
+    public navParams: NavParams,
+    private _auth: AuthProvider
+  ) {
   }
+
+  private _onLogoutClick(): void {
+   this._auth.logoutUser();
+  }
+
 }
