@@ -68,10 +68,11 @@ a {
   padding: 50px;
 
   .alert-wrapper {
-    width: 80%;
+    width: 50%;
     position: absolute;
     top: 9%;
-    border-radius: 0;
+    border-radius: 10px;
+    overflow: hidden;
   }
 
   .alert-button-group {
@@ -87,8 +88,10 @@ a {
     border-radius: 0;
     height: 8vh;
     color: $alert-text !important;
-    font-size: 2.5vh;
+    font-size: 2.75vh;
     border: .75px solid $alert-border;
+    text-transform: capitalize;
+
 
     .button-inner {
       justify-content: center;
@@ -98,10 +101,10 @@ a {
 
 .timespan-alert.alert-ios {
   .alert-wrapper {
-    width: 80%;
+    width: 60%;
     position: absolute;
     top: 10%;
-    border-radius: 0;
+    border-radius: 10px;
     left: 0;
     right: 0;
     margin-left: auto;
@@ -128,8 +131,8 @@ a {
     border-radius: 0;
     text-transform: capitalize;
     color: $alert-text !important;
-    font-size: 2.5vh;
-    border: .75px solid $alert-border;
+    font-size: 2.75vh;
+    border: .15px solid $alert-border;
   }
 
   .alert-button:last-child {

@@ -1,6 +1,9 @@
 @import "../../styles/variables";
 
 timespan-selector {
+  ion-col {
+    padding: 0;
+  }
   .timeSpan {
     text-transform: capitalize;
   }
@@ -26,6 +29,7 @@ timespan-selector {
     width: 70%;
     margin: auto;
     ion-col {
+      padding: 0;
       button {
         color: #29ACE0 !important;
         border: 1px solid #9DAEB2;
