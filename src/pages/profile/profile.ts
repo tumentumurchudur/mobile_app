@@ -2,7 +2,6 @@ import { Component, OnDestroy } from "@angular/core";
 import { IonicPage, NavController, NavParams } from "ionic-angular";
 import { AuthProvider } from "../../providers";
 import { StoreServices } from "../../store/services";
-import { Subscription } from "rxjs/Subscription";
 
 @IonicPage()
 @Component({
@@ -10,7 +9,6 @@ import { Subscription } from "rxjs/Subscription";
   templateUrl: "profile.html",
 })
 export class ProfilePage {
-  private _subscriptions: Subscription[] = [];
 
   constructor(
     private _storeServices: StoreServices,
@@ -21,17 +19,7 @@ export class ProfilePage {
   }
 
   private _onLogoutClick(): void {
-   const logout = this._auth.logoutUser().subscribe(() => {
-      this.navCtrl.pop();
-    })
-
-    this._subscriptions.push(logout);
-  }
-
-  ngOnDestroy() {
-    for (const subscription of this._subscriptions) {
-      subscription.unsubscribe();
-    }
+   this._auth.logoutUser();
   }
 
 }

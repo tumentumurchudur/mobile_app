@@ -148,15 +148,10 @@ export class AuthProvider {
     })
   }
 
-  public logoutUser(): Observable<IUser> {
-    return Observable.create(observer => {
-      return this._af.auth.signOut().then(() => {
-        this._storage.remove("userInfo");
-        observer.next();
-     }).catch((error) => {
-      observer.error(error);
-     });
-    });
+  public logoutUser(): void {
+    this._af.auth.signOut().then(() => {
+      this._storage.remove("userInfo");
+    })
   }
 
 }
