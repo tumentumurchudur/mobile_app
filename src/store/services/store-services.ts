@@ -4,11 +4,6 @@ import { AppState } from "../reducers";
 import { IUser, IReads, IMeter, IDateRange, IComparison } from "../../interfaces";
 import { Observable } from "rxjs/Observable";
 import {
-	AddMeter,
-	UpdateMeter,
-	LoadMeters,
-  AddProviders,
-	LoadFromDb,
 	ResetProvider,
 	TriggerAddProviders,
   TriggerGetProviderCountries,

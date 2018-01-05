@@ -22,8 +22,7 @@ import {
 
   AddMeters,
   UpdateMeter,
-  AddReads,
-  LoadReadsByDateRange
+  AddReads
 } from "../actions";
 
 @Injectable()
