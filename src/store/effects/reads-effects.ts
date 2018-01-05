@@ -17,7 +17,6 @@ import { IReads, IDateRange } from "../../interfaces";
 import { CostHelper, ChartHelper } from "../../helpers";
 import {
   TRIGGER_UPDATE_METER_READS,
-  TRIGGER_LOAD_READS_BY_DATE_RANGE,
   LOAD_READS_BY_METERS,
   LOAD_READS_BY_DATE,
 
@@ -116,17 +115,6 @@ export class ReadsEffects {
       return new AddMeters(newMeters);
     });
 
-  @Effect()
-  public triggerLoadReadsByDateRange$ = this._actions$
-    .ofType(TRIGGER_LOAD_READS_BY_DATE_RANGE)
-    .map((action: any) => action.payload)
-    .debounceTime(250)
-    .map((data: any) => {
-      const { meter, timeSpan, startDate, endDate } = data;
-
-      return new LoadReadsByDateRange({ meter, timeSpan, startDate, endDate });
-    });
-
   /**
    * Handles LOAD_READS_BY_DATE action and
    * updates reads in the store using meter guid, start and end dates.
@@ -135,6 +123,7 @@ export class ReadsEffects {
   public updateReadsByDate$ = this._actions$
     .ofType(LOAD_READS_BY_DATE)
     .map((action: any) => action.payload)
+    .debounceTime(250)
     .switchMap((values: any) => {
       const { meter, timeSpan, startDate, endDate } = values;
 

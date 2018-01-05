@@ -10,7 +10,6 @@ import {
   AddProviders,
 	LoadFromDb,
 	ResetProvider,
-	TriggerLoadReadsByDateRange,
 	TriggerAddProviders,
   TriggerGetProviderCountries,
   TriggerGetProviderRegions,
@@ -28,6 +27,7 @@ import {
 	AddReads,
 	LoadingReads,
 	LoadReadsByMeters,
+	LoadReadsByDateRange,
 	LoadingComparisonReads
 } from "../actions";
 
@@ -114,7 +114,7 @@ export class StoreServices {
 
 	public loadReadsByDateRange(meter: IMeter, timeSpan: string, startDate: Date, endDate: Date) {
 		this._store.dispatch(new LoadingReads());
-		this._store.dispatch(new TriggerLoadReadsByDateRange({ meter, timeSpan, startDate, endDate }));
+		this._store.dispatch(new LoadReadsByDateRange({ meter, timeSpan, startDate, endDate }));
 	}
 
 	public selectReadsLoading() {
