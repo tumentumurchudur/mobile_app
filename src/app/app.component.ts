@@ -10,7 +10,7 @@ export class MyApp {
 
   constructor(platform: Platform, statusBar: StatusBar) {
     platform.ready().then(() => {
-      statusBar.overlaysWebView(false);
+      statusBar.overlaysWebView(true);
       statusBar.backgroundColorByHexString("#d5dde2");
 
       if (platform.is("android")) {
