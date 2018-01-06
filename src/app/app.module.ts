@@ -35,8 +35,17 @@ import { MyApp } from "./app.component";
     HttpClientModule,
     IonicModule.forRoot(MyApp,
       {
-        autoFocusAssist: false,
-        scrollAssist: false
+        platforms: {
+          ios : {
+            scrollAssist: false,
+            autoFocusAssist: false,
+            statusbarPadding: true
+          },
+          android : {
+            scrollAssist: false,
+            autoFocusAssist: false
+          }
+        }
       }),
     StoreModule.forRoot(reducers, { metaReducers }),
     StoreDevtoolsModule.instrument({

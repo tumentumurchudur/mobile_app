@@ -5,6 +5,10 @@ page-home {
     background-color: $background-color;
   }
 
+  .scroll-content {
+    padding-top: 0 !important;
+  };
+
   .navbar {
     height: 8vh;
   }
