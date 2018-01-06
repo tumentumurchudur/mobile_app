@@ -71,11 +71,12 @@ export class ComparisonEffects {
         Observable.of(dateRange),
         storeData ? Observable.of(storeData.usage) : this._db.getReadsByDateRange(meter._guid, startDate, endDate),
         storeData ? Observable.of(storeData.avg) : this._db.getReadsByNeighborhood(ncmpAvgGuid, startDate, endDate),
-        storeData ? Observable.of(storeData.eff) : this._db.getReadsByNeighborhood(ncmpEffGuid, startDate, endDate)
+        storeData ? Observable.of(storeData.eff) : this._db.getReadsByNeighborhood(ncmpEffGuid, startDate, endDate),
+        storeData ? Observable.of(storeData.rank) : this._db.getNeighborhoodComparisonRanks(meter, dateRange.startDate, dateRange.endDate)
       );
     })
     .flatMap((data: any[]) => {
-      const [ subscription, group, meter, dateRange, usage = [], avg = [], eff = [] ] = data;
+      const [ subscription, group, meter, dateRange, usage = [], avg = [], eff = [], rank ] = data;
 
       if (subscription) {
         subscription.unsubscribe();
@@ -168,7 +169,8 @@ export class ComparisonEffects {
         avgCosts,
         eff,
         effCosts,
-        calcReads
+        calcReads,
+        rank
       };
 
       return [

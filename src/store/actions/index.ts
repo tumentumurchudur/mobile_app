@@ -1,4 +1,3 @@
-export { LoadFromDb, LOAD_FROM_DB } from "./actions";
 export {
   ADD_USER,
   UPDATE_USER,

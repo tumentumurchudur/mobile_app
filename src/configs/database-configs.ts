@@ -12,7 +12,8 @@ export const databasePaths = {
 	meters: "meters",
 	orgs: "orgs",
 	reads: "reads",
-	providers: "providers"
+	providers: "providers",
+	ranks: "nbhc_ranks"
 }
 
 export const databaseToken = {

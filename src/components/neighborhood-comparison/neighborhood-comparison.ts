@@ -19,6 +19,7 @@ export class NeighborhoodComparisonComponent implements OnChanges {
   private _series: string[] = [];
   private _lineColors: string[] = [];
   private _legends: string[] = [];
+  private _rank: number;
 
   private _options = [
     { line: "line1", color: "#2075CB", legend: "You" },
@@ -53,8 +54,9 @@ export class NeighborhoodComparisonComponent implements OnChanges {
       return;
     }
 
-    const { calcReads, avgCosts, effCosts, usageCosts } = filteredReads[0];
+    const { calcReads, avgCosts, effCosts, usageCosts, rank } = filteredReads[0];
     this._allData = calcReads || [];
+    this._rank = rank;
 
     if (usageCosts) {
       this._costs.push(usageCosts.totalCost);
