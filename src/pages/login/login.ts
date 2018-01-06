@@ -7,7 +7,6 @@ import { AuthProvider } from "../../providers"
 import { StoreServices } from "../../store/services";
 import { Subscription } from "rxjs/Subscription";
 
-
 @IonicPage({
   name: "LoginPage"
 })
@@ -30,8 +29,7 @@ export class LoginPage {
     public navCtrl: NavController,
     private _storage: Storage,
     private _splashScreen: SplashScreen
-  ) {
-  }
+  ) { }
 
   ngOnInit() {
     this._loginReturningUser();
@@ -45,12 +43,16 @@ export class LoginPage {
 
   private _loginReturningUser() {
     this._storage.get("userInfo").then((userInfo: IFbToken) => {
-      if (!userInfo.providerId) {
+      if (!userInfo || !userInfo.providerId) {
         this._splashScreen.hide();
         return;
       }
+
       const subscription = this._auth.loginUserFromStorage(userInfo).subscribe(userData => {
-        if (!userData) return;
+        if (!userData || !userData.email || !userData.uid) {
+          return;
+        }
+
         const user: IUser = {
           email: userData.email,
           uid: userData.uid,
@@ -67,6 +69,7 @@ export class LoginPage {
       }, (error) => {
         console.log("Login failed:", error);
       });
+
       this._subscriptions.push(subscription);
     });
   }
@@ -80,8 +83,12 @@ export class LoginPage {
   }
 
   private _onLoginClick(user: IUser): void {
+    if (!this._validateUserInput) {
+      return;
+    }
+
     if (!this._isNewUser) {
-      this._auth.loginWithEmail(user).subscribe(userData => {
+      const subscription: Subscription = this._auth.loginWithEmail(user).subscribe(userData => {
         const user: IUser = {
           email: userData.email,
           uid: userData.uid,
@@ -96,12 +103,18 @@ export class LoginPage {
       }, (error) => {
         console.log("Login failed:", error);
       });
+
+      this._subscriptions.push(subscription);
     } else {
       this.navCtrl.push("SignUpPage");
     }
   }
 
   private _onFacebookClick(): void {
+    if (!this._validateUserInput) {
+      return;
+    }
+
     this._auth.loginWithFacebook().subscribe(userData => {
       const user: IUser = {
         email: userData.email,
@@ -119,6 +132,10 @@ export class LoginPage {
   }
 
   private _onGoogleClick(): void {
+    if (!this._validateUserInput) {
+      return;
+    }
+
     this._auth.loginWithGoogle().subscribe(userData => {
       const user: IUser = {
         email: userData.email,
@@ -137,5 +154,9 @@ export class LoginPage {
 
   private _onResetPasswordClick(): void {
     this.navCtrl.push("ResetPasswordPage");
+  }
+
+  private _validateUserInput() {
+    return this._user.email && this._user.password;
   }
 }
