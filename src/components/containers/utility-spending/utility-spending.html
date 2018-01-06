@@ -8,8 +8,6 @@
       <ion-card class="chart-card">
         <!-- Header -->
         <div class="header">
-          <div [class.status]="_isUsageCostBehindGoal(meter)"></div>
-          <img class="exclamation-icon" src="assets/exclamation.svg">
           <div class="meter-name">{{ meter._name }}</div>
         </div>
 
@@ -20,6 +18,11 @@
           [@cardState]
         >
           <div *ngIf="meter._actualUsageCost !== null">
+            <div class="goal-status">
+              <div [class.status]="_isUsageCostBehindGoal(meter)"></div>
+              <img class="exclamation-icon" src="assets/exclamation.svg">
+            </div>
+
             <arc-tween-chart
               [outerArcValue]="meter._actualUsageCost"
               [innerArcValue]="_getDailyGoalCost(meter)"
@@ -94,6 +97,12 @@
           *ngIf="_currentNavigationItems[i] === _navigationItems.COMPARISON"
           [@cardState]
         >
+          <div class="goal-status" *ngIf="_comparison$ | async as comparisonReads">
+            <div style="position: absolute; right: 0; bottom: 6px">
+              Rank: 25
+            </div>
+          </div>
+
           <timespan-selector
             [selectedTimeSpan]="_selectedDateRanges[i].timeSpan"
             [disableNextButton]="_shouldDisableNextButton(i)"
