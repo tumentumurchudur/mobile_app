@@ -1,7 +1,6 @@
 import { Component, Input, OnChanges, ChangeDetectionStrategy } from "@angular/core";
 
-import { ChartHelper } from "../../helpers";
-import { IDateRange, IComparison, IMeter, IUsage } from "../../interfaces";
+import { IDateRange, IComparison, IMeter } from "../../interfaces";
 import { chartConfigs } from "../../configs";
 
 @Component({
@@ -19,7 +18,6 @@ export class NeighborhoodComparisonComponent implements OnChanges {
   private _series: string[] = [];
   private _lineColors: string[] = [];
   private _legends: string[] = [];
-  private _rank: number;
 
   private _options = [
     { line: "line1", color: "#2075CB", legend: "You" },
@@ -56,7 +54,6 @@ export class NeighborhoodComparisonComponent implements OnChanges {
 
     const { calcReads, avgCosts, effCosts, usageCosts, rank } = filteredReads[0];
     this._allData = calcReads || [];
-    this._rank = rank;
 
     if (usageCosts) {
       this._costs.push(usageCosts.totalCost);

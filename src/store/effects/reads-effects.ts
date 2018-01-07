@@ -125,6 +125,7 @@ export class ReadsEffects {
     .debounceTime(250)
     .switchMap((values: any) => {
       const { meter, timeSpan, startDate, endDate } = values;
+      const dateRange: IDateRange = { timeSpan: null, startDate, endDate };
 
       // Get reads data from the store if available.
       let storeData;
@@ -136,7 +137,7 @@ export class ReadsEffects {
         })[0] || null;
       });
 
-      const reads = storeData ? Observable.of(storeData.reads) : this._db.getReadsByDateRange(meter._guid, startDate, endDate);
+      const reads = storeData ? Observable.of(storeData.reads) : this._db.getReadsByDateRange(meter._guid, dateRange);
 
       return Observable.combineLatest([
         Observable.of(meter),

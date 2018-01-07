@@ -69,10 +69,10 @@ export class ComparisonEffects {
         Observable.of(group),
         Observable.of(meter),
         Observable.of(dateRange),
-        storeData ? Observable.of(storeData.usage) : this._db.getReadsByDateRange(meter._guid, startDate, endDate),
-        storeData ? Observable.of(storeData.avg) : this._db.getReadsByNeighborhood(ncmpAvgGuid, startDate, endDate),
-        storeData ? Observable.of(storeData.eff) : this._db.getReadsByNeighborhood(ncmpEffGuid, startDate, endDate),
-        storeData ? Observable.of(storeData.rank) : this._db.getNeighborhoodComparisonRanks(meter, dateRange.startDate, dateRange.endDate)
+        storeData ? Observable.of(storeData.usage) : this._db.getReadsByDateRange(meter._guid, dateRange),
+        storeData ? Observable.of(storeData.avg) : this._db.getReadsByNeighborhood(ncmpAvgGuid, dateRange),
+        storeData ? Observable.of(storeData.eff) : this._db.getReadsByNeighborhood(ncmpEffGuid, dateRange),
+        storeData ? Observable.of(storeData.rank) : this._db.getNeighborhoodComparisonRanks(meter, dateRange)
       );
     })
     .flatMap((data: any[]) => {
@@ -112,14 +112,7 @@ export class ComparisonEffects {
       }
 
       let calcReads = [];
-      let loopDeltas;
-      if (useDeltas.length) {
-        loopDeltas = useDeltas;
-      } else if (avgDeltas.length) {
-        loopDeltas = avgDeltas;
-      } else {
-        loopDeltas = effDeltas;
-      }
+      const loopDeltas = useDeltas.length ? useDeltas : avgDeltas;
 
       for (let i = 0; i < loopDeltas.length; i++) {
         // Check if consumption data is available.
@@ -131,24 +124,7 @@ export class ComparisonEffects {
             line3: effDeltas[i].line1 || 0
           });
         }
-        // Check average data.
-        else if (!avgDeltas.length) {
-          calcReads.push({
-            date: loopDeltas[i].date,
-            line1: useDeltas[i].line1 || 0,
-            line3: effDeltas[i].line1 || 0
-          });
-        }
-        // Check efficiency data.
-        else if (!effDeltas.length) {
-          calcReads.push({
-            date: loopDeltas[i].date,
-            line1: useDeltas[i].line1 || 0,
-            line2: avgDeltas[i].line1 || 0
-          });
-        }
-        // All data is available.
-        // Consumption, average and efficiency
+        // Data for all three charts is available.
         else {
           calcReads.push({
             date: loopDeltas[i].date,

@@ -98,8 +98,12 @@
           [@cardState]
         >
           <div class="goal-status" *ngIf="_comparison$ | async as comparisonReads">
-            <div style="position: absolute; right: 0; bottom: 6px">
-              Rank: 25
+            <div class="rank">
+              <div class="percentile">
+                {{ _getNeighborhoodRank(comparisonReads, meter, i) }}
+                <small>%</small>
+              </div>
+              <div class="rank-text">RANK</div>
             </div>
           </div>
 

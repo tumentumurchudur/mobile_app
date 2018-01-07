@@ -256,7 +256,8 @@ export class DatabaseProvider {
     });
   }
 
-  public getReadsByDateRange(meterGuid: string, startDate: Date, endDate: Date): Observable<IReads[]> {
+  public getReadsByDateRange(meterGuid: string, dateRange: IDateRange): Observable<IReads[]> {
+    const { startDate, endDate } = dateRange;
     const startAt = startDate.getTime().toString();
     const endAt = endDate.getTime().toString();
 
@@ -286,7 +287,8 @@ export class DatabaseProvider {
     });
   }
 
-  public getReadsByNeighborhood(guid: string, startDate: Date, endDate: Date): Observable<IReads[]> {
+  public getReadsByNeighborhood(guid: string, dateRange: IDateRange): Observable<IReads[]> {
+    const { startDate, endDate } = dateRange;
     const startAt = startDate.getTime().toString();
     const endAt = endDate.getTime().toString();
 
@@ -409,7 +411,8 @@ export class DatabaseProvider {
     });
   }
 
-  public getNeighborhoodComparisonRanks(meter: IMeter, startDate: Date, endDate: Date): Observable<number> {
+  public getNeighborhoodComparisonRanks(meter: IMeter, dateRange: IDateRange): Observable<number> {
+    const { startDate, endDate } = dateRange;
     const startAt = startDate.getTime().toString();
     const endAt = endDate.getTime().toString();
 

@@ -201,6 +201,17 @@ export class UtilitySpendingComponent implements OnInit {
     return { deltas: [], cost: null };
   }
 
+  private _getNeighborhoodRank(comparisonReads: IComparison[], meter: IMeter, index: number) {
+    const { startDate, endDate } = this._selectedDateRanges[index];
+    const data = comparisonReads.find(read => {
+      return read.guid === meter._guid &&
+        read.startDate.toString() === startDate.toString() &&
+        read.endDate.toString() === endDate.toString()
+    });
+
+    return data ? data.rank : null;
+  }
+
   private _showDateRange(index: number): string {
     return ChartHelper.getFormattedDateRange(this._selectedDateRanges[index]);
   }

@@ -41,35 +41,67 @@ utility-spending {
 					bottom: 6px;
 					right: -5px;
 				}
+
+				.rank {
+					position: absolute;
+					right: 0;
+					bottom: 6px
+				}
 			}
-		}
 
-		.spending-goal {
-			text-align: center;
-			font-size: 18px;
-			opacity: .7;
-			margin-bottom: 5px
-		}
+			.rank {
+				position: absolute;
+				top: -46px;
+				right: 0;
+				height: 58px;
+				width: 58px;
+				text-align: right;
+				padding: 1px 1px 0 0;
+				color: $white;
+				font-size: 20px;
+				background-color: #2075CB;
+				border-left: 2px solid #2075CB;
+				border-bottom: 2px solid #2075CB;
+				border-bottom-left-radius: 100%;
 
-		.actual-cost {
-			color: $dusty-gray;
-			text-align: center;
-			font-size: 48px;
-		}
+				.percentile {
+					padding-right: 3px;
+					word-spacing: -3px;
+				}
 
-		.timespan-cost {
-			color: orange;
-			text-align: center;
-			font-size: 48px;
-		}
+				.rank-text {
+					padding-right: 7px;
+					font-size: 12px;
+				}
+			}
 
-		.show-all {
-			text-align: right;
-			margin-right: 20px;
-		}
+			.spending-goal {
+				text-align: center;
+				font-size: 18px;
+				opacity: .7;
+				margin-bottom: 5px
+			}
 
-		.edit-meter-form {
-			margin: 0;
+			.actual-cost {
+				color: $dusty-gray;
+				text-align: center;
+				font-size: 48px;
+			}
+
+			.timespan-cost {
+				color: orange;
+				text-align: center;
+				font-size: 48px;
+			}
+
+			.show-all {
+				text-align: right;
+				margin-right: 20px;
+			}
+
+			.edit-meter-form {
+				margin: 0;
+			}
 		}
 	}
 
