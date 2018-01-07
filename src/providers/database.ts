@@ -8,6 +8,7 @@ import { AuthProvider } from "./auth";
 
 import { Observable } from "rxjs/Observable";
 import "rxjs/add/observable/combineLatest";
+import "rxjs/add/operator/catch";
 
 @Injectable()
 export class DatabaseProvider {
@@ -407,7 +408,11 @@ export class DatabaseProvider {
       const [token] = data;
       const header = new HttpHeaders().set("Authorization", neighborhoodConfigs.AUTHORIZATION);
 
-      return this._httpClient.get(`${neighborhoodConfigs.NEIGHBORHOOD_COMP_DEV_REST_URL}?guid=${_guid}&token=${token}&utilityType=${_utilityType}`, { headers: header })
+      return this._httpClient
+        .get(`${neighborhoodConfigs.NEIGHBORHOOD_COMP_DEV_REST_URL}?guid=${_guid}&token=${token}&utilityType=${_utilityType}`, { headers: header })
+        .catch(error => {
+          return Observable.throw(new Error(error));
+        });
     });
   }
 

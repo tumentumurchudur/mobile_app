@@ -9,6 +9,8 @@ import "rxjs/add/operator/map";
 import "rxjs/add/operator/switchMap";
 import "rxjs/add/observable/combineLatest";
 import "rxjs/add/operator/debounceTime";
+import "rxjs/add/operator/timeout";
+import "rxjs/add/operator/timeoutWith";
 
 import { DatabaseProvider } from "../../providers";
 import { neighborhoodConfigs } from "../../configs";
@@ -37,19 +39,23 @@ export class ComparisonEffects {
       return Observable.combineLatest(
         Observable.of(meter),
         Observable.of(dateRange),
-        group ? Observable.of(group) : this._db.getNeighborhoodGroup(meter),
+        group ? Observable.of(group) :
+          this._db.getNeighborhoodGroup(meter).catch(error => {
+            console.log("error", error);
+            return Observable.of(null);
+          }),
         Observable.of(subscription)
       );
     })
     .switchMap((data: any) => {
       const [ meter, dateRange, group, groupSubscription ] = data;
       const { startDate, endDate } = dateRange;
-
+      console.log("group", group);
       if (groupSubscription) {
         groupSubscription.unsubscribe();
       }
 
-      const neighborhoodGroupID = group["group_id"] || null;
+      const neighborhoodGroupID = group ? group["group_id"] : null;
       const ncmpAvgGuid = `${neighborhoodGroupID}${neighborhoodConfigs.NEIGHBORHOOD_COMP_AVG_GUID}`;
       const ncmpEffGuid = `${neighborhoodGroupID}${neighborhoodConfigs.NEIGHBORHOOD_COMP_EFF_GUID}`;
 
@@ -70,13 +76,13 @@ export class ComparisonEffects {
         Observable.of(meter),
         Observable.of(dateRange),
         storeData ? Observable.of(storeData.usage) : this._db.getReadsByDateRange(meter._guid, dateRange),
-        storeData ? Observable.of(storeData.avg) : this._db.getReadsByNeighborhood(ncmpAvgGuid, dateRange),
-        storeData ? Observable.of(storeData.eff) : this._db.getReadsByNeighborhood(ncmpEffGuid, dateRange),
+        storeData ? Observable.of(storeData.avg) : (group ? this._db.getReadsByNeighborhood(ncmpAvgGuid, dateRange) : []),
+        storeData ? Observable.of(storeData.eff) : (group ? this._db.getReadsByNeighborhood(ncmpEffGuid, dateRange) : []),
         storeData ? Observable.of(storeData.rank) : this._db.getNeighborhoodComparisonRanks(meter, dateRange)
       );
     })
     .flatMap((data: any[]) => {
-      const [ subscription, group, meter, dateRange, usage = [], avg = [], eff = [], rank ] = data;
+      const [ subscription, group = null, meter, dateRange, usage = [], avg = [], eff = [], rank ] = data;
 
       if (subscription) {
         subscription.unsubscribe();
@@ -153,6 +159,11 @@ export class ComparisonEffects {
         new AddNeighborhoodGroup(group),
         new AddComparison(payload)
       ];
+    })
+    .catch(error => {
+      console.log("error again", error);
+
+      return [new AddComparison(null)];
     });
 
   constructor(

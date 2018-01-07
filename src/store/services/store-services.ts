@@ -173,6 +173,7 @@ export class StoreServices {
   }
 
 	public loadNeighborhoodReads(meter: IMeter, dateRange: IDateRange) {
+		console.log("load reads", meter, dateRange);
 		this._store.dispatch(new LoadingComparisonReads());
 		this._store.dispatch(new TriggerComparisonReads({ meter, dateRange }));
 	}

@@ -72,7 +72,7 @@
               <line-chart
                 [data]="data.deltas"
                 [lineColors]="_getMeterConfig(meter, 'lineChartColors')"
-                [loading]="_loadingReads$ | async"
+                [loading]="_currentMeterIndex === i ? (_loadingReads$ | async) : false"
                 [animate]="_currentMeterIndex === i"
                 [series]="['line1']"
                 [dateFormat]="_selectedDateRanges[i].dateFormat"
@@ -98,9 +98,9 @@
           [@cardState]
         >
           <div class="goal-status" *ngIf="_comparison$ | async as comparisonReads">
-            <div class="rank">
+            <div *ngIf="_isNeighborhoodRankAvailable(comparisonReads, meter, i)" class="rank">
               <div class="percentile">
-                {{ _getNeighborhoodRank(comparisonReads, meter, i) }}
+                {{ _ranks[i] }}
                 <small>%</small>
               </div>
               <div class="rank-text">RANK</div>
@@ -118,7 +118,7 @@
 
           <neighborhood-comparison
             [comparisonReads]="_comparison$ | async"
-            [loading]="_comparisonLoading$ | async"
+            [loading]="_currentMeterIndex === i ? (_comparisonLoading$ | async) : false"
             [dateRange]="_selectedDateRanges[i]"
             [meter]="meter"
           >

@@ -38,6 +38,7 @@ export class UtilitySpendingComponent implements OnInit {
   private _currentNavigationItems: string[] = [];
   private _currentMeterIndex: number = 0;
   private _selectedDateRanges: IDateRange[] = [];
+  private _ranks: number[] = [];
 
   constructor(
     private _storeServices: StoreServices
@@ -201,7 +202,7 @@ export class UtilitySpendingComponent implements OnInit {
     return { deltas: [], cost: null };
   }
 
-  private _getNeighborhoodRank(comparisonReads: IComparison[], meter: IMeter, index: number) {
+  private _isNeighborhoodRankAvailable(comparisonReads: IComparison[], meter: IMeter, index: number): boolean {
     const { startDate, endDate } = this._selectedDateRanges[index];
     const data = comparisonReads.find(read => {
       return read.guid === meter._guid &&
@@ -209,7 +210,15 @@ export class UtilitySpendingComponent implements OnInit {
         read.endDate.toString() === endDate.toString()
     });
 
-    return data ? data.rank : null;
+    if (data) {
+      this._ranks[index] = data ? data.rank : null;
+
+      return true;
+    } else {
+      this._ranks[index] = null;
+
+      return false;
+    }
   }
 
   private _showDateRange(index: number): string {
