@@ -9,8 +9,6 @@ import "rxjs/add/operator/map";
 import "rxjs/add/operator/switchMap";
 import "rxjs/add/observable/combineLatest";
 import "rxjs/add/operator/debounceTime";
-import "rxjs/add/operator/timeout";
-import "rxjs/add/operator/timeoutWith";
 
 import { DatabaseProvider } from "../../providers";
 import { neighborhoodConfigs } from "../../configs";
