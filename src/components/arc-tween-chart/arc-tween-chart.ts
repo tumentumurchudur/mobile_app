@@ -136,7 +136,7 @@ export class ArcTweenChartComponent implements OnInit {
    * @type {string}
    * @memberof ArcTweenChartComponent
    */
-  @Input() goalStatus: string = "good";
+  @Input() goalStatus: string = "";
 
   private element: any;
 

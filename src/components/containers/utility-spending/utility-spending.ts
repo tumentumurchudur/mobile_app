@@ -87,10 +87,10 @@ export class UtilitySpendingComponent implements OnInit {
     const percentToGoal = (1 - (meter._actualUsageCost/this._getDailyGoalCost(meter)));
 
     if (meter._actualUsageCost > this._getDailyGoalCost(meter)) {
-      return 'alert'
+      return "alert"
     } else if (percentToGoal < .05) {
-      return 'warning'
-    } else return 'good'
+      return "warning"
+    } else return "good"
   }
 
   private _updateAllMeters(refresher: any, index: number) {
