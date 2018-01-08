@@ -210,15 +210,9 @@ export class UtilitySpendingComponent implements OnInit {
         read.endDate.toString() === endDate.toString()
     });
 
-    if (data) {
-      this._ranks[index] = data ? data.rank : null;
+    this._ranks[index] = data ? data.rank : null;
 
-      return true;
-    } else {
-      this._ranks[index] = null;
-
-      return false;
-    }
+    return !!this._ranks[index];
   }
 
   private _showDateRange(index: number): string {

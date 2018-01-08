@@ -289,7 +289,6 @@ export class DatabaseProvider {
   }
 
   public getReadsByNeighborhood(guid: string, dateRange: IDateRange): Observable<IReads[]> {
-    console.log("getting...", dateRange);
     const { startDate, endDate } = dateRange;
     const startAt = startDate.getTime().toString();
     const endAt = endDate.getTime().toString();
@@ -311,7 +310,6 @@ export class DatabaseProvider {
               return { date: key, delta: data[key].delta };
             });
           }
-          console.log("reads", reads);
           observer.next(reads);
         })
         .catch(error => {

@@ -31,7 +31,7 @@ export class ComparisonEffects {
       const { meter, dateRange } = data;
 
       return Observable.combineLatest(
-        this._storeServices.selectComparisonGroup(),
+        this._storeServices.selectComparisonGroup().take(1),
         Observable.of(meter),
         Observable.of(dateRange)
       );
@@ -47,35 +47,23 @@ export class ComparisonEffects {
     })
     .switchMap((data: any[]) => {
       const [ group, meter, dateRange ] = data;
-      const { startDate, endDate } = dateRange;
 
       const neighborhoodGroupID = group && group.group_id ? group.group_id : null;
-      const ncmpAvgGuid = `${neighborhoodGroupID}${neighborhoodConfigs.NEIGHBORHOOD_COMP_AVG_GUID}`;
-      const ncmpEffGuid = `${neighborhoodGroupID}${neighborhoodConfigs.NEIGHBORHOOD_COMP_EFF_GUID}`;
-
-      let reads;
-      const subscription: Subscription = this._storeServices.selectComparisonReads()
-        .subscribe((data: IComparison[]) => {
-          reads = data;
-      });
+      const ncmpAvgGuid = neighborhoodGroupID ? `${neighborhoodGroupID}${neighborhoodConfigs.NEIGHBORHOOD_COMP_AVG_GUID}` : null;
+      const ncmpEffGuid = neighborhoodGroupID ? `${neighborhoodGroupID}${neighborhoodConfigs.NEIGHBORHOOD_COMP_EFF_GUID}` : null;
 
       return Observable.combineLatest([
-        Observable.of(subscription),
         Observable.of(group),
         Observable.of(meter),
         Observable.of(dateRange),
-        Observable.of(reads),
-        neighborhoodGroupID ? Observable.of(ncmpAvgGuid) : Observable.of(null),
-        neighborhoodGroupID ? Observable.of(ncmpEffGuid) : Observable.of(null)
+        this._storeServices.selectComparisonReads().take(1),
+        ncmpAvgGuid ? Observable.of(ncmpAvgGuid) : Observable.of(null),
+        ncmpEffGuid ? Observable.of(ncmpEffGuid) : Observable.of(null)
       ]);
     })
     .switchMap((data: any[]) => {
-      const [ subscription, group, meter, dateRange, reads, ncmpAvgGuid, ncmpEffGuid ] = data;
+      const [ group, meter, dateRange, reads, ncmpAvgGuid, ncmpEffGuid ] = data;
       const { startDate, endDate } = dateRange;
-
-      if (subscription) {
-        subscription.unsubscribe();
-      }
 
       // Check if data is available in the store.
       const storeData = reads.find(read => {
@@ -96,12 +84,26 @@ export class ComparisonEffects {
     })
     .flatMap((data: any[]) => {
       const [ group, meter, dateRange, usage = [], avg = [], eff = [], rank ] = data;
-      console.log("group", group);
+
       // No need to display chart if avg and eff data is not available.
       if (!avg.length && !eff.length) {
+        const payload = {
+          guid: meter._guid,
+          startDate: dateRange.startDate,
+          endDate: dateRange.endDate,
+          usage: [],
+          usageCosts: null,
+          avg: [],
+          avgCosts: null,
+          eff: [],
+          effCosts: null,
+          calcReads: [],
+          rank: null
+        };
+
         return [
-          // new AddNeighborhoodGroup(group),
-          new AddComparison(null)
+          new AddNeighborhoodGroup(group),
+          new AddComparison(payload)
         ];
       }
 
@@ -165,7 +167,7 @@ export class ComparisonEffects {
       };
 
       return [
-        // new AddNeighborhoodGroup(group),
+        new AddNeighborhoodGroup(group),
         new AddComparison(payload)
       ];
     });
