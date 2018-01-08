@@ -32,6 +32,7 @@
               [meterIconColor]="_getMeterConfig(meter, 'imgColor')"
               [animate]="i === 0 || i === _currentMeterIndex"
               [loading]="_meterLoading$ | async"
+              [goalStatus]="_getMeterGoalStatus(meter)"
             ></arc-tween-chart>
 
             <!-- Updates meter when clicked -->
@@ -83,7 +84,7 @@
                 >
                   {{ data.cost.totalCost | currency:'USD': true: '1.2-2' }}
                 </div>
-                <div>
+                <div class="timespan-usage">
                   {{ data.cost.totalDelta / 1000 | number: '.1-2' }} {{ _getMeterConfig(meter, 'unit') }}
                 </div>
               </div>

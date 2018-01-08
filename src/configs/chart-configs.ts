@@ -2,16 +2,16 @@ export const chartConfigs = [
 	{
 		name: "power",
 		// background, foreground and inner arc colors respectively.
-		arcChartColors: ["#ddd", "#EF8E0F", "#535969"],
+		arcChartColors: ["#ddd", "#EF8E0F", "#535969", "FFAA00", "#C22A17"],
 		lineChartColors: ["#EF8E0F"],
-		unit: "KWh",
+		unit: "kWh",
 		imgSrc: "./assets/imgs/icon_power.svg",
 		imgColor: "#EF8E0F",
 		textColor: "#EF8E0F"
 	},
 	{
 		name: "gas",
-		arcChartColors: ["#ddd", "#5555A9", "#535969"],
+		arcChartColors: ["#ddd", "#5555A9", "#535969", "FFAA00", "#C22A17"],
 		lineChartColors: ["#5555A9"],
 		unit: "DTH",
 		imgSrc: "./assets/imgs/icon_gas.svg",
@@ -20,7 +20,7 @@ export const chartConfigs = [
 	},
 	{
 		name: "water",
-		arcChartColors: ["#ddd", "#2075CB", "#535969"],
+		arcChartColors: ["#ddd", "#2075CB", "#535969", "FFAA00", "#C22A17"],
 		lineChartColors: ["#2075CB"],
 		unit: "gal",
 		imgSrc: "./assets/imgs/icon_water.svg",
@@ -29,9 +29,9 @@ export const chartConfigs = [
 	},
 	{
 		name: "solar",
-		arcChartColors: ["#ddd", "#57DD00", "#535969"],
+		arcChartColors: ["#ddd", "#57DD00", "#535969", "FFAA00", "#C22A17"],
 		lineChartColors: ["#57DD00"],
-		unit: "KWh",
+		unit: "kWh",
 		imgSrc: "./assets/imgs/icon_solar.svg",
 		imgColor: "#57DD00",
 		textColor: "#57DD00"

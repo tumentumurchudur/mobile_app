@@ -16,7 +16,6 @@ export class MyApp {
       keyboard.disableScroll(true);
       if (platform.is("android")) {
         statusBar.overlaysWebView(false);
-        keyboard.disableScroll(true);
       }
     });
   }
