@@ -9,12 +9,13 @@ arc-tween-chart {
 
 		.svg-icon {
 			position: absolute;
-      margin: auto;
+       margin: auto;
 			top: 26%;
 			left: 0;
 			right: 0;
 			width: auto;
 			height: 13vh;
+       max-height: 95px;
 		}
 	}
 }

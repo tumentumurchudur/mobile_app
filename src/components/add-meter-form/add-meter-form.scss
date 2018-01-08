@@ -24,12 +24,11 @@ add-meter-form {
   }
 
   .utilitype-svg {
-    height: 3vh;
     width: 3vh;
   }
 
   .unselected-util-type {
-    opacity: .3 !important;
+    background-color: #CCCFD4 !important;
   }
 
   .datetime {

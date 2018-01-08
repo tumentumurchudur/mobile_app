@@ -88,12 +88,25 @@ export class AddMeterFormComponent {
     this._step--;
   }
 
+  private _isNextButtonDisabled(): boolean {
+    switch (this._step) {
+      case 1:
+        return this._addMeter.controls['utilityType'].invalid;
+      case 2:
+        return this._addMeter.controls['meterNumber'].invalid;
+      case 3:
+        return this._addMeter.controls['plan'].invalid;
+      case 4:
+        return this._addMeter.controls['goal'].invalid;
+    }
+  }
+
   private _getSvg(type:string): string {
     return `url(./assets/imgs/icon_${type}.svg) no-repeat 50% 50%`
   }
 
   private _getMeterColor(type: string) {
-    const meterConfig = chartConfigs.filter(config => config.name === type)[0] || null;
+    const meterConfig = chartConfigs.filter(config => config.name === type)[0];
 
     return meterConfig.imgColor;
   }

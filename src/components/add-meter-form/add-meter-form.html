@@ -114,6 +114,7 @@
     </button>
     <button ion-button
       *ngIf="_step <= 4 && _step !== 2"
+      [disabled]="_isNextButtonDisabled()"
       class="form-nav-button"
       color="primary"
       (tap)="_incStep()"
@@ -123,6 +124,7 @@
     </button>
     <button ion-button
             *ngIf="_step === 2"
+            [disabled]="_isNextButtonDisabled()"
             class="form-nav-button"
             color="primary"
             (tap)="_validateMeter()"

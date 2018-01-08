@@ -34,6 +34,8 @@ utility-spending {
 
 		.card-content {
 			height: 65vh;
+       max-height: 450px;
+       max-width: 360px;
 			text-align: center;
 			position: relative;
 		}
@@ -56,7 +58,6 @@ utility-spending {
 		}
 
 		.timespan-cost {
-			color: orange;
 			text-align: center;
 			font-size: 48px;
 		}
