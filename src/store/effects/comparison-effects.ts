@@ -30,68 +30,77 @@ export class ComparisonEffects {
     .switchMap((data: any) => {
       const { meter, dateRange } = data;
 
-      let group = null;
-      const subscription: Subscription = this._storeServices.selectComparisonGroup()
-        .subscribe((group: any) => {
-          group = group;
-        });
-
       return Observable.combineLatest(
+        this._storeServices.selectComparisonGroup(),
         Observable.of(meter),
-        Observable.of(dateRange),
-        group ? Observable.of(group) :
-          this._db.getNeighborhoodGroup(meter).catch(error => {
-            console.log("error", error);
-            return Observable.of(null);
-          }),
-        Observable.of(subscription)
+        Observable.of(dateRange)
       );
     })
-    .switchMap((data: any) => {
-      const [ meter, dateRange, group, groupSubscription ] = data;
-      const { startDate, endDate } = dateRange;
-      console.log("group", group);
-      if (groupSubscription) {
-        groupSubscription.unsubscribe();
-      }
+    .switchMap((data: any[]) => {
+      const [ group, meter, dateRange ] = data;
 
-      const neighborhoodGroupID = group ? group["group_id"] : null;
+      return Observable.combineLatest([
+        Object.keys(group).length ? Observable.of(group) : this._db.getNeighborhoodGroup(meter),
+        Observable.of(meter),
+        Observable.of(dateRange)
+      ]);
+    })
+    .switchMap((data: any[]) => {
+      const [ group, meter, dateRange ] = data;
+      const { startDate, endDate } = dateRange;
+
+      const neighborhoodGroupID = group && group.group_id ? group.group_id : null;
       const ncmpAvgGuid = `${neighborhoodGroupID}${neighborhoodConfigs.NEIGHBORHOOD_COMP_AVG_GUID}`;
       const ncmpEffGuid = `${neighborhoodGroupID}${neighborhoodConfigs.NEIGHBORHOOD_COMP_EFF_GUID}`;
 
-      // Check if data is available in the store.
-      let storeData;
+      let reads;
       const subscription: Subscription = this._storeServices.selectComparisonReads()
         .subscribe((data: IComparison[]) => {
-          storeData = data.find(read => {
-            return read.guid === meter._guid &&
-              read.startDate.toString() === startDate.toString() &&
-              read.endDate.toString() === endDate.toString();
-          });
+          reads = data;
       });
 
-      return Observable.combineLatest(
+      return Observable.combineLatest([
         Observable.of(subscription),
         Observable.of(group),
         Observable.of(meter),
         Observable.of(dateRange),
-        storeData ? Observable.of(storeData.usage) : this._db.getReadsByDateRange(meter._guid, dateRange),
-        storeData ? Observable.of(storeData.avg) : (group ? this._db.getReadsByNeighborhood(ncmpAvgGuid, dateRange) : []),
-        storeData ? Observable.of(storeData.eff) : (group ? this._db.getReadsByNeighborhood(ncmpEffGuid, dateRange) : []),
-        storeData ? Observable.of(storeData.rank) : this._db.getNeighborhoodComparisonRanks(meter, dateRange)
-      );
+        Observable.of(reads),
+        neighborhoodGroupID ? Observable.of(ncmpAvgGuid) : Observable.of(null),
+        neighborhoodGroupID ? Observable.of(ncmpEffGuid) : Observable.of(null)
+      ]);
     })
-    .flatMap((data: any[]) => {
-      const [ subscription, group = null, meter, dateRange, usage = [], avg = [], eff = [], rank ] = data;
+    .switchMap((data: any[]) => {
+      const [ subscription, group, meter, dateRange, reads, ncmpAvgGuid, ncmpEffGuid ] = data;
+      const { startDate, endDate } = dateRange;
 
       if (subscription) {
         subscription.unsubscribe();
       }
 
+      // Check if data is available in the store.
+      const storeData = reads.find(read => {
+        return read.guid === meter._guid &&
+          read.startDate.toString() === startDate.toString() &&
+          read.endDate.toString() === endDate.toString();
+      });
+
+      return Observable.combineLatest([
+        Observable.of(group),
+        Observable.of(meter),
+        Observable.of(dateRange),
+        storeData ? Observable.of(storeData.usage) : this._db.getReadsByDateRange(meter._guid, dateRange),
+        storeData ? Observable.of(storeData.avg) : (ncmpAvgGuid ? this._db.getReadsByNeighborhood(ncmpAvgGuid, dateRange) : Observable.of([])),
+        storeData ? Observable.of(storeData.eff) : (ncmpEffGuid ? this._db.getReadsByNeighborhood(ncmpEffGuid, dateRange) : Observable.of([])),
+        storeData ? Observable.of(storeData.rank) : this._db.getNeighborhoodComparisonRanks(meter, dateRange)
+      ]);
+    })
+    .flatMap((data: any[]) => {
+      const [ group, meter, dateRange, usage = [], avg = [], eff = [], rank ] = data;
+      console.log("group", group);
       // No need to display chart if avg and eff data is not available.
       if (!avg.length && !eff.length) {
         return [
-          new AddNeighborhoodGroup(group),
+          // new AddNeighborhoodGroup(group),
           new AddComparison(null)
         ];
       }
@@ -156,14 +165,9 @@ export class ComparisonEffects {
       };
 
       return [
-        new AddNeighborhoodGroup(group),
+        // new AddNeighborhoodGroup(group),
         new AddComparison(payload)
       ];
-    })
-    .catch(error => {
-      console.log("error again", error);
-
-      return [new AddComparison(null)];
     });
 
   constructor(
