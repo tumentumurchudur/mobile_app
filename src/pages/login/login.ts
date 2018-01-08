@@ -16,10 +16,8 @@ import { Subscription } from "rxjs/Subscription";
 })
 export class LoginPage {
   private _user: IUser = {
-    email: "spark@vutiliti.com",
-    password: "spark123",
-    // email: null,
-    // password: null,
+    email: null,
+    password: null,
     uid: null
   };
   private _isNewUser: boolean = false;
