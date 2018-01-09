@@ -7,7 +7,10 @@
     <div *ngFor="let meter of meters; let i = index">
       <ion-card class="chart-card">
         <!-- Header -->
-        <div class="header">
+        <div
+          *ngIf="_currentNavigationItems[i] !== _navigationItems.EDIT"
+          class="utilitiy-spending-header"
+        >
           <div [class.status]="_isUsageCostBehindGoal(meter)"></div>
           <img class="exclamation-icon" src="assets/exclamation.svg">
           <div class="meter-name">{{ meter._name }}</div>
@@ -62,7 +65,7 @@
             (itemTapped)="_onTimeTravelClick($event, meter, i, 'timeTravel')"
           ></timespan-selector>
 
-          <div>{{ _showDateRange(i) }}</div>
+          <div class="date-range">{{ _showDateRange(i) }}</div>
 
           <div *ngIf="_reads$ | async as reads">
             <div *ngIf="_getDataByGuid(reads, meter._guid, i) as data">
@@ -104,7 +107,7 @@
             (itemTapped)="_onTimeTravelClick($event, meter, i, 'comparison')"
           ></timespan-selector>
 
-          <div>{{ _showDateRange(i) }}</div>
+          <div class="date-range">{{ _showDateRange(i) }}</div>
 
           <neighborhood-comparison
             [comparisonReads]="_comparison$ | async"
@@ -117,7 +120,7 @@
 
         <!-- Device Edit -->
         <div
-          class="card-content"
+          class="edit-card-content"
           *ngIf="_currentNavigationItems[i] === _navigationItems.EDIT"
           [@cardState]
         >

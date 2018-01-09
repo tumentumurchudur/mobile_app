@@ -7,10 +7,11 @@ utility-spending {
 
 	.chart-card {
     border-radius: 4px;
-		.header {
+		.utilitiy-spending-header {
       color: $header-text;
-      margin: 10px 0px 10px 20px;
+      margin: 1vh 0 1vh 2vh;
 			position: relative;
+      height: 3vh;
 
 			.status {
 				position: absolute;
@@ -34,14 +35,25 @@ utility-spending {
 
 		.card-content {
 			height: 65vh;
-       max-height: 450px;
-       max-width: 360px;
+      max-height: 450px;
+      max-width: 360px;
 			text-align: center;
 			position: relative;
 		}
 
+    .edit-card-content {
+      height: 70vh;
+      max-width: 360px;
+      text-align: center;
+      position: relative;
+    }
+
+    .date-range {
+      color: $header-text;
+    }
+
 		.meter-name {
-			font-size: 22px;
+			font-size: 3vh;
 		}
 
 		.spending-goal {
@@ -60,10 +72,12 @@ utility-spending {
 		.timespan-cost {
 			text-align: center;
 			font-size: 48px;
+      margin-top: -1.5vh;
 		}
 
     .timespan-usage {
       font-size: 15px;
+      color: $header-text;
     }
 
 		.show-all {
@@ -102,7 +116,8 @@ utility-spending {
 				.usage-label {
 					display: flex;
 					font-size: 15px;
-				}
+          color: $header-text;
+        }
       }
 		}
 

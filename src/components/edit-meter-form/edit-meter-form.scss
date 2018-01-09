@@ -6,6 +6,8 @@ edit-meter-form {
   }
 
   ion-navbar {
+    height: 4vh;
+    padding: 4px !important;
     min-height: 45px !important;
     color: #999EA8 !important;
   }
@@ -35,6 +37,7 @@ edit-meter-form {
     }
 
     form {
+      margin-top: calc(5vh + 8px);
       width: 100%;
     }
 

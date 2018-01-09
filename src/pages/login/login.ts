@@ -48,11 +48,11 @@ export class LoginPage {
         }
 
         const user: IUser = this._createUser(userData);
+        this.navCtrl.push("HomePage");
 
         // Update the store with current user.
         this._storeServices.addUser(user);
 
-        this.navCtrl.push("HomePage");
         this._splashScreen.hide();
       })
       .catch(error => {
