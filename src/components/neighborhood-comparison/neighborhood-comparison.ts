@@ -54,6 +54,8 @@ export class NeighborhoodComparisonComponent implements OnChanges {
 
     const { calcReads, avgCosts, effCosts, usageCosts, rank } = filteredReads[0];
     this._allData = calcReads || [];
+    this._costs = [];
+    this._consumptions = [];
 
     if (usageCosts) {
       this._costs.push(usageCosts.totalCost);
