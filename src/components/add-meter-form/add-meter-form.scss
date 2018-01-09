@@ -16,6 +16,21 @@ add-meter-form {
     border-top: 1px solid $alto;
     border-bottom: 1px solid $alto;
   }
+
+  .util-select {
+    margin: 1vh !important;
+    display: flex;
+    align-content: center;
+  }
+
+  .utilitype-svg {
+    width: 3vh;
+  }
+
+  .unselected-util-type {
+    background-color: #CCCFD4 !important;
+  }
+
   .datetime {
     margin-left: 4rem !important;
   }

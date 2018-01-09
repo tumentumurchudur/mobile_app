@@ -1,3 +1,22 @@
 page-profile {
 
+  .ion-navbar {
+    padding-left: 1vh;
+    padding-right: 5vh;
+    text-align: center;
+  }
+
+  div.toolbar-title {
+    color: #999EA8 !important;
+  }
+
+  div.scroll-content {
+    padding: 20% 15% 35% 15% !important;
+  }
+
+  .profile-button {
+   height: 7vh;
+   margin-bottom: 3.5vh;
+   font-size: 3vh;
+  }
 }

@@ -135,7 +135,7 @@ export class ChartHelper {
       case timeSpanConfigs.HOUR:
         return moment(startDate).format("hh:mm a") + " - " + moment(endDate).format("hh:mm a");
       case timeSpanConfigs.YEAR:
-        return moment(startDate).format("MMM") + " - " + moment(endDate).format("MMM YYYY");
+        return moment(startDate).format("YYYY");
       default:
         return "";
     }

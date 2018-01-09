@@ -21,7 +21,7 @@ page-login {
 
   .logo-container {
     height: 30vh;
-    margin-top: 8vh;
+    margin-top: 7vh;
 
     .login-img {
       position: absolute;
@@ -140,10 +140,11 @@ page-login {
     font-weight: lighter;
     font-family: $bryant-regular, sans-serif;
     font-size: 1.85vh;
-    padding-top: 5vh;
+    padding-top: 3vh;
   }
 
   .forgot-pass-btn {
+    height: 8vh;
     font-weight: lighter;
     position: absolute;
     bottom: 0;

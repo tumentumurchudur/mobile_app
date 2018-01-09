@@ -27,7 +27,7 @@
               [centerValue]="meter._usage / 1000 | number: '.1-2'"
               [centerLabel]="_getMeterConfig(meter, 'unit')"
               [textColor]="_getMeterConfig(meter, 'textColor')"
-              [colors]="_getMeterConfig(meter, 'arcChartColors')"
+              [colors]="_getGoalLineColors(meter, i)"
               [meterIcon]="_getMeterConfig(meter, 'imgSrc')"
               [meterIconColor]="_getMeterConfig(meter, 'imgColor')"
               [animate]="i === 0 || i === _currentMeterIndex"
@@ -37,7 +37,7 @@
             <!-- Updates meter when clicked -->
             <div
               class="actual-cost"
-              [ngStyle]="{ 'color': _isUsageCostBehindGoal(meter) ? '#C22A17' : '#969696' }"
+              [ngStyle]="{ 'color': _getActualCostColor(meter, i) }"
               (click)="_updateMeter(meter, i)"
             >
               {{ meter._actualUsageCost | currency: 'USD': true: '1.2-2' }}
@@ -77,10 +77,13 @@
               ></line-chart>
 
               <div *ngIf="data.cost">
-                <div class="timespan-cost">
+                <div
+                  class="timespan-cost"
+                  [ngStyle]="{ 'color': _getMeterConfig(meter, 'textColor') }"
+                >
                   {{ data.cost.totalCost | currency:'USD': true: '1.2-2' }}
                 </div>
-                <div>
+                <div class="timespan-usage">
                   {{ data.cost.totalDelta / 1000 | number: '.1-2' }} {{ _getMeterConfig(meter, 'unit') }}
                 </div>
               </div>

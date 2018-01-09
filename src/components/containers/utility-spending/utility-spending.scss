@@ -6,8 +6,10 @@ utility-spending {
 	}
 
 	.chart-card {
+    border-radius: 4px;
 		.header {
-			margin: 10px 0px 10px 20px;
+      color: $header-text;
+      margin: 10px 0px 10px 20px;
 			position: relative;
 
 			.status {
@@ -17,21 +19,23 @@ utility-spending {
 				width: 0;
 				height: 0;
 				border-style: solid;
-				border-width: 0 55px 55px 0;
+				border-width: 0 9.5vh 10vh 0;
 				border-color: transparent #C22A17 transparent transparent;
 			}
 
 			.exclamation-icon {
 				position: absolute;
-				height: 40px;
-				width: 45px;
-				top: -12px;
-				right: -5px;
+				height: 5.5vh;
+				width: 5.5vh;
+				top: -1vh;
+				right: 0.25vh;
 			}
 		}
 
 		.card-content {
-			height: 63vh;
+			height: 65vh;
+       max-height: 450px;
+       max-width: 360px;
 			text-align: center;
 			position: relative;
 		}
@@ -41,10 +45,10 @@ utility-spending {
 		}
 
 		.spending-goal {
+      color: $header-text;
 			text-align: center;
-			font-size: 18px;
-			opacity: .7;
-			margin-bottom: 5px
+			font-size: 2.75vh;
+			margin-bottom: 5px;
 		}
 
 		.actual-cost {
@@ -54,10 +58,13 @@ utility-spending {
 		}
 
 		.timespan-cost {
-			color: orange;
 			text-align: center;
 			font-size: 48px;
 		}
+
+    .timespan-usage {
+      font-size: 15px;
+    }
 
 		.show-all {
 			text-align: right;
@@ -94,7 +101,7 @@ utility-spending {
 
 				.usage-label {
 					display: flex;
-					font-size: 10px;
+					font-size: 15px;
 				}
       }
 		}

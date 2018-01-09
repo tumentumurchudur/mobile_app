@@ -1,13 +1,15 @@
-<ion-header>
-
-  <ion-navbar>
-    <ion-title>ProfilePage</ion-title>
+<ion-header no-border>
+  <ion-navbar class="ion-navbar" color="light" [hideBackButton]="true">
+    <ion-buttons left>
+      <button ion-button navPop color="navbar-button" icon-only>
+        <ion-icon name="arrow-back"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title>Settings</ion-title>
   </ion-navbar>
 
 </ion-header>
 
-
 <ion-content padding>
-  <button ion-button outline color="light" (tap)="_onLogoutClick()">Log Out</button>
-
+  <button class="profile-button" ion-button block outline color="primary" (tap)="_onLogoutClick()">Log Out</button>
 </ion-content>
