@@ -4,7 +4,7 @@ import { StoreServices } from "../../../store/services";
 
 import { Observable } from "rxjs/Observable";
 import { IUser, IMeter, IReads, IDateRange, ILineItem, IComparison } from "../../../interfaces";
-import { chartConfigs, navigationConfigs, timeSpanConfigs } from "../../../configs";
+import { chartConfigs, navigationConfigs, timeSpanConfigs, archChartConfigs } from "../../../configs";
 import { ChartHelper } from "../../../helpers";
 
 import { trigger, state, style, animate, transition } from "@angular/animations";
@@ -38,6 +38,8 @@ export class UtilitySpendingComponent implements OnInit {
   private _currentNavigationItems: string[] = [];
   private _currentMeterIndex: number = 0;
   private _selectedDateRanges: IDateRange[] = [];
+  private _arcChartColors: string[] = [];
+  private _arcChartCostState: string[] = [];
 
   constructor(
     private _storeServices: StoreServices
@@ -65,6 +67,35 @@ export class UtilitySpendingComponent implements OnInit {
     const meterConfig = chartConfigs.filter(config => config.name === meter._utilityType)[0] || null;
 
     return meterConfig ? meterConfig[config] : "";
+  }
+
+  private _getGoalLineColors(meter: IMeter, index: number): string[] {
+    const percentToGoal = 1 - (meter._actualUsageCost / this._getDailyGoalCost(meter));
+
+    let colors = this._getMeterConfig(meter, 'arcChartColors');
+
+    if (meter._actualUsageCost > this._getDailyGoalCost(meter)) {
+      colors[colors.length - 1] = "#C22A17";
+      this._arcChartCostState[index] = archChartConfigs.states.ALERT;
+    } else if (percentToGoal < .05) {
+      colors[colors.length - 1] = "#FFCD52";
+      this._arcChartCostState[index] = archChartConfigs.states.WARNING;
+    } else {
+      colors[colors.length - 1] = "#535969";
+      this._arcChartCostState[index] = archChartConfigs.states.NORMAL;
+    }
+    this._arcChartColors[index] = colors;
+    return colors;
+  }
+
+  private _getActualCostColor(meter: IMeter, index: number): string {
+    const costColorIndex = this._arcChartColors[index].length - 1;
+
+    if (this._arcChartCostState[index] !== archChartConfigs.states.NORMAL) {
+      return this._arcChartColors[index][costColorIndex];
+    } else {
+      return this._getMeterConfig(meter, "arcChartColors")[1];
+    }
   }
 
   private _getDailyGoalCost(meter: IMeter) {

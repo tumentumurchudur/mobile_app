@@ -21,11 +21,11 @@
       </div>
       <div class="cost-label" (click)="_filterChartData(i, _series[i])">
         <span [ngStyle]="{ 'color': _lineColors[i] }">
-          {{ _costs[i] | currency:'USD': true: '1.2-2'}}
+          {{ _costs[i] | currency:'USD': true: '1.0-0'}}
         </span>
       </div>
-      <div class="usage-labe">
-        {{ _consumptions[i] / 1000 | number: '.1-2' }} {{ _getUnit() }}
+      <div class="usage-label">
+        {{ _consumptions[i] / 1000 | number: '1.0-0' }} {{ _getUnit() }}
       </div>
     </div>
   </div>

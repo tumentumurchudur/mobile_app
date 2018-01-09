@@ -22,7 +22,6 @@
     <preference name="SplashScreenDelay" value="6000" />
     <preference name="ShowSplashScreenSpinner" value="false" />
     <preference name="StatusBarOverlaysWebView" value="true" />
-    <preference name="StatusBarBackgroundColor" value="#d5dde2" />
     <platform name="android">
         <allow-intent href="market:*" />
         <icon density="ldpi" src="resources/android/icon/drawable-ldpi-icon.png" />
@@ -98,5 +97,4 @@
         <variable name="REVERSED_CLIENT_ID" value="com.googleusercontent.apps.664713118536-q2649h2j3qqkgekblfk0udqigcuep7ua" />
     </plugin>
     <plugin name="platforms" />
-    <plugin name="cordova-plugin-nativestorage" spec="^2.2.2" />
 </widget>

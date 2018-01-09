@@ -4,7 +4,7 @@ export const chartConfigs = [
 		// background, foreground and inner arc colors respectively.
 		arcChartColors: ["#ddd", "#EF8E0F", "#535969"],
 		lineChartColors: ["#EF8E0F"],
-		unit: "KWh",
+		unit: "kWh",
 		imgSrc: "./assets/imgs/icon_power.svg",
 		imgColor: "#EF8E0F",
 		textColor: "#EF8E0F"
@@ -31,7 +31,7 @@ export const chartConfigs = [
 		name: "solar",
 		arcChartColors: ["#ddd", "#57DD00", "#535969"],
 		lineChartColors: ["#57DD00"],
-		unit: "KWh",
+		unit: "kWh",
 		imgSrc: "./assets/imgs/icon_solar.svg",
 		imgColor: "#57DD00",
 		textColor: "#57DD00"

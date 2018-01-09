@@ -25,6 +25,13 @@ line-chart {
     .area {
       opacity: .2;
     }
+
+    .axis-color {
+      stroke: #535969;
+      stroke-width: .65;
+      font-size: 1.5vh;
+      font-weight: lighter;
+    }
   }
 
 }

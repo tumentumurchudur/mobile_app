@@ -16,6 +16,25 @@ add-meter-form {
     border-top: 1px solid $alto;
     border-bottom: 1px solid $alto;
   }
+
+  .util-select {
+    margin: 1vh !important;
+    display: flex;
+    align-content: center;
+  }
+
+  .utilitype-svg {
+    width: 3vh;
+  }
+
+  .unselected-util-type {
+    background-color: #CCCFD4 !important;
+  }
+
+  .item-inner {
+    padding: 0 8px;
+  }
+
   .datetime {
     margin-left: 4rem !important;
   }
@@ -51,18 +70,13 @@ add-meter-form {
   }
 
   .utility-type {
-    padding-left: 0;
+    padding: 0;
   }
 
   .util-type-title {
     padding-left: 16px;
     text-transform: capitalize;
-  }
-
-  i {
-    margin-right: 1rem;
-    margin-left: 2rem;
-    font-size: 1.75rem;
+    font-size: 2.85vh;
   }
 
   .button-section {

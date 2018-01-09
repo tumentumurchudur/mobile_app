@@ -28,9 +28,8 @@ export class LineChartComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    this._clear();
-
     if (changes.data && changes.data.currentValue !== changes.data.previousValue) {
+      this._clear();
       this._draw();
     }
   }
@@ -171,12 +170,14 @@ export class LineChartComponent implements OnChanges {
     if (this.showXAxisLabels) {
       svg.append("g")
         .attr("transform", "translate(20," + (height + this.margin.top) + ")")
+        .attr("class", "axis-color")
         .call(xAxis);
     }
 
     if (this.showYAxisLabels) {
       svg.append("g")
         .attr("transform", "translate(20, 10)")
+        .attr("class", "axis-color")
         .call(yAxis);
     }
   }

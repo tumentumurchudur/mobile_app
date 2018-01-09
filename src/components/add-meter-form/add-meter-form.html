@@ -5,7 +5,16 @@
     <div *ngIf="_providerTypes$ | async as utilityTypes">
       <ion-list radio-group formControlName="utilityType" class="list-container" (ionChange)="_getCountries()">
         <ion-item class="utility-type" *ngFor="let type of utilityTypes">
-          <ion-label>
+          <ion-label class="util-select">
+            <div
+              class="utilitype-svg"
+              [class.unselected-util-type]="_addMeter.value['utilityType'] !== type"
+              [ngStyle]="{
+                '-webkit-mask': _getSvg(type), 'background-color': _getMeterColor(type),
+                'mask': _getSvg(type), 'background-color': _getMeterColor(type)
+              }"
+            >
+            </div>
             <span class="util-type-title">{{ type }}</span>
           </ion-label>
           <ion-radio value="{{ type }}"></ion-radio>
@@ -105,6 +114,7 @@
     </button>
     <button ion-button
       *ngIf="_step <= 4 && _step !== 2"
+      [disabled]="_isNextButtonDisabled()"
       class="form-nav-button"
       color="primary"
       (tap)="_incStep()"
@@ -114,6 +124,7 @@
     </button>
     <button ion-button
             *ngIf="_step === 2"
+            [disabled]="_isNextButtonDisabled()"
             class="form-nav-button"
             color="primary"
             (tap)="_validateMeter()"

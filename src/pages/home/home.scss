@@ -15,14 +15,14 @@ page-home {
 
   .cog {
     margin:auto;
-    height: 20px;
+    height: 3.25vh;
     color: #2d2d2d;
   }
 
   div.toolbar-title {
     color: #29ACE0 !important;
     font-family: $bryant-alternate, sans-serif;
-    font-size: 3rem;
+    font-size: 4.75vh;
     text-align: center;
   }
 
@@ -31,5 +31,8 @@ page-home {
     background: none;
   }
 
+  .navbar-button {
+    font-size: 4.75vh !important;
+  }
 
 }

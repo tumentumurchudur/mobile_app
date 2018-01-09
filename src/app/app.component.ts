@@ -16,8 +16,6 @@ export class MyApp {
       keyboard.disableScroll(true);
       if (platform.is("android")) {
         statusBar.overlaysWebView(false);
-        statusBar.backgroundColorByHexString("#d5dde2");
-        keyboard.disableScroll(true);
       }
     });
   }

@@ -1,5 +1,8 @@
+@import "../../styles/variables";
+
 neighborhood-comparison {
   .show-all {
+    color: $header-text;
     position: absolute;
     text-align: right;
     right: 10px;
@@ -14,6 +17,7 @@ neighborhood-comparison {
     bottom: 20px;
 
     .legend {
+      color: $header-text;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -31,13 +35,14 @@ neighborhood-comparison {
       }
 
       .cost-label {
-        font-size: 20px;
-        margin-top: 20px;
+        font-size: 26px !important;
+        margin-top: 3vh !important;
       }
 
       .usage-label {
+        color: $header-text;
         display: flex;
-        font-size: 10px;
+        font-size: 15px !important;
       }
     }
   }
