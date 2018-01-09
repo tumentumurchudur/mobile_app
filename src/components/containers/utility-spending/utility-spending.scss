@@ -6,8 +6,11 @@ utility-spending {
 	}
 
 	.chart-card {
+		border-radius: 4px;
+
 		.header {
-			margin: 10px 0px 10px 20px;
+      color: $header-text;
+      margin: 10px 0px 10px 20px;
 			position: relative;
 
 			.meter-name {
@@ -16,7 +19,9 @@ utility-spending {
 		}
 
 		.card-content {
-			height: 63vh;
+			height: 65vh;
+      max-height: 450px;
+      // max-width: 360px;
 			text-align: center;
 			position: relative;
 
@@ -36,11 +41,38 @@ utility-spending {
 
 				.exclamation-icon {
 					position: absolute;
-					height: 40px;
-					width: 45px;
-					bottom: 6px;
-					right: -5px;
+					height: 5.5vh;
+					width: 5.5vh;
+					bottom: 7px;
+					right: 0.25vh;
 				}
+			}
+
+			.spending-goal {
+				color: $header-text;
+				text-align: center;
+				font-size: 2.75vh;
+				margin-bottom: 5px;
+			}
+
+			.actual-cost {
+				color: $dusty-gray;
+				text-align: center;
+				font-size: 48px;
+			}
+
+			.timespan-cost {
+				text-align: center;
+				font-size: 48px;
+			}
+
+			.timespan-usage {
+				font-size: 15px;
+			}
+
+			.show-all {
+				text-align: right;
+				margin-right: 20px;
 			}
 
 			.rank {
@@ -66,37 +98,13 @@ utility-spending {
 				.rank-text {
 					padding-right: 7px;
 					font-size: 12px;
+
+					.usage-label {
+						display: flex;
+						font-size: 15px;
+					}
 				}
-			}
-
-			.spending-goal {
-				text-align: center;
-				font-size: 18px;
-				opacity: .7;
-				margin-bottom: 5px
-			}
-
-			.actual-cost {
-				color: $dusty-gray;
-				text-align: center;
-				font-size: 48px;
-			}
-
-			.timespan-cost {
-				color: orange;
-				text-align: center;
-				font-size: 48px;
-			}
-
-			.show-all {
-				text-align: right;
-				margin-right: 20px;
-			}
-
-			.edit-meter-form {
-				margin: 0;
 			}
 		}
 	}
-
 }

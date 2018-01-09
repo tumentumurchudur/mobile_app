@@ -1,10 +1,11 @@
-import { Component, Inject } from "@angular/core";
+import { Component, Input } from "@angular/core";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { AlertController, NavController, LoadingController } from "ionic-angular";
 import { Keyboard } from "@ionic-native/keyboard";
 import * as moment from "moment";
 import { StoreServices } from "../../store/services";
 import { IMeter, IUser } from "../../interfaces";
+import { chartConfigs } from "../../configs/chart-configs";
 import {Observable} from "rxjs/Observable";
 import { Subscription } from "rxjs/Subscription";
 
@@ -13,6 +14,7 @@ import { Subscription } from "rxjs/Subscription";
   templateUrl: "add-meter-form.html"
 })
 export class AddMeterFormComponent {
+  private _meterIcon: string = "";
   private _addMeter: FormGroup;
   private _user: IUser;
   private _meterGuid: string;
@@ -84,6 +86,29 @@ export class AddMeterFormComponent {
 
   private _decStep(): void {
     this._step--;
+  }
+
+  private _isNextButtonDisabled(): boolean {
+    switch (this._step) {
+      case 1:
+        return this._addMeter.controls['utilityType'].invalid;
+      case 2:
+        return this._addMeter.controls['meterNumber'].invalid;
+      case 3:
+        return this._addMeter.controls['plan'].invalid;
+      case 4:
+        return this._addMeter.controls['goal'].invalid;
+    }
+  }
+
+  private _getSvg(type: string): string {
+    return `url(./assets/imgs/icon_${type}.svg) no-repeat 50% 50%`
+  }
+
+  private _getMeterColor(type: string) {
+    const meterConfig = chartConfigs.filter(config => config.name === type)[0];
+
+    return meterConfig.imgColor;
   }
 
   private _validateMeter() {
