@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnInit } from "@angular/core";
 import { AlertController } from "ionic-angular";
-import { FormGroup, FormBuilder } from "@angular/forms";
+import {FormGroup, FormBuilder, FormControl} from "@angular/forms";
 import {Keyboard} from '@ionic-native/keyboard';
 
 import { IMeter, IUser } from "../../interfaces";
@@ -34,8 +34,8 @@ export class EditMeterFormComponent implements OnInit {
 
     this._editMeter = this._formBuilder.group({
       name: [this.meter._name],
-      meterNumber: [this.meter._meter_id],
-      provider: [this._providerName + " - " + this._planName],
+      meterNumber: new FormControl({value: this.meter._meter_id, disabled: true}),
+      provider: new FormControl({value: this._providerName + " - " + this._planName, disabled: true}),
       billingStart: [this.meter._billing_start],
       goal: [this.meter._goal]
     });

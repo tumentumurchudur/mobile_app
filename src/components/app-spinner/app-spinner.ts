@@ -5,5 +5,5 @@ import { Component, Input } from "@angular/core";
   templateUrl: "app-spinner.html"
 })
 export class AppSpinnerComponent {
-  @Input() text: string = "Loading...";
+  @Input() text: string = "";
 }

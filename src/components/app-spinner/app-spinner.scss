@@ -4,14 +4,15 @@ app-spinner {
   .spinner {
     position: absolute;
     height: 80px;
+    width: 80px;
     top: 35%;
-    left: calc(50% - 80px);
+    left: calc(51% - 40px);
     z-index: 10;
 
     .svg-logo {
       position: relative;
       margin: auto;
-      bottom: 52px;
+      bottom: 37px;
       width: auto;
       height: 3vh;
       max-height: 20px;
