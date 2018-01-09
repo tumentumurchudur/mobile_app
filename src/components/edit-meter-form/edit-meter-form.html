@@ -6,7 +6,7 @@
     <ion-navbar color="light" hideBackButton="true">
       <ion-buttons left>
         <button
-          ion-button color="button"
+          ion-button color="navbar-button"
           class="cancel-btn"
           (click)="_onCancel()"
         >
@@ -28,7 +28,7 @@
       </ion-buttons>
     </ion-navbar>
   </ion-header>
-  <form class="flex-11 layout vertical" [formGroup]="_editMeter">
+  <form [formGroup]="_editMeter">
     <ion-item>
       <ion-label floating color="text" stacked>Name</ion-label>
       <ion-input readonly formControlName="name"></ion-input>
@@ -51,7 +51,7 @@
 
     <ion-item class="meter-input">
       <ion-label floating color="text" stacked>Meter Number</ion-label>
-      <ion-input readonly value="{{ meter._meter_id }}"></ion-input>
+      <ion-input readonly formControlName="meterNumber"></ion-input>
     </ion-item>
   </form>
 
