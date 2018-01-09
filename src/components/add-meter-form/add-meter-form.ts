@@ -57,14 +57,14 @@ export class AddMeterFormComponent {
 
   ngOnInit() {
     this._storeServices.getProviders();
-    const subscription = this._storeServices.selectUser()
+    const subscription: Subscription = this._storeServices.selectUser()
       .subscribe((user: IUser) => {
         this._user = user;
       });
 
     this._subscriptions.push(subscription);
 
-    const meterSubscription = this._addMeterGuid$.subscribe((guid) => {
+    const meterSubscription: Subscription = this._addMeterGuid$.subscribe((guid) => {
       if (this._loading) {
         this._loading.dismiss({ guid });
       }

@@ -4,7 +4,6 @@ import { Effect, Actions } from "@ngrx/effects";
 import { StoreServices } from "../../store/services";
 
 import { Observable } from "rxjs/rx";
-import { Subscription } from "rxjs/Subscription";
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/switchMap";
 import "rxjs/add/observable/combineLatest";
