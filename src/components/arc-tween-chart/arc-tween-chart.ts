@@ -130,13 +130,6 @@ export class ArcTweenChartComponent implements OnInit {
    */
   @Input() loading: boolean = false;
 
-  /**
-   * Indicates the innerArc goal status.
-   *
-   * @type {string}
-   * @memberof ArcTweenChartComponent
-   */
-
   private element: any;
 
   //these are all *relative* units, which will scale to fill the SVG.
@@ -233,7 +226,6 @@ export class ArcTweenChartComponent implements OnInit {
         .datum({ endAngle: innerValue * τ })
         .style("fill", this.colors[2] || "red")
         .attr("d", innerArc);
-
     }
 
     // Creates a tween on the specified transition's "d" attribute, transitioning

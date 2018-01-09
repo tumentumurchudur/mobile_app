@@ -101,7 +101,7 @@ export class AddMeterFormComponent {
     }
   }
 
-  private _getSvg(type:string): string {
+  private _getSvg(type: string): string {
     return `url(./assets/imgs/icon_${type}.svg) no-repeat 50% 50%`
   }
 

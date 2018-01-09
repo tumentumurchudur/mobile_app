@@ -76,13 +76,13 @@ export class UtilitySpendingComponent implements OnInit {
 
     if (meter._actualUsageCost > this._getDailyGoalCost(meter)) {
       colors[colors.length - 1] = "#C22A17";
-      this._arcChartCostState[index] = archChartConfigs.ALERT;
+      this._arcChartCostState[index] = archChartConfigs.states.ALERT;
     } else if (percentToGoal < .05) {
       colors[colors.length - 1] = "#FFAA00";
-      this._arcChartCostState[index] = archChartConfigs.WARNING;
+      this._arcChartCostState[index] = archChartConfigs.states.WARNING;
     } else {
       colors[colors.length - 1] = "#535969";
-      this._arcChartCostState[index] = archChartConfigs.NORMAL;
+      this._arcChartCostState[index] = archChartConfigs.states.NORMAL;
     }
     this._arcChartColors[index] = colors;
     return colors;
@@ -91,7 +91,7 @@ export class UtilitySpendingComponent implements OnInit {
   private _getActualCostColor(meter: IMeter, index: number): string {
     const costColorIndex = this._arcChartColors[index].length - 1;
 
-    if (this._arcChartCostState[index] !== archChartConfigs.NORMAL) {
+    if (this._arcChartCostState[index] !== archChartConfigs.states.NORMAL) {
       return this._arcChartColors[index][costColorIndex];
     } else {
       return this._getMeterConfig(meter, "arcChartColors")[1];
