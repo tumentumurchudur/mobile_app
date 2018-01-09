@@ -77,15 +77,14 @@ export class UtilitySpendingComponent implements OnInit {
     if (meter._actualUsageCost > this._getDailyGoalCost(meter)) {
       colors[colors.length - 1] = "#C22A17";
       this._arcChartCostState[index] = archChartConfigs.ALERT;
-    } else if (percentToGoal < .15) {
+    } else if (percentToGoal < .05) {
       colors[colors.length - 1] = "#FFAA00";
       this._arcChartCostState[index] = archChartConfigs.WARNING;
     } else {
-      this._arcChartCostState[index] = archChartConfigs.NORMAL
+      colors[colors.length - 1] = "#535969";
+      this._arcChartCostState[index] = archChartConfigs.NORMAL;
     }
-
     this._arcChartColors[index] = colors;
-
     return colors;
   }
 
