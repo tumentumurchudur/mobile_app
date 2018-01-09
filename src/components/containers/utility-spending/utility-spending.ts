@@ -4,7 +4,7 @@ import { StoreServices } from "../../../store/services";
 
 import { Observable } from "rxjs/Observable";
 import { IUser, IMeter, IReads, IDateRange, ILineItem, IComparison } from "../../../interfaces";
-import { chartConfigs, navigationConfigs, timeSpanConfigs } from "../../../configs";
+import { chartConfigs, navigationConfigs, timeSpanConfigs, archChartConfigs } from "../../../configs";
 import { ChartHelper } from "../../../helpers";
 
 import { trigger, state, style, animate, transition } from "@angular/animations";
@@ -38,6 +38,8 @@ export class UtilitySpendingComponent implements OnInit {
   private _currentNavigationItems: string[] = [];
   private _currentMeterIndex: number = 0;
   private _selectedDateRanges: IDateRange[] = [];
+  private _arcChartColors: string[] = [];
+  private _arcChartCostState: string[] = [];
 
   constructor(
     private _storeServices: StoreServices
@@ -67,6 +69,36 @@ export class UtilitySpendingComponent implements OnInit {
     return meterConfig ? meterConfig[config] : "";
   }
 
+  private _getGoalLineColors(meter: IMeter, index: number): string[] {
+    const percentToGoal = 1 - (meter._actualUsageCost / this._getDailyGoalCost(meter));
+
+    let colors = this._getMeterConfig(meter, 'arcChartColors');
+
+    if (meter._actualUsageCost > this._getDailyGoalCost(meter)) {
+      colors[colors.length - 1] = "#C22A17";
+      this._arcChartCostState[index] = archChartConfigs.ALERT;
+    } else if (percentToGoal < .15) {
+      colors[colors.length - 1] = "#FFAA00";
+      this._arcChartCostState[index] = archChartConfigs.WARNING;
+    } else {
+      this._arcChartCostState[index] = archChartConfigs.NORMAL
+    }
+
+    this._arcChartColors[index] = colors;
+
+    return colors;
+  }
+
+  private _getActualCostColor(meter: IMeter, index: number): string {
+    const costColorIndex = this._arcChartColors[index].length - 1;
+
+    if (this._arcChartCostState[index] !== archChartConfigs.NORMAL) {
+      return this._arcChartColors[index][costColorIndex];
+    } else {
+      return this._getMeterConfig(meter, "arcChartColors")[1];
+    }
+  }
+
   private _getDailyGoalCost(meter: IMeter) {
     const goalDailyCost = meter._goal / meter._billing_total;
     const facilityFeePerDay = meter._facilityFee / meter._billing_total;
@@ -81,16 +113,6 @@ export class UtilitySpendingComponent implements OnInit {
 
   private _isUsageCostBehindGoal(meter: IMeter) {
     return meter._actualUsageCost > this._getDailyGoalCost(meter);
-  }
-
-  private _getMeterGoalStatus(meter: IMeter) {
-    const percentToGoal = (1 - (meter._actualUsageCost/this._getDailyGoalCost(meter)));
-
-    if (meter._actualUsageCost > this._getDailyGoalCost(meter)) {
-      return "alert"
-    } else if (percentToGoal < .05) {
-      return "warning"
-    } else return "good"
   }
 
   private _updateAllMeters(refresher: any, index: number) {

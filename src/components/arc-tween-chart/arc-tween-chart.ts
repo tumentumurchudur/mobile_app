@@ -136,7 +136,6 @@ export class ArcTweenChartComponent implements OnInit {
    * @type {string}
    * @memberof ArcTweenChartComponent
    */
-  @Input() goalStatus: string = "";
 
   private element: any;
 
@@ -230,22 +229,10 @@ export class ArcTweenChartComponent implements OnInit {
         .style("fill", this.colors[1] || "orange")
         .attr("d", arc);
 
-      if (this.goalStatus === "alert") {
-        innerArcPath = vis.append("path")
-          .datum({ endAngle: innerValue * τ })
-          .style("fill", this.colors[4] || "red")
-          .attr("d", innerArc);
-      } else if (this.goalStatus === "warning") {
-        innerArcPath = vis.append("path")
-          .datum({ endAngle: innerValue * τ })
-          .style("fill", this.colors[3] || "red")
-          .attr("d", innerArc);
-      } else {
-        innerArcPath = vis.append("path")
-          .datum({ endAngle: innerValue * τ })
-          .style("fill", this.colors[2] || "red")
-          .attr("d", innerArc);
-      }
+      innerArcPath = vis.append("path")
+        .datum({ endAngle: innerValue * τ })
+        .style("fill", this.colors[2] || "red")
+        .attr("d", innerArc);
 
     }
 

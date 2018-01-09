@@ -27,18 +27,17 @@
               [centerValue]="meter._usage / 1000 | number: '.1-2'"
               [centerLabel]="_getMeterConfig(meter, 'unit')"
               [textColor]="_getMeterConfig(meter, 'textColor')"
-              [colors]="_getMeterConfig(meter, 'arcChartColors')"
+              [colors]="_getGoalLineColors(meter, i)"
               [meterIcon]="_getMeterConfig(meter, 'imgSrc')"
               [meterIconColor]="_getMeterConfig(meter, 'imgColor')"
               [animate]="i === 0 || i === _currentMeterIndex"
               [loading]="_meterLoading$ | async"
-              [goalStatus]="_getMeterGoalStatus(meter)"
             ></arc-tween-chart>
 
             <!-- Updates meter when clicked -->
             <div
               class="actual-cost"
-              [ngStyle]="{ 'color': _isUsageCostBehindGoal(meter) ? '#C22A17' : _getMeterConfig(meter, 'textColor') }"
+              [ngStyle]="{ 'color': _getActualCostColor(meter, i) }"
               (click)="_updateMeter(meter, i)"
             >
               {{ meter._actualUsageCost | currency: 'USD': true: '1.2-2' }}
