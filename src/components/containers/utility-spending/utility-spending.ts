@@ -78,7 +78,7 @@ export class UtilitySpendingComponent implements OnInit {
       colors[colors.length - 1] = "#C22A17";
       this._arcChartCostState[index] = archChartConfigs.states.ALERT;
     } else if (percentToGoal < .05) {
-      colors[colors.length - 1] = "#FFAA00";
+      colors[colors.length - 1] = "#FFCD52";
       this._arcChartCostState[index] = archChartConfigs.states.WARNING;
     } else {
       colors[colors.length - 1] = "#535969";
