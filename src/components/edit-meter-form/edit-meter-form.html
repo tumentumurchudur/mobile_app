@@ -36,7 +36,7 @@
       <ion-input type="number" formControlName="billingStart" max="28" min="1"></ion-input>
     </ion-item>
 
-    <ion-item class="meter-input">
+    <ion-item (keyup.enter)="_keyBoardClose()" class="meter-input">
       <ion-label floating color="text" stacked>Goal Amount</ion-label>
       <ion-input formControlName="goal" class="money" type="number" min="0"></ion-input>
     </ion-item>

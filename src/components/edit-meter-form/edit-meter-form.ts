@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnInit } from "@angular/core";
 import { AlertController } from "ionic-angular";
 import { FormGroup, FormBuilder } from "@angular/forms";
+import {Keyboard} from '@ionic-native/keyboard';
 
 import { IMeter, IUser } from "../../interfaces";
 import { StoreServices } from "../../store/services";
@@ -23,7 +24,8 @@ export class EditMeterFormComponent implements OnInit {
   constructor(
     private _formBuilder: FormBuilder,
     private _storeServices: StoreServices,
-    private _alertCtrl: AlertController
+    private _alertCtrl: AlertController,
+    private _keyboard: Keyboard
   ) { }
 
   ngOnInit() {
@@ -75,6 +77,10 @@ export class EditMeterFormComponent implements OnInit {
         }
       ]
     }).present();
+  }
+
+  private _keyBoardClose() {
+    this._keyboard.close();
   }
 
 }
