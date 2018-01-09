@@ -1,11 +1,10 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { IonicPage, NavController } from "ionic-angular";
 import { Storage } from "@ionic/storage";
 import { SplashScreen } from "@ionic-native/splash-screen";
 import { IUser, IFbToken } from "../../interfaces";
 import { AuthProvider } from "../../providers"
 import { StoreServices } from "../../store/services";
-import { Subscription } from "rxjs/Subscription";
 
 @IonicPage({
   name: "LoginPage"
@@ -21,7 +20,6 @@ export class LoginPage {
     uid: null
   };
   private _isNewUser: boolean = false;
-  private _subscriptions: Subscription[] = [];
 
   constructor(
     private _storeServices: StoreServices,
@@ -35,43 +33,33 @@ export class LoginPage {
     this._loginReturningUser();
   }
 
-  ngOnDestroy() {
-    for (const subscription of this._subscriptions) {
-      subscription.unsubscribe();
-    }
-  }
-
-  private _loginReturningUser() {
-    this._storage.get("userInfo").then((userInfo: IFbToken) => {
-      if (!userInfo || !userInfo.providerId) {
-        this._splashScreen.hide();
-        return;
-      }
-
-      const subscription = this._auth.loginUserFromStorage(userInfo).subscribe(userData => {
-        if (!userData || !userData.email || !userData.uid) {
-          return;
+  private _loginReturningUser(): void {
+    this._storage.get("userInfo")
+      .then((userInfo: IFbToken) => {
+        if (!userInfo || !userInfo.providerId) {
+          throw new Error("User is not available in local storage.");
         }
 
-        const user: IUser = {
-          email: userData.email,
-          uid: userData.uid,
-          password: null,
-          orgPath: null
-        };
+        return this._auth.loginUserFromStorage(userInfo);
+      })
+      .then(userData => {
+        if (!userData || !userData.email || !userData.uid) {
+          throw new Error("userData is not valid.");
+        }
+
+        const user: IUser = this._createUser(userData);
 
         // Update the store with current user.
         this._storeServices.addUser(user);
 
-        this.navCtrl.push("HomePage").then(() => {
-          this._splashScreen.hide();
-        });
-      }, (error) => {
-        console.log("Login failed:", error);
-      });
+        this.navCtrl.push("HomePage");
+        this._splashScreen.hide();
+      })
+      .catch(error => {
+        console.log(error);
 
-      this._subscriptions.push(subscription);
-    });
+        this._splashScreen.hide();
+      });
   }
 
   private _onLoginOptionClick() {
@@ -83,80 +71,71 @@ export class LoginPage {
   }
 
   private _onLoginClick(user: IUser): void {
-    if (!this._validateUserInput) {
+    if (!this._validateUserInput(user)) {
       return;
     }
 
-    if (!this._isNewUser) {
-      const subscription: Subscription = this._auth.loginWithEmail(user).subscribe(userData => {
-        const user: IUser = {
-          email: userData.email,
-          uid: userData.uid,
-          password: null,
-          orgPath: null
-        };
+    if (this._isNewUser) {
+      this.navCtrl.push("SignUpPage");
+      return;
+    }
 
-        // Update the store with current user.
+    this._auth.loginWithEmail(user)
+      .then(userData => {
+        const user: IUser = this._createUser(userData);
+
         this._storeServices.addUser(user);
 
         this.navCtrl.push("HomePage");
-      }, (error) => {
-        console.log("Login failed:", error);
+      })
+      .catch(error => {
+        console.log("Password login failed: ", error);
       });
-
-      this._subscriptions.push(subscription);
-    } else {
-      this.navCtrl.push("SignUpPage");
-    }
   }
 
   private _onFacebookClick(): void {
-    if (!this._validateUserInput) {
-      return;
-    }
+    this._auth.loginWithFacebook()
+      .then(userData => {
+        const user: IUser = this._createUser(userData);
 
-    this._auth.loginWithFacebook().subscribe(userData => {
-      const user: IUser = {
-        email: userData.email,
-        uid: userData.uid,
-        password: null,
-        orgPath: null
-      };
+        this._storeServices.addUser(user);
 
-      this._storeServices.addUser(user);
-
-      this.navCtrl.push("HomePage");
-    }, (error) => {
-      console.log("Login failed:", error);
-    })
+        this.navCtrl.push("HomePage");
+      })
+      .catch(error => {
+        console.log("Facebook login failed: ", error)
+      });
   }
 
   private _onGoogleClick(): void {
-    if (!this._validateUserInput) {
-      return;
-    }
+    this._auth.loginWithGoogle()
+      .then(userData => {
+        const user: IUser = this._createUser(userData);
 
-    this._auth.loginWithGoogle().subscribe(userData => {
-      const user: IUser = {
-        email: userData.email,
-        uid: userData.uid,
-        password: null,
-        orgPath: null
-      };
+        this._storeServices.addUser(user);
 
-      this._storeServices.addUser(user);
-
-      this.navCtrl.push("HomePage");
-    }, (error) => {
-      console.log("Login failed:", error);
-    })
+        this.navCtrl.push("HomePage");
+      })
+      .catch(error => {
+        console.log("Google login failed:", error);
+      });
   }
 
   private _onResetPasswordClick(): void {
     this.navCtrl.push("ResetPasswordPage");
   }
 
-  private _validateUserInput() {
-    return this._user.email && this._user.password;
+  private _validateUserInput(user: IUser) {
+    return user && user.email && user.password;
   }
+
+  private _createUser(user: IUser): IUser {
+    return {
+      email: user.email,
+      uid: user.uid,
+      password: null,
+      orgPath: null
+    };
+  }
+
 }

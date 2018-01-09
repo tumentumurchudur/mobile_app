@@ -19,15 +19,10 @@ export class AuthProvider {
 
 ) { }
 
-  public loginWithEmail(user: IUser): Observable<IUser> {
-    return Observable.create(observer => {
-      const credential: IFbToken = firebase.auth.EmailAuthProvider.credential(user.email, user.password);
-      this._signInWithCredential(credential).then((authData) => {
-          observer.next(authData);
-        }).catch((error) => {
-          observer.error(error);
-        });
-    });
+  public loginWithEmail(user: IUser): Promise<IUser> {
+    const credential: IFbToken = firebase.auth.EmailAuthProvider.credential(user.email, user.password);
+
+    return this._signInWithCredential(credential);
   }
 
   public registerUser(user: IUser): Observable<IUser> {
@@ -40,20 +35,18 @@ export class AuthProvider {
     });
   }
 
-  public loginWithGoogle(): Observable<IUser> {
-    return Observable.create(observer => {
-      this._googleplus.login({
-        "webClientId": googleConfig.webClientId,
-        "offline": true
-      }).then((response) => {
-        const googleCredential: IFbToken = firebase.auth.GoogleAuthProvider.credential(response.idToken);
+  public loginWithGoogle(): Promise<IUser> {
+    return this._googleplus.login({
+      "webClientId": googleConfig.webClientId,
+      "offline": true
+    })
+    .then(response => {
+      const googleCredential: IFbToken = firebase.auth.GoogleAuthProvider.credential(response.idToken);
 
-        this._signInWithCredential(googleCredential).then((authData) => {
-          observer.next(authData);
-        });
-      }).catch((error) => {
-        observer.error(error);
-      });
+      return this._signInWithCredential(googleCredential);
+    })
+    .catch(error => {
+      throw new Error(error);
     });
   }
 
@@ -66,18 +59,16 @@ export class AuthProvider {
      })
   }
 
-  public loginWithFacebook(): Observable<IUser> {
-    return Observable.create(observer => {
-      this._facebook.login(["email"]).then((response) => {
+  public loginWithFacebook(): Promise<IUser> {
+    return this._facebook.login(["email"])
+      .then(response => {
         const facebookCredential: IFbToken = firebase.auth.FacebookAuthProvider.credential(response.authResponse.accessToken);
 
-        this._signInWithCredential(facebookCredential).then((authData) => {
-          observer.next(authData);
-        });
-      }).catch((error) => {
-        observer.error(error);
+        return this._signInWithCredential(facebookCredential);
+      })
+      .catch(error => {
+        throw new Error(error);
       });
-    });
   }
 
   private _getFacebookToken(credential): Promise<IFbToken> {
@@ -112,35 +103,43 @@ export class AuthProvider {
     });
   }
 
-  public loginUserFromStorage(userInfo: IFbToken): Observable<any> {
+  public loginUserFromStorage(userInfo: IFbToken): Promise<any> {
     return this._getUserCredentials(userInfo)
-      .switchMap((credential: IFbToken) => {
+      .then((credential: IFbToken) => {
         this._storage.set("userInfo", credential);
 
-        return this._af.auth.signInWithCredential(credential).then((authData) => {
-          return authData;
-        });
+        return this._af.auth.signInWithCredential(credential)
+      })
+      .catch(error => {
+        // bubble up this error, so we can catch in the consumer.
+        throw new Error(error);
       });
   }
 
-  private _getUserCredentials(userInfo: IFbToken): Observable<IFbToken> {
-    return Observable.create(observer => {
+  private _getUserCredentials(userInfo: IFbToken): Promise<IFbToken> {
+    return new Promise((resolve, reject) => {
+      if (!userInfo || !userInfo.providerId) {
+        reject("userInfo is not available.");
+      }
+
       switch (userInfo.providerId) {
         case "google.com":
           this._googleSilentLogin().then((credential: IFbToken) => {
-            observer.next(credential);
+            resolve(credential);
           });
           break;
         case "facebook.com":
           this._getFacebookToken(userInfo).then((credential: IFbToken) => {
-            observer.next(credential);
+            resolve(credential);
           });
           break;
         case "password":
-          const credential:IFbToken = firebase.auth.EmailAuthProvider.credential(userInfo.a, userInfo.f);
+          const credential: IFbToken = firebase.auth.EmailAuthProvider.credential(userInfo.a, userInfo.f);
 
-          observer.next(credential);
+          resolve(credential);
           break;
+        default:
+          reject("login type mismatch!");
       }
     });
   }
