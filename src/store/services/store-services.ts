@@ -116,7 +116,7 @@ export class StoreServices {
 		return this._store.select(state => state.reads.loading);
 	}
 
-	public selectReadsData() {
+	public selectReadsData(): Observable<IReads[]> {
 		return this._store.select(state => state.reads.data);
 	}
 
