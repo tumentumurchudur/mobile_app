@@ -8,4 +8,5 @@ export interface IReads {
   reads: IRead[] | null,
   deltas: ILineItem[] | null,
   cost: { totalCost: number, totalDelta: number } | null
+  timedOut: boolean
 }

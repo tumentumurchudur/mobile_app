@@ -228,9 +228,9 @@ export class UtilitySpendingComponent implements OnInit {
     });
 
     if (data) {
-      return { deltas: data.deltas, cost: data.cost };
+      return { deltas: data.deltas, cost: data.cost, timedOut: data.timedOut };
     }
-    return { deltas: [], cost: null };
+    return { deltas: [], cost: null, timedOut: false };
   }
 
   private _isNeighborhoodRankAvailable(comparisonReads: IComparison[], meter: IMeter, index: number): boolean {
@@ -252,6 +252,12 @@ export class UtilitySpendingComponent implements OnInit {
 
   private _onCancelEditMeter(meter: IMeter, index: number): void {
     this._currentNavigationItems[index] = this._navigationItems.ARC_CHART;
+  }
+
+  private _onRetry(meter: IMeter, dateRange: IDateRange) {
+    const {  timeSpan, startDate, endDate } = dateRange;
+
+    this._storeServices.loadReadsByDateRange(meter, timeSpan, startDate, endDate);
   }
 
   private _onSaveEditMeter(meter: IMeter, index: number): void {
