@@ -71,24 +71,33 @@ export class ComparisonEffects {
           read.endDate.toString() === endDate.toString();
       });
 
+      const isUsageDataAvail = storeData && !storeData.timedOut && storeData.usage.length;
+      const isAvgDataAvail = storeData && !storeData.timedOut && storeData.avg.length;
+      const isEffDataAvail = storeData && !storeData.timedOut && storeData.eff.length;
+      const isRankAvail = storeData && !storeData.timedOut && storeData.rank;
+
       return Observable.combineLatest([
         Observable.of(group),
         Observable.of(meter),
         Observable.of(dateRange),
-        storeData ? Observable.of(storeData.usage) : this._db.getReadsByDateRange(meter._guid, dateRange),
-        storeData ? Observable.of(storeData.avg) : (ncmpAvgGuid ? this._db.getReadsByNeighborhood(ncmpAvgGuid, dateRange) : Observable.of([])),
-        storeData ? Observable.of(storeData.eff) : (ncmpEffGuid ? this._db.getReadsByNeighborhood(ncmpEffGuid, dateRange) : Observable.of([])),
-        storeData ? Observable.of(storeData.rank) : this._db.getNeighborhoodComparisonRanks(meter, dateRange)
+        isUsageDataAvail ? Observable.of(storeData.usage) : this._db.getReadsByDateRange(meter._guid, dateRange),
+
+        isAvgDataAvail
+          ? Observable.of(storeData.avg)
+          : (ncmpAvgGuid ? this._db.getReadsByNeighborhood(ncmpAvgGuid, dateRange) : Observable.of([])),
+
+        isEffDataAvail
+          ? Observable.of(storeData.eff)
+          : (ncmpEffGuid ? this._db.getReadsByNeighborhood(ncmpEffGuid, dateRange) : Observable.of([])),
+
+        isRankAvail ? Observable.of(storeData.rank) : this._db.getNeighborhoodComparisonRanks(meter, dateRange)
       ])
+      .take(1)
       .timeout(environment.apiTimeout) // Times out if nothing comes back.
       .catch(error => Observable.of([meter, group, dateRange, [], [], [], null, true]));
     })
     .flatMap((data: any[]) => {
       const [group, meter, dateRange, usage = [], avg = [], eff = [], rank, timedOut = false] = data;
-
-      if (timedOut) {
-        return [new AddComparison(null)];
-      }
 
       // No need to display chart if avg and eff data is not available.
       if (!avg.length && !eff.length) {
@@ -103,7 +112,8 @@ export class ComparisonEffects {
           eff: [],
           effCosts: null,
           calcReads: [],
-          rank: null
+          rank: null,
+          timedOut
         };
 
         return [
@@ -168,7 +178,8 @@ export class ComparisonEffects {
         eff,
         effCosts,
         calcReads,
-        rank
+        rank,
+        timedOut
       };
 
       return [

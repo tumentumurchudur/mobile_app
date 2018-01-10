@@ -254,10 +254,27 @@ export class UtilitySpendingComponent implements OnInit {
     this._currentNavigationItems[index] = this._navigationItems.ARC_CHART;
   }
 
-  private _onRetry(meter: IMeter, dateRange: IDateRange) {
-    const {  timeSpan, startDate, endDate } = dateRange;
+  private _onRetryTimeTravel(meter: IMeter, dateRange: IDateRange) {
+    const { timeSpan, startDate, endDate } = dateRange;
 
     this._storeServices.loadReadsByDateRange(meter, timeSpan, startDate, endDate);
+  }
+
+  private _onRetryComparison(meter: IMeter, dateRange: IDateRange) {
+    const { timeSpan, startDate, endDate } = dateRange;
+
+    this._storeServices.loadNeighborhoodReads(meter, { timeSpan, startDate, endDate});
+  }
+
+  private _isComparisonReadsTimedOut(comparisonReads: IComparison[], meter: IMeter, dateRange: IDateRange): boolean {
+    const { startDate, endDate } = dateRange;
+    const data = comparisonReads.find(read => {
+      return read.guid === meter._guid &&
+        read.startDate.toString() === startDate.toString() &&
+        read.endDate.toString() === endDate.toString()
+    });
+
+    return data ? data.timedOut : false;
   }
 
   private _onSaveEditMeter(meter: IMeter, index: number): void {
