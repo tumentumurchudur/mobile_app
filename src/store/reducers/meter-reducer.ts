@@ -31,7 +31,7 @@ export function meterReducer(state = { data: [], loading: false}, action): any {
 		  return Object.assign({}, state, { loading: true });
 		case ActionTypes.UPDATE_METER:
 		  if (!action.payload) {
-			return state;
+				return state;
 			}
 
 			const { _guid } = action.payload;

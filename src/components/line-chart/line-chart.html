@@ -1,7 +1,7 @@
 <div class="chart-container">
   <svg preserveAspectRatio="xMidYMid meet"></svg>
   <div class="no-data" *ngIf="(!data || !data.length) && !loading">
-    No data
+    {{ noDataText }}
   </div>
 
   <div *ngIf="loading">

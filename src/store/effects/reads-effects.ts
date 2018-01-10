@@ -147,18 +147,14 @@ export class ReadsEffects {
       return Observable.combineLatest([
         Observable.of(meter),
         Observable.of(dateRange),
-        storeData ? Observable.of(storeData.reads) : this._db.getReadsByDateRange(meter._guid, dateRange)
+        storeData && !storeData.timedOut ? Observable.of(storeData.reads) : this._db.getReadsByDateRange(meter._guid, dateRange)
       ])
+      .take(1)
       .timeout(environment.apiTimeout) // Times out if nothing comes back.
       .catch(error => Observable.of([meter, dateRange, [], true]));
     })
     .map((values: any[]) => {
       const [ meter, dateRange, reads = [], timedOut = false ] = values;
-
-      if (timedOut) {
-        return new AddReads(null);
-      }
-
       const { startDate, endDate } = dateRange;
       const rawDeltas = reads.length ? ChartHelper.getDeltas(reads) : [];
 
@@ -175,7 +171,8 @@ export class ReadsEffects {
         endDate,
         reads,
         deltas,
-        cost
+        cost,
+        timedOut
       } as IReads;
 
       return new AddReads(payload);
