@@ -150,10 +150,15 @@ export class ReadsEffects {
         storeData ? Observable.of(storeData.reads) : this._db.getReadsByDateRange(meter._guid, dateRange)
       ])
       .timeout(environment.apiTimeout) // Times out if nothing comes back.
-      .catch(error => Observable.of([meter, dateRange, []]));
+      .catch(error => Observable.of([meter, dateRange, [], true]));
     })
     .map((values: any[]) => {
-      const [ meter, dateRange, reads = [] ] = values;
+      const [ meter, dateRange, reads = [], timedOut = false ] = values;
+
+      if (timedOut) {
+        return new AddReads(null);
+      }
+
       const { startDate, endDate } = dateRange;
       const rawDeltas = reads.length ? ChartHelper.getDeltas(reads) : [];
 

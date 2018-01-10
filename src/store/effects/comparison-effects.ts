@@ -81,10 +81,14 @@ export class ComparisonEffects {
         storeData ? Observable.of(storeData.rank) : this._db.getNeighborhoodComparisonRanks(meter, dateRange)
       ])
       .timeout(environment.apiTimeout) // Times out if nothing comes back.
-      .catch(error => Observable.of([meter, group, dateRange, [], [], [], null]));
+      .catch(error => Observable.of([meter, group, dateRange, [], [], [], null, true]));
     })
     .flatMap((data: any[]) => {
-      const [ group, meter, dateRange, usage = [], avg = [], eff = [], rank ] = data;
+      const [group, meter, dateRange, usage = [], avg = [], eff = [], rank, timedOut = false] = data;
+
+      if (timedOut) {
+        return [new AddComparison(null)];
+      }
 
       // No need to display chart if avg and eff data is not available.
       if (!avg.length && !eff.length) {
