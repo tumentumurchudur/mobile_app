@@ -8,9 +8,11 @@ import "rxjs/add/operator/map";
 import "rxjs/add/operator/switchMap";
 import "rxjs/add/observable/combineLatest";
 import "rxjs/add/operator/debounceTime";
+import "rxjs/add/operator/timeout";
 
 import { DatabaseProvider } from "../../providers";
 import { neighborhoodConfigs } from "../../configs";
+import { environment } from "../../environments";
 
 import { TRIGGER_COMPARISON_READS, AddComparison, AddNeighborhoodGroup } from "../actions";
 import { IComparison, IMeter } from "../../interfaces";
@@ -77,7 +79,9 @@ export class ComparisonEffects {
         storeData ? Observable.of(storeData.avg) : (ncmpAvgGuid ? this._db.getReadsByNeighborhood(ncmpAvgGuid, dateRange) : Observable.of([])),
         storeData ? Observable.of(storeData.eff) : (ncmpEffGuid ? this._db.getReadsByNeighborhood(ncmpEffGuid, dateRange) : Observable.of([])),
         storeData ? Observable.of(storeData.rank) : this._db.getNeighborhoodComparisonRanks(meter, dateRange)
-      ]);
+      ])
+      .timeout(environment.apiTimeout) // Times out if nothing comes back.
+      .catch(error => Observable.of([meter, group, dateRange, [], [], [], null]));
     })
     .flatMap((data: any[]) => {
       const [ group, meter, dateRange, usage = [], avg = [], eff = [], rank ] = data;
