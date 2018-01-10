@@ -3,12 +3,12 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import firebase from "firebase";
 
 import { fireBaseConfig, neighborhoodConfigs, databasePaths, databaseToken } from "../configs";
-import { IUser, IMeter, IReads } from "../interfaces";
+import { IUser, IMeter, IReads, IDateRange } from "../interfaces";
 import { AuthProvider } from "./auth";
 
 import { Observable } from "rxjs/Observable";
 import "rxjs/add/observable/combineLatest";
-
+import "rxjs/add/operator/catch";
 
 @Injectable()
 export class DatabaseProvider {
@@ -18,6 +18,7 @@ export class DatabaseProvider {
   private _orgsRef: firebase.database.Reference;
   private _readsRef: firebase.database.Reference;
   private _providersRef: firebase.database.Reference;
+  private _ncmpRanksRef: firebase.database.Reference;
 
   constructor(
     private _authProvider: AuthProvider,
@@ -34,6 +35,7 @@ export class DatabaseProvider {
     this._orgsRef = this._db.ref(databasePaths.orgs);
     this._readsRef = this._db.ref(databasePaths.reads);
     this._providersRef = this._db.ref(databasePaths.providers);
+    this._ncmpRanksRef = this._db.ref(databasePaths.ranks);
   }
 
   /**
@@ -255,7 +257,8 @@ export class DatabaseProvider {
     });
   }
 
-  public getReadsByDateRange(meterGuid: string, startDate: Date, endDate: Date): Observable<IReads[]> {
+  public getReadsByDateRange(meterGuid: string, dateRange: IDateRange): Observable<IReads[]> {
+    const { startDate, endDate } = dateRange;
     const startAt = startDate.getTime().toString();
     const endAt = endDate.getTime().toString();
 
@@ -285,7 +288,8 @@ export class DatabaseProvider {
     });
   }
 
-  public getReadsByNeighborhood(guid: string, startDate: Date, endDate: Date): Observable<IReads[]> {
+  public getReadsByNeighborhood(guid: string, dateRange: IDateRange): Observable<IReads[]> {
+    const { startDate, endDate } = dateRange;
     const startAt = startDate.getTime().toString();
     const endAt = endDate.getTime().toString();
 
@@ -306,7 +310,6 @@ export class DatabaseProvider {
               return { date: key, delta: data[key].delta };
             });
           }
-
           observer.next(reads);
         })
         .catch(error => {
@@ -404,7 +407,44 @@ export class DatabaseProvider {
       const [token] = data;
       const header = new HttpHeaders().set("Authorization", neighborhoodConfigs.AUTHORIZATION);
 
-      return this._httpClient.get(`${neighborhoodConfigs.NEIGHBORHOOD_COMP_DEV_REST_URL}?guid=${_guid}&token=${token}&utilityType=${_utilityType}`, { headers: header })
+      return this._httpClient
+        .get(`${neighborhoodConfigs.NEIGHBORHOOD_COMP_DEV_REST_URL}?guid=${_guid}&token=${token}&utilityType=${_utilityType}`, { headers: header })
+        .catch(error => {
+          return Observable.of(null);
+        });
+    });
+  }
+
+  public getNeighborhoodComparisonRanks(meter: IMeter, dateRange: IDateRange): Observable<number> {
+    const { startDate, endDate } = dateRange;
+    const startAt = startDate.getTime().toString();
+    const endAt = endDate.getTime().toString();
+
+    return Observable.create(observer => {
+      this._ncmpRanksRef
+        .child(`${meter._guid}/hours`)
+        .orderByKey()
+        .startAt(startAt)
+        .endAt(endAt)
+        .once("value")
+        .then(snapshot => {
+          const ranks = snapshot.val();
+          const totals = [];
+          let sum = 0;
+
+          if (ranks) {
+            Object.keys(ranks).forEach(key => {
+              totals.push(ranks[key]);
+            });
+
+            sum = totals.reduce((a, b) => { return a + b.total }, 0);
+          }
+
+          observer.next(sum > 0 ? Math.round(sum / totals.length) : 0);
+        })
+        .catch(error => {
+          observer.error(error);
+        });
     });
   }
 
@@ -412,15 +452,12 @@ export class DatabaseProvider {
     return Observable.create(observer => {
       const path = `${user.orgPath}/Building1/_meters/_${meter._utilityType}/${meter._name}`;
 
-      // TODO: Remove and replace it by commented out code below.
-      observer.next(meter);
-
-      // this._orgsRef.child(path).remove().then(() => {
-      //   observer.next(meter);
-      // })
-      // .catch(error => {
-      //   observer.error(error);
-      // });
+      this._orgsRef.child(path).remove().then(() => {
+        observer.next(meter);
+      })
+      .catch(error => {
+        observer.error(error);
+      });
     });
   }
 

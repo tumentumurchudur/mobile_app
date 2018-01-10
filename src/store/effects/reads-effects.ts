@@ -5,14 +5,15 @@ import { Storage } from "@ionic/storage";
 import { StoreServices } from "../../store/services";
 
 import { Observable } from "rxjs/rx";
-import { Subscription } from "rxjs/Subscription";
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/switchMap";
 import "rxjs/add/observable/combineLatest";
 import "rxjs/add/operator/debounceTime";
+import "rxjs/add/operator/timeout";
 
 import { DatabaseProvider } from "../../providers";
 import { IReads, IDateRange } from "../../interfaces";
+import { environment } from "../../environments";
 
 import { CostHelper, ChartHelper } from "../../helpers";
 import {
@@ -76,7 +77,6 @@ export class ReadsEffects {
         for (let meter of meters) {
           if (meter._guid === newMeter._guid && meter._name === newMeter._name) {
             meter = newMeter;
-
             break;
           }
         }
@@ -125,40 +125,37 @@ export class ReadsEffects {
     .debounceTime(250)
     .switchMap((values: any) => {
       const { meter, timeSpan, startDate, endDate } = values;
-
-      // Get reads data from the store if available.
-      let storeData;
-      const subscription: Subscription = this._storeServices.selectReadsData().subscribe((data: IReads[]) => {
-        storeData = data.filter(read => {
-          return read.guid === meter._guid &&
-            read.startDate.toString() === startDate.toString() &&
-            read.endDate.toString() === endDate.toString();
-        })[0] || null;
-      });
-
-      const reads = storeData ? Observable.of(storeData.reads) : this._db.getReadsByDateRange(meter._guid, startDate, endDate);
+      const dateRange: IDateRange = { timeSpan, startDate, endDate };
 
       return Observable.combineLatest([
         Observable.of(meter),
-        Observable.of(timeSpan),
-        Observable.of(startDate),
-        Observable.of(endDate),
-        reads,
-        // Needs subscription to the store observable,
-        // so it can be unsubscribed to prevent memory leaks.
-        Observable.of(subscription)
+        Observable.of(dateRange),
+        this._storeServices.selectReadsData().take(1),
       ]);
     })
-    .map(values => {
-      const [ meter, timeSpan, startDate, endDate, reads = [], subscription ] = values;
+    .switchMap((data: any[]) => {
+      const [ meter, dateRange, reads = [] ] = data;
+      const { startDate, endDate } = dateRange;
 
-      if (subscription) {
-        subscription.unsubscribe();
-      }
+      // Get reads data from the store if available.
+      const storeData = reads.find(read => {
+        return read.guid === meter._guid &&
+          read.startDate.toString() === startDate.toString() &&
+          read.endDate.toString() === endDate.toString();
+      });
 
+      return Observable.combineLatest([
+        Observable.of(meter),
+        Observable.of(dateRange),
+        storeData ? Observable.of(storeData.reads) : this._db.getReadsByDateRange(meter._guid, dateRange)
+      ])
+      .timeout(environment.apiTimeout) // Times out if nothing comes back.
+      .catch(error => Observable.of([meter, dateRange, []]));
+    })
+    .map((values: any[]) => {
+      const [ meter, dateRange, reads = [] ] = values;
+      const { startDate, endDate } = dateRange;
       const rawDeltas = reads.length ? ChartHelper.getDeltas(reads) : [];
-
-      const dateRange: IDateRange = { timeSpan, startDate, endDate };
 
       // Removes abnormally large values.
       const normalizedDeltas = rawDeltas.length ? ChartHelper.normalizeData(rawDeltas) : [];

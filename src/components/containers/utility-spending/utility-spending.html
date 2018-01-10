@@ -8,8 +8,6 @@
       <ion-card class="chart-card">
         <!-- Header -->
         <div class="header">
-          <div [class.status]="_isUsageCostBehindGoal(meter)"></div>
-          <img class="exclamation-icon" src="assets/exclamation.svg">
           <div class="meter-name">{{ meter._name }}</div>
         </div>
 
@@ -20,6 +18,11 @@
           [@cardState]
         >
           <div *ngIf="meter._actualUsageCost !== null">
+            <div class="goal-status">
+              <div [class.status]="_isUsageCostBehindGoal(meter)"></div>
+              <img class="exclamation-icon" src="assets/exclamation.svg">
+            </div>
+
             <arc-tween-chart
               [outerArcValue]="meter._actualUsageCost"
               [innerArcValue]="_getDailyGoalCost(meter)"
@@ -69,7 +72,7 @@
               <line-chart
                 [data]="data.deltas"
                 [lineColors]="_getMeterConfig(meter, 'lineChartColors')"
-                [loading]="_loadingReads$ | async"
+                [loading]="_currentMeterIndex === i ? (_loadingReads$ | async) : false"
                 [animate]="_currentMeterIndex === i"
                 [series]="['line1']"
                 [dateFormat]="_selectedDateRanges[i].dateFormat"
@@ -97,6 +100,16 @@
           *ngIf="_currentNavigationItems[i] === _navigationItems.COMPARISON"
           [@cardState]
         >
+          <div class="goal-status" *ngIf="_comparison$ | async as comparisonReads">
+            <div *ngIf="_isNeighborhoodRankAvailable(comparisonReads, meter, i)" class="rank">
+              <div class="percentile">
+                {{ _ranks[i] }}
+                <small>%</small>
+              </div>
+              <div class="rank-text">RANK</div>
+            </div>
+          </div>
+
           <timespan-selector
             [selectedTimeSpan]="_selectedDateRanges[i].timeSpan"
             [disableNextButton]="_shouldDisableNextButton(i)"
@@ -108,7 +121,7 @@
 
           <neighborhood-comparison
             [comparisonReads]="_comparison$ | async"
-            [loading]="_comparisonLoading$ | async"
+            [loading]="_currentMeterIndex === i ? (_comparisonLoading$ | async) : false"
             [dateRange]="_selectedDateRanges[i]"
             [meter]="meter"
           >

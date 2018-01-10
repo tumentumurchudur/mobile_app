@@ -6,109 +6,104 @@ utility-spending {
 	}
 
 	.chart-card {
-    border-radius: 4px;
+		border-radius: 4px;
+
 		.header {
       color: $header-text;
       margin: 10px 0px 10px 20px;
 			position: relative;
 
-			.status {
-				position: absolute;
-				top: -10px;
-				right: 0;
-				width: 0;
-				height: 0;
-				border-style: solid;
-				border-width: 0 9.5vh 10vh 0;
-				border-color: transparent #C22A17 transparent transparent;
-			}
-
-			.exclamation-icon {
-				position: absolute;
-				height: 5.5vh;
-				width: 5.5vh;
-				top: -1vh;
-				right: 0.25vh;
+			.meter-name {
+				font-size: 22px;
 			}
 		}
 
 		.card-content {
 			height: 65vh;
-       max-height: 450px;
-       max-width: 360px;
+      max-height: 450px;
 			text-align: center;
 			position: relative;
-		}
 
-		.meter-name {
-			font-size: 22px;
-		}
+			.goal-status {
+				position: relative;
 
-		.spending-goal {
-      color: $header-text;
-			text-align: center;
-			font-size: 2.75vh;
-			margin-bottom: 5px;
-		}
-
-		.actual-cost {
-			color: $dusty-gray;
-			text-align: center;
-			font-size: 48px;
-		}
-
-		.timespan-cost {
-			text-align: center;
-			font-size: 48px;
-		}
-
-    .timespan-usage {
-      font-size: 15px;
-    }
-
-		.show-all {
-			text-align: right;
-			margin-right: 20px;
-		}
-
-    .legends {
-      display: flex;
-      justify-content: space-around;
-      position: relative;
-      bottom: 20px;
-
-      .legend {
-				display: flex;
-				flex-direction: column;
-				align-items: center;
-
-				.circle {
-					border-radius: 50%;
-					width: 12px;
-					height: 12px;
-					margin-right: 3px;
+				.status {
+					position: absolute;
+					bottom: -9px;
+					right: 0;
+					width: 0;
+					height: 0;
+					border-style: solid;
+					border-width: 0 55px 55px 0;
+					border-color: transparent #C22A17 transparent transparent;
 				}
 
-				.series-label {
-					display: flex;
-					align-items: center;
+				.exclamation-icon {
+					position: absolute;
+					height: 5.5vh;
+					width: 5.5vh;
+					bottom: 7px;
+					right: 0.25vh;
+				}
+			}
+
+			.spending-goal {
+				color: $header-text;
+				text-align: center;
+				font-size: 2.75vh;
+				margin-bottom: 5px;
+			}
+
+			.actual-cost {
+				color: $dusty-gray;
+				text-align: center;
+				font-size: 48px;
+			}
+
+			.timespan-cost {
+				text-align: center;
+				font-size: 48px;
+			}
+
+			.timespan-usage {
+				font-size: 15px;
+			}
+
+			.show-all {
+				text-align: right;
+				margin-right: 20px;
+			}
+
+			.rank {
+				position: absolute;
+				top: -46px;
+				right: 0;
+				height: 58px;
+				width: 58px;
+				text-align: right;
+				padding: 1px 1px 0 0;
+				color: $white;
+				font-size: 20px;
+				background-color: #2075CB;
+				border-left: 2px solid #2075CB;
+				border-bottom: 2px solid #2075CB;
+				border-bottom-left-radius: 100%;
+
+				.percentile {
+					padding-right: 3px;
+					word-spacing: -3px;
 				}
 
-				.cost-label {
-					font-size: 20px;
-					margin-top: 20px;
-				}
+				.rank-text {
+					padding-right: 7px;
+					font-size: 12px;
 
-				.usage-label {
-					display: flex;
-					font-size: 15px;
+					.usage-label {
+						display: flex;
+						font-size: 15px;
+					}
 				}
-      }
-		}
-
-		.edit-meter-form {
-			margin: 0;
+			}
 		}
 	}
-
 }

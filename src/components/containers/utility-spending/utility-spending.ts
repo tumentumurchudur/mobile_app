@@ -38,6 +38,7 @@ export class UtilitySpendingComponent implements OnInit {
   private _currentNavigationItems: string[] = [];
   private _currentMeterIndex: number = 0;
   private _selectedDateRanges: IDateRange[] = [];
+  private _ranks: number[] = [];
   private _arcChartColors: string[] = [];
   private _arcChartCostState: string[] = [];
 
@@ -230,6 +231,19 @@ export class UtilitySpendingComponent implements OnInit {
       return { deltas: data.deltas, cost: data.cost };
     }
     return { deltas: [], cost: null };
+  }
+
+  private _isNeighborhoodRankAvailable(comparisonReads: IComparison[], meter: IMeter, index: number): boolean {
+    const { startDate, endDate } = this._selectedDateRanges[index];
+    const data = comparisonReads.find(read => {
+      return read.guid === meter._guid &&
+        read.startDate.toString() === startDate.toString() &&
+        read.endDate.toString() === endDate.toString()
+    });
+
+    this._ranks[index] = data ? data.rank : null;
+
+    return !!this._ranks[index];
   }
 
   private _showDateRange(index: number): string {

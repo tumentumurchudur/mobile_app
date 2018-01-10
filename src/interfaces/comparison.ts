@@ -12,4 +12,5 @@ export interface IComparison {
   usage: any[];
   usageCosts: IUsage;
   calcReads: ILineItem[];
+  rank: number
 }
