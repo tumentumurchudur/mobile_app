@@ -69,6 +69,18 @@
 
           <div *ngIf="_reads$ | async as reads">
             <div *ngIf="_getDataByGuid(reads, meter._guid, i) as data">
+
+              <!-- Retry icon -->
+              <div *ngIf="data.timedOut" class="timeout-container">
+                <ion-icon
+                  class="refresh-icon"
+                  ios="ios-refresh-circle"
+                  md="md-refresh-circle"
+                  (click)="_onRetry(meter, _selectedDateRanges[i])"
+                ></ion-icon>
+                <div class="timeout-text">Tap to retry.</div>
+              </div>
+
               <line-chart
                 [data]="data.deltas"
                 [lineColors]="_getMeterConfig(meter, 'lineChartColors')"
@@ -77,6 +89,7 @@
                 [series]="['line1']"
                 [dateFormat]="_selectedDateRanges[i].dateFormat"
                 [showAreaFill]="true"
+                [noDataText]="data.timedOut ? 'Timed out!' : 'No data'"
               ></line-chart>
 
               <div *ngIf="data.cost">
@@ -90,6 +103,7 @@
                   {{ data.cost.totalDelta / 1000 | number: '.1-2' }} {{ _getMeterConfig(meter, 'unit') }}
                 </div>
               </div>
+
             </div>
           </div>
         </div>

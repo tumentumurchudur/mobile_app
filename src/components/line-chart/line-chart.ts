@@ -19,6 +19,7 @@ export class LineChartComponent implements OnChanges {
   @Input() showAreaFill: boolean = true;
   @Input() showXAxisLabels: boolean = true;
   @Input() showYAxisLabels: boolean = true;
+  @Input() noDataText: string = "No data";
 
   private element: any;
   private margin: any = { left: 10, right: 10, top: 10, bottom: 10 };
