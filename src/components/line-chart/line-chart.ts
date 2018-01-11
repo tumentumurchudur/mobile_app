@@ -180,7 +180,7 @@ export class LineChartComponent implements OnChanges {
     if (this.showYAxisLabels) {
       svg.append("g")
         .attr("transform", "translate(20, 10)")
-        .attr("class", "axis-color")
+
         .call(yAxis);
     }
   }

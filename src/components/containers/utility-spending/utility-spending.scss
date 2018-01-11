@@ -19,20 +19,20 @@ utility-spending {
 			}
 		}
 
-		.card-content {
-			height: 65vh;
-      max-height: 450px;
-      max-width: 450px;
-			text-align: center;
-			position: relative;
-
     .edit-card-content {
       height: 70vh;
-	    max-width: 450px;
-	    max-height: calc(450px + 5vh);
+      max-width: 450px;
+      max-height: calc(450px + 5vh);
       text-align: center;
       position: relative;
     }
+
+		.card-content {
+      height: 65vh;
+      max-height: 450px;
+      max-width: 450px;
+      text-align: center;
+      position: relative;
 
     .date-range {
       color: $header-text;
@@ -57,10 +57,10 @@ utility-spending {
 
 				.exclamation-icon {
 					position: absolute;
-					height: 5.5vh;
-					width: 5.5vh;
-					bottom: -2px;
-					right: 0;
+					height: 4.5vh;
+					width: 4.5vh;
+					bottom: 4px;
+					right: 0.25vh;
 				}
 			}
 
@@ -122,7 +122,7 @@ utility-spending {
 
 			.rank {
 				position: absolute;
-				top: -46px;
+				top: -5vh;
 				right: 0;
 				height: 58px;
 				width: 58px;
