@@ -124,8 +124,7 @@ export class ReadsEffects {
     .map((action: any) => action.payload)
     .debounceTime(250)
     .switchMap((values: any) => {
-      const { meter, timeSpan, startDate, endDate } = values;
-      const dateRange: IDateRange = { timeSpan, startDate, endDate };
+      const { meter, dateRange } = values;
 
       return Observable.combineLatest([
         Observable.of(meter),

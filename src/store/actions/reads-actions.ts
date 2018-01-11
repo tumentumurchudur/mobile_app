@@ -1,5 +1,6 @@
 import { Action } from "@ngrx/store";
 import { IReads, IMeter, IUser } from "../../interfaces";
+import { IDateRange } from "../../interfaces/date-range";
 
 export const ADD_READS: string = "[Reads] ADD READS";
 export const LOAD_READS_BY_METERS: string = "[Reads] LOAD READS BY METERS";
@@ -17,9 +18,9 @@ export class AddReads implements Action {
 
 export class LoadReadsByDateRange implements Action {
 	public readonly type = LOAD_READS_BY_DATE;
-	public payload: any | null;
+	public payload: { meter: IMeter, dateRange: IDateRange };
 
-	constructor(private _payload: any) {
+	constructor(private _payload: { meter: IMeter, dateRange: IDateRange }) {
 		this.payload = _payload;
 	}
 }

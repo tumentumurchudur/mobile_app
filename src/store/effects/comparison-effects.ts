@@ -30,19 +30,10 @@ export class ComparisonEffects {
       const { meter, dateRange } = data;
 
       return Observable.combineLatest(
-        this._storeServices.selectComparisonGroup().take(1),
+        this._db.getNeighborhoodGroup(meter),
         Observable.of(meter),
         Observable.of(dateRange)
       );
-    })
-    .switchMap((data: any[]) => {
-      const [ group, meter, dateRange ] = data;
-
-      return Observable.combineLatest([
-        Object.keys(group).length ? Observable.of(group) : this._db.getNeighborhoodGroup(meter),
-        Observable.of(meter),
-        Observable.of(dateRange)
-      ]);
     })
     .switchMap((data: any[]) => {
       const [ group, meter, dateRange ] = data;
@@ -71,27 +62,38 @@ export class ComparisonEffects {
           read.endDate.toString() === endDate.toString();
       });
 
+      const isUsageDataAvail = storeData && !storeData.timedOut && storeData.usage.length;
+      const isAvgDataAvail = storeData && !storeData.timedOut && storeData.avg.length;
+      const isEffDataAvail = storeData && !storeData.timedOut && storeData.eff.length;
+      const isRankAvail = storeData && !storeData.timedOut && storeData.rank;
+
       return Observable.combineLatest([
         Observable.of(group),
         Observable.of(meter),
         Observable.of(dateRange),
-        storeData ? Observable.of(storeData.usage) : this._db.getReadsByDateRange(meter._guid, dateRange),
-        storeData ? Observable.of(storeData.avg) : (ncmpAvgGuid ? this._db.getReadsByNeighborhood(ncmpAvgGuid, dateRange) : Observable.of([])),
-        storeData ? Observable.of(storeData.eff) : (ncmpEffGuid ? this._db.getReadsByNeighborhood(ncmpEffGuid, dateRange) : Observable.of([])),
-        storeData ? Observable.of(storeData.rank) : this._db.getNeighborhoodComparisonRanks(meter, dateRange)
+        isUsageDataAvail ? Observable.of(storeData.usage) : this._db.getReadsByDateRange(meter._guid, dateRange),
+
+        isAvgDataAvail
+          ? Observable.of(storeData.avg)
+          : (ncmpAvgGuid ? this._db.getReadsByNeighborhood(ncmpAvgGuid, dateRange) : Observable.of([])),
+
+        isEffDataAvail
+          ? Observable.of(storeData.eff)
+          : (ncmpEffGuid ? this._db.getReadsByNeighborhood(ncmpEffGuid, dateRange) : Observable.of([])),
+
+        isRankAvail ? Observable.of(storeData.rank) : this._db.getNeighborhoodComparisonRanks(meter, dateRange)
       ])
+      .take(1)
       .timeout(environment.apiTimeout) // Times out if nothing comes back.
-      .catch(error => Observable.of([meter, group, dateRange, [], [], [], null, true]));
+      .catch(error => {
+        return Observable.of([group, meter, dateRange, [], [], [], null, true]);
+      });
     })
-    .flatMap((data: any[]) => {
+    .map((data: any[]) => {
       const [group, meter, dateRange, usage = [], avg = [], eff = [], rank, timedOut = false] = data;
 
-      if (timedOut) {
-        return [new AddComparison(null)];
-      }
-
       // No need to display chart if avg and eff data is not available.
-      if (!avg.length && !eff.length) {
+      if ((!avg.length && !eff.length) || timedOut) {
         const payload = {
           guid: meter._guid,
           startDate: dateRange.startDate,
@@ -103,13 +105,11 @@ export class ComparisonEffects {
           eff: [],
           effCosts: null,
           calcReads: [],
-          rank: null
+          rank: null,
+          timedOut
         };
 
-        return [
-          new AddNeighborhoodGroup(group),
-          new AddComparison(payload)
-        ];
+        return new AddComparison(payload);
       }
 
       // Calculate deltas and costs of average data.
@@ -150,9 +150,9 @@ export class ComparisonEffects {
         else {
           calcReads.push({
             date: loopDeltas[i].date,
-            line1: useDeltas[i].line1 || 0,
-            line2: avgDeltas[i].line1 || 0,
-            line3: effDeltas[i].line1 || 0
+            line1: effDeltas[i].line1 || 0,
+            line2: useDeltas[i].line1 || 0,
+            line3: avgDeltas[i].line1 || 0
           });
         }
       }
@@ -168,13 +168,11 @@ export class ComparisonEffects {
         eff,
         effCosts,
         calcReads,
-        rank
+        rank,
+        timedOut
       };
 
-      return [
-        new AddNeighborhoodGroup(group),
-        new AddComparison(payload)
-      ];
+      return new AddComparison(payload);
     });
 
   constructor(

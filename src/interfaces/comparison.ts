@@ -12,5 +12,6 @@ export interface IComparison {
   usage: any[];
   usageCosts: IUsage;
   calcReads: ILineItem[];
-  rank: number
+  rank: number,
+  timedOut: boolean
 }

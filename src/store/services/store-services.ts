@@ -23,7 +23,8 @@ import {
 	LoadingReads,
 	LoadReadsByMeters,
 	LoadReadsByDateRange,
-	LoadingComparisonReads
+	LoadingComparisonReads,
+	ResetComparisonTimeout
 } from "../actions";
 
 
@@ -107,9 +108,9 @@ export class StoreServices {
 		this._store.dispatch(new AddReads(reads));
 	}
 
-	public loadReadsByDateRange(meter: IMeter, timeSpan: string, startDate: Date, endDate: Date) {
+	public loadReadsByDateRange(meter: IMeter, dateRange: IDateRange) {
 		this._store.dispatch(new LoadingReads());
-		this._store.dispatch(new LoadReadsByDateRange({ meter, timeSpan, startDate, endDate }));
+		this._store.dispatch(new LoadReadsByDateRange({ meter, dateRange }));
 	}
 
 	public selectReadsLoading() {
@@ -173,6 +174,9 @@ export class StoreServices {
   }
 
 	public loadNeighborhoodReads(meter: IMeter, dateRange: IDateRange) {
+		const guid = meter._guid;
+
+		this._store.dispatch(new ResetComparisonTimeout({ guid, dateRange }));
 		this._store.dispatch(new LoadingComparisonReads());
 		this._store.dispatch(new TriggerComparisonReads({ meter, dateRange }));
 	}

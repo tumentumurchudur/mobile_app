@@ -12,6 +12,7 @@ import { AddMeterFormComponent } from './add-meter-form/add-meter-form';
 import { AppSpinnerComponent } from './app-spinner/app-spinner';
 import { EditMeterFormComponent } from './edit-meter-form/edit-meter-form';
 import { NeighborhoodComparisonComponent } from './neighborhood-comparison/neighborhood-comparison';
+import { RetryButtonComponent } from './retry-button/retry-button';
 
 @NgModule({
 	declarations: [
@@ -23,7 +24,8 @@ import { NeighborhoodComparisonComponent } from './neighborhood-comparison/neigh
     AddMeterFormComponent,
     AppSpinnerComponent,
     EditMeterFormComponent,
-    NeighborhoodComparisonComponent
+    NeighborhoodComparisonComponent,
+    RetryButtonComponent
 	],
 	imports: [
     CommonModule,
@@ -39,7 +41,8 @@ import { NeighborhoodComparisonComponent } from './neighborhood-comparison/neigh
     AddMeterFormComponent,
     AppSpinnerComponent,
     EditMeterFormComponent,
-    NeighborhoodComparisonComponent
+    NeighborhoodComparisonComponent,
+    RetryButtonComponent
 	]
 })
 export class ComponentsModule {}
