@@ -33,7 +33,7 @@ export class NeighborhoodComparisonComponent implements OnChanges {
   private _consumptions: number[] = [];
 
   public ngOnChanges() {
-    if (!this.comparisonReads || !this.comparisonReads.length) {
+    if (!this.comparisonReads || !this.comparisonReads.length || this.loading) {
       this._allData = [];
       return;
     }

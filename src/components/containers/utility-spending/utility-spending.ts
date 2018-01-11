@@ -145,14 +145,9 @@ export class UtilitySpendingComponent implements OnInit {
       }
 
       // Initiate request to load data from database for given guid, start and end dates.
-      this._storeServices.loadReadsByDateRange(
-        meter,
-        timeSpan,
-        this._selectedDateRanges[index].startDate,
-        this._selectedDateRanges[index].endDate
-      );
+      this._storeServices.loadReadsByDateRange(meter, this._selectedDateRanges[index]);
     } else if (this._currentNavigationItems[index] === this._navigationItems.COMPARISON) {
-      const { timeSpan, startDate, endDate } = this._selectedDateRanges[index];
+      const { startDate, endDate } = this._selectedDateRanges[index];
 
       // Set default dates if start and end dates are empty.
       if (!startDate || !endDate) {
@@ -160,14 +155,7 @@ export class UtilitySpendingComponent implements OnInit {
       }
 
       // Trigger a request to load neighborhood reads from API.
-      this._storeServices.loadNeighborhoodReads(
-        meter,
-        {
-          timeSpan,
-          startDate: this._selectedDateRanges[index].startDate,
-          endDate: this._selectedDateRanges[index].endDate
-        }
-      );
+      this._storeServices.loadNeighborhoodReads(meter, this._selectedDateRanges[index]);
     }
   }
 
@@ -175,24 +163,14 @@ export class UtilitySpendingComponent implements OnInit {
     // Sets default start and end dates.
     const { startDate, endDate, dateFormat } = ChartHelper.getDefaultDateRange(timeSpan);
 
-    this._selectedDateRanges[index].timeSpan = timeSpan;
-    this._selectedDateRanges[index].startDate = startDate;
-    this._selectedDateRanges[index].endDate = endDate;
-    this._selectedDateRanges[index].dateFormat = dateFormat;
-
+    // Changes current time span for the given meter.
+    this._selectedDateRanges[index] = { timeSpan, startDate, endDate, dateFormat };
     this._currentMeterIndex = index;
 
     if (page === "timeTravel") {
-      this._storeServices.loadReadsByDateRange(meter, timeSpan, startDate, endDate);
+      this._storeServices.loadReadsByDateRange(meter, this._selectedDateRanges[index]);
     } else {
-      this._storeServices.loadNeighborhoodReads(
-        meter,
-        {
-          timeSpan,
-          startDate: this._selectedDateRanges[index].startDate,
-          endDate: this._selectedDateRanges[index].endDate
-        }
-      );
+      this._storeServices.loadNeighborhoodReads(meter, this._selectedDateRanges[index]);
     }
   }
 
@@ -203,19 +181,10 @@ export class UtilitySpendingComponent implements OnInit {
   private _onTimeTravelClick(direction: string, meter: IMeter, index: number, page: string): void {
     this._selectedDateRanges[index] = ChartHelper.getDateRange(direction, this._selectedDateRanges[index]);
 
-    const { timeSpan, startDate, endDate } = this._selectedDateRanges[index];
-
     if (page === "timeTravel") {
-      this._storeServices.loadReadsByDateRange(meter, timeSpan, startDate, endDate);
+      this._storeServices.loadReadsByDateRange(meter, this._selectedDateRanges[index]);
     } else {
-      this._storeServices.loadNeighborhoodReads(
-        meter,
-        {
-          timeSpan,
-          startDate: this._selectedDateRanges[index].startDate,
-          endDate: this._selectedDateRanges[index].endDate
-        }
-      );
+      this._storeServices.loadNeighborhoodReads(meter,this._selectedDateRanges[index]);
     }
   }
 
@@ -254,10 +223,23 @@ export class UtilitySpendingComponent implements OnInit {
     this._currentNavigationItems[index] = this._navigationItems.ARC_CHART;
   }
 
-  private _onRetry(meter: IMeter, dateRange: IDateRange) {
-    const {  timeSpan, startDate, endDate } = dateRange;
+  private _onRetryTimeTravel(meter: IMeter, dateRange: IDateRange) {
+    this._storeServices.loadReadsByDateRange(meter, dateRange);
+  }
 
-    this._storeServices.loadReadsByDateRange(meter, timeSpan, startDate, endDate);
+  private _onRetryComparison(meter: IMeter, dateRange: IDateRange) {
+    this._storeServices.loadNeighborhoodReads(meter, dateRange);
+  }
+
+  private _isComparisonReadsTimedOut(comparisonReads: IComparison[], meter: IMeter, dateRange: IDateRange): boolean {
+    const { startDate, endDate } = dateRange;
+    const data = comparisonReads.find(read => {
+      return read.guid === meter._guid &&
+        read.startDate.toString() === startDate.toString() &&
+        read.endDate.toString() === endDate.toString()
+    });
+
+    return data ? data.timedOut : false;
   }
 
   private _onSaveEditMeter(meter: IMeter, index: number): void {
