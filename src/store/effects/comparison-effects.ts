@@ -85,7 +85,9 @@ export class ComparisonEffects {
       ])
       .take(1)
       .timeout(environment.apiTimeout) // Times out if nothing comes back.
-      .catch(error => Observable.of([group, meter, dateRange, [], [], [], null, true]));
+      .catch(error => {
+        return Observable.of([group, meter, dateRange, [], [], [], null, true]);
+      });
     })
     .map((data: any[]) => {
       const [group, meter, dateRange, usage = [], avg = [], eff = [], rank, timedOut = false] = data;
