@@ -116,7 +116,7 @@ export class StoreServices {
 		return this._store.select(state => state.reads.loading);
 	}
 
-	public selectReadsData() {
+	public selectReadsData(): Observable<IReads[]> {
 		return this._store.select(state => state.reads.data);
 	}
 
@@ -177,11 +177,11 @@ export class StoreServices {
 		this._store.dispatch(new TriggerComparisonReads({ meter, dateRange }));
 	}
 
-	public selectComparisonReads() {
+	public selectComparisonReads(): Observable<IComparison[]> {
 		return this._store.select(state => state.comparison.data);
 	}
 
-	public selectComparisonGroup() {
+	public selectComparisonGroup(): Observable<any> {
 		return this._store.select(state => state.comparison.neighborhoodGroup);
 	}
 

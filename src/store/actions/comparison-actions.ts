@@ -19,7 +19,7 @@ export class AddComparison implements Action {
 	public readonly type = ADD_COMPARISON_READS;
 	public payload: IComparison | null;
 
-	constructor(private _payload: IComparison) {
+	constructor(private _payload: IComparison | null) {
 		this.payload = _payload;
 	}
 }

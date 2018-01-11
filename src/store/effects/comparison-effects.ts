@@ -4,14 +4,15 @@ import { Effect, Actions } from "@ngrx/effects";
 import { StoreServices } from "../../store/services";
 
 import { Observable } from "rxjs/rx";
-import { Subscription } from "rxjs/Subscription";
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/switchMap";
 import "rxjs/add/observable/combineLatest";
 import "rxjs/add/operator/debounceTime";
+import "rxjs/add/operator/timeout";
 
 import { DatabaseProvider } from "../../providers";
 import { neighborhoodConfigs } from "../../configs";
+import { environment } from "../../environments";
 
 import { TRIGGER_COMPARISON_READS, AddComparison, AddNeighborhoodGroup } from "../actions";
 import { IComparison, IMeter } from "../../interfaces";
@@ -28,64 +29,86 @@ export class ComparisonEffects {
     .switchMap((data: any) => {
       const { meter, dateRange } = data;
 
-      let group = null;
-      const subscription: Subscription = this._storeServices.selectComparisonGroup()
-        .subscribe((group: any) => {
-          group = group;
-        });
-
       return Observable.combineLatest(
+        this._storeServices.selectComparisonGroup().take(1),
         Observable.of(meter),
-        Observable.of(dateRange),
-        group ? Observable.of(group) : this._db.getNeighborhoodGroup(meter),
-        Observable.of(subscription)
+        Observable.of(dateRange)
       );
     })
-    .switchMap((data: any) => {
-      const [ meter, dateRange, group, groupSubscription ] = data;
-      const { startDate, endDate } = dateRange;
+    .switchMap((data: any[]) => {
+      const [ group, meter, dateRange ] = data;
 
-      if (groupSubscription) {
-        groupSubscription.unsubscribe();
-      }
+      return Observable.combineLatest([
+        Object.keys(group).length ? Observable.of(group) : this._db.getNeighborhoodGroup(meter),
+        Observable.of(meter),
+        Observable.of(dateRange)
+      ]);
+    })
+    .switchMap((data: any[]) => {
+      const [ group, meter, dateRange ] = data;
 
-      const neighborhoodGroupID = group["group_id"] || null;
-      const ncmpAvgGuid = `${neighborhoodGroupID}${neighborhoodConfigs.NEIGHBORHOOD_COMP_AVG_GUID}`;
-      const ncmpEffGuid = `${neighborhoodGroupID}${neighborhoodConfigs.NEIGHBORHOOD_COMP_EFF_GUID}`;
+      const neighborhoodGroupID = group && group.group_id ? group.group_id : null;
+      const ncmpAvgGuid = neighborhoodGroupID ? `${neighborhoodGroupID}${neighborhoodConfigs.NEIGHBORHOOD_COMP_AVG_GUID}` : null;
+      const ncmpEffGuid = neighborhoodGroupID ? `${neighborhoodGroupID}${neighborhoodConfigs.NEIGHBORHOOD_COMP_EFF_GUID}` : null;
 
-      // Check if data is available in the store.
-      let storeData;
-      const subscription: Subscription = this._storeServices.selectComparisonReads()
-        .subscribe((data: IComparison[]) => {
-          storeData = data.find(read => {
-            return read.guid === meter._guid &&
-              read.startDate.toString() === startDate.toString() &&
-              read.endDate.toString() === endDate.toString();
-          });
-      });
-
-      return Observable.combineLatest(
-        Observable.of(subscription),
+      return Observable.combineLatest([
         Observable.of(group),
         Observable.of(meter),
         Observable.of(dateRange),
-        storeData ? Observable.of(storeData.usage) : this._db.getReadsByDateRange(meter._guid, startDate, endDate),
-        storeData ? Observable.of(storeData.avg) : this._db.getReadsByNeighborhood(ncmpAvgGuid, startDate, endDate),
-        storeData ? Observable.of(storeData.eff) : this._db.getReadsByNeighborhood(ncmpEffGuid, startDate, endDate)
-      );
+        this._storeServices.selectComparisonReads().take(1),
+        ncmpAvgGuid ? Observable.of(ncmpAvgGuid) : Observable.of(null),
+        ncmpEffGuid ? Observable.of(ncmpEffGuid) : Observable.of(null)
+      ]);
+    })
+    .switchMap((data: any[]) => {
+      const [ group, meter, dateRange, reads, ncmpAvgGuid, ncmpEffGuid ] = data;
+      const { startDate, endDate } = dateRange;
+
+      // Check if data is available in the store.
+      const storeData = reads.find(read => {
+        return read.guid === meter._guid &&
+          read.startDate.toString() === startDate.toString() &&
+          read.endDate.toString() === endDate.toString();
+      });
+
+      return Observable.combineLatest([
+        Observable.of(group),
+        Observable.of(meter),
+        Observable.of(dateRange),
+        storeData ? Observable.of(storeData.usage) : this._db.getReadsByDateRange(meter._guid, dateRange),
+        storeData ? Observable.of(storeData.avg) : (ncmpAvgGuid ? this._db.getReadsByNeighborhood(ncmpAvgGuid, dateRange) : Observable.of([])),
+        storeData ? Observable.of(storeData.eff) : (ncmpEffGuid ? this._db.getReadsByNeighborhood(ncmpEffGuid, dateRange) : Observable.of([])),
+        storeData ? Observable.of(storeData.rank) : this._db.getNeighborhoodComparisonRanks(meter, dateRange)
+      ])
+      .timeout(environment.apiTimeout) // Times out if nothing comes back.
+      .catch(error => Observable.of([meter, group, dateRange, [], [], [], null, true]));
     })
     .flatMap((data: any[]) => {
-      const [ subscription, group, meter, dateRange, usage = [], avg = [], eff = [] ] = data;
+      const [group, meter, dateRange, usage = [], avg = [], eff = [], rank, timedOut = false] = data;
 
-      if (subscription) {
-        subscription.unsubscribe();
+      if (timedOut) {
+        return [new AddComparison(null)];
       }
 
       // No need to display chart if avg and eff data is not available.
       if (!avg.length && !eff.length) {
+        const payload = {
+          guid: meter._guid,
+          startDate: dateRange.startDate,
+          endDate: dateRange.endDate,
+          usage: [],
+          usageCosts: null,
+          avg: [],
+          avgCosts: null,
+          eff: [],
+          effCosts: null,
+          calcReads: [],
+          rank: null
+        };
+
         return [
           new AddNeighborhoodGroup(group),
-          new AddComparison(null)
+          new AddComparison(payload)
         ];
       }
 
@@ -111,14 +134,7 @@ export class ComparisonEffects {
       }
 
       let calcReads = [];
-      let loopDeltas;
-      if (useDeltas.length) {
-        loopDeltas = useDeltas;
-      } else if (avgDeltas.length) {
-        loopDeltas = avgDeltas;
-      } else {
-        loopDeltas = effDeltas;
-      }
+      const loopDeltas = useDeltas.length ? useDeltas : avgDeltas;
 
       for (let i = 0; i < loopDeltas.length; i++) {
         // Check if consumption data is available.
@@ -130,24 +146,7 @@ export class ComparisonEffects {
             line3: effDeltas[i].line1 || 0
           });
         }
-        // Check average data.
-        else if (!avgDeltas.length) {
-          calcReads.push({
-            date: loopDeltas[i].date,
-            line1: useDeltas[i].line1 || 0,
-            line3: effDeltas[i].line1 || 0
-          });
-        }
-        // Check efficiency data.
-        else if (!effDeltas.length) {
-          calcReads.push({
-            date: loopDeltas[i].date,
-            line1: useDeltas[i].line1 || 0,
-            line2: avgDeltas[i].line1 || 0
-          });
-        }
-        // All data is available.
-        // Consumption, average and efficiency
+        // Data for all three charts is available.
         else {
           calcReads.push({
             date: loopDeltas[i].date,
@@ -168,7 +167,8 @@ export class ComparisonEffects {
         avgCosts,
         eff,
         effCosts,
-        calcReads
+        calcReads,
+        rank
       };
 
       return [

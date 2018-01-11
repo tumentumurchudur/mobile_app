@@ -14,23 +14,8 @@ utility-spending {
 			position: relative;
       height: 3vh;
 
-			.status {
-				position: absolute;
-				top: -10px;
-				right: 0;
-				width: 0;
-				height: 0;
-				border-style: solid;
-				border-width: 0 9.5vh 10vh 0;
-				border-color: transparent #C22A17 transparent transparent;
-			}
-
-			.exclamation-icon {
-				position: absolute;
-				height: 5.5vh;
-				width: 5.5vh;
-				top: -1vh;
-				right: 0.25vh;
+			.meter-name {
+				font-size: 22px;
 			}
 		}
 
@@ -40,7 +25,6 @@ utility-spending {
       max-width: 450px;
 			text-align: center;
 			position: relative;
-		}
 
     .edit-card-content {
       height: 70vh;
@@ -57,19 +41,31 @@ utility-spending {
 		.meter-name {
 			font-size: 3vh;
 		}
+			.goal-status {
+				position: relative;
 
-		.spending-goal {
-      color: $header-text;
-			text-align: center;
-			font-size: 2.75vh;
-			margin-bottom: 5px;
-		}
+				.status {
+					position: absolute;
+					bottom: -9px;
+					right: 0;
+					width: 0;
+					height: 0;
+					border-style: solid;
+					border-width: 0 55px 55px 0;
+					border-color: transparent #C22A17 transparent transparent;
+				}
 
-		.actual-cost {
-			color: $dusty-gray;
-			text-align: center;
-			font-size: 48px;
-		}
+				.exclamation-icon {
+					position: absolute;
+					height: 5.5vh;
+					width: 5.5vh;
+					bottom: 7px;
+					right: 0.25vh;
+				}
+			}
+
+			.timeout-container {
+				margin-top: 1rem;
 
 		.timespan-cost {
 			text-align: center;
@@ -81,39 +77,36 @@ utility-spending {
       font-size: 2.75vh;
       color: $header-text;
     }
-
-		.show-all {
-			text-align: right;
-			margin-right: 20px;
-		}
-
-    .legends {
-      display: flex;
-      justify-content: space-around;
-      position: relative;
-      bottom: 20px;
-
-      .legend {
-				display: flex;
-				flex-direction: column;
-				align-items: center;
-
-				.circle {
-					border-radius: 50%;
-					width: 12px;
-					height: 12px;
-					margin-right: 3px;
+				.refresh-icon {
+					font-size: 6.2rem;
 				}
 
-				.series-label {
-					display: flex;
-					align-items: center;
+				.timeout-text {
+					font-size: 1.2rem;
 				}
+			}
 
-				.cost-label {
-					font-size: 20px;
-					margin-top: 20px;
-				}
+			.spending-goal {
+				color: $header-text;
+				text-align: center;
+				font-size: 2.75vh;
+				margin-bottom: 5px;
+			}
+
+			.actual-cost {
+				color: $dusty-gray;
+				text-align: center;
+				font-size: 48px;
+			}
+
+			.timespan-cost {
+				text-align: center;
+				font-size: 48px;
+			}
+
+			.timespan-usage {
+				font-size: 15px;
+			}
 
 				.usage-label {
 					display: flex;
@@ -122,10 +115,41 @@ utility-spending {
         }
       }
 		}
+			.show-all {
+				text-align: right;
+				margin-right: 20px;
+			}
 
-		.edit-meter-form {
-			margin: 0;
-		}
-	}
+			.rank {
+				position: absolute;
+				top: -46px;
+				right: 0;
+				height: 58px;
+				width: 58px;
+				text-align: right;
+				padding: 1px 1px 0 0;
+				color: $white;
+				font-size: 20px;
+				background-color: #2075CB;
+				border-left: 2px solid #2075CB;
+				border-bottom: 2px solid #2075CB;
+				border-bottom-left-radius: 100%;
 
+				.percentile {
+					padding-right: 3px;
+					word-spacing: -3px;
+				}
+
+				.rank-text {
+					padding-right: 7px;
+					font-size: 12px;
+
+					.usage-label {
+						display: flex;
+						font-size: 15px;
+					}
+				}
+		  }
 }
+
+

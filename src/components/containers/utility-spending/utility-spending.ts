@@ -38,6 +38,7 @@ export class UtilitySpendingComponent implements OnInit {
   private _currentNavigationItems: string[] = [];
   private _currentMeterIndex: number = 0;
   private _selectedDateRanges: IDateRange[] = [];
+  private _ranks: number[] = [];
   private _arcChartColors: string[] = [];
   private _arcChartCostState: string[] = [];
 
@@ -227,9 +228,22 @@ export class UtilitySpendingComponent implements OnInit {
     });
 
     if (data) {
-      return { deltas: data.deltas, cost: data.cost };
+      return { deltas: data.deltas, cost: data.cost, timedOut: data.timedOut };
     }
-    return { deltas: [], cost: null };
+    return { deltas: [], cost: null, timedOut: false };
+  }
+
+  private _isNeighborhoodRankAvailable(comparisonReads: IComparison[], meter: IMeter, index: number): boolean {
+    const { startDate, endDate } = this._selectedDateRanges[index];
+    const data = comparisonReads.find(read => {
+      return read.guid === meter._guid &&
+        read.startDate.toString() === startDate.toString() &&
+        read.endDate.toString() === endDate.toString()
+    });
+
+    this._ranks[index] = data ? data.rank : null;
+
+    return !!this._ranks[index];
   }
 
   private _showDateRange(index: number): string {
@@ -238,6 +252,12 @@ export class UtilitySpendingComponent implements OnInit {
 
   private _onCancelEditMeter(meter: IMeter, index: number): void {
     this._currentNavigationItems[index] = this._navigationItems.ARC_CHART;
+  }
+
+  private _onRetry(meter: IMeter, dateRange: IDateRange) {
+    const {  timeSpan, startDate, endDate } = dateRange;
+
+    this._storeServices.loadReadsByDateRange(meter, timeSpan, startDate, endDate);
   }
 
   private _onSaveEditMeter(meter: IMeter, index: number): void {
