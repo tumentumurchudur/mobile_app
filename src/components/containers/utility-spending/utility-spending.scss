@@ -7,7 +7,8 @@ utility-spending {
 
 	.chart-card {
 		border-radius: 4px;
-		margin: 0 10px 10px 10px;
+		margin: 0 12px 10px 12px;
+    width: calc(100% - 24px);
 		.utilitiy-spending-header {
       color: $header-text;
       margin: 1vh 0 1vh 2vh;
