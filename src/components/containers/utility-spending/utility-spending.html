@@ -72,13 +72,11 @@
 
               <!-- Retry icon -->
               <div *ngIf="data.timedOut" class="timeout-container">
-                <ion-icon
-                  class="refresh-icon"
-                  ios="ios-refresh-circle"
-                  md="md-refresh-circle"
-                  (click)="_onRetryTimeTravel(meter, _selectedDateRanges[i])"
-                ></ion-icon>
-                <div class="timeout-text">Tap to retry.</div>
+                <retry-button
+                  [text]="'Tap to retry.'"
+                  (clicked)="_onRetryTimeTravel(meter, _selectedDateRanges[i])"
+                >
+                </retry-button>
               </div>
 
               <line-chart
@@ -139,13 +137,10 @@
               *ngIf="_isComparisonReadsTimedOut(compReads, meter, _selectedDateRanges[i])"
               class="timeout-container"
             >
-              <ion-icon
-                class="refresh-icon"
-                ios="ios-refresh-circle"
-                md="md-refresh-circle"
-                (click)="_onRetryComparison(meter, _selectedDateRanges[i])"
-              ></ion-icon>
-              <div class="timeout-text">Tap to retry.</div>
+              <retry-button
+                [text]="'Tap to retry.'"
+                (clicked)="_onRetryComparison(meter, _selectedDateRanges[i])"
+              ></retry-button>
             </div>
           </div>
 
