@@ -3,6 +3,7 @@
 edit-meter-form {
   .form-header {
     margin: 0 !important;
+    background-color: #d5dde2;
   }
 
   ion-navbar {
@@ -10,6 +11,10 @@ edit-meter-form {
     padding: 4px !important;
     min-height: 45px !important;
     color: #999EA8 !important;
+  }
+
+  .header-ios .toolbar-ios:last-child .toolbar-background-ios {
+    border-bottom: none !important;
   }
 
   .cancel-btn {
@@ -20,7 +25,7 @@ edit-meter-form {
 
   .edit-title{
     text-align: center;
-    font-size: 1.5rem;
+    font-size: 17px;
   }
 
   .delete-btn {

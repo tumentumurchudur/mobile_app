@@ -7,16 +7,11 @@
     <div *ngFor="let meter of meters; let i = index">
       <ion-card class="chart-card">
         <!-- Header -->
-<<<<<<< HEAD
         <div
           *ngIf="_currentNavigationItems[i] !== _navigationItems.EDIT"
           class="utilitiy-spending-header"
         >
           <div [class.status]="_isUsageCostBehindGoal(meter)"></div>
-          <img class="exclamation-icon" src="assets/exclamation.svg">
-=======
-        <div class="header">
->>>>>>> master
           <div class="meter-name">{{ meter._name }}</div>
         </div>
 
