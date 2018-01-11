@@ -1,5 +1,5 @@
 export const environment = {
   production: false,
   cacheDuration: 30, // in minutes,
-  apiTimeout: 2000
+  apiTimeout: 1000
 }

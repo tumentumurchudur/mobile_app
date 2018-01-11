@@ -304,7 +304,7 @@ export class DatabaseProvider {
         .then(snapshot => {
           const data = snapshot.val();
           let reads = [];
-
+          console.log("getting...", data);
           if (data) {
             reads = Object.keys(data).map(key => {
               return { date: key, delta: data[key].delta };

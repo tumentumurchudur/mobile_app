@@ -17,10 +17,6 @@ export const comparisonReducerMap: ActionReducerMap<ComparisonState> = {
 export function comparisonReducer(state = { data: [], loading: false, neighborhoodGroup: {} }, action): any {
 	switch (action.type) {
 		case ActionTypes.ADD_COMPARISON_READS:
-			if (!action.payload) {
-				return Object.assign({}, state, { loading: false });
-			}
-
 			const { guid = null, startDate = null, endDate = null } = action.payload;
 			const filteredData = state.data.filter(d => {
 				return d.guid !== guid ||
@@ -31,6 +27,21 @@ export function comparisonReducer(state = { data: [], loading: false, neighborho
 			return Object.assign({}, state, { data: filteredData.concat(action.payload) }, { loading: false });
 		case ActionTypes.LOADING_COMPARISON_READS:
 			return Object.assign({}, state, { loading: true });
+		case ActionTypes.RESET_COMPARISON_TIMEOUT:
+			const currentReads = state.data.find(d => {
+				return d.guid === action.payload.guid ||
+					d.startDate.toString() === action.payload.dateRange.startDate.toString() ||
+					d.endDate.toString() === action.payload.dateRange.endDate.toString();
+			});
+
+			if (!currentReads) {
+				return state;
+			}
+
+			const updatedReads = Object.assign({}, currentReads, { timedOut: false });
+			const otherReads = state.data.filter(d => d.guid !== updatedReads.guid);
+
+			return Object.assign({}, state, { data: otherReads.concat(updatedReads) });
 		case ActionTypes.ADD_NEIGHBORHOOD_GROUP:
 			return Object.assign({}, state, { neighborhoodGroup: action.payload });
 		default:

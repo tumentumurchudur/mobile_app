@@ -1,10 +1,11 @@
 import { Action } from "@ngrx/store";
-import { IMeter, IComparison } from "../../interfaces";
+import { IMeter, IComparison, IDateRange } from "../../interfaces";
 
 export const TRIGGER_COMPARISON_READS: string = "[Comparison] TRIGGER COMPARISON READS";
 export const ADD_COMPARISON_READS: string = "[Comparison] ADD COMPARISON READS";
 export const LOADING_COMPARISON_READS: string = "[Comparison] LOADING COMPARISON READS";
 export const ADD_NEIGHBORHOOD_GROUP: string = "[Comparison] ADD NEIGHBORHOOD GROUP";
+export const RESET_COMPARISON_TIMEOUT: string = "[Comparison] RESET COMPARISON TIMEOUT";
 
 export class TriggerComparisonReads implements Action {
 	public readonly type = TRIGGER_COMPARISON_READS;
@@ -34,6 +35,15 @@ export class AddNeighborhoodGroup implements Action {
 	public payload: any;
 
 	constructor(private _payload: any) {
+		this.payload = _payload;
+	}
+}
+
+export class ResetComparisonTimeout implements Action {
+	public readonly type = RESET_COMPARISON_TIMEOUT;
+	public payload: { guid: string, dateRange: IDateRange };
+
+	constructor(private _payload: { guid: string, dateRange: IDateRange }) {
 		this.payload = _payload;
 	}
 }

@@ -87,9 +87,11 @@ export {
   TriggerComparisonReads,
   LoadingComparisonReads,
   AddNeighborhoodGroup,
+  ResetComparisonTimeout,
 
   ADD_COMPARISON_READS,
   TRIGGER_COMPARISON_READS,
   LOADING_COMPARISON_READS,
-  ADD_NEIGHBORHOOD_GROUP
+  ADD_NEIGHBORHOOD_GROUP,
+  RESET_COMPARISON_TIMEOUT
 } from "./comparison-actions"
