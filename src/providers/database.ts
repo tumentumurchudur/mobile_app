@@ -401,18 +401,14 @@ export class DatabaseProvider {
   public getNeighborhoodGroup(meter: IMeter): Observable<any> {
     const { _guid, _utilityType } = meter;
 
-    return Observable.combineLatest(
-      this._authProvider.getTokenId(),
-    ).switchMap((data: any) => {
-      const [token] = data;
-      const header = new HttpHeaders().set("Authorization", neighborhoodConfigs.AUTHORIZATION);
+    return this._authProvider.getTokenId()
+      .switchMap((token: any) => {
+        const header = new HttpHeaders().set("Authorization", neighborhoodConfigs.AUTHORIZATION);
 
-      return this._httpClient
-        .get(`${neighborhoodConfigs.NEIGHBORHOOD_COMP_DEV_REST_URL}?guid=${_guid}&token=${token}&utilityType=${_utilityType}`, { headers: header })
-        .catch(error => {
-          return Observable.of(null);
-        });
-    });
+        return this._httpClient
+          .get(`${neighborhoodConfigs.NEIGHBORHOOD_COMP_DEV_REST_URL}?guid=${_guid}&token=${token}&utilityType=${_utilityType}`, { headers: header })
+          .catch(error => Observable.of(null));
+      });
   }
 
   public getNeighborhoodComparisonRanks(meter: IMeter, dateRange: IDateRange): Observable<number> {

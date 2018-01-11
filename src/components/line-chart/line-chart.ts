@@ -197,7 +197,7 @@ export class LineChartComponent implements OnChanges {
       .attr("d", lineFunc(lineData))
       .attr("transform", "translate(20, 10)")
       .attr("stroke", color)
-      .attr("stroke-width", "1");
+      .attr("stroke-width", "2");
   }
 
   private _addDots(svg: any, x: any, y: any, colName: string, color: string) {
