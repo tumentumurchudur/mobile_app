@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from "@angular/core";
+import { Component, EventEmitter, Output, Input } from "@angular/core";
 
 @Component({
   selector: "retry-button",
