@@ -174,7 +174,9 @@ export class StoreServices {
   }
 
 	public loadNeighborhoodReads(meter: IMeter, dateRange: IDateRange) {
-		this._store.dispatch(new ResetComparisonTimeout({ guid: meter._guid, dateRange }));
+		const guid = meter._guid;
+
+		this._store.dispatch(new ResetComparisonTimeout({ guid, dateRange }));
 		this._store.dispatch(new LoadingComparisonReads());
 		this._store.dispatch(new TriggerComparisonReads({ meter, dateRange }));
 	}

@@ -147,7 +147,7 @@ export class UtilitySpendingComponent implements OnInit {
       // Initiate request to load data from database for given guid, start and end dates.
       this._storeServices.loadReadsByDateRange(meter, this._selectedDateRanges[index]);
     } else if (this._currentNavigationItems[index] === this._navigationItems.COMPARISON) {
-      const { timeSpan, startDate, endDate } = this._selectedDateRanges[index];
+      const { startDate, endDate } = this._selectedDateRanges[index];
 
       // Set default dates if start and end dates are empty.
       if (!startDate || !endDate) {
@@ -155,14 +155,7 @@ export class UtilitySpendingComponent implements OnInit {
       }
 
       // Trigger a request to load neighborhood reads from API.
-      this._storeServices.loadNeighborhoodReads(
-        meter,
-        {
-          timeSpan,
-          startDate: this._selectedDateRanges[index].startDate,
-          endDate: this._selectedDateRanges[index].endDate
-        }
-      );
+      this._storeServices.loadNeighborhoodReads(meter, this._selectedDateRanges[index]);
     }
   }
 
@@ -185,8 +178,6 @@ export class UtilitySpendingComponent implements OnInit {
 
   private _onTimeTravelClick(direction: string, meter: IMeter, index: number, page: string): void {
     this._selectedDateRanges[index] = ChartHelper.getDateRange(direction, this._selectedDateRanges[index]);
-
-    const { timeSpan, startDate, endDate } = this._selectedDateRanges[index];
 
     if (page === "timeTravel") {
       this._storeServices.loadReadsByDateRange(meter, this._selectedDateRanges[index]);
