@@ -16,6 +16,10 @@ export const readsReducerMap: ActionReducerMap<ReadsState> = {
 export function readsReducer(state = { data: [], loading: false }, action): any {
 	switch (action.type) {
 		case ActionTypes.ADD_READS:
+			if (!action.payload) {
+				return Object.assign({}, state, { loading: false });
+			}
+
 			const { guid = null, startDate = null, endDate = null } = action.payload;
 			const filteredData = state.data.filter(s => {
 				return s.guid !== guid ||

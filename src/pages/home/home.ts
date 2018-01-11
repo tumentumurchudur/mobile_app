@@ -18,7 +18,7 @@ export class HomePage implements OnInit, OnDestroy {
   private _subscriptions: Subscription[] = [];
 
   ngOnInit() {
-    const subscription = this._store.select(state => state.user)
+    const subscription: Subscription = this._store.select(state => state.user)
       .subscribe((user: IUser) => {
         this._user = user;
       });

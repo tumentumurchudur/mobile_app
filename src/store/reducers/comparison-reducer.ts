@@ -18,11 +18,10 @@ export function comparisonReducer(state = { data: [], loading: false, neighborho
 	switch (action.type) {
 		case ActionTypes.ADD_COMPARISON_READS:
 			if (!action.payload) {
-				return Object.assign({}, state, { data: [], loading: false });
+				return Object.assign({}, state, { loading: false });
 			}
 
 			const { guid = null, startDate = null, endDate = null } = action.payload;
-
 			const filteredData = state.data.filter(d => {
 				return d.guid !== guid ||
 					d.startDate.toString() !== startDate.toString() ||

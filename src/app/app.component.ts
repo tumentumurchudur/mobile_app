@@ -13,9 +13,11 @@ export class MyApp {
     platform.ready().then(() => {
       statusBar.overlaysWebView(false);
       statusBar.styleDefault();
+      statusBar.backgroundColorByHexString("#EDEFF2");
       keyboard.disableScroll(true);
       if (platform.is("android")) {
         statusBar.overlaysWebView(false);
+        statusBar.styleDefault();
       }
     });
   }

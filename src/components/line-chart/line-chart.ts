@@ -19,6 +19,7 @@ export class LineChartComponent implements OnChanges {
   @Input() showAreaFill: boolean = true;
   @Input() showXAxisLabels: boolean = true;
   @Input() showYAxisLabels: boolean = true;
+  @Input() noDataText: string = "No data";
 
   private element: any;
   private margin: any = { left: 10, right: 10, top: 10, bottom: 10 };
@@ -30,7 +31,10 @@ export class LineChartComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     if (changes.data && changes.data.currentValue !== changes.data.previousValue) {
       this._clear();
-      this._draw();
+
+      if (!this.loading && this.data && this.data.length) {
+        this._draw();
+      }
     }
   }
 
@@ -42,7 +46,6 @@ export class LineChartComponent implements OnChanges {
 
     // Position svg using given margins
     const svg = d3.select(this.element).select("svg")
-      .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")")
       .attr("viewBox", "0 0 " + this.width * viewBoxWithMultiplier + " " + this.height * viewBoxWithMultiplier);
 
     // Set the domain and range for values on the x-axis
