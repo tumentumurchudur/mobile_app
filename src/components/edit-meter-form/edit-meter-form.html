@@ -31,7 +31,7 @@
       <ion-input readonly formControlName="name"></ion-input>
     </ion-item>
 
-    <ion-item class="meter-input">
+    <ion-item (keyup.enter)="_keyBoardClose()" class="meter-input">
       <ion-label floating color="text" stacked>Billing Start Date</ion-label>
       <ion-input type="number" formControlName="billingStart" max="28" min="1"></ion-input>
     </ion-item>
