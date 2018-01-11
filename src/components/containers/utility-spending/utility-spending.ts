@@ -145,12 +145,7 @@ export class UtilitySpendingComponent implements OnInit {
       }
 
       // Initiate request to load data from database for given guid, start and end dates.
-      this._storeServices.loadReadsByDateRange(
-        meter,
-        timeSpan,
-        this._selectedDateRanges[index].startDate,
-        this._selectedDateRanges[index].endDate
-      );
+      this._storeServices.loadReadsByDateRange(meter, this._selectedDateRanges[index]);
     } else if (this._currentNavigationItems[index] === this._navigationItems.COMPARISON) {
       const { timeSpan, startDate, endDate } = this._selectedDateRanges[index];
 
@@ -175,24 +170,12 @@ export class UtilitySpendingComponent implements OnInit {
     // Sets default start and end dates.
     const { startDate, endDate, dateFormat } = ChartHelper.getDefaultDateRange(timeSpan);
 
-    this._selectedDateRanges[index].timeSpan = timeSpan;
-    this._selectedDateRanges[index].startDate = startDate;
-    this._selectedDateRanges[index].endDate = endDate;
-    this._selectedDateRanges[index].dateFormat = dateFormat;
-
     this._currentMeterIndex = index;
 
     if (page === "timeTravel") {
-      this._storeServices.loadReadsByDateRange(meter, timeSpan, startDate, endDate);
+      this._storeServices.loadReadsByDateRange(meter, this._selectedDateRanges[index]);
     } else {
-      this._storeServices.loadNeighborhoodReads(
-        meter,
-        {
-          timeSpan,
-          startDate: this._selectedDateRanges[index].startDate,
-          endDate: this._selectedDateRanges[index].endDate
-        }
-      );
+      this._storeServices.loadNeighborhoodReads(meter, this._selectedDateRanges[index]);
     }
   }
 
@@ -206,16 +189,9 @@ export class UtilitySpendingComponent implements OnInit {
     const { timeSpan, startDate, endDate } = this._selectedDateRanges[index];
 
     if (page === "timeTravel") {
-      this._storeServices.loadReadsByDateRange(meter, timeSpan, startDate, endDate);
+      this._storeServices.loadReadsByDateRange(meter, this._selectedDateRanges[index]);
     } else {
-      this._storeServices.loadNeighborhoodReads(
-        meter,
-        {
-          timeSpan,
-          startDate: this._selectedDateRanges[index].startDate,
-          endDate: this._selectedDateRanges[index].endDate
-        }
-      );
+      this._storeServices.loadNeighborhoodReads(meter,this._selectedDateRanges[index]);
     }
   }
 
@@ -255,15 +231,11 @@ export class UtilitySpendingComponent implements OnInit {
   }
 
   private _onRetryTimeTravel(meter: IMeter, dateRange: IDateRange) {
-    const { timeSpan, startDate, endDate } = dateRange;
-
-    this._storeServices.loadReadsByDateRange(meter, timeSpan, startDate, endDate);
+    this._storeServices.loadReadsByDateRange(meter, dateRange);
   }
 
   private _onRetryComparison(meter: IMeter, dateRange: IDateRange) {
-    const { timeSpan, startDate, endDate } = dateRange;
-
-    this._storeServices.loadNeighborhoodReads(meter, { timeSpan, startDate, endDate});
+    this._storeServices.loadNeighborhoodReads(meter, dateRange);
   }
 
   private _isComparisonReadsTimedOut(comparisonReads: IComparison[], meter: IMeter, dateRange: IDateRange): boolean {
