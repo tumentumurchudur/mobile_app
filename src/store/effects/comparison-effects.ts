@@ -150,9 +150,9 @@ export class ComparisonEffects {
         else {
           calcReads.push({
             date: loopDeltas[i].date,
-            line1: useDeltas[i].line1 || 0,
-            line2: avgDeltas[i].line1 || 0,
-            line3: effDeltas[i].line1 || 0
+            line1: effDeltas[i].line1 || 0,
+            line2: useDeltas[i].line1 || 0,
+            line3: avgDeltas[i].line1 || 0
           });
         }
       }

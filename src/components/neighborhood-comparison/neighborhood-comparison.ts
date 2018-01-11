@@ -18,11 +18,10 @@ export class NeighborhoodComparisonComponent implements OnChanges {
   private _series: string[] = [];
   private _lineColors: string[] = [];
   private _legends: string[] = [];
-
   private _options = [
-    { line: "line1", color: "#2075CB", legend: "You" },
-    { line: "line2", color: "#EF8E0F", legend: "Average" },
-    { line: "line3", color: "#00B200", legend: "Efficient" }
+    { line: "line1", color: "#00B200", legend: "Efficient" },
+    { line: "line2", color: "#2075CB", legend: "You" },
+    { line: "line3", color: "#EF8E0F", legend: "Average" }
   ];
 
   private _selectedData: any[];
@@ -57,6 +56,11 @@ export class NeighborhoodComparisonComponent implements OnChanges {
     this._costs = [];
     this._consumptions = [];
 
+    if (effCosts) {
+      this._costs.push(effCosts.totalCost);
+      this._consumptions.push(effCosts.totalDelta);
+    }
+
     if (usageCosts) {
       this._costs.push(usageCosts.totalCost);
       this._consumptions.push(usageCosts.totalDelta);
@@ -67,10 +71,7 @@ export class NeighborhoodComparisonComponent implements OnChanges {
       this._consumptions.push(avgCosts.totalDelta);
     }
 
-    if (effCosts) {
-      this._costs.push(effCosts.totalCost);
-      this._consumptions.push(effCosts.totalDelta);
-    }
+
 
     if (calcReads && calcReads.length) {
       // Find available lines such as line1, line2, etc for chart
