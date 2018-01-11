@@ -87,7 +87,7 @@ export class ComparisonEffects {
       .timeout(environment.apiTimeout) // Times out if nothing comes back.
       .catch(error => Observable.of([group, meter, dateRange, [], [], [], null, true]));
     })
-    .flatMap((data: any[]) => {
+    .map((data: any[]) => {
       const [group, meter, dateRange, usage = [], avg = [], eff = [], rank, timedOut = false] = data;
 
       // No need to display chart if avg and eff data is not available.
@@ -107,9 +107,7 @@ export class ComparisonEffects {
           timedOut
         };
 
-        return [
-          new AddComparison(payload)
-        ];
+        return new AddComparison(payload);
       }
 
       // Calculate deltas and costs of average data.
@@ -172,9 +170,7 @@ export class ComparisonEffects {
         timedOut
       };
 
-      return [
-        new AddComparison(payload)
-      ];
+      return new AddComparison(payload);
     });
 
   constructor(
