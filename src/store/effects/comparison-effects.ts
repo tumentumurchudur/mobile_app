@@ -30,19 +30,10 @@ export class ComparisonEffects {
       const { meter, dateRange } = data;
 
       return Observable.combineLatest(
-        this._storeServices.selectComparisonGroup().take(1),
+        this._db.getNeighborhoodGroup(meter),
         Observable.of(meter),
         Observable.of(dateRange)
       );
-    })
-    .switchMap((data: any[]) => {
-      const [ group, meter, dateRange ] = data;
-
-      return Observable.combineLatest([
-        Object.keys(group).length ? Observable.of(group) : this._db.getNeighborhoodGroup(meter),
-        Observable.of(meter),
-        Observable.of(dateRange)
-      ]);
     })
     .switchMap((data: any[]) => {
       const [ group, meter, dateRange ] = data;
@@ -94,13 +85,13 @@ export class ComparisonEffects {
       ])
       .take(1)
       .timeout(environment.apiTimeout) // Times out if nothing comes back.
-      .catch(error => Observable.of([meter, group, dateRange, [], [], [], null, true]));
+      .catch(error => Observable.of([group, meter, dateRange, [], [], [], null, true]));
     })
     .flatMap((data: any[]) => {
       const [group, meter, dateRange, usage = [], avg = [], eff = [], rank, timedOut = false] = data;
 
       // No need to display chart if avg and eff data is not available.
-      if (!avg.length && !eff.length) {
+      if ((!avg.length && !eff.length) || timedOut) {
         const payload = {
           guid: meter._guid,
           startDate: dateRange.startDate,
@@ -117,7 +108,6 @@ export class ComparisonEffects {
         };
 
         return [
-          new AddNeighborhoodGroup(group),
           new AddComparison(payload)
         ];
       }
@@ -183,7 +173,6 @@ export class ComparisonEffects {
       };
 
       return [
-        new AddNeighborhoodGroup(group),
         new AddComparison(payload)
       ];
     });
