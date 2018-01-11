@@ -163,6 +163,12 @@ export class UtilitySpendingComponent implements OnInit {
     // Sets default start and end dates.
     const { startDate, endDate, dateFormat } = ChartHelper.getDefaultDateRange(timeSpan);
 
+    // Changes current time span for the given meter.
+    this._selectedDateRanges[index].timeSpan = timeSpan;
+    this._selectedDateRanges[index].startDate = startDate;
+    this._selectedDateRanges[index].endDate = endDate;
+    this._selectedDateRanges[index].dateFormat = dateFormat;
+
     this._currentMeterIndex = index;
 
     if (page === "timeTravel") {
