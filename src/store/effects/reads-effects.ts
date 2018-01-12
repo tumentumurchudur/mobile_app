@@ -143,21 +143,30 @@ export class ReadsEffects {
           read.endDate.toString() === endDate.toString();
       });
 
+      const isDataAvail = storeData && !storeData.timedOut;
+
       return Observable.combineLatest([
         Observable.of(meter),
         Observable.of(dateRange),
-        storeData && !storeData.timedOut ? Observable.of(storeData.reads) : this._db.getReadsByDateRange(meter._guid, dateRange)
+        // if data is available in the store, pass it down. Otherwise, get it from Firebase.
+        isDataAvail ? Observable.of(storeData) : this._db.getReadsByDateRange(meter._guid, dateRange),
+        Observable.of(isDataAvail)
       ])
       .take(1)
       .timeout(environment.apiTimeout) // Times out if nothing comes back.
-      .catch(error => Observable.of([meter, dateRange, [], true]));
+      .catch(error => Observable.of([meter, dateRange, [], false, true]));
     })
     .map((values: any[]) => {
-      const [ meter, dateRange, reads = [], timedOut = false ] = values;
+      const [ meter, dateRange, data, isDataAvail = false, timedOut = false ] = values;
       const { startDate, endDate } = dateRange;
-      const rawDeltas = reads.length ? ChartHelper.getDeltas(reads) : [];
 
-      // Removes abnormally large values.
+      if (isDataAvail) {
+        return new AddReads(null);
+      }
+
+      const rawDeltas = data.length ? ChartHelper.getDeltas(data) : [];
+
+        // Removes abnormally large values.
       const normalizedDeltas = rawDeltas.length ? ChartHelper.normalizeData(rawDeltas) : [];
 
       // Puts values into date buckets by time span.
@@ -168,7 +177,6 @@ export class ReadsEffects {
         guid: meter._guid,
         startDate,
         endDate,
-        reads,
         deltas,
         cost,
         timedOut

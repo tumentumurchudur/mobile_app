@@ -195,7 +195,7 @@ export class UtilitySpendingComponent implements OnInit {
         read.startDate.toString() === startDate.toString() &&
         read.endDate.toString() === endDate.toString()
     });
-
+    console.log("data", data);
     if (data) {
       return { deltas: data.deltas, cost: data.cost, timedOut: data.timedOut };
     }
