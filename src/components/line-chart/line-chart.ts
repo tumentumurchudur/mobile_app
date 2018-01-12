@@ -1,4 +1,4 @@
-import { Component, Input, ElementRef, OnChanges, ChangeDetectionStrategy, SimpleChanges } from "@angular/core";
+import { Component, Input, ElementRef, OnChanges, ChangeDetectionStrategy } from "@angular/core";
 import { ILineItem } from "../../interfaces";
 import * as d3 from "d3";
 
@@ -28,7 +28,7 @@ export class LineChartComponent implements OnChanges {
     this.element = element.nativeElement;
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges() {
     this._clear();
 
     if (!this.loading && this.data && this.data.length) {

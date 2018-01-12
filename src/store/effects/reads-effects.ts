@@ -164,6 +164,19 @@ export class ReadsEffects {
         return new AddReads(null);
       }
 
+      if (timedOut) {
+        const payload = {
+          guid: meter._guid,
+          startDate,
+          endDate,
+          deltas: [],
+          cost: null,
+          timedOut
+        } as IReads;
+
+        return new AddReads(payload);
+      }
+
       const rawDeltas = data.length ? ChartHelper.getDeltas(data) : [];
 
         // Removes abnormally large values.
