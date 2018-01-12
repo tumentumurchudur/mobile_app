@@ -3,11 +3,19 @@
 edit-meter-form {
   .form-header {
     margin: 0 !important;
+    background-color: #d5dde2;
   }
 
   ion-navbar {
+    height: 4vh;
+    padding: 4px !important;
     min-height: 45px !important;
     color: #999EA8 !important;
+    border-radius: 4px 4px 0 0;
+  }
+
+  .header-ios .toolbar-ios:last-child .toolbar-background-ios {
+    border-bottom: none !important;
   }
 
   .cancel-btn {
@@ -18,7 +26,7 @@ edit-meter-form {
 
   .edit-title{
     text-align: center;
-    font-size: 1.5rem;
+    font-size: 17px;
   }
 
   .delete-btn {
@@ -35,7 +43,13 @@ edit-meter-form {
     }
 
     form {
+      margin-top: calc(5vh + 8px);
       width: 100%;
+    }
+
+    ion-item {
+      color: $header-text !important;
+      padding-right: 16px !important;
     }
 
     ion-input .text-input {

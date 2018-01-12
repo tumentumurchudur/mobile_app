@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { IonicPage, NavController } from "ionic-angular";
 import { Storage } from "@ionic/storage";
 import { SplashScreen } from "@ionic-native/splash-screen";
+import { Keyboard } from '@ionic-native/keyboard';
 import { IUser, IFbToken } from "../../interfaces";
 import { AuthProvider } from "../../providers"
 import { StoreServices } from "../../store/services";
@@ -26,7 +27,8 @@ export class LoginPage {
     private _auth: AuthProvider,
     public navCtrl: NavController,
     private _storage: Storage,
-    private _splashScreen: SplashScreen
+    private _splashScreen: SplashScreen,
+    private _keyboard: Keyboard
   ) { }
 
   ngOnInit() {
@@ -48,11 +50,11 @@ export class LoginPage {
         }
 
         const user: IUser = this._createUser(userData);
+        this.navCtrl.push("HomePage");
 
         // Update the store with current user.
         this._storeServices.addUser(user);
 
-        this.navCtrl.push("HomePage");
         this._splashScreen.hide();
       })
       .catch(error => {
@@ -136,6 +138,11 @@ export class LoginPage {
       password: null,
       orgPath: null
     };
+  }
+
+  protected _keyboardSubmit() {
+    this._keyboard.close();
+    this._onLoginClick(this._user);
   }
 
 }

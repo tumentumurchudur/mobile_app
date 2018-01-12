@@ -33,6 +33,7 @@ a {
   color: $primary;
 }
 
+// Standardized button height
 .button-md{
   text-transform: none;
   height: 5vh;
@@ -55,6 +56,16 @@ a {
   font-family: "Bryant Pro Bold Alternate";
 }
 
+// removes iOS padding in navbar
+.ios ion-nav > .ion-page > ion-header > .toolbar.statusbar-padding:first-child ion-segment, .ios ion-nav > .ion-page > ion-header > .toolbar.statusbar-padding:first-child ion-title {
+  padding-top: 0 !important;
+}
+
+.ios ion-nav > .ion-page > ion-header > .toolbar.statusbar-padding:first-child {
+  padding-top: 0 !important;
+}
+
+// Adds blue line on inputs for valid inputs
 .item-md.item-input.ng-valid.input-has-value:not(.input-has-focus) .item-inner {
   border-bottom-color: #29ACE0;
   box-shadow: #29ACE0;

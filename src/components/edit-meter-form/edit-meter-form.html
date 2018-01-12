@@ -1,12 +1,9 @@
-<!-- Form Header -->
-
-<!-- Form content -->
 <ion-content>
   <ion-header class="form-header">
-    <ion-navbar color="light" hideBackButton="true">
+    <ion-navbar hideBackButton="true">
       <ion-buttons left>
         <button
-          ion-button color="navbar-button"
+          ion-button color="primary"
           class="cancel-btn"
           (click)="_onCancel()"
         >
@@ -34,24 +31,24 @@
       <ion-input readonly formControlName="name"></ion-input>
     </ion-item>
 
-    <ion-item class="meter-input">
+    <ion-item (keyup.enter)="_keyBoardClose()" class="meter-input">
       <ion-label floating color="text" stacked>Billing Start Date</ion-label>
       <ion-input type="number" formControlName="billingStart" max="28" min="1"></ion-input>
     </ion-item>
 
-    <ion-item class="meter-input">
+    <ion-item (keyup.enter)="_keyBoardClose()" class="meter-input">
       <ion-label floating color="text" stacked>Goal Amount</ion-label>
       <ion-input formControlName="goal" class="money" type="number" min="0"></ion-input>
     </ion-item>
 
     <ion-item class="meter-input">
       <ion-label floating color="text" stacked>Provider</ion-label>
-      <ion-input readonly formControlName="provider"></ion-input>
+      <ion-input formControlName="provider"></ion-input>
     </ion-item>
 
     <ion-item class="meter-input">
       <ion-label floating color="text" stacked>Meter Number</ion-label>
-      <ion-input readonly formControlName="meterNumber"></ion-input>
+      <ion-input formControlName="meterNumber"></ion-input>
     </ion-item>
   </form>
 

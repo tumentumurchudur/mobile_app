@@ -7,29 +7,47 @@ utility-spending {
 
 	.chart-card {
 		border-radius: 4px;
-
-		.header {
+		margin: 0 12px 10px 12px;
+    width: calc(100% - 24px);
+		.utilitiy-spending-header {
       color: $header-text;
-      margin: 10px 0px 10px 20px;
+      margin: 1vh 0 1vh 2vh;
 			position: relative;
+      height: 3vh;
 
 			.meter-name {
 				font-size: 22px;
 			}
 		}
 
-		.card-content {
-			height: 65vh;
-      max-height: 450px;
-			text-align: center;
-			position: relative;
+    .edit-card-content {
+      height: 70vh;
+      max-width: 450px;
+      max-height: calc(450px + 5vh);
+      text-align: center;
+      position: relative;
+    }
 
+		.card-content {
+      height: 65vh;
+      max-height: 450px;
+      max-width: 450px;
+      text-align: center;
+      position: relative;
+
+    .date-range {
+      color: $header-text;
+    }
+
+		.meter-name {
+			font-size: 3vh;
+		}
 			.goal-status {
 				position: relative;
 
 				.status {
 					position: absolute;
-					bottom: -9px;
+					bottom: -14px;
 					right: 0;
 					width: 0;
 					height: 0;
@@ -40,15 +58,34 @@ utility-spending {
 
 				.exclamation-icon {
 					position: absolute;
-					height: 5.5vh;
-					width: 5.5vh;
-					bottom: 7px;
+					height: 4.5vh;
+					width: 4.5vh;
+					bottom: 4px;
 					right: 0.25vh;
 				}
 			}
 
 			.timeout-container {
 				margin-top: 1rem;
+
+		.timespan-cost {
+			text-align: center;
+			font-size: 48px;
+      margin-top: -1.5vh;
+		}
+
+    .timespan-usage {
+      font-size: 2.75vh;
+      color: $header-text;
+    }
+				.refresh-icon {
+					font-size: 6.2rem;
+				}
+
+				.timeout-text {
+					font-size: 1.2rem;
+				}
+
 			}
 
 			.spending-goal {
@@ -73,6 +110,13 @@ utility-spending {
 				font-size: 15px;
 			}
 
+				.usage-label {
+					display: flex;
+					font-size: 15px;
+          color: $header-text;
+        }
+      }
+		}
 			.show-all {
 				text-align: right;
 				margin-right: 20px;
@@ -80,7 +124,7 @@ utility-spending {
 
 			.rank {
 				position: absolute;
-				top: -46px;
+				top: -5vh;
 				right: 0;
 				height: 58px;
 				width: 58px;
@@ -107,7 +151,7 @@ utility-spending {
 						font-size: 15px;
 					}
 				}
-			}
-		}
-	}
+		  }
 }
+
+

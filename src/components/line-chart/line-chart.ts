@@ -46,7 +46,6 @@ export class LineChartComponent implements OnChanges {
 
     // Position svg using given margins
     const svg = d3.select(this.element).select("svg")
-      .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")")
       .attr("viewBox", "0 0 " + this.width * viewBoxWithMultiplier + " " + this.height * viewBoxWithMultiplier);
 
     // Set the domain and range for values on the x-axis
@@ -174,12 +173,14 @@ export class LineChartComponent implements OnChanges {
     if (this.showXAxisLabels) {
       svg.append("g")
         .attr("transform", "translate(20," + (height + this.margin.top) + ")")
+        .attr("class", "axis-color")
         .call(xAxis);
     }
 
     if (this.showYAxisLabels) {
       svg.append("g")
         .attr("transform", "translate(20, 10)")
+        .attr("class", "axis-color")
         .call(yAxis);
     }
   }
