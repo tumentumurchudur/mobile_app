@@ -1,7 +1,7 @@
 line-chart {
   .chart-container {
     position: relative;
-
+    padding-left: 12px;
     .no-data {
       position: absolute;
       top: 40%;
@@ -24,6 +24,13 @@ line-chart {
 
     .area {
       opacity: .2;
+    }
+
+    .axis-color {
+      stroke: #535969;
+      stroke-width: .65;
+      font-size: 1.5vh;
+      font-weight: lighter;
     }
   }
 
