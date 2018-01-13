@@ -18,14 +18,15 @@ import {
   CHECK_COMPARISON_READS,
   BEGIN_COMPARISON_READS,
   TRIGGER_COMPARISON_READS,
+
   AddComparison,
   BeginComparisonReads,
   CheckComparisonReads,
   AddNeighborhoodGroup
 } from "../actions";
-import { IComparison, IMeter } from "../../interfaces";
+
+import { IComparison, IMeter, IDateRange } from "../../interfaces";
 import { ChartHelper, CostHelper } from "../../helpers";
-import { IDateRange } from "../../interfaces/date-range";
 
 @Injectable()
 export class ComparisonEffects {

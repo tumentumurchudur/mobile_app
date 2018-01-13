@@ -22,7 +22,7 @@ export class CheckComparisonReads implements Action {
 	public readonly type = CHECK_COMPARISON_READS;
 	public payload: any[];
 
-	constructor(private _payload: any) {
+	constructor(private _payload: any[]) {
 		this.payload = _payload;
 	}
 }
@@ -31,7 +31,7 @@ export class BeginComparisonReads implements Action {
 	public readonly type = BEGIN_COMPARISON_READS;
 	public payload: any[];
 
-	constructor(private _payload: any) {
+	constructor(private _payload: any[]) {
 		this.payload = _payload;
 	}
 }
