@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { AngularFireAuth } from "angularfire2/auth"; //Add FirebaseApp
+import {  AlertController } from "ionic-angular";
 import { IUser, IFbToken } from "../interfaces";
 import { googleConfig } from "../configs";
 import { Observable } from "rxjs/Observable";
@@ -10,13 +11,13 @@ import { Storage } from "@ionic/storage";
 
 @Injectable()
 export class AuthProvider {
-
+  private _user: IUser;
   constructor(
       private _af: AngularFireAuth,
       private _facebook: Facebook,
       private _googleplus: GooglePlus,
-      private _storage: Storage,
-
+      private _alertCtrl: AlertController,
+      private _storage: Storage
 ) { }
 
   public loginWithEmail(user: IUser): Promise<IUser> {
@@ -45,9 +46,6 @@ export class AuthProvider {
 
       return this._signInWithCredential(googleCredential);
     })
-    .catch(error => {
-      throw new Error(error);
-    });
   }
 
   private _googleSilentLogin(): Promise<IFbToken> {
@@ -80,7 +78,12 @@ export class AuthProvider {
   private _signInWithCredential(credential: IFbToken): Promise<any> {
    this._storage.set("userInfo", credential);
 
-   return this._af.auth.signInWithCredential(credential);
+   return this._af.auth.signInWithCredential(credential).then((response) => {
+     return response
+   })
+     .catch( error => {
+       this._displayAndHandleErrors(error);
+     });
   }
 
   public resetPassword(emailAddr: string): Observable<IUser> {
@@ -144,7 +147,73 @@ export class AuthProvider {
     });
   }
 
-  public logoutUser(): void {
+  private _displayAndHandleErrors(error: any) {
+    console.log(error);
+    return new Promise<any>((resolve) => {
+      let title;
+      let message;
+      let buttons;
+      switch (true) {
+        case (error.code == 'auth/user-not-found'):
+          title = 'Could Not Complete Login';
+          message = 'Unfortunately, we could not find your account. Please double check your password or create an account.';
+          buttons = [
+            {text: 'Try Again', role: 'cancel'},
+            {text: 'Sign Up', handler: () => {
+              // TODO: _UserSignUp() user goes here
+            }}
+          ];
+          break;
+        case (error.code == 'social-login-not-found'):
+          title = 'Could Not Complete Login';
+          message = 'Unfortunately, we could not find your account. If you feel this is an error, try using a different social provider. Otherwise, create an account.';
+          buttons = [
+            {text: 'Cancel', role: 'cancel', handler: () => {
+              this.logOutUser();
+              resolve();
+            }},
+            {text: 'Sign Up', role: 'cancel', handler: () => {
+              resolve();
+            }}
+          ];
+          break;
+        case (error.code === 'auth/wrong-password'):
+          title = 'The password is invalid. Please try again';
+          message = error.message;
+          buttons = ['Ok'];
+          break;
+        case (error.code === 'auth/email-already-in-use'):
+          title = 'Could Not Complete Sign Up';
+          message = error.message;
+          buttons = ['Ok'];
+          break;
+        case (error.code === 'auth/account-exists-with-different-credential'):
+          title = 'Try a Different Social Provider';
+          message = error.message;
+          buttons = ['Ok'];
+          break;
+        case (error.code === 'auth/internal-error' || error.code == 'auth/invalid-credential'):
+          title = 'Your login session has expired. Please login again.';
+          message = error.message;
+          buttons = ['Ok'];
+          break;
+        default:
+          title = 'Something Went Wrong';
+          message = 'Could not complete login at this time. Please try again';
+          buttons =  ['Ok'];
+      }
+
+      let alert = this._alertCtrl.create({
+        title: title,
+        message: message,
+        buttons: buttons
+      });
+
+      alert.present();
+    });
+  }
+
+  public logOutUser(): void {
     this._af.auth.signOut().then(() => {
       this._storage.remove("userInfo");
     });

@@ -28,39 +28,43 @@
        </div>
      </ion-col>
     </ion-row>
-    <ion-row>
-      <ion-col class="no-padding">
-        <ion-item>
-          <ion-label>
-            <ion-icon class="login-input-icon" name="mail"></ion-icon>
-          </ion-label>
-          <ion-input
-            type="text"
-            [(ngModel)]="_user.email"
-            placeholder="Email address"
-          >
-          </ion-input>
-        </ion-item>
-        <ion-item (keyup.enter)="_keyboardSubmit()">
-          <ion-label>
-            <ion-icon class="login-input-icon" name="lock"></ion-icon>
-          </ion-label>
-          <ion-input
-            type="password"
-            [(ngModel)]="_user.password"
-            placeholder="Password"
-          >
-          </ion-input>
-        </ion-item>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col class="no-padding">
-        <button ion-button outline block color="primary" (click)="_onLoginClick(_user)">
-          {{!this.isNewUser ? "Login" : "Register"}}
-        </button>
-      </ion-col>
-    </ion-row>
+    <form (submit)="_onLoginClick(_user)" [formGroup]="_loginForm">
+      <ion-row>
+        <ion-col class="no-padding">
+          <ion-item>
+            <ion-label>
+              <ion-icon class="login-input-icon" name="mail"></ion-icon>
+            </ion-label>
+            <ion-input
+              type="email"
+              #email formControlName="email"
+              placeholder="Email address"
+              [class.invalid]="!_loginForm.controls.email.valid && (_loginForm.controls.email.touched || _loginForm.submitted)"
+            >
+            </ion-input>
+          </ion-item>
+          <ion-item (keyup.enter)="_keyboardSubmit()">
+            <ion-label>
+              <ion-icon class="login-input-icon" name="lock"></ion-icon>
+            </ion-label>
+            <ion-input
+              type="password"
+              #password formControlName="password"
+              placeholder="Password"
+              [class.invalid]="!_loginForm.controls.password.valid && (_loginForm.controls.password.touched || _loginForm.submitted)"
+            >
+            </ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col class="no-padding">
+          <button ion-button outline block color="primary" type="submit">
+            {{!this.isNewUser ? "Login" : "Register"}}
+          </button>
+        </ion-col>
+      </ion-row>
+    </form>
     <ion-row class="or-with">
       <ion-col><div class="line"></div></ion-col>
       <ion-col class="or-text"> or </ion-col>

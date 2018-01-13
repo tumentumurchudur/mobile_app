@@ -11,7 +11,7 @@ export class UserEffects {
   public logoutUser$ = this._actions$
     .ofType(TRIGGER_PREP_FOR_LOGOUT)
     .map(() => {
-      return this._auth.logoutUser();
+      return this._auth.logOutUser();
     });
 
   constructor(
