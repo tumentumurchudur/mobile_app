@@ -14,7 +14,15 @@ import { DatabaseProvider } from "../../providers";
 import { neighborhoodConfigs } from "../../configs";
 import { environment } from "../../environments";
 
-import { TRIGGER_COMPARISON_READS, AddComparison, AddNeighborhoodGroup } from "../actions";
+import {
+  CHECK_COMPARISON_READS,
+  BEGIN_COMPARISON_READS,
+  TRIGGER_COMPARISON_READS,
+  AddComparison,
+  BeginComparisonReads,
+  CheckComparisonReads,
+  AddNeighborhoodGroup
+} from "../actions";
 import { IComparison, IMeter } from "../../interfaces";
 import { ChartHelper, CostHelper } from "../../helpers";
 import { IDateRange } from "../../interfaces/date-range";
@@ -43,7 +51,6 @@ export class ComparisonEffects {
       const ncmpEffGuid = neighborhoodGroupID ? `${neighborhoodGroupID}${neighborhoodConfigs.NEIGHBORHOOD_COMP_EFF_GUID}` : null;
 
       return Observable.combineLatest([
-        Observable.of(group),
         Observable.of(meter),
         Observable.of(dateRange),
         this._storeServices.selectComparisonReads().take(1),
@@ -51,129 +58,161 @@ export class ComparisonEffects {
         ncmpEffGuid ? Observable.of(ncmpEffGuid) : Observable.of(null)
       ]);
     })
-    .switchMap((data: any[]) => {
-      const [ group, meter, dateRange, reads, ncmpAvgGuid, ncmpEffGuid ] = data;
-      const { startDate, endDate } = dateRange;
+    .map((data: any) => {
+      const [ meter, dateRange, reads, ncmpAvgGuid, ncmpEffGuid ] = data;
 
-      // Check if data is available in the store.
-      const storeData = reads.find(read => {
-        return read.guid === meter._guid &&
-          read.startDate.toString() === startDate.toString() &&
-          read.endDate.toString() === endDate.toString();
-      });
-
-      const isUsageDataAvail = storeData && !storeData.timedOut && storeData.usage.length;
-      const isAvgDataAvail = storeData && !storeData.timedOut && storeData.avg.length;
-      const isEffDataAvail = storeData && !storeData.timedOut && storeData.eff.length;
-      const isRankAvail = storeData && !storeData.timedOut && storeData.rank;
-
-      return Observable.combineLatest([
-        Observable.of(group),
-        Observable.of(meter),
-        Observable.of(dateRange),
-        isUsageDataAvail ? Observable.of(storeData.usage) : this._db.getReadsByDateRange(meter._guid, dateRange),
-
-        isAvgDataAvail
-          ? Observable.of(storeData.avg)
-          : (ncmpAvgGuid ? this._db.getReadsByNeighborhood(ncmpAvgGuid, dateRange) : Observable.of([])),
-
-        isEffDataAvail
-          ? Observable.of(storeData.eff)
-          : (ncmpEffGuid ? this._db.getReadsByNeighborhood(ncmpEffGuid, dateRange) : Observable.of([])),
-
-        isRankAvail ? Observable.of(storeData.rank) : this._db.getNeighborhoodComparisonRanks(meter, dateRange)
-      ])
-      .take(1)
-      .timeout(environment.apiTimeout) // Times out if nothing comes back.
-      .catch(error => {
-        return Observable.of([group, meter, dateRange, [], [], [], null, true]);
-      });
-    })
-    .map((data: any[]) => {
-      const [group, meter, dateRange, usage = [], avg = [], eff = [], rank, timedOut = false] = data;
-
-      // No need to display chart if avg and eff data is not available.
-      if ((!avg.length && !eff.length) || timedOut) {
-        const payload = {
-          guid: meter._guid,
-          startDate: dateRange.startDate,
-          endDate: dateRange.endDate,
-          usage: [],
-          usageCosts: null,
-          avg: [],
-          avgCosts: null,
-          eff: [],
-          effCosts: null,
-          calcReads: [],
-          rank: null,
-          timedOut
-        };
-
-        return new AddComparison(payload);
-      }
-
-      // Calculate deltas and costs of average data.
-      const avgResult = this._calculateDeltasAndCosts(avg, dateRange, meter);
-      const avgDeltas = avgResult.deltas;
-      const avgCosts = avgResult.costs;
-
-      // Calculate deltas and costs of efficiency data.
-      const effResult = this._calculateDeltasAndCosts(eff, dateRange, meter);
-      const effDeltas = effResult.deltas;
-      const effCosts = effResult.costs;
-
-      // consumption data
-      let useDeltas = [];
-      let usageCosts = null;
-      if (usage.length) {
-        const rawDeltas = ChartHelper.getDeltas(usage);
-        const normalizedDeltas = ChartHelper.normalizeData(rawDeltas);
-
-        useDeltas = normalizedDeltas.length ? ChartHelper.groupDeltasByTimeSpan(dateRange, normalizedDeltas) : [];
-        usageCosts = rawDeltas.length ? CostHelper.calculateCostFromDeltas(meter, rawDeltas) : null;
-      }
-
-      let calcReads = [];
-      const loopDeltas = useDeltas.length ? useDeltas : avgDeltas;
-
-      for (let i = 0; i < loopDeltas.length; i++) {
-        // Check if consumption data is available.
-        // If not available, show average and efficiency data in chart only.
-        if (!useDeltas.length) {
-          calcReads.push({
-            date: loopDeltas[i].date,
-            line2: avgDeltas[i].line1 || 0,
-            line3: effDeltas[i].line1 || 0
-          });
-        }
-        // Data for all three charts is available.
-        else {
-          calcReads.push({
-            date: loopDeltas[i].date,
-            line1: effDeltas[i].line1 || 0,
-            line2: useDeltas[i].line1 || 0,
-            line3: avgDeltas[i].line1 || 0
-          });
-        }
-      }
-
-      const payload: IComparison = {
-        guid: meter._guid,
-        startDate: dateRange.startDate,
-        endDate: dateRange.endDate,
-        usage,
-        usageCosts,
-        avg,
-        avgCosts,
-        eff,
-        effCosts,
-        calcReads,
-        rank,
-        timedOut
-      };
-
-      return new AddComparison(payload);
+      return new CheckComparisonReads([meter, dateRange, reads, ncmpAvgGuid, ncmpEffGuid]);
     });
+
+
+    @Effect()
+    public checkNeighborhoodReads$ = this._actions$
+      .ofType(CHECK_COMPARISON_READS)
+      .map((action: any) => action.payload)
+      .map((data: any[]) => {
+        const [ meter, dateRange, reads, ncmpAvgGuid, ncmpEffGuid ] = data;
+        const { startDate, endDate } = dateRange;
+
+        // Check if data is available in the store.
+        const storeData = reads.find(read => {
+          return read.guid === meter._guid &&
+            read.startDate.toString() === startDate.toString() &&
+            read.endDate.toString() === endDate.toString();
+        });
+
+        const avgCosts = storeData ? storeData.avgCosts : null;
+        const effCosts = storeData ? storeData.effCosts : null;
+        const usageCosts = storeData ? storeData.usageCosts : null;
+        const calcReads = storeData ? storeData.calcReads : [];
+        const timedOut = storeData ? storeData.timedOut : false;
+
+        if (timedOut) {
+          const payload: IComparison = {
+            guid: meter._guid,
+            startDate,
+            endDate,
+            usageCosts,
+            avgCosts,
+            effCosts,
+            calcReads,
+            rank: storeData.rank,
+            timedOut
+          };
+
+          // Request has timed out.
+          return new AddComparison(payload);
+        }
+
+        if (avgCosts && effCosts && calcReads.length) {
+          // Get data from store.
+          return new AddComparison(null);
+        }
+
+        // Get data from API.
+        return new BeginComparisonReads([meter, dateRange, ncmpAvgGuid, ncmpEffGuid]);
+      });
+
+      @Effect()
+      public beginNeighborhoodReads$ = this._actions$
+        .ofType(BEGIN_COMPARISON_READS)
+        .map((action: any) => action.payload)
+        .switchMap((data: any[]) => {
+          const [ meter, dateRange, ncmpAvgGuid, ncmpEffGuid ] = data;
+
+          return Observable.combineLatest([
+            Observable.of(meter),
+            Observable.of(dateRange),
+            this._db.getReadsByDateRange(meter._guid, dateRange),
+            this._db.getReadsByNeighborhood(ncmpAvgGuid, dateRange),
+            this._db.getReadsByNeighborhood(ncmpEffGuid, dateRange),
+            this._db.getNeighborhoodComparisonRanks(meter, dateRange),
+            // Whether or not request has timed out.
+            Observable.of(false)
+          ])
+          .take(1)
+          .timeout(environment.apiTimeout) // Times out if nothing comes back.
+          .catch(error => Observable.of([meter, dateRange, [], [], [], null, true]));
+        })
+        .map((data: any[]) => {
+          const [ meter, dateRange, usage = [], avg = [], eff = [], rank, timedOut = false ] = data;
+          const { startDate, endDate } = dateRange;
+
+          // No need to display chart if avg and eff data is not available or request timed out.
+          if ((!avg.length && !eff.length) || timedOut) {
+            const payload = {
+              guid: meter._guid,
+              startDate,
+              endDate,
+              usageCosts: null,
+              avgCosts: null,
+              effCosts: null,
+              calcReads: [],
+              rank,
+              timedOut
+            };
+
+            return new AddComparison(payload);
+          }
+
+          // Calculate deltas and costs of average data.
+          const avgResult = this._calculateDeltasAndCosts(avg, dateRange, meter);
+          const avgDeltas = avgResult.deltas;
+          const avgCosts = avgResult.costs;
+
+          // Calculate deltas and costs of efficiency data.
+          const effResult = this._calculateDeltasAndCosts(eff, dateRange, meter);
+          const effDeltas = effResult.deltas;
+          const effCosts = effResult.costs;
+
+          // consumption data
+          let useDeltas = [];
+          let usageCosts = null;
+          if (usage.length) {
+            const rawDeltas = ChartHelper.getDeltas(usage);
+            const normalizedDeltas = ChartHelper.normalizeData(rawDeltas);
+
+            useDeltas = normalizedDeltas.length ? ChartHelper.groupDeltasByTimeSpan(dateRange, normalizedDeltas) : [];
+            usageCosts = rawDeltas.length ? CostHelper.calculateCostFromDeltas(meter, rawDeltas) : null;
+          }
+
+          let calcReads = [];
+          const loopDeltas = useDeltas.length ? useDeltas : avgDeltas;
+
+          for (let i = 0; i < loopDeltas.length; i++) {
+            // Check if consumption data is available.
+            // If not available, show average and efficiency data in chart only.
+            if (!useDeltas.length) {
+              calcReads.push({
+                date: loopDeltas[i].date,
+                line2: avgDeltas[i].line1 || 0,
+                line3: effDeltas[i].line1 || 0
+              });
+            }
+            // Data for all three charts is available.
+            else {
+              calcReads.push({
+                date: loopDeltas[i].date,
+                line1: effDeltas[i].line1 || 0,
+                line2: useDeltas[i].line1 || 0,
+                line3: avgDeltas[i].line1 || 0
+              });
+            }
+          }
+
+          const payload: IComparison = {
+            guid: meter._guid,
+            startDate,
+            endDate,
+            usageCosts,
+            avgCosts,
+            effCosts,
+            calcReads,
+            rank,
+            timedOut
+          };
+
+          return new AddComparison(payload);
+        });
 
   constructor(
     private readonly _actions$: Actions,

@@ -6,10 +6,30 @@ export const ADD_COMPARISON_READS: string = "[Comparison] ADD COMPARISON READS";
 export const LOADING_COMPARISON_READS: string = "[Comparison] LOADING COMPARISON READS";
 export const ADD_NEIGHBORHOOD_GROUP: string = "[Comparison] ADD NEIGHBORHOOD GROUP";
 export const RESET_COMPARISON_TIMEOUT: string = "[Comparison] RESET COMPARISON TIMEOUT";
+export const BEGIN_COMPARISON_READS: string = "[Comparison] BEGIN COMPARISON READS";
+export const CHECK_COMPARISON_READS: string = "[Comparison] CHECK COMPARISON READS";
 
 export class TriggerComparisonReads implements Action {
 	public readonly type = TRIGGER_COMPARISON_READS;
 	public payload: any | null;
+
+	constructor(private _payload: any) {
+		this.payload = _payload;
+	}
+}
+
+export class CheckComparisonReads implements Action {
+	public readonly type = CHECK_COMPARISON_READS;
+	public payload: any[];
+
+	constructor(private _payload: any) {
+		this.payload = _payload;
+	}
+}
+
+export class BeginComparisonReads implements Action {
+	public readonly type = BEGIN_COMPARISON_READS;
+	public payload: any[];
 
 	constructor(private _payload: any) {
 		this.payload = _payload;
