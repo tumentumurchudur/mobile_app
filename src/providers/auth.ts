@@ -148,7 +148,6 @@ export class AuthProvider {
   }
 
   private _displayAndHandleErrors(error: any) {
-    console.log(error);
     return new Promise<any>((resolve) => {
       let title;
       let message;
@@ -215,7 +214,8 @@ export class AuthProvider {
 
   public logOutUser(): void {
     this._af.auth.signOut().then(() => {
-      this._storage.remove("userInfo");
+      //clears ALL storage. WARNING: HOT!
+      this._storage.clear();
     });
   }
 

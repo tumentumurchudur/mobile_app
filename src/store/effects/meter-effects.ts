@@ -56,9 +56,12 @@ export class MeterEffects {
       cssClass: 'meter-toast',
       position: 'top'
     });
+
+    //removes any existing toasts
     toast.dismissAll();
     toast.present();
   }
+
   /**
    * Handles load meters action.
    *
