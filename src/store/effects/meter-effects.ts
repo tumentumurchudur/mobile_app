@@ -35,25 +35,28 @@ import {
 
 @Injectable()
 export class MeterEffects {
-
+  /**
+   * Handles meter Toasts.
+   * @memberof MeterEffects
+   */
   private _presentToast(meterName: string, event: string) {
-    let message = `Adding ${meterName}...`
+    let message = `Adding ${meterName}...`;
 
     if (event === "completed"){
-      message = `${meterName} was successfully added.`
+      message = `${meterName} was successfully added.`;
     }
 
     if (event === "removeMeter"){
-      message = `${meterName} was successfully removed.`
+      message = `${meterName} was successfully removed.`;
     }
 
     let toast = this._toastCtrl.create({
       message: message,
-      duration: 15000,
+      duration: 2000,
       cssClass: 'meter-toast',
       position: 'top'
     });
-
+    toast.dismissAll();
     toast.present();
   }
   /**
