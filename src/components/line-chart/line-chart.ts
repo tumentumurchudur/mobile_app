@@ -9,7 +9,7 @@ import * as d3 from "d3";
 })
 export class LineChartComponent implements OnChanges {
   @Input() width: number = 330;
-  @Input() height: number = 240;
+  @Input() height: number = 250;
   @Input() data: ILineItem[] = [];
   @Input() loading: boolean = false;
   @Input() animate: boolean = false;
@@ -22,7 +22,7 @@ export class LineChartComponent implements OnChanges {
   @Input() noDataText: string = "No data";
 
   private element: any;
-  private margin: any = { left: 10, right: 10, top: 10, bottom: 10 };
+  private margin: any = { left: 10, right: 0, top: 10, bottom: 10 };
 
   constructor(element: ElementRef) {
     this.element = element.nativeElement;
@@ -33,18 +33,20 @@ export class LineChartComponent implements OnChanges {
 
     if (!this.loading && this.data && this.data.length) {
       this._draw();
+      this._hideZeroTicks();
     }
   }
 
   private _draw(): void {
     const initialDelay = 100;
-    const viewBoxWithMultiplier = 1.1;
+    const viewBoxWithMultiplier = 1; //.97;
     const width = this.width - this.margin.left - this.margin.right;
     const height = this.height - this.margin.top - this.margin.bottom;
 
     // Position svg using given margins
     const svg = d3.select(this.element).select("svg")
-      .attr("viewBox", "0 0 " + this.width * viewBoxWithMultiplier + " " + this.height * viewBoxWithMultiplier);
+      .attr("viewBox", "20 0 " + this.width + " 270");
+      // .attr("viewBox", "20 0 " + this.width * viewBoxWithMultiplier  + " 270") ;// + this.height * viewBoxWithMultiplier);
 
     // Set the domain and range for values on the x-axis
     const x = d3.scaleTime()
@@ -154,6 +156,7 @@ export class LineChartComponent implements OnChanges {
       .ticks(5)
       .tickPadding(5)
       .tickSizeInner(-height)
+      .tickSizeOuter(0)
       .tickFormat(d3.timeFormat(this.dateFormat));
 
     // Calculates the range of values for Y axis.
@@ -164,13 +167,14 @@ export class LineChartComponent implements OnChanges {
 
     const yAxis = d3.axisLeft(y)
       .ticks(5)
-      .tickPadding(5)
-      .tickSizeInner(-width)
+      .tickPadding(-20)
+      .tickSize(-10)
+      .tickSizeOuter(0)
       .tickFormat(d => d / parseInt(divider));
 
     if (this.showXAxisLabels) {
       svg.append("g")
-        .attr("transform", "translate(20," + (height + this.margin.top) + ")")
+        .attr("transform", "translate(20, " + (height + this.margin.top) + ")")
         .attr("class", "axis-color")
         .call(xAxis);
     }
@@ -181,6 +185,15 @@ export class LineChartComponent implements OnChanges {
         .attr("class", "axis-color")
         .call(yAxis);
     }
+  }
+
+  private _hideZeroTicks() {
+    d3.select(this.element).select("svg").selectAll(".tick")
+      .each(function(d, i) {
+          if (d == 0) {
+            this.remove();
+          }
+      });
   }
 
   private _getLineFunc(x: (date: any) => any, y: (val: number) => any, colName: string): any {
