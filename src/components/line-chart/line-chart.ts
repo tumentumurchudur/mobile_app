@@ -188,7 +188,7 @@ export class LineChartComponent implements OnChanges {
   private _hideZeroTicks() {
     d3.select(this.element).select("svg").selectAll(".tick")
       .each(function(d, i) {
-          if (d == 0) {
+          if (d === 0) {
             this.remove();
           }
       });
