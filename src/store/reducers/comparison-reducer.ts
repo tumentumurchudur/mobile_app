@@ -17,6 +17,10 @@ export const comparisonReducerMap: ActionReducerMap<ComparisonState> = {
 export function comparisonReducer(state = { data: [], loading: false, neighborhoodGroup: {} }, action): any {
 	switch (action.type) {
 		case ActionTypes.ADD_COMPARISON_READS:
+			if (!action.payload) {
+				return Object.assign({}, state, { data: state.data, loading : false });
+			}
+
 			const { guid = null, startDate = null, endDate = null } = action.payload;
 			const filteredData = state.data.filter(d => {
 				return d.guid !== guid ||
@@ -32,20 +36,24 @@ export function comparisonReducer(state = { data: [], loading: false, neighborho
 			const meterGuid = action.payload.guid;
 			const comparisonReads: IComparison[] = state.data as IComparison[];
 
-			const currentComparisonReads = comparisonReads.find(read => {
+			const currentComparisonData: IComparison = comparisonReads.find(read => {
 				return read.guid === meterGuid &&
 					read.startDate.toString() === dateRange.startDate.toString() &&
 					read.endDate.toString() === dateRange.endDate.toString();
 			});
 
-			if (!currentComparisonReads) {
-				return state;
+			if (!currentComparisonData) {
+				return Object.assign({}, state);
 			}
 
-			const updatedReads = Object.assign({}, currentComparisonReads, { timedOut: false });
-			const otherReads = comparisonReads.filter(d => d.guid !== updatedReads.guid);
+			const newComparisonData = Object.assign({}, currentComparisonData, { timedOut: false });
+			const otherComparisonData = comparisonReads.filter(d => {
+				return d.guid !== newComparisonData.guid ||
+					d.startDate.toString() !== dateRange.startDate.toString() &&
+					d.endDate.toString() !== dateRange.endDate.toString();
+			});
 
-			return Object.assign({}, state, { data: otherReads.concat(updatedReads) });
+			return Object.assign({}, state, { data: otherComparisonData.concat(newComparisonData) });
 		case ActionTypes.ADD_NEIGHBORHOOD_GROUP:
 			return Object.assign({}, state, { neighborhoodGroup: action.payload });
 		default:
