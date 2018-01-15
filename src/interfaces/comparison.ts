@@ -5,12 +5,9 @@ export interface IComparison {
   guid: string;
   startDate: Date;
   endDate: Date;
-  avg: any[];
-  avgCosts: IUsage;
-  eff: any[];
-  effCosts: IUsage;
-  usage: any[];
-  usageCosts: IUsage;
+  avgCosts: IUsage | null;
+  effCosts: IUsage | null;
+  usageCosts: IUsage | null;
   calcReads: ILineItem[];
   rank: number,
   timedOut: boolean

@@ -184,8 +184,8 @@ export class ChartHelper {
 
     switch(dateRange.timeSpan) {
       case timeSpanConfigs.MONTH:
-        startDate = moment(dateRange.startDate).add(direction === "prev" ? -1 : 1, "M");
-        endDate = moment(dateRange.endDate).add(direction === "prev" ? -1 : 1, "M");
+        startDate = moment(dateRange.startDate).add(direction === "prev" ? -1 : 1, "M").startOf("month");
+        endDate = moment(dateRange.endDate).add(direction === "prev" ? -1 : 1, "M").endOf("month");
 
         break;
       case timeSpanConfigs.DAY:
