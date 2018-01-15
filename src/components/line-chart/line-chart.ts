@@ -39,14 +39,12 @@ export class LineChartComponent implements OnChanges {
 
   private _draw(): void {
     const initialDelay = 100;
-    const viewBoxWithMultiplier = 1; //.97;
     const width = this.width - this.margin.left - this.margin.right;
     const height = this.height - this.margin.top - this.margin.bottom;
 
     // Position svg using given margins
     const svg = d3.select(this.element).select("svg")
-      .attr("viewBox", "20 0 " + this.width + " 270");
-      // .attr("viewBox", "20 0 " + this.width * viewBoxWithMultiplier  + " 270") ;// + this.height * viewBoxWithMultiplier);
+      .attr("viewBox", "20 0 " + this.width + " " + (this.height + this.margin.top));
 
     // Set the domain and range for values on the x-axis
     const x = d3.scaleTime()
