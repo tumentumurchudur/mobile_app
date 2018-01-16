@@ -1,10 +1,10 @@
 import { Component, OnInit } from "@angular/core";
 import { IonicPage, NavController, AlertController } from "ionic-angular";
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators} from "@angular/forms";
 import { Storage } from "@ionic/storage";
-import {EmailValidator} from "../../validators/email-validator";
+import { EmailValidator } from "../../validators/email-validator";
 import { SplashScreen } from "@ionic-native/splash-screen";
-import { Keyboard } from '@ionic-native/keyboard';
+import { Keyboard } from "@ionic-native/keyboard";
 import { IUser, IFbToken } from "../../interfaces";
 import { AuthProvider } from "../../providers"
 import { StoreServices } from "../../store/services";
@@ -36,8 +36,8 @@ export class LoginPage {
     private _keyboard: Keyboard
   ) {
     this._loginForm = _formBuilder.group({
-      email: ['', Validators.compose([Validators.required, EmailValidator.isValid])],
-      password: ['', Validators.compose([Validators.required, Validators.minLength(6)])]
+      email: ["", Validators.compose([Validators.required, EmailValidator.isValid])],
+      password: ["", Validators.compose([Validators.required, Validators.minLength(6)])]
     });
 
   }
@@ -93,8 +93,8 @@ export class LoginPage {
     }
 
     if (this._loginForm.dirty) {
-      this._loginForm.controls['email'].markAsTouched();
-      this._loginForm.controls['password'].markAsTouched();
+      this._loginForm.controls["email"].markAsTouched();
+      this._loginForm.controls["password"].markAsTouched();
       if (!this._loginForm.valid) {
         this._showError();
         return;
@@ -104,8 +104,8 @@ export class LoginPage {
             const user: IUser = this._createUser(userData);
 
             this._loginForm.reset();
-            this._loginForm.controls['email'].clearValidators();
-            this._loginForm.controls['password'].clearValidators();
+            this._loginForm.controls["email"].clearValidators();
+            this._loginForm.controls["password"].clearValidators();
 
             this._storeServices.addUser(user);
 
@@ -160,26 +160,26 @@ export class LoginPage {
     let message: string;
     let buttons: Array<any>;
 
-    if (!this._loginForm.controls['email'].valid && !this._loginForm.controls['password'].valid) {
+    if (!this._loginForm.controls["email"].valid && !this._loginForm.controls["password"].valid) {
       message = `Please enter a valid email address.\n
         Password must be at least 6 characters.`;
-      buttons = [{text: 'Try again', role: 'cancel'}];
+      buttons = [{text: "Try again", role: "cancel"}];
     }
-    else if (!this._loginForm.controls['email'].valid) {
-      message = 'Please enter a valid email address.';
-      buttons = [{text: 'Try again', role: 'cancel'}];
+    else if (!this._loginForm.controls["email"].valid) {
+      message = "Please enter a valid email address.";
+      buttons = [{text: "Try again", role: "cancel"}];
     }
-    else if (!this._loginForm.controls['password'].valid) {
-      message = 'Password must be at least 6 characters.';
-      buttons = [{text: 'Try again', role: 'cancel'}];
+    else if (!this._loginForm.controls["password"].valid) {
+      message = "Password must be at least 6 characters.";
+      buttons = [{text: "Try again", role: "cancel"}];
     }
 
-    let alert = this._alertCtrl.create({
-      title: 'Error',
+    this._alertCtrl.create({
+      title: "Error",
       message: message,
       buttons: buttons
-    });
-    alert.present();
+    })
+    .present();
   }
 
   protected _keyboardSubmit() {

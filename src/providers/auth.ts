@@ -78,9 +78,7 @@ export class AuthProvider {
   private _signInWithCredential(credential: IFbToken): Promise<any> {
    this._storage.set("userInfo", credential);
 
-   return this._af.auth.signInWithCredential(credential).then((response) => {
-     return response
-   })
+   return this._af.auth.signInWithCredential(credential).then(response => response)
      .catch( error => {
        this._displayAndHandleErrors(error);
      });
@@ -202,13 +200,12 @@ export class AuthProvider {
           buttons =  ['Ok'];
       }
 
-      let alert = this._alertCtrl.create({
+      this._alertCtrl.create({
         title: title,
         message: message,
         buttons: buttons
-      });
-
-      alert.present();
+      })
+        .present();
     });
   }
 

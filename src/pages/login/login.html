@@ -37,7 +37,7 @@
             </ion-label>
             <ion-input
               type="email"
-              #email 
+              #email
               formControlName="email"
               placeholder="Email address"
               [class.invalid]="!_loginForm.controls.email.valid && (_loginForm.controls.email.touched || _loginForm.submitted)"
@@ -50,7 +50,7 @@
             </ion-label>
             <ion-input
               type="password"
-              #password 
+              #password
               formControlName="password"
               placeholder="Password"
               [class.invalid]="!_loginForm.controls.password.valid && (_loginForm.controls.password.touched || _loginForm.submitted)"
@@ -61,8 +61,13 @@
       </ion-row>
       <ion-row>
         <ion-col class="no-padding">
-          <button ion-button outline block color="primary" type="submit">
-            {{!this.isNewUser ? "Login" : "Register"}}
+          <button
+            ion-button
+            outline
+            block color="primary"
+            type="submit"
+          >
+            {{ !this._isNewUser ? "Login" : "Register" }}
           </button>
         </ion-col>
       </ion-row>
