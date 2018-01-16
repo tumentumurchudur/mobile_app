@@ -158,7 +158,7 @@ export class LoginPage {
 
   private _showError() {
     let message: string;
-    let buttons: Array<any>;
+    let buttons: any[];
 
     if (!this._loginForm.controls["email"].valid && !this._loginForm.controls["password"].valid) {
       message = `Please enter a valid email address.\n
@@ -176,8 +176,8 @@ export class LoginPage {
 
     this._alertCtrl.create({
       title: "Error",
-      message: message,
-      buttons: buttons
+      message,
+      buttons
     })
     .present();
   }

@@ -12,6 +12,7 @@ import { Storage } from "@ionic/storage";
 @Injectable()
 export class AuthProvider {
   private _user: IUser;
+
   constructor(
       private _af: AngularFireAuth,
       private _facebook: Facebook,
@@ -146,67 +147,63 @@ export class AuthProvider {
   }
 
   private _displayAndHandleErrors(error: any) {
-    return new Promise<any>((resolve) => {
       let title;
       let message;
       let buttons;
-      switch (true) {
-        case (error.code == 'auth/user-not-found'):
-          title = 'Could Not Complete Login';
-          message = 'Unfortunately, we could not find your account. Please double check your password or create an account.';
+      switch (error.code) {
+        case "auth/user-not-found":
+          title = "Could Not Complete Login";
+          message = "Unfortunately, we could not find your account. Please double check your password or create an account.";
           buttons = [
-            {text: 'Try Again', role: 'cancel'},
-            {text: 'Sign Up', handler: () => {
+            {text: "Try Again", role: "cancel"},
+            {text: "Sign Up", handler: () => {
               // TODO: _UserSignUp() user goes here
             }}
           ];
           break;
-        case (error.code == 'social-login-not-found'):
-          title = 'Could Not Complete Login';
-          message = 'Unfortunately, we could not find your account. If you feel this is an error, try using a different social provider. Otherwise, create an account.';
+        case "social-login-not-found":
+          title = "Could Not Complete Login";
+          message = "Unfortunately, we could not find your account. If you feel this is an error, try using a different social provider. Otherwise, create an account.";
           buttons = [
-            {text: 'Cancel', role: 'cancel', handler: () => {
+            {text: "Cancel", role: "cancel", handler: () => {
               this.logOutUser();
-              resolve();
             }},
-            {text: 'Sign Up', role: 'cancel', handler: () => {
-              resolve();
+            {text: "Sign Up", role: "cancel", handler: () => {
             }}
           ];
           break;
-        case (error.code === 'auth/wrong-password'):
-          title = 'The password is invalid. Please try again';
+        case "auth/wrong-password":
+          title = "The password is invalid. Please try again";
           message = error.message;
-          buttons = ['Ok'];
+          buttons = ["Ok"];
           break;
-        case (error.code === 'auth/email-already-in-use'):
-          title = 'Could Not Complete Sign Up';
+        case "auth/email-already-in-use":
+          title = "Could Not Complete Sign Up";
           message = error.message;
-          buttons = ['Ok'];
+          buttons = ["Ok"];
           break;
-        case (error.code === 'auth/account-exists-with-different-credential'):
-          title = 'Try a Different Social Provider';
+        case "auth/account-exists-with-different-credential":
+          title = "Try a Different Social Provider";
           message = error.message;
-          buttons = ['Ok'];
+          buttons = ["Ok"];
           break;
-        case (error.code === 'auth/internal-error' || error.code == 'auth/invalid-credential'):
-          title = 'Your login session has expired. Please login again.';
+        case "auth/internal-error" || "auth/invalid-credential":
+          title = "Your login session has expired. Please login again.";
           message = error.message;
-          buttons = ['Ok'];
+          buttons = ["Ok"];
           break;
         default:
-          title = 'Something Went Wrong';
-          message = 'Could not complete login at this time. Please try again';
-          buttons =  ['Ok'];
+          title = "Something Went Wrong";
+          message = "Could not complete login at this time. Please try again";
+          buttons =  ["Ok"];
       }
 
       this._alertCtrl.create({
         title: title,
-        message: message,
-        buttons: buttons
+        message,
+        buttons
       })
         .present();
-    });
   }
 
   public logOutUser(): void {
