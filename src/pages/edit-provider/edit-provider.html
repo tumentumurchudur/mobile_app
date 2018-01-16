@@ -1,0 +1,53 @@
+<ion-header>
+  <ion-navbar color="light" hideBackButton="true">
+    <ion-title class="setup-title">Provider Information</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <form class="text-container" [formGroup]="_editProvider">
+      <h4>Select your provider information</h4>
+      <div *ngIf="_providerCountries$ | async as countries">
+        <ion-item>
+          <ion-label>Country</ion-label>
+          <ion-select formControlName="country" (ionChange)="_getRegions()">
+            <ion-option *ngFor="let country of countries" [value]="_country">
+              {{ country }}
+            </ion-option>
+          </ion-select>
+        </ion-item>
+      </div>
+      <div *ngIf="_providerRegions$ | async as regions">
+        <ion-item>
+          <ion-label>Region</ion-label>
+          <ion-select formControlName="region" (ionChange)="_getProviders()">
+            <ion-option *ngFor="let region of regions" [value]="_region">
+              {{ region }}
+            </ion-option>
+          </ion-select>
+        </ion-item>
+      </div>
+      <div *ngIf="_providerServiceProviders$ | async as providers">
+        <ion-item>
+          <ion-label>Provider</ion-label>
+          <ion-select formControlName="provider" (ionChange)="_getPlans()">
+            <ion-option *ngFor="let provider of providers" [value]="_provider">
+              {{ provider }}
+            </ion-option>
+          </ion-select>
+        </ion-item>
+      </div>
+      <div *ngIf="_providerPlans$ | async as plans">
+        <ion-item>
+          <ion-label>Plan</ion-label>
+          <ion-select formControlName="plan">
+            <ion-option *ngFor="let plan of plans" [value]="_plan">
+              {{ plan }}
+            </ion-option>
+          </ion-select>
+        </ion-item>
+      </div>
+  </form>
+
+  <button class="save-btn flex" (tap)="closeModal()">Close</button>
+</ion-content>
