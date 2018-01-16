@@ -20,7 +20,7 @@ export class ProfilePage {
 
   private _onLogoutClick(): void {
    this._auth.logOutUser();
-   this.navCtrl.setRoot('LoginPage');
+   this.navCtrl.setRoot("LoginPage");
   }
 
 }
