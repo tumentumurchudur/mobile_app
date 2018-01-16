@@ -1,10 +1,8 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import {IonicPage, NavController, NavParams, ViewController} from 'ionic-angular';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import {Observable} from "rxjs/Observable";
 import { StoreServices } from "../../store/services";
-
-
 
 @IonicPage()
 @Component({
@@ -24,12 +22,16 @@ export class EditProviderPage {
   private _type: string;
   private _country: string;
   private _region: string;
+  private _provider: string;
+  private _plan: string;
 
   constructor(
     private _formBuilder: FormBuilder,
     private _storeServices: StoreServices,
-    private navCtrl: NavController,
-    private navParams: NavParams) {
+    private _navCtrl: NavController,
+    private _viewCtrl: ViewController,
+    private navParams: NavParams
+  ) {
 
     this._providerData = this.navParams.get('providerData').split('/');
     this._planName = this.navParams.get('plan');
@@ -37,10 +39,9 @@ export class EditProviderPage {
     this._country = this._providerData[1];
     this._region = this._providerData[2];
 
-
     this._editProvider = _formBuilder.group({
-      country: [this._country],
-      region: [this._region],
+      country: [''],
+      region: [''],
       provider: [''],
       plan: ['']
     });
@@ -53,17 +54,8 @@ export class EditProviderPage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad EditProviderPage');
-    console.log('this._providerData', this._providerData);
-    console.log('this._providerData[0]', this._type);
-    console.log('this._providerData[1]', this._country);
-    console.log('this._providerData[2]', this._region);
     this._storeServices.getProviderCountries(this._type);
-    this._storeServices.getProviderRegions(`${this._type}/${this._country}`);
-    this._storeServices.getProviderProviders(`${this._type}/${this._country}/${this._region}`);
   }
-
-
 
   private _getRegions() {
     this._storeServices.getProviderRegions(`${this._type}/${this._editProvider.value["country"]}`);
@@ -74,10 +66,15 @@ export class EditProviderPage {
   }
 
   private _getPlans() {
-    const provider = this._editProvider.value["provider"].trim();
-    console.log(this._editProvider.value["provider"].trim());
-    console.log(`${this._type}/${this._editProvider.value["country"]}/${this._editProvider.value["region"]}/${provider}/plans`);
-    this._storeServices.getProviderPlans(`${this._type}/${this._editProvider.value["country"]}/${this._editProvider.value["region"]}/${provider}/plans`);
+    this._storeServices.getProviderPlans(`${this._type}/${this._editProvider.value["country"]}/${this._editProvider.value["region"]}/${this._editProvider.value["provider"]}/plans`);
+  }
+
+  private _closeModal() {
+    this._viewCtrl.dismiss({type: this._type, provider: this._editProvider});
+  }
+
+  private _cancelModal() {
+    this._viewCtrl.dismiss();
   }
 
 }

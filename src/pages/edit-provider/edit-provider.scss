@@ -13,6 +13,10 @@ page-edit-provider {
     height: 8vh;
   }
 
+  ion-label{
+    white-space:normal !important;
+  }
+
   div.toolbar-title {
     color: #999EA8 !important;
     padding-right: 5vh;
@@ -22,27 +26,54 @@ page-edit-provider {
   .setup-title{
     text-align: center;
     padding-right: 15vw;
+    padding-top: 0px !important;
   }
 
   .text-container {
     padding: 2rem 0 0 0;
     width: 100%;
+    h4 {
+      padding: 10%;
+      text-align: center;
+    }
   }
 
-
-  .cancel-btn {
-    color: #8C919A;
-    font-size: 1.5rem;
-    width:15vw;
-    text-transform: none;
-  }
-
-  .save-btn {
-    display: flex;
-    font-size: 1.5rem;
-    background-color: #2AACE0;
-    color: #ffffff;
+  .button-section {
+    position: absolute;
+    bottom: 0;
     width: 100%;
+    font-size: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  .form-nav-button {
+    display: flex;
+    margin: 0;
+    width: 100%;
+    text-align: center;
+    padding-bottom: 4px;
+    font-size: 20px;
+    height: 10vh;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    flex: 1;
+  }
+
+  .form-nav-button-back {
+    margin: 0;
+    width: 50%;
+    padding-bottom: 4px;
+    font-size: 20px;
+    height: 10vh;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    background: transparent;
+    color: $vutiliti-blue;
+    text-transform: none;
   }
 
 }
