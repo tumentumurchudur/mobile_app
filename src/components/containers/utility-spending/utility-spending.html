@@ -92,6 +92,7 @@
                 [dateFormat]="_selectedDateRanges[i].dateFormat"
                 [showAreaFill]="true"
                 [noDataText]="data.timedOut ? 'Timed out!' : 'No data'"
+                [unit]="_getMeterConfig(meter, 'unit')"
               ></line-chart>
 
               <div *ngIf="data.cost">
@@ -153,6 +154,7 @@
             [loading]="_currentMeterIndex === i ? (_comparisonLoading$ | async) : false"
             [dateRange]="_selectedDateRanges[i]"
             [meter]="meter"
+            [unit]="_getMeterConfig(meter, 'unit')"
           >
           </neighborhood-comparison>
         </div>

@@ -13,6 +13,7 @@ export class NeighborhoodComparisonComponent implements OnChanges {
   @Input() loading: boolean;
   @Input() dateRange: IDateRange;
   @Input() meter: IMeter;
+  @Input() unit: string;
 
   private _allData: any[] = [];
   private _series: string[] = [];
