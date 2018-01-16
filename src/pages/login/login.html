@@ -37,7 +37,8 @@
             </ion-label>
             <ion-input
               type="email"
-              #email formControlName="email"
+              #email 
+              formControlName="email"
               placeholder="Email address"
               [class.invalid]="!_loginForm.controls.email.valid && (_loginForm.controls.email.touched || _loginForm.submitted)"
             >
@@ -49,7 +50,8 @@
             </ion-label>
             <ion-input
               type="password"
-              #password formControlName="password"
+              #password 
+              formControlName="password"
               placeholder="Password"
               [class.invalid]="!_loginForm.controls.password.valid && (_loginForm.controls.password.touched || _loginForm.submitted)"
             >
