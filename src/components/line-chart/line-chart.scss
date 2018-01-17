@@ -3,6 +3,11 @@ line-chart {
     position: relative;
     margin-left: 7px;
 
+    .text-unit {
+      font-size: 8vh;
+      opacity: .2;
+    }
+
     .no-data {
       position: absolute;
       top: 40%;
