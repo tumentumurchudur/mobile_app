@@ -165,7 +165,7 @@ export class StoreServices {
     this._store.dispatch(new TriggerGetProviderPlans(path));
   }
 
-  public resetProvider() {
+  public resetProviders() {
 	  this._store.dispatch(new ResetProvider());
   }
 

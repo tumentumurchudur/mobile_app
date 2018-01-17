@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnInit } from "@angular/core";
 import { AlertController, ModalController } from "ionic-angular";
 import { FormGroup, FormBuilder, FormControl } from "@angular/forms";
-import { Keyboard } from '@ionic-native/keyboard';
+import { Keyboard } from "@ionic-native/keyboard";
 
 import { IMeter, IUser } from "../../interfaces";
 import { StoreServices } from "../../store/services";
@@ -21,8 +21,8 @@ export class EditMeterFormComponent implements OnInit {
   private _providerName: string;
   private _planName: string;
   private _currentMeterName: string;
+  private _providerPath: string;
   private _newProviderPath: string;
-
 
   constructor(
     private _formBuilder: FormBuilder,
@@ -36,29 +36,34 @@ export class EditMeterFormComponent implements OnInit {
     this._providerName = this.meter._provider.split("/").pop() || "No provider";
     this._planName = this.meter._plan || "No plan";
     this._currentMeterName = this.meter._name;
+    this._providerPath = this.meter._provider;
     this._editMeter = this._formBuilder.group({
       name: [this.meter._name],
       meterNumber: new FormControl({value: this.meter._meter_id, disabled: true}),
-      provider: new FormControl({value: this._providerName + " - " + this._planName}),
+      provider: [this._providerName + " - " + this._planName],
+      plan: [this._planName],
       billingStart: [this.meter._billing_start],
       goal: [this.meter._goal]
     });
   }
 
   protected _editProvider() {
-    let modal = this._modalCtrl.create('EditProviderPage', {
+    this._storeServices.resetProviders();
+    let modal = this._modalCtrl.create("EditProviderPage", {
       providerData: this.meter._provider,
       plan: this._planName
     });
     modal.onDidDismiss((data) => {
-      this._newProviderPath = `${data.type}/${data.provider.value['country']}/${data.provider.value['region']}/` +
-        `${data.provider.value['provider'].name}`;
-      this._providerName = data.provider.value['provider'].name;
-      this._planName = data.provider.value['plan'].name;
-      if (this._editMeter.value['provider'] !== this._newProviderPath ||
-        this._editMeter.value['plan'] !== this._planName) {
-        this._editMeter.patchValue({provider: this._newProviderPath, plan: this._planName});
-        this._editMeter.markAsDirty();
+      if (!data) {
+        return;
+      } else {
+        this._providerName = data.provider.value['provider'];
+        this._planName = data.provider.value['plan'];
+        this._providerPath = `${data.type}/${data.provider.value["country"]}/${data.provider.value["region"]}/${data.provider.value["provider"]}`;
+        if (this._editMeter.value["provider"] !== this._newProviderPath || this._editMeter.value["plan"] !== this._planName) {
+          this._editMeter.patchValue({provider: this._providerName + " - " + this._planName, plan: this._planName});
+          this._editMeter.markAsDirty();
+        }
       }
     });
     modal.present();
@@ -69,9 +74,10 @@ export class EditMeterFormComponent implements OnInit {
       _billing_start: parseInt(this._editMeter.value["billingStart"]),
       _goal: parseInt(this._editMeter.value["goal"]),
       _name: this._editMeter.value["name"],
+      _provider: this._providerPath,
       _oldMeterName: this._currentMeterName
     });
-
+    console.log("newMeter", newMeter);
     this.saveClicked.emit(newMeter);
   }
 

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import {IonicPage, NavController, NavParams, ViewController} from 'ionic-angular';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import {Observable} from "rxjs/Observable";
 import { StoreServices } from "../../store/services";
 
@@ -22,8 +22,6 @@ export class EditProviderPage {
   private _type: string;
   private _country: string;
   private _region: string;
-  private _provider: string;
-  private _plan: string;
 
   constructor(
     private _formBuilder: FormBuilder,
@@ -40,10 +38,10 @@ export class EditProviderPage {
     this._region = this._providerData[2];
 
     this._editProvider = _formBuilder.group({
-      country: [''],
-      region: [''],
-      provider: [''],
-      plan: ['']
+      country: ['', Validators.required],
+      region: ['', Validators.required],
+      provider: ['', Validators.compose([Validators.required, Validators.minLength(2)])],
+      plan: ['', Validators.required]
     });
 
     this._providerCountries$ = this._storeServices.selectProviderCountries();
@@ -59,10 +57,12 @@ export class EditProviderPage {
 
   private _getRegions() {
     this._storeServices.getProviderRegions(`${this._type}/${this._editProvider.value["country"]}`);
+
   }
 
   private _getProviders() {
     this._storeServices.getProviderProviders(`${this._type}/${this._editProvider.value["country"]}/${this._editProvider.value["region"]}`);
+    this._editProvider.value['provider'].invalid;
   }
 
   private _getPlans() {
@@ -70,6 +70,7 @@ export class EditProviderPage {
   }
 
   private _closeModal() {
+    console.log('editProvider', this._editProvider);
     this._viewCtrl.dismiss({type: this._type, provider: this._editProvider});
   }
 

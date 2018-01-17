@@ -61,7 +61,6 @@ export class ProviderEffects {
     .ofType(TRIGGER_GET_PROVIDERS)
     .map((action: any) => action.payload)
     .switchMap((path: string) => {
-    console.log('path', path);
       return this._db.getProviderRequestInfo(path);
     })
     .map((regions: any) => {
@@ -73,7 +72,6 @@ export class ProviderEffects {
     .ofType(TRIGGER_GET_PROVIDER_PLANS)
     .map((action: any) => action.payload)
     .switchMap((path: string) => {
-      console.log('path', path);
       return this._db.getProviderRequestInfo(path);
     })
     .map((plans: any) => {
