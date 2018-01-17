@@ -181,6 +181,9 @@ export class UtilitySpendingComponent implements OnInit {
   private _onTimeTravelClick(direction: string, meter: IMeter, index: number, page: string): void {
     this._selectedDateRanges[index] = ChartHelper.getDateRange(direction, this._selectedDateRanges[index]);
 
+    // Sets meter as the current card, so animation can be activated.
+    this._currentMeterIndex = index;
+
     if (page === "timeTravel") {
       this._storeServices.loadReadsByDateRange(meter, this._selectedDateRanges[index]);
     } else {
