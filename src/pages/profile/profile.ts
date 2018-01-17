@@ -19,8 +19,8 @@ export class ProfilePage {
   }
 
   private _onLogoutClick(): void {
-   this._auth.logoutUser();
-   this.navCtrl.setRoot('LoginPage');
+   this._auth.logOutUser();
+   this.navCtrl.setRoot("LoginPage");
   }
 
 }
