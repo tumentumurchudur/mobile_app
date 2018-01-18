@@ -365,7 +365,6 @@ export class DatabaseProvider {
       //checks if user name has been changed or not, if so then delete old meter and add new
       if (meter._name !== meter._oldMeterName) {
 
-        console.log('Update User Name', settings);
         this._orgsRef.child(`${user.orgPath}/Building1/_meters/_${meter._utilityType}/${meter._oldMeterName}`).remove();
           this._orgsRef.child(path).set(settings).then(() => {
             observer.next(Object.assign({}, meter, settings));
