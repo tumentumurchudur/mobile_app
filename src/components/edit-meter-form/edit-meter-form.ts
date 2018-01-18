@@ -57,8 +57,8 @@ export class EditMeterFormComponent implements OnInit {
       if (!data) {
         return;
       } else {
-        this._providerName = data.provider.value['provider'];
-        this._planName = data.provider.value['plan'];
+        this._providerName = data.provider.value["provider"];
+        this._planName = data.provider.value["plan"];
         this._providerPath = `${data.type}/${data.provider.value["country"]}/${data.provider.value["region"]}/${data.provider.value["provider"]}`;
         if (this._editMeter.value["provider"] !== this._newProviderPath || this._editMeter.value["plan"] !== this._planName) {
           this._editMeter.patchValue({provider: this._providerName + " - " + this._planName, plan: this._planName});
@@ -77,7 +77,6 @@ export class EditMeterFormComponent implements OnInit {
       _provider: this._providerPath,
       _oldMeterName: this._currentMeterName
     });
-    console.log("newMeter", newMeter);
     this.saveClicked.emit(newMeter);
   }
 

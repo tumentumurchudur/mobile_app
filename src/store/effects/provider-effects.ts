@@ -11,7 +11,7 @@ import {
   TRIGGER_GET_PROVIDER_PLANS,
 
   AddProviders,
-  ResetProvider,
+  ResetProviders,
   UpdateProviderCountries,
   UpdateProviders,
   UpdateProviderPlans,

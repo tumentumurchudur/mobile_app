@@ -45,7 +45,7 @@ export {
 export {
   AddProviders,
   TriggerAddProviders,
-  ResetProvider,
+  ResetProviders,
   UpdateProviderRegions,
   UpdateProviderCountries,
   UpdateProviders,
@@ -63,7 +63,7 @@ export {
   TRIGGER_GET_PROVIDER_PLANS,
   TRIGGER_ADD_PROVIDERS,
 
-  RESET_PROVIDER,
+  RESET_PROVIDERS,
   UPDATE_PROVIDER_COUNTRIES,
   UPDATE_PROVIDERS,
   UPDATE_PROVIDER_REGIONS,

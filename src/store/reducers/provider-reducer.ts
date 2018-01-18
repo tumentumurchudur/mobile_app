@@ -37,7 +37,7 @@ export function providerReducer(state = { providerTypes: [], provider: {} }, act
       const newProviderPlans = Object.assign({}, state.provider, { plans: action.payload });
 
       return Object.assign({}, state, { provider: newProviderPlans });
-    case ActionTypes.RESET_PROVIDER:
+    case ActionTypes.RESET_PROVIDERS:
       return Object.assign({}, state, { provider: {} });
     default:
       return state;
