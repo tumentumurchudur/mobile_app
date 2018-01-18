@@ -87,11 +87,6 @@ export class LoginPage {
     user.email = this._loginForm.value.email.toLowerCase().trim();
     user.password =  this._loginForm.value.password;
 
-    if (this._isNewUser) {
-      this.navCtrl.push("SignUpPage");
-      return;
-    }
-
     if (this._loginForm.dirty) {
       this._loginForm.controls["email"].markAsTouched();
       this._loginForm.controls["password"].markAsTouched();
@@ -99,6 +94,11 @@ export class LoginPage {
         this._showError();
         return;
       } else {
+        if (this._isNewUser) {
+          this.navCtrl.push("SignUpPage");
+          return;
+        }
+
         this._auth.loginWithEmail(user)
           .then(userData => {
             const user: IUser = this._createUser(userData);
