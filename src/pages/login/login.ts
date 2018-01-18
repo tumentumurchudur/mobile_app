@@ -2,9 +2,9 @@ import { Component, OnInit } from "@angular/core";
 import { IonicPage, NavController } from "ionic-angular";
 import { Storage } from "@ionic/storage";
 import { SplashScreen } from "@ionic-native/splash-screen";
-import { Keyboard } from '@ionic-native/keyboard';
+import { Keyboard } from "@ionic-native/keyboard";
 import { IUser, IFbToken } from "../../interfaces";
-import { AuthProvider } from "../../providers"
+import { AuthProvider } from "../../providers";
 import { StoreServices } from "../../store/services";
 
 @IonicPage({
@@ -20,7 +20,7 @@ export class LoginPage {
     password: null,
     uid: null
   };
-  private _isNewUser: boolean = false;
+  private _isNewUser = false;
 
   constructor(
     private _storeServices: StoreServices,
@@ -105,7 +105,7 @@ export class LoginPage {
         this.navCtrl.push("HomePage");
       })
       .catch(error => {
-        console.log("Facebook login failed: ", error)
+        console.log("Facebook login failed: ", error);
       });
   }
 

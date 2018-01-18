@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from "@angular/core";
+import { Component } from "@angular/core";
 import { IonicPage, NavController, NavParams } from "ionic-angular";
 import { AuthProvider } from "../../providers";
 import { StoreServices } from "../../store/services";
@@ -20,7 +20,7 @@ export class ProfilePage {
 
   private _onLogoutClick(): void {
    this._auth.logoutUser();
-   this.navCtrl.setRoot('LoginPage');
+   this.navCtrl.setRoot("LoginPage");
   }
 
 }

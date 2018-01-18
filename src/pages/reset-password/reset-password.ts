@@ -1,12 +1,12 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { Component } from "@angular/core";
+import { IonicPage, NavController, NavParams } from "ionic-angular";
 
 @IonicPage({
-  name: 'ResetPasswordPage'
+  name: "ResetPasswordPage"
 })
 @Component({
-  selector: 'page-reset-password',
-  templateUrl: 'reset-password.html',
+  selector: "page-reset-password",
+  templateUrl: "reset-password.html",
 })
 export class ResetPasswordPage {
 
@@ -14,7 +14,7 @@ export class ResetPasswordPage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad ResetPasswordPage');
+    console.log("ionViewDidLoad ResetPasswordPage");
   }
 
 }

@@ -4,27 +4,27 @@ import { AppState } from "../reducers";
 import { IUser, IReads, IMeter, IDateRange, IComparison } from "../../interfaces";
 import { Observable } from "rxjs/Observable";
 import {
-	ResetProvider,
-	TriggerAddProviders,
-  TriggerGetProviderCountries,
-  TriggerGetProviderRegions,
-  TriggerGetProviders,
-  TriggerGetProviderPlans,
-	AddUser,
-	UpdateUser,
-	TriggerAddMeter,
-	TriggerRemoveMeter,
-	TriggerLoadMeters,
-	TriggerUpdateMeterReads,
-	TriggerUpdateMeterSettings,
-  TriggerValidateMeter,
-	TriggerComparisonReads,
-	AddReads,
-	LoadingReads,
-	LoadReadsByMeters,
-	LoadReadsByDateRange,
-	LoadingComparisonReads,
-	ResetComparisonTimeout
+ResetProvider,
+TriggerAddProviders,
+TriggerGetProviderCountries,
+TriggerGetProviderRegions,
+TriggerGetProviders,
+TriggerGetProviderPlans,
+AddUser,
+UpdateUser,
+TriggerAddMeter,
+TriggerRemoveMeter,
+TriggerLoadMeters,
+TriggerUpdateMeterReads,
+TriggerUpdateMeterSettings,
+TriggerValidateMeter,
+TriggerComparisonReads,
+AddReads,
+LoadingReads,
+LoadReadsByMeters,
+LoadReadsByDateRange,
+LoadingComparisonReads,
+ResetComparisonTimeout
 } from "../actions";
 
 
@@ -70,12 +70,12 @@ export class StoreServices {
 		this._store.dispatch(new TriggerRemoveMeter({ meter, user }));
 	}
 
-	public selectMeters() : Observable<IMeter[]> {
-		return this._store.select(state => state.meters.data)
+	public selectMeters(): Observable<IMeter[]> {
+		return this._store.select(state => state.meters.data);
 	}
 
   public selectUser(): Observable<IUser> {
-    return this._store.select(state => state.user)
+    return this._store.select(state => state.user);
   }
 
 	public addUser(user: IUser) {

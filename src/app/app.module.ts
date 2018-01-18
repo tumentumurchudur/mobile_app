@@ -9,9 +9,9 @@ import { Keyboard } from "@ionic-native/keyboard";
 
 import { AngularFireModule } from "angularfire2";
 import { HttpClientModule } from "@angular/common/http";
-import { AngularFireAuthModule } from "angularfire2/auth"
+import { AngularFireAuthModule } from "angularfire2/auth";
 import { fireBaseConfig } from "../configs";
-import { AuthProvider, DatabaseProvider } from "../providers"
+import { AuthProvider, DatabaseProvider } from "../providers";
 import { Facebook } from "@ionic-native/facebook";
 import { GooglePlus } from "@ionic-native/google-plus";
 
@@ -19,7 +19,7 @@ import { StoreDevtoolsModule } from "@ngrx/store-devtools";
 import { StoreModule } from "@ngrx/store";
 import { reducers, metaReducers } from "../store/reducers";
 import { EffectsModule } from "@ngrx/effects";
-import { IonicStorageModule } from "@ionic/storage"
+import { IonicStorageModule } from "@ionic/storage";
 import { MeterEffects, ComparisonEffects, ReadsEffects, ProviderEffects } from "../store/effects";
 import { StoreServices } from "../store/services";
 import { CostHelper } from "../helpers";
