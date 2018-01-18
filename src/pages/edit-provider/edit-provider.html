@@ -48,7 +48,7 @@
     <section class="button-section">
       <button class="form-nav-button-back" (tap)="_cancelModal()">Cancel</button>
       <button
-        [disabled]="!this._editProvider.valid"
+        [disabled]="!this._editProvider.controls["plan"].invalid"
         ion-button
         type="submit"
         class="form-nav-button"

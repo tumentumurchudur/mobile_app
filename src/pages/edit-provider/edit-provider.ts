@@ -1,13 +1,13 @@
-import { Component } from '@angular/core';
-import {IonicPage, NavController, NavParams, ViewController} from 'ionic-angular';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Component } from "@angular/core";
+import {IonicPage, NavController, NavParams, ViewController} from "ionic-angular";
+import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import {Observable} from "rxjs/Observable";
 import { StoreServices } from "../../store/services";
 
 @IonicPage()
 @Component({
-  selector: 'page-edit-provider',
-  templateUrl: 'edit-provider.html',
+  selector: "page-edit-provider",
+  templateUrl: "edit-provider.html",
 })
 export class EditProviderPage {
 
@@ -31,17 +31,17 @@ export class EditProviderPage {
     private navParams: NavParams
   ) {
 
-    this._providerData = this.navParams.get('providerData').split('/');
-    this._planName = this.navParams.get('plan');
+    this._providerData = this.navParams.get("providerData").split("/");
+    this._planName = this.navParams.get("plan");
     this._type = this._providerData[0];
     this._country = this._providerData[1];
     this._region = this._providerData[2];
 
     this._editProvider = _formBuilder.group({
-      country: ['', Validators.required],
-      region: ['', Validators.required],
-      provider: ['', Validators.compose([Validators.required, Validators.minLength(2)])],
-      plan: ['', Validators.required]
+      country: ["", Validators.required],
+      region: ["", Validators.required],
+      provider: ["", Validators.compose([Validators.required, Validators.minLength(2)])],
+      plan: ["", Validators.required]
     });
 
     this._providerCountries$ = this._storeServices.selectProviderCountries();
@@ -62,7 +62,6 @@ export class EditProviderPage {
 
   private _getProviders() {
     this._storeServices.getProviderProviders(`${this._type}/${this._editProvider.value["country"]}/${this._editProvider.value["region"]}`);
-    this._editProvider.value['provider'].invalid;
   }
 
   private _getPlans() {
@@ -70,7 +69,6 @@ export class EditProviderPage {
   }
 
   private _closeModal() {
-    console.log('editProvider', this._editProvider);
     this._viewCtrl.dismiss({type: this._type, provider: this._editProvider});
   }
 
