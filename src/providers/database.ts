@@ -344,6 +344,8 @@ export class DatabaseProvider {
   }
 
   public updateMeterSettings(meter: IMeter, user: IUser): Observable<IMeter> {
+
+    console.log('meterinUpdateSettings')
     return Observable.create(observer => {
 
       const updates = {};
@@ -362,15 +364,15 @@ export class DatabaseProvider {
 
       //checks if user name has been changed or not, if so then delete old meter and add new
       if (meter._name !== meter._oldMeterName) {
-        this._orgsRef.child(`${user.orgPath}/Building1/_meters/_${meter._utilityType}/${meter._oldMeterName}`).remove().then(() =>{
-          this._orgsRef.child(path)
-            .set(meter).then(() => {
+
+        console.log('Update User Name', settings);
+        this._orgsRef.child(`${user.orgPath}/Building1/_meters/_${meter._utilityType}/${meter._oldMeterName}`).remove();
+          this._orgsRef.child(path).set(settings).then(() => {
             observer.next(Object.assign({}, meter, settings));
           })
             .catch(error => {
               observer.error(error);
              });
-        });
 
       } else {
           this._orgsRef.update(updates).then(() => {
