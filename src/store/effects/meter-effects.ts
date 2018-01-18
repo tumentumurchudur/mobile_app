@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { Effect, Actions } from "@ngrx/effects";
 import { Storage } from "@ionic/storage";
 import * as moment from "moment";
+import { ToastController } from "ionic-angular";
 
 import { Observable } from "rxjs/rx";
 import "rxjs/add/operator/map";
@@ -34,6 +35,33 @@ import {
 
 @Injectable()
 export class MeterEffects {
+  /**
+   * Handles meter Toasts.
+   * @memberof MeterEffects
+   */
+  private _presentToast(meterName: string, event: string) {
+    let message = `Adding ${meterName}...`;
+
+    if (event === "completed"){
+      message = `${meterName} was successfully added.`;
+    }
+
+    if (event === "removed"){
+      message = `${meterName} was successfully removed.`;
+    }
+
+    const toast = this._toastCtrl.create({
+      message: message,
+      duration: 2000,
+      cssClass: "meter-toast",
+      position: "top"
+    });
+
+    //removes any existing toasts
+    toast.dismissAll();
+    toast.present();
+  }
+
   /**
    * Handles load meters action.
    *
@@ -175,6 +203,7 @@ export class MeterEffects {
     .map((action: any) => action.payload)
     .switchMap((data: any) => {
       const { meter = null, user = null } = data;
+      this._presentToast(meter._name, "adding");
       return  this._db.addMeter(meter, user);
     })
     .switchMap((meter: IMeter) => {
@@ -186,6 +215,7 @@ export class MeterEffects {
     })
     .map((meter: IMeter[]) => {
       const newMeter = CostHelper.calculateCostAndUsageForMeters([meter[0]]);
+      this._presentToast(meter[0]._name, "completed");
 
       return new AddMeter(newMeter[0]);
     });
@@ -219,6 +249,7 @@ export class MeterEffects {
       return this._db.deleteMeter(meter, user);
     })
     .map((meter: IMeter) => {
+      this._presentToast(meter._name, "removed");
       // Removes meter from store.
       return new RemoveMeter(meter);
     });
@@ -226,6 +257,7 @@ export class MeterEffects {
   constructor(
     private readonly _actions$: Actions,
     private readonly _db: DatabaseProvider,
-    private readonly _storage: Storage
+    private readonly _storage: Storage,
+    private _toastCtrl: ToastController
   ) { }
 }

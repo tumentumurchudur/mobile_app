@@ -21,7 +21,6 @@ $status-warning-color: #FFCD52;
 $status-bad-color: #C22A17;
 $text-input-highlight-color-valid: #29ACE0;
 $text-input-md-highlight-color-valid: #29ACE0;
-$toolbar-ios-height: 5rem !important;
 $cordova-ios-statusbar-padding: 0px !important;
 $navbar-ios-height:5rem;
 $vu-white: #dddddd;
@@ -70,12 +69,28 @@ a {
 }
 // Adds blue line on inputs for valid inputs
 .item-md.item-input.ng-valid.input-has-value:not(.input-has-focus) .item-inner {
-  border-bottom-color: #29ACE0;
-  box-shadow: #29ACE0;
+  border-bottom-color: $primary;
+}
+
+.item-ios.item-input.ng-valid.input-has-value:not(.input-has-focus) .item-inner {
+  border-bottom-color: $primary;
 }
 
 .item-md.item-input.ng-valid.input-has-value:not(.input-has-focus) .item-inner {
-  box-shadow: inset 0 -1px 0 0 #29ACE0 !important;
+  box-shadow: inset 0 -1px 0 0 $primary !important;
+}
+
+.item-ios.item-input.ng-valid.input-has-value:not(.input-has-focus) .item-inner {
+  box-shadow: inset 0 -1px 0 0 $primary !important;
+}
+
+.meter-toast {
+  .toast-wrapper{
+    background: none;
+  }
+  .toast-container{
+    background-color: #535969;
+  }
 }
 
 .timespan-alert.alert-md {

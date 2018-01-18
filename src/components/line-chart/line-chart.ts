@@ -20,6 +20,7 @@ export class LineChartComponent implements OnChanges {
   @Input() showXAxisLabels: boolean = true;
   @Input() showYAxisLabels: boolean = true;
   @Input() noDataText: string = "No data";
+  @Input() unit: string = "";
 
   private element: any;
   private margin: any = { left: 10, right: 0, top: 10, bottom: 10 };
@@ -45,6 +46,12 @@ export class LineChartComponent implements OnChanges {
     // Position svg using given margins
     const svg = d3.select(this.element).select("svg")
       .attr("viewBox", "20 0 " + this.width + " " + (this.height + this.margin.top));
+
+    // Adds unit text
+    svg.append("text")
+      .attr("class", "text-unit")
+      .attr("transform", "translate(" + width * .3 + "," + height * .65 + ")rotate(-90)")
+      .text(this.unit || "");
 
     // Set the domain and range for values on the x-axis
     const x = d3.scaleTime()
