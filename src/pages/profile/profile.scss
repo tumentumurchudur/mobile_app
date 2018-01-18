@@ -1,13 +1,14 @@
+@import "../../styles/variables";
+
 page-profile {
 
   .ion-navbar {
-    padding-left: 1vh;
     padding-right: 5vh;
     text-align: center;
   }
 
   div.toolbar-title {
-    color: #999EA8 !important;
+    color: $navbar-text !important;
     font-size: 20px;
   }
 

@@ -85,14 +85,11 @@ export class AuthProvider {
      });
   }
 
-  public resetPassword(emailAddr: string): Observable<IUser> {
-    return Observable.create(observer => {
-      this._af.auth.sendPasswordResetEmail(emailAddr).then(success => {
-          observer.next(success);
-        }).catch(error => {
-          observer.error(error);
-        });
-    });
+  public resetPassword(emailAddr: string): Promise<any> {
+    return this._af.auth.sendPasswordResetEmail(emailAddr).then(success => success)
+      .catch(error => {
+        this._displayAndHandleErrors(error);
+      })
   }
 
   public getTokenId(): Observable<any> {
