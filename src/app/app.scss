@@ -64,6 +64,9 @@ a {
   padding-top: 0 !important;
 }
 
+.alert-ios .alert-radio-label{
+  white-space: nowrap !important;
+}
 // Adds blue line on inputs for valid inputs
 .item-md.item-input.ng-valid.input-has-value:not(.input-has-focus) .item-inner {
   border-bottom-color: $primary;

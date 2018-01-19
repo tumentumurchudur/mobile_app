@@ -28,7 +28,7 @@
   <form [formGroup]="_editMeter">
     <ion-item>
       <ion-label floating color="text" stacked>Name</ion-label>
-      <ion-input readonly formControlName="name"></ion-input>
+      <ion-input formControlName="name"></ion-input>
     </ion-item>
 
     <ion-item (keyup.enter)="_keyBoardClose()" class="meter-input">
@@ -43,7 +43,7 @@
 
     <ion-item class="meter-input">
       <ion-label floating color="text" stacked>Provider</ion-label>
-      <ion-input formControlName="provider"></ion-input>
+      <ion-input formControlName="provider" (tap)="_editProvider()"></ion-input>
     </ion-item>
 
     <ion-item class="meter-input">

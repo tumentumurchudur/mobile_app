@@ -4,7 +4,7 @@ import { AppState } from "../reducers";
 import { IUser, IReads, IMeter, IDateRange, IComparison } from "../../interfaces";
 import { Observable } from "rxjs/Observable";
 import {
-	ResetProvider,
+	ResetProviders,
 	TriggerAddProviders,
   TriggerGetProviderCountries,
   TriggerGetProviderRegions,
@@ -165,8 +165,8 @@ export class StoreServices {
     this._store.dispatch(new TriggerGetProviderPlans(path));
   }
 
-  public resetProvider() {
-	  this._store.dispatch(new ResetProvider());
+  public resetProviders() {
+	  this._store.dispatch(new ResetProviders());
   }
 
   public validateMeter(meterNumber: string) {

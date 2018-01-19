@@ -65,11 +65,11 @@
         </ion-select>
       </ion-item>
     </div>
-    <div *ngIf="_providerServiceProviders$ | async as providers">
+    <div *ngIf="_providerServiceProviders$ | async as serviceProviders">
       <ion-item>
         <ion-label>Provider</ion-label>
         <ion-select formControlName="provider" (ionChange)="_getPlans()">
-          <ion-option *ngFor="let provider of providers" [value]="provider">
+          <ion-option *ngFor="let provider of serviceProviders" [value]="provider">
             {{ provider }}
           </ion-option>
         </ion-select>
