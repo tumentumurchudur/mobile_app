@@ -227,8 +227,12 @@ ion-app {
   background-color: #EDEFF2 !important;
 }
 
-.side-menu-title .toolbar-title {
-  color: #29ACE0 !important;
+.side-menu-title {
+  padding: 0;
+  .toolbar-title {
+    color: #29ACE0 !important;
+    padding: 0;
+  }
 }
 
 
