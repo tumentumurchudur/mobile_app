@@ -154,4 +154,8 @@ page-login {
     color: $vu-white;
     background-color: rgba(221, 221, 221, 0.15);
   }
+
+  .invalid {
+    border-bottom: 2px solid red !important;
+  }
 }
