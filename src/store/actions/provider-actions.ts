@@ -10,7 +10,7 @@ export const TRIGGER_GET_PROVIDER_PLANS: string = "TRIGGER GET PROVIDER PLANS";
 
 export const UPDATE_PROVIDER_COUNTRIES: string = "UPDATE PROVIDER COUNTRIES";
 export const UPDATE_PROVIDERS: string = "UPDATE PROVIDERS";
-export const RESET_PROVIDER: string = "RESET PROVIDER";
+export const RESET_PROVIDERS: string = "RESET PROVIDERS";
 export const UPDATE_PROVIDER_PLANS: string = "UPDATE PROVIDER PLANS";
 export const UPDATE_PROVIDER_REGIONS: string = "UPDATE PROVIDER REGIONS";
 
@@ -101,9 +101,8 @@ export class UpdateProviders implements Action {
   }
 }
 
-export class ResetProvider implements Action {
-  public readonly type = RESET_PROVIDER;
+export class ResetProviders implements Action {
+  public readonly type = RESET_PROVIDERS;
   public payload: any = null;
-
 }
 

@@ -4,27 +4,27 @@ import { AppState } from "../reducers";
 import { IUser, IReads, IMeter, IDateRange, IComparison } from "../../interfaces";
 import { Observable } from "rxjs/Observable";
 import {
-ResetProvider,
-TriggerAddProviders,
-TriggerGetProviderCountries,
-TriggerGetProviderRegions,
-TriggerGetProviders,
-TriggerGetProviderPlans,
-AddUser,
-UpdateUser,
-TriggerAddMeter,
-TriggerRemoveMeter,
-TriggerLoadMeters,
-TriggerUpdateMeterReads,
-TriggerUpdateMeterSettings,
-TriggerValidateMeter,
-TriggerComparisonReads,
-AddReads,
-LoadingReads,
-LoadReadsByMeters,
-LoadReadsByDateRange,
-LoadingComparisonReads,
-ResetComparisonTimeout
+	ResetProviders,
+	TriggerAddProviders,
+  TriggerGetProviderCountries,
+  TriggerGetProviderRegions,
+  TriggerGetProviders,
+  TriggerGetProviderPlans,
+	AddUser,
+	UpdateUser,
+	TriggerAddMeter,
+	TriggerRemoveMeter,
+	TriggerLoadMeters,
+	TriggerUpdateMeterReads,
+	TriggerUpdateMeterSettings,
+  TriggerValidateMeter,
+	TriggerComparisonReads,
+	AddReads,
+	LoadingReads,
+	LoadReadsByMeters,
+	LoadReadsByDateRange,
+	LoadingComparisonReads,
+	ResetComparisonTimeout
 } from "../actions";
 
 
@@ -165,8 +165,8 @@ export class StoreServices {
     this._store.dispatch(new TriggerGetProviderPlans(path));
   }
 
-  public resetProvider() {
-	  this._store.dispatch(new ResetProvider());
+  public resetProviders() {
+	  this._store.dispatch(new ResetProviders());
   }
 
   public validateMeter(meterNumber: string) {

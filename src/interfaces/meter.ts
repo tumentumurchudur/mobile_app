@@ -3,6 +3,7 @@ import { IRead } from "./read";
 
 export interface IMeter {
   _name: string,
+  _oldMeterName?: string,
   _billing_start: number | null,
   _billing_total?: number | null,
   _billing_since_start?: number | null,

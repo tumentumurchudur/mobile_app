@@ -117,7 +117,7 @@ export class AddMeterFormComponent {
       // If there is no guidState returned from request on loading dismissal, request has timed out
       if (!guidState) {
         const timeoutAlert = this.alertCtrl.create({
-          message: "Connection is weak. Would you like to keep trying?",
+          message: "Request timed out. Would you like to keep trying?",
           buttons: [
             {
               text: "Cancel",
