@@ -164,12 +164,10 @@ export class LoginPage {
       message = `Please enter a valid email address.\n
         Password must be at least 6 characters.`;
       buttons = [{text: "Try again", role: "cancel"}];
-    }
-    else if (!this._loginForm.controls["email"].valid) {
+    } else if (!this._loginForm.controls["email"].valid) {
       message = "Please enter a valid email address.";
       buttons = [{text: "Try again", role: "cancel"}];
-    }
-    else if (!this._loginForm.controls["password"].valid) {
+    } else if (!this._loginForm.controls["password"].valid) {
       message = "Password must be at least 6 characters.";
       buttons = [{text: "Try again", role: "cancel"}];
     }

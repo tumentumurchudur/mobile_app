@@ -1,5 +1,5 @@
-import { Action } from '@ngrx/store';
-import { IUser } from '../../interfaces';
+import { Action } from "@ngrx/store";
+import { IUser } from "../../interfaces";
 
 export const ADD_USER: string = "ADD USER";
 export const UPDATE_USER: string = "UPDATE USER";

@@ -6,12 +6,12 @@ export interface ProviderState {
   providers: {
     providerTypes: string[],
     provider: IProvider | null
-  }
+  };
 }
 
 export const providerReducerMap: ActionReducerMap<ProviderState> = {
   providers: providerReducer
-}
+};
 
 export function providerReducer(state = { providerTypes: [], provider: {} }, action): any {
   switch (action.type) {

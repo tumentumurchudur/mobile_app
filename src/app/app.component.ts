@@ -7,7 +7,7 @@ import { Keyboard } from "@ionic-native/keyboard";
   templateUrl: "app.html"
 })
 export class MyApp {
-  rootPage:any = "LoginPage";
+  rootPage: any = "LoginPage";
 
   constructor(platform: Platform, statusBar: StatusBar, keyboard: Keyboard) {
     platform.ready().then(() => {

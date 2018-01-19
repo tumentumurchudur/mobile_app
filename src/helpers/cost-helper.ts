@@ -40,7 +40,7 @@ export class CostHelper {
 		const rates = [];
 
 		if (tiers) {
-			for (let key of Object.keys(tiers)) {
+			for (const key of Object.keys(tiers)) {
 				const limit = parseInt(key);
 				const rate = tiers[key];
 

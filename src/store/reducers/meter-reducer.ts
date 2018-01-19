@@ -1,17 +1,17 @@
 import { ActionReducerMap } from "@ngrx/store";
-import { IMeter } from '../../interfaces';
-import * as ActionTypes from '../actions';
+import { IMeter } from "../../interfaces";
+import * as ActionTypes from "../actions";
 
 export interface MeterState {
 	meters: {
 		data: IMeter[] | null,
 		loading: boolean
-	}
+	};
 }
 
 export const meterReducerMap: ActionReducerMap<MeterState> = {
 	meters: meterReducer
-}
+};
 
 export function meterReducer(state = { data: [], loading: false}, action): any {
 	switch (action.type) {

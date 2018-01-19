@@ -9,6 +9,6 @@ export interface IComparison {
   effCosts: IUsage | null;
   usageCosts: IUsage | null;
   calcReads: ILineItem[];
-  rank: number,
-  timedOut: boolean
+  rank: number;
+  timedOut: boolean;
 }

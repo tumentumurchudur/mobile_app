@@ -4,4 +4,4 @@ export const timeSpanConfigs = {
   WEEK: "weeks",
   MONTH: "months",
   YEAR: "years"
-}
+};

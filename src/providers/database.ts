@@ -120,7 +120,7 @@ export class DatabaseProvider {
       .map((allMeterData: IMeter[][]) => {
         // Adds property _reads and assigns the reads for each meter in the passed meters array.
         return meters.map((meter, index) => {
-          return { ...meter, _reads: allMeterData[index] }
+          return { ...meter, _reads: allMeterData[index] };
         });
       });
   }
@@ -145,7 +145,7 @@ export class DatabaseProvider {
           const { plans = null } = provider;
           let rateInfo = null;
 
-          for(const type of planTypes) {
+          for (const type of planTypes) {
             if (plans[type]) {
               rateInfo = plans[type];
               break;
@@ -160,7 +160,7 @@ export class DatabaseProvider {
           return {
             ...meters[index],
             _summer: summer, _winter: winter, _facilityFee: facilityFee
-          }
+          };
         });
       });
   }
@@ -359,7 +359,7 @@ export class DatabaseProvider {
 
       updates[path] = settings;
 
-      //checks if user name has been changed or not, if so then delete old meter and add new
+      // checks if user name has been changed or not, if so then delete old meter and add new
       if (meter._name !== meter._oldMeterName) {
         const oldMeter = Object.assign({}, meter, { _name: meter._oldMeterName });
         this.deleteMeter(oldMeter, user);
@@ -446,7 +446,9 @@ export class DatabaseProvider {
               totals.push(ranks[key]);
             });
 
-            sum = totals.reduce((a, b) => { return a + b.total }, 0);
+            sum = totals.reduce((a, b) => {
+              return a + b.total;
+            }, 0);
           }
 
           observer.next(sum > 0 ? Math.round(sum / totals.length) : 0);
