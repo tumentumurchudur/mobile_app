@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { Subscription } from "rxjs/Subscription";
 
-import { IonicPage, NavController } from "ionic-angular";
+import { IonicPage, NavController, MenuController } from "ionic-angular";
 import { IUser } from "../../interfaces";
 import { Store } from "@ngrx/store";
 import { AppState } from "../../store/reducers";
@@ -16,6 +16,7 @@ import { AppState } from "../../store/reducers";
 export class HomePage implements OnInit, OnDestroy {
   private _user: IUser;
   private _subscriptions: Subscription[] = [];
+  private _sideMenuOpen: boolean = false;
 
   ngOnInit() {
     const subscription: Subscription = this._store.select(state => state.user)
@@ -34,11 +35,13 @@ export class HomePage implements OnInit, OnDestroy {
 
   constructor(
     private _store: Store<AppState>,
-    public nav: NavController
+    public nav: NavController,
+    private _menuCtrl: MenuController
   ) { }
 
-  protected changeMainView(newView: string): void {
-    this.nav.push(newView);
+  changeMainView(): void {
+    this._sideMenuOpen = true;
+    this._menuCtrl.open();
   }
 
 }
