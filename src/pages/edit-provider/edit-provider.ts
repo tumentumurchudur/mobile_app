@@ -13,10 +13,10 @@ export class EditProviderPage {
 
   private _editProvider: FormGroup;
   private _providerData: string;
-  private _providerCountries$: Observable<any>;
-  private _providerRegions$: Observable<any>;
-  private _providerServiceProviders$: Observable<any>;
-  private _providerPlans$: Observable<any>;
+  private _providerCountries$: Observable<string[]>;
+  private _providerRegions$: Observable<string[]>;
+  private _providerServiceProviders$: Observable<string[]>;
+  private _providerPlans$: Observable<string[]>;
   private _addMeterGuid$: Observable<any>;
   private _planName: string;
   private _type: string;
@@ -57,7 +57,6 @@ export class EditProviderPage {
 
   private _getRegions() {
     this._storeServices.getProviderRegions(`${this._type}/${this._editProvider.value["country"]}`);
-
   }
 
   private _getProviders() {

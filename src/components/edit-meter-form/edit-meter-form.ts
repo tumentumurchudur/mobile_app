@@ -49,22 +49,22 @@ export class EditMeterFormComponent implements OnInit {
 
   protected _editProvider() {
     this._storeServices.resetProviders();
-    let modal = this._modalCtrl.create("EditProviderPage", {
+    const modal = this._modalCtrl.create("EditProviderPage", {
       providerData: this.meter._provider,
       plan: this._planName
     });
     modal.onDidDismiss((data) => {
       if (!data) {
         return;
-      } else {
+      }
         this._providerName = data.provider.value["provider"];
         this._planName = data.provider.value["plan"];
         this._providerPath = `${data.type}/${data.provider.value["country"]}/${data.provider.value["region"]}/${data.provider.value["provider"]}`;
+
         if (this._editMeter.value["provider"] !== this._newProviderPath || this._editMeter.value["plan"] !== this._planName) {
           this._editMeter.patchValue({provider: this._providerName + " - " + this._planName, plan: this._planName});
           this._editMeter.markAsDirty();
         }
-      }
     });
     modal.present();
   }
