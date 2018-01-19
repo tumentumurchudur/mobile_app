@@ -22,5 +22,4 @@ export class ProfilePage {
    this._auth.logOutUser();
    this.navCtrl.setRoot("LoginPage");
   }
-
 }
