@@ -1,6 +1,8 @@
 import { Component, OnInit } from "@angular/core";
-import { IonicPage, NavController } from "ionic-angular";
+import { IonicPage, NavController, AlertController } from "ionic-angular";
+import { FormBuilder, FormGroup, Validators} from "@angular/forms";
 import { Storage } from "@ionic/storage";
+import { EmailValidator } from "../../validators/email-validator";
 import { SplashScreen } from "@ionic-native/splash-screen";
 import { Keyboard } from "@ionic-native/keyboard";
 import { IUser, IFbToken } from "../../interfaces";
@@ -15,6 +17,7 @@ import { StoreServices } from "../../store/services";
   templateUrl: "login.html",
 })
 export class LoginPage {
+  public _loginForm: FormGroup;
   private _user: IUser = {
     email: null,
     password: null,
@@ -26,10 +29,18 @@ export class LoginPage {
     private _storeServices: StoreServices,
     private _auth: AuthProvider,
     public navCtrl: NavController,
+    private _alertCtrl: AlertController,
+    private _formBuilder: FormBuilder,
     private _storage: Storage,
     private _splashScreen: SplashScreen,
     private _keyboard: Keyboard
-  ) { }
+  ) {
+    this._loginForm = _formBuilder.group({
+      email: ["", Validators.compose([Validators.required, EmailValidator.isValid])],
+      password: ["", Validators.compose([Validators.required, Validators.minLength(6)])]
+    });
+
+  }
 
   ngOnInit() {
     this._loginReturningUser();
@@ -73,26 +84,35 @@ export class LoginPage {
   }
 
   private _onLoginClick(user: IUser): void {
-    if (!this._validateUserInput(user)) {
-      return;
-    }
+    user.email = this._loginForm.value.email.toLowerCase().trim();
+    user.password =  this._loginForm.value.password;
 
     if (this._isNewUser) {
       this.navCtrl.push("SignUpPage");
       return;
     }
 
-    this._auth.loginWithEmail(user)
-      .then(userData => {
-        const user: IUser = this._createUser(userData);
+    if (this._loginForm.dirty) {
+      this._loginForm.controls["email"].markAsTouched();
+      this._loginForm.controls["password"].markAsTouched();
+      if (!this._loginForm.valid) {
+        this._showError();
+        return;
+      } else {
+        this._auth.loginWithEmail(user)
+          .then(userData => {
+            const user: IUser = this._createUser(userData);
 
-        this._storeServices.addUser(user);
+            this._loginForm.reset();
+            this._loginForm.controls["email"].clearValidators();
+            this._loginForm.controls["password"].clearValidators();
 
-        this.navCtrl.push("HomePage");
-      })
-      .catch(error => {
-        console.log("Password login failed: ", error);
-      });
+            this._storeServices.addUser(user);
+
+            this.navCtrl.push("HomePage");
+          });
+      }
+    }
   }
 
   private _onFacebookClick(): void {
@@ -127,10 +147,6 @@ export class LoginPage {
     this.navCtrl.push("ResetPasswordPage");
   }
 
-  private _validateUserInput(user: IUser) {
-    return user && user.email && user.password;
-  }
-
   private _createUser(user: IUser): IUser {
     return {
       email: user.email,
@@ -138,6 +154,32 @@ export class LoginPage {
       password: null,
       orgPath: null
     };
+  }
+
+  private _showError() {
+    let message: string;
+    let buttons: any[];
+
+    if (!this._loginForm.controls["email"].valid && !this._loginForm.controls["password"].valid) {
+      message = `Please enter a valid email address.\n
+        Password must be at least 6 characters.`;
+      buttons = [{text: "Try again", role: "cancel"}];
+    }
+    else if (!this._loginForm.controls["email"].valid) {
+      message = "Please enter a valid email address.";
+      buttons = [{text: "Try again", role: "cancel"}];
+    }
+    else if (!this._loginForm.controls["password"].valid) {
+      message = "Password must be at least 6 characters.";
+      buttons = [{text: "Try again", role: "cancel"}];
+    }
+
+    this._alertCtrl.create({
+      title: "Error",
+      message,
+      buttons
+    })
+    .present();
   }
 
   protected _keyboardSubmit() {
