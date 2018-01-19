@@ -1,0 +1,62 @@
+<ion-header>
+  <ion-navbar color="light" hideBackButton="true">
+    <ion-title class="setup-title">Provider Information</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <form class="text-container" [formGroup]="_editProvider">
+      <h4>Update your provider information</h4>
+      <div *ngIf="_providerCountries$ | async as countries">
+        <ion-item>
+          <ion-label>Country</ion-label>
+          <ion-select formControlName="country" (ionChange)="_getRegions()">
+            <ion-option *ngFor="let country of countries" [value]="country">
+              {{country}}
+            </ion-option>
+          </ion-select>
+        </ion-item>
+      </div>
+      <div *ngIf="_providerRegions$ | async as regions">
+        <ion-item>
+          <ion-label>Region</ion-label>
+          <ion-select formControlName="region" (ionChange)="_getProviders()">
+            <ion-option *ngFor="let region of regions" [value]="region">{{region}}</ion-option>
+          </ion-select>
+        </ion-item>
+      </div>
+      <div *ngIf="_providerServiceProviders$ | async as serviceProviders">
+        <ion-item>
+          <ion-label>Provider</ion-label>
+          <ion-select formControlName="provider" (ionChange)="_getPlans()">
+            <ion-option *ngFor="let provider of serviceProviders" [value]="provider">
+              {{ provider }}
+            </ion-option>
+          </ion-select>
+        </ion-item>
+      </div>
+      <div *ngIf="_providerPlans$ | async as plans">
+        <ion-item>
+          <ion-label>Plan</ion-label>
+          <ion-select formControlName="plan">
+            <ion-option *ngFor="let plan of plans" [value]="plan">
+              {{ plan }}
+            </ion-option>
+          </ion-select>
+        </ion-item>
+      </div>
+    <section class="button-section">
+      <button class="form-nav-button-back" (tap)="_cancelModal()">Cancel</button>
+      <button
+        [disabled]="!this._editProvider.valid"
+        ion-button
+        type="submit"
+        class="form-nav-button"
+        color="primary"
+        (tap)="_closeModal()"
+      >
+        Update
+      </button>
+    </section>
+  </form>
+</ion-content>
