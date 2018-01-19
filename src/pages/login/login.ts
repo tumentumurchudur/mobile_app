@@ -182,9 +182,4 @@ export class LoginPage {
     .present();
   }
 
-  protected _keyboardSubmit() {
-    this._keyboard.close();
-    this._onLoginClick(this._user);
-  }
-
 }
