@@ -361,15 +361,15 @@ export class DatabaseProvider {
 
       //checks if user name has been changed or not, if so then delete old meter and add new
       if (meter._name !== meter._oldMeterName) {
-
-        this._orgsRef.child(`Vutiliti/VutilitiCP/Residential/${user.uid}/Building1/_meters/_${meter._utilityType}/${meter._oldMeterName}`).remove();
-          this._orgsRef.child(path).set(settings).then(() => {
-            observer.next(Object.assign({}, meter, settings));
-          })
-            .catch(error => {
-              observer.error(error);
-             });
-
+        const oldMeter = Object.assign({}, meter, { _name: meter._oldMeterName });
+        this.deleteMeter(oldMeter, user);
+        // TODO: Implement addMeter() into this function once orgPath is saved to localStorage
+        this._orgsRef.child(path).set(settings).then(() => {
+          observer.next(Object.assign({}, meter, settings));
+        })
+          .catch(error => {
+            observer.error(error);
+           });
       } else {
           this._orgsRef.child(path).update(settings).then(() => {
             observer.next(Object.assign({}, meter, settings));
