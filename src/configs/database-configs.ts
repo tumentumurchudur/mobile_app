@@ -5,7 +5,7 @@ export const fireBaseConfig = {
 	projectId: "firebase-vutiliti-platform",
 	storageBucket: "firebase-vutiliti-platform.appspot.com",
 	messagingSenderId: "153277340240"
-}
+};
 
 export const databasePaths = {
 	users: "users",
@@ -14,9 +14,9 @@ export const databasePaths = {
 	reads: "reads",
 	providers: "providers",
 	ranks: "nbhc_ranks"
-}
+};
 
 export const databaseToken = {
   production: "VICdha7cFBew3pqe2xnS6ECuYOj5LKnXQqnjoR9W",
   dev: "0JBEo6TvuaSdu3mxS2PRNjghQhGOWAVOjN0z2fis"
-}
+};

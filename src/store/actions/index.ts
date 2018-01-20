@@ -98,4 +98,4 @@ export {
   RESET_COMPARISON_TIMEOUT,
   BEGIN_COMPARISON_READS,
   CHECK_COMPARISON_READS
-} from "./comparison-actions"
+} from "./comparison-actions";

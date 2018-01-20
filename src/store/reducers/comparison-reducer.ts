@@ -7,12 +7,12 @@ export interface ComparisonState {
 		loading: boolean,
 		data: IComparison[] | null,
 		neighborhoodGroup: any
-	}
+	};
 }
 
 export const comparisonReducerMap: ActionReducerMap<ComparisonState> = {
 	comparison: comparisonReducer
-}
+};
 
 export function comparisonReducer(state = { data: [], loading: false, neighborhoodGroup: {} }, action): any {
 	switch (action.type) {

@@ -1,11 +1,19 @@
 {
-  "rules": {
-    "no-duplicate-variable": true,
-    "no-unused-variable": [
-      true
-    ]
-  },
   "rulesDirectory": [
     "node_modules/tslint-eslint-rules/dist/rules"
-  ]
+  ],
+  "extends": "tslint-ionic-rules",
+  "rules": {
+    "linebreak-style": false,
+    "quotemark": [
+      true,
+      "double"
+    ],
+    "no-inferrable-types": false,
+    "ordered-imports": false,
+    "radix": false,
+    "no-unused-variable": false,
+    "no-import-side-effect": false,
+    "indent": false
+  }
 }

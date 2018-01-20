@@ -7,9 +7,9 @@ export class ChartHelper {
   public static getDeltas(data: IRead[]): ILineItem[] {
     const chartData = [];
 
-    for(let i = data.length - 1; i >= 0; i--) {
+    for (let i = data.length - 1; i >= 0; i--) {
       if (i - 1 >= 0) {
-        const diff = data[i].total - data[i-1].total;
+        const diff = data[i].total - data[i - 1].total;
 
         chartData.push({
           date: new Date(parseInt(data[i].date.toString())),
@@ -45,14 +45,15 @@ export class ChartHelper {
    * @param data
    */
   public static groupDeltasByTimeSpan(dateRange: IDateRange, data: ILineItem[]): ILineItem[] {
-    let { startDate, endDate, timeSpan } = dateRange;
+    const { endDate, timeSpan } = dateRange;
+    let { startDate } = dateRange;
     const dataPoints = [];
     const emptyPoints = [];
 
-    switch(timeSpan) {
+    switch (timeSpan) {
       case timeSpanConfigs.MONTH:
       case timeSpanConfigs.WEEK:
-        while(startDate < endDate && startDate <= new Date()) {
+        while (startDate < endDate && startDate <= new Date()) {
           const startDay = moment(startDate).startOf("day").toDate();
           const endDay = moment(startDate).endOf("day").toDate();
           const dataPoint: ILineItem = this._getTotalsByDateRange(startDay, endDay, data);
@@ -72,7 +73,7 @@ export class ChartHelper {
         this._fillEmptyHoles(dataPoints, emptyPoints);
         break;
       case timeSpanConfigs.DAY:
-        while(startDate < endDate && startDate <= new Date()) {
+        while (startDate < endDate && startDate <= new Date()) {
           const startHour = startDate;
           const endHour = moment(startDate).add(1, "h").toDate();
           const dataPoint = this._getTotalsByDateRange(startHour, endHour, data);
@@ -87,7 +88,7 @@ export class ChartHelper {
         this._fillEmptyHoles(dataPoints, emptyPoints);
         break;
       case timeSpanConfigs.YEAR:
-        while(startDate < endDate && startDate <= new Date()) {
+        while (startDate < endDate && startDate <= new Date()) {
           const startMonth = moment(startDate).startOf("month").toDate();
           const endMonth = moment(startDate).endOf("month").toDate();
           const dataPoint = this._getTotalsByDateRange(startMonth, endMonth, data);
@@ -102,7 +103,7 @@ export class ChartHelper {
         this._fillEmptyHoles(dataPoints, emptyPoints);
         break;
       case timeSpanConfigs.HOUR:
-        while(startDate < endDate && startDate <= new Date()) {
+        while (startDate < endDate && startDate <= new Date()) {
           const startHour = startDate;
           const endHour = moment(startDate).add(15, "m").toDate();
           const dataPoint = this._getTotalsByDateRange(startHour, endHour, data);
@@ -125,7 +126,7 @@ export class ChartHelper {
   public static getFormattedDateRange(dateRange: IDateRange): string {
     const { startDate, endDate, timeSpan } = dateRange;
 
-    switch(timeSpan) {
+    switch (timeSpan) {
       case timeSpanConfigs.MONTH:
         return moment(startDate).format("MMM YYYY");
       case timeSpanConfigs.WEEK:
@@ -142,37 +143,37 @@ export class ChartHelper {
   }
 
   public static getDefaultDateRange(timeSpan: string) {
-    switch(timeSpan) {
+    switch (timeSpan) {
       case timeSpanConfigs.MONTH:
         return {
           startDate: moment().startOf("month").toDate(),
           endDate: moment().endOf("month").toDate(),
           dateFormat: "%e" // abbreviated weekday namespace-padded day of the month as a decimal number [ 1,31]
-        }
+        };
       case timeSpanConfigs.DAY:
         return {
           startDate: moment().startOf("day").toDate(),
           endDate: moment().endOf("day").toDate(),
           dateFormat: "%I%p" // hour (12-hour clock) as a decimal number [01,12] followed by either AM or PM
-        }
+        };
       case timeSpanConfigs.WEEK:
         return {
           startDate: moment().startOf("week").toDate(),
           endDate: moment().endOf("week").toDate(),
           dateFormat: "%a" // abbreviated weekday name
-        }
+        };
       case timeSpanConfigs.HOUR:
         return {
           startDate: moment().startOf("hour").toDate(),
           endDate: moment().endOf("hour").toDate(),
           dateFormat: "%M" // minute as a decimal number [00,59]
-        }
+        };
       case timeSpanConfigs.YEAR:
         return {
           startDate: moment().startOf("year").toDate(),
           endDate: moment().endOf("year").toDate(),
           dateFormat: "%b" // abbreviated month name
-        }
+        };
       default:
         break;
     }
@@ -182,7 +183,7 @@ export class ChartHelper {
     let startDate;
     let endDate;
 
-    switch(dateRange.timeSpan) {
+    switch (dateRange.timeSpan) {
       case timeSpanConfigs.MONTH:
         startDate = moment(dateRange.startDate).add(direction === "prev" ? -1 : 1, "M").startOf("month");
         endDate = moment(dateRange.endDate).add(direction === "prev" ? -1 : 1, "M").endOf("month");
@@ -217,12 +218,14 @@ export class ChartHelper {
       endDate: endDate.toDate(),
       timeSpan: dateRange.timeSpan,
       dateFormat: dateRange.dateFormat
-    }
+    };
   }
 
   private static _getTotalsByDateRange(startDate: Date, endDate: Date, data: ILineItem[]): ILineItem {
     const points = data.filter(d => d.date >= startDate && d.date < endDate);
-    const total = points.reduce((a, b) => { return a + b.line1 }, 0);
+    const total = points.reduce((a, b) => {
+      return a + b.line1;
+    }, 0);
 
     return {
       date: startDate,

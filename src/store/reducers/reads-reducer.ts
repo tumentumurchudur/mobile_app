@@ -1,17 +1,17 @@
 import { ActionReducerMap } from "@ngrx/store";
-import { IReads, IRead } from '../../interfaces';
-import * as ActionTypes from '../actions';
+import { IReads, IRead } from "../../interfaces";
+import * as ActionTypes from "../actions";
 
 export interface ReadsState {
 	reads: {
 		loading: boolean,
 		data: IReads[] | null
-	}
+	};
 }
 
 export const readsReducerMap: ActionReducerMap<ReadsState> = {
 	reads: readsReducer
-}
+};
 
 export function readsReducer(state = { data: [], loading: false }, action): any {
 	switch (action.type) {

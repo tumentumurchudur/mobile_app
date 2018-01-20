@@ -104,6 +104,5 @@ export class UpdateProviders implements Action {
 export class ResetProviders implements Action {
   public readonly type = RESET_PROVIDERS;
   public payload: any = null;
-
 }
 

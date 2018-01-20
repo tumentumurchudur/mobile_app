@@ -1,12 +1,12 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { Component } from "@angular/core";
+import { IonicPage, NavController, NavParams } from "ionic-angular";
 
 @IonicPage({
-  name: 'SignUpPage'
+  name: "SignUpPage"
 })
 @Component({
-  selector: 'page-sign-up',
-  templateUrl: 'sign-up.html',
+  selector: "page-sign-up",
+  templateUrl: "sign-up.html",
 })
 export class SignUpPage {
 
@@ -14,7 +14,7 @@ export class SignUpPage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad SignUpPage');
+    console.log("ionViewDidLoad SignUpPage");
   }
 
 }

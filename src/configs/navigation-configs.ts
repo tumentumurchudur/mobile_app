@@ -3,4 +3,4 @@ export const navigationConfigs = {
   LINE_CHART: "line-chart",
   COMPARISON: "comparison",
   EDIT: "edit"
-}
+};

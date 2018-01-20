@@ -176,7 +176,7 @@ export class ComparisonEffects {
             usageCosts = rawDeltas.length ? CostHelper.calculateCostFromDeltas(meter, rawDeltas) : null;
           }
 
-          let calcReads = [];
+          const calcReads = [];
           const loopDeltas = useDeltas.length ? useDeltas : avgDeltas;
 
           for (let i = 0; i < loopDeltas.length; i++) {
@@ -188,9 +188,7 @@ export class ComparisonEffects {
                 line2: avgDeltas[i].line1 || 0,
                 line3: effDeltas[i].line1 || 0
               });
-            }
-            // Data for all three charts is available.
-            else {
+            } else { // Data for all three charts is available.
               calcReads.push({
                 date: loopDeltas[i].date,
                 line1: effDeltas[i].line1 || 0,
@@ -241,7 +239,7 @@ export class ComparisonEffects {
       return {
         date: d.date,
         line1: d.delta
-      }
+      };
     });
 
     // group efficiency data by time span
