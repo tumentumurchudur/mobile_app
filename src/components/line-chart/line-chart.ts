@@ -191,10 +191,17 @@ export class LineChartComponent implements OnChanges {
   }
 
   private _hideZeroTicks() {
+    const format = this.dateFormat;
+
     d3.select(this.element).select("svg").selectAll(".tick")
       .each(function(d, i) {
           if (d === 0) {
             this.remove();
+          } else if (i === 0 && format.trim() === "%a") {
+            d3.select(this).selectAll("text")
+             .each(function() {
+                d3.select(this).attr("x", "10");
+             });
           }
       });
   }
