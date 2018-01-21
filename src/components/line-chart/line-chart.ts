@@ -34,7 +34,7 @@ export class LineChartComponent implements OnChanges {
 
     if (!this.loading && this.data && this.data.length) {
       this._draw();
-      this._hideZeroTicks();
+      this._styleTicks();
     }
   }
 
@@ -190,18 +190,48 @@ export class LineChartComponent implements OnChanges {
     }
   }
 
-  private _hideZeroTicks() {
-    const format = this.dateFormat;
+  private _styleTicks() {
+    const width = this.width;
 
     d3.select(this.element).select("svg").selectAll(".tick")
       .each(function(d, i) {
+          // Hide value 0 on the x-axis.
           if (d === 0) {
             this.remove();
-          } else if (i === 0 && format.trim() === "%a") {
-            d3.select(this).selectAll("text")
-             .each(function() {
-                d3.select(this).attr("x", "10");
-             });
+          }
+
+          const transform = d3.select(this).attr("transform");
+
+          if (!transform) {
+            return;
+          }
+
+          // Avoid labels from getting cutoff.
+          const arr = transform.split("(");
+          const values = arr[1] ? arr[1].split(",") : [];
+          const xTranslate = values[0] || null;
+
+          if (xTranslate === null) {
+            return;
+          }
+
+          // positioned too far on the right.
+          const moveLeft = xTranslate > width * .95;
+
+          // positioned too far on the left.
+          const moveRight = xTranslate < 10;
+
+          const elText = d3.select(this).selectAll("text");
+
+          // label is too long to fit.
+          const isTextLong = elText.text().length >= 3;
+          const pixelsPerChar = 3.2;
+
+          if (isTextLong && (moveRight || moveLeft)) {
+            // Calculate # of pixel to move in which direction.
+            const distance = elText.text().length * pixelsPerChar * (moveRight ? 1 : -1);
+
+            elText.attr("x", distance);
           }
       });
   }
