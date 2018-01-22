@@ -90,6 +90,7 @@ export class AuthProvider {
     return this._af.auth.sendPasswordResetEmail(emailAddr).then(success => success)
       .catch(error => {
         this._displayAndHandleErrors(error);
+        return new Error(error);
       })
   }
 
