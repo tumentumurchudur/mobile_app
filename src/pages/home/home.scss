@@ -1,9 +1,5 @@
 @import "../../styles/variables";
 
-.side-menu-open {
-
-}
-
 page-home {
   .content-md, .content-ios {
     background-color: $background-color;
@@ -19,10 +15,9 @@ page-home {
   }
 
   .cog {
-    border: 1px solid #fff;
     margin:auto;
-    width: 3.35vh;
     height: 3.25vh;
+    color: #2d2d2d;
   }
 
   div.toolbar-title {
@@ -30,7 +25,6 @@ page-home {
     font-family: $bryant-alternate, sans-serif;
     font-size: 4.75vh;
     text-align: center;
-    padding-right: 18vw;
   }
 
   .toolbar-title-ios {

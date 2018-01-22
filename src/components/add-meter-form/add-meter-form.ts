@@ -70,7 +70,7 @@ export class AddMeterFormComponent {
       if (this._loading) {
         this._loading.dismiss({ guid });
       }
-    })
+    });
     this._subscriptions.push(meterSubscription);
   }
 
@@ -91,18 +91,18 @@ export class AddMeterFormComponent {
   private _isNextButtonDisabled(): boolean {
     switch (this._step) {
       case 1:
-        return this._addMeter.controls['utilityType'].invalid;
+        return this._addMeter.controls["utilityType"].invalid;
       case 2:
-        return this._addMeter.controls['meterNumber'].invalid;
+        return this._addMeter.controls["meterNumber"].invalid;
       case 3:
-        return this._addMeter.controls['plan'].invalid;
+        return this._addMeter.controls["plan"].invalid;
       case 4:
-        return this._addMeter.controls['goal'].invalid;
+        return this._addMeter.controls["goal"].invalid;
     }
   }
 
   private _getSvg(type: string): string {
-    return `url(./assets/imgs/icon_${type}.svg) no-repeat 50% 50%`
+    return `url(./assets/imgs/icon_${type}.svg) no-repeat 50% 50%`;
   }
 
   private _getMeterColor(type: string) {
@@ -117,7 +117,7 @@ export class AddMeterFormComponent {
       // If there is no guidState returned from request on loading dismissal, request has timed out
       if (!guidState) {
         const timeoutAlert = this.alertCtrl.create({
-          message: "Connection is weak. Would you like to keep trying?",
+          message: "Request timed out. Would you like to keep trying?",
           buttons: [
             {
               text: "Cancel",
@@ -136,9 +136,7 @@ export class AddMeterFormComponent {
           ]
         });
         timeoutAlert.present();
-      }
-      // request returned guidState but no guid was found
-      else if (!guidState.guid) {
+      } else if (!guidState.guid) { // request returned guidState but no guid was found
         const alert = this.alertCtrl.create({
           message: "Unfortunately, we are not collecting data for this meter yet.",
           buttons: [
@@ -149,9 +147,7 @@ export class AddMeterFormComponent {
           ]
         });
         alert.present();
-      }
-      // request successfully returned guid and meter was validated
-      else {
+      } else { // request successfully returned guid and meter was validated
         this._meterGuid = guidState.guid;
         this._incStep();
       }

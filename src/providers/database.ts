@@ -120,7 +120,7 @@ export class DatabaseProvider {
       .map((allMeterData: IMeter[][]) => {
         // Adds property _reads and assigns the reads for each meter in the passed meters array.
         return meters.map((meter, index) => {
-          return { ...meter, _reads: allMeterData[index] }
+          return { ...meter, _reads: allMeterData[index] };
         });
       });
   }
@@ -145,7 +145,7 @@ export class DatabaseProvider {
           const { plans = null } = provider;
           let rateInfo = null;
 
-          for(const type of planTypes) {
+          for (const type of planTypes) {
             if (plans[type]) {
               rateInfo = plans[type];
               break;
@@ -160,7 +160,7 @@ export class DatabaseProvider {
           return {
             ...meters[index],
             _summer: summer, _winter: winter, _facilityFee: facilityFee
-          }
+          };
         });
       });
   }
@@ -319,10 +319,9 @@ export class DatabaseProvider {
   }
 
   public addMeter(meter: IMeter, user: IUser): Observable<IMeter> {
-
     return Observable.create(observer => {
       const updates = {};
-      const path = `${user.orgPath}/Building1/_meters/_${meter._utilityType}/${meter._name}`;
+      const path = `Vutiliti/VutilitiCP/Residential/${user.uid}/Building1/_meters/_${meter._utilityType}/${meter._name}`;
       const settings = {
         _billing_start: meter._billing_start,
         _goal: meter._goal,
@@ -345,26 +344,40 @@ export class DatabaseProvider {
 
   public updateMeterSettings(meter: IMeter, user: IUser): Observable<IMeter> {
     return Observable.create(observer => {
+
       const updates = {};
-      const path = `${user.orgPath}/Building1/_meters/_${meter._utilityType}/${meter._name}`;
+      const path = `Vutiliti/VutilitiCP/Residential/${user.uid}/Building1/_meters/_${meter._utilityType}/${meter._name}`;
       const settings = {
         _billing_start: meter._billing_start,
         _goal: meter._goal,
-        _guid: meter._guid,
         _meter_id: meter._meter_id,
-        _provider: meter._provider,
         _plan: meter._plan,
-        _type: meter._type
+        _provider: meter._provider,
+        _type: meter._type,
+        _guid: meter._guid,
       };
 
       updates[path] = settings;
 
-      this._orgsRef.update(updates).then(() => {
-        observer.next(Object.assign({}, meter, settings));
-      })
-      .catch(error => {
-        observer.error(error);
-      });
+      // checks if user name has been changed or not, if so then delete old meter and add new
+      if (meter._name !== meter._oldMeterName) {
+        const oldMeter = Object.assign({}, meter, { _name: meter._oldMeterName });
+        this.deleteMeter(oldMeter, user);
+        // TODO: Implement addMeter() into this function once orgPath is saved to localStorage
+        this._orgsRef.child(path).set(settings).then(() => {
+          observer.next(Object.assign({}, meter, settings));
+        })
+          .catch(error => {
+            observer.error(error);
+           });
+      } else {
+          this._orgsRef.child(path).update(settings).then(() => {
+            observer.next(Object.assign({}, meter, settings));
+          })
+            .catch(error => {
+              observer.error(error);
+            });
+      }
     });
   }
 
@@ -433,7 +446,9 @@ export class DatabaseProvider {
               totals.push(ranks[key]);
             });
 
-            sum = totals.reduce((a, b) => { return a + b.total }, 0);
+            sum = totals.reduce((a, b) => {
+              return a + b.total;
+            }, 0);
           }
 
           observer.next(sum > 0 ? Math.round(sum / totals.length) : 0);

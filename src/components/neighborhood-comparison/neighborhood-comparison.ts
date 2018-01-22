@@ -96,17 +96,17 @@ export class NeighborhoodComparisonComponent implements OnChanges {
         return {
           date: d.date,
           line1: lineData
-        }
+        };
       } else if (series === "line2") {
         return {
           date: d.date,
           line2: lineData
-        }
+        };
       } else {
         return {
           date: d.date,
           line3: lineData
-        }
+        };
       }
     });
 

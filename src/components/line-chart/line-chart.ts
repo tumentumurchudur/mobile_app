@@ -85,9 +85,7 @@ export class LineChartComponent implements OnChanges {
           if (!isDataPointAveraged) {
             // Adds a placeholder if data point is not averaged.
             dottedLineData.push({ date: this.data[i].date, line1: null, line2: null, line3: null });
-          }
-          // Data point is averaged
-          else {
+          } else { // Data point is averaged
             // Check if prev value is averaged. If it is not averaged, then add it to
             // dottedLineData array, so a line can be drawn from it to current averaged data point.
             if (i > 0 && !this._isDataPointAveraged(this.data[i - 1].line1)) {
@@ -205,7 +203,7 @@ export class LineChartComponent implements OnChanges {
     return d3.line()
       .x(d => x(d.date))
       .y(d => y(d[colName]))
-      .defined(d => d[colName] !== null)
+      .defined(d => d[colName] !== null);
   }
 
   private _addPath(svg: any, lineFunc: (data: any) => any, lineData: ILineItem[], color: string, className: string) {
@@ -257,10 +255,10 @@ export class LineChartComponent implements OnChanges {
       .x(d => xScale(d.date))
       .y0(height)
       .y1(d => yScale(d[field] || 0))(data);
-  };
+  }
 
   private _clear() {
-    const svg = d3.select(this.element).select("svg")
+    const svg = d3.select(this.element).select("svg");
 
     svg.selectAll("*").remove();
   }

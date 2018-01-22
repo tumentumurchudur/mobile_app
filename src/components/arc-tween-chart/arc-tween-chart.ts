@@ -1,9 +1,9 @@
-import { Component, OnInit, Input, ElementRef } from '@angular/core';
-import * as d3 from 'd3';
+import { Component, OnInit, Input, ElementRef } from "@angular/core";
+import * as d3 from "d3";
 
 @Component({
-  selector: 'arc-tween-chart',
-  templateUrl: 'arc-tween-chart.html'
+  selector: "arc-tween-chart",
+  templateUrl: "arc-tween-chart.html"
 })
 export class ArcTweenChartComponent implements OnInit {
   /**
@@ -132,7 +132,7 @@ export class ArcTweenChartComponent implements OnInit {
 
   private element: any;
 
-  //these are all *relative* units, which will scale to fill the SVG.
+  // these are all *relative* units, which will scale to fill the SVG.
   private margin: any = { left: 20, right: 20, top: 10, bottom: 10 };
 
   private viewBoxWidth = this.margin.left + this.diameter + this.margin.right;
@@ -145,7 +145,7 @@ export class ArcTweenChartComponent implements OnInit {
   /**
    * Life cycle hook.
    * Initialize the component after Angular first displays
-   * the data-bound properties and sets the directive/component's input properties.
+   * the data-bound properties and sets the directive/component"s input properties.
    * Called once, after the first ngOnChanges()
    *
    * @memberof ArcTweenChartComponent
@@ -228,7 +228,7 @@ export class ArcTweenChartComponent implements OnInit {
         .attr("d", innerArc);
     }
 
-    // Creates a tween on the specified transition's "d" attribute, transitioning
+    // Creates a tween on the specified transition"s "d" attribute, transitioning
     // any selected arcs from their current angle to the specified new angle.
     function arcTween(transition, newAngle, arc) {
       transition.attrTween("d", (d) => {

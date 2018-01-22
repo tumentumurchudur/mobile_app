@@ -9,9 +9,9 @@ import { Keyboard } from "@ionic-native/keyboard";
 
 import { AngularFireModule } from "angularfire2";
 import { HttpClientModule } from "@angular/common/http";
-import { AngularFireAuthModule } from "angularfire2/auth"
+import { AngularFireAuthModule } from "angularfire2/auth";
 import { fireBaseConfig } from "../configs";
-import { AuthProvider, DatabaseProvider } from "../providers"
+import { AuthProvider, DatabaseProvider } from "../providers";
 import { Facebook } from "@ionic-native/facebook";
 import { GooglePlus } from "@ionic-native/google-plus";
 

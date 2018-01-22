@@ -6,7 +6,7 @@ import { EmailValidator } from "../../validators/email-validator";
 import { SplashScreen } from "@ionic-native/splash-screen";
 import { Keyboard } from "@ionic-native/keyboard";
 import { IUser, IFbToken } from "../../interfaces";
-import { AuthProvider } from "../../providers"
+import { AuthProvider } from "../../providers";
 import { StoreServices } from "../../store/services";
 
 @IonicPage({
@@ -23,7 +23,7 @@ export class LoginPage {
     password: null,
     uid: null
   };
-  private _isNewUser: boolean = false;
+  private _isNewUser = false;
 
   constructor(
     private _storeServices: StoreServices,
@@ -125,7 +125,7 @@ export class LoginPage {
         this.navCtrl.push("HomePage");
       })
       .catch(error => {
-        console.log("Facebook login failed: ", error)
+        console.log("Facebook login failed: ", error);
       });
   }
 
@@ -164,12 +164,10 @@ export class LoginPage {
       message = `Please enter a valid email address.\n
         Password must be at least 6 characters.`;
       buttons = [{text: "Try again", role: "cancel"}];
-    }
-    else if (!this._loginForm.controls["email"].valid) {
+    } else if (!this._loginForm.controls["email"].valid) {
       message = "Please enter a valid email address.";
       buttons = [{text: "Try again", role: "cancel"}];
-    }
-    else if (!this._loginForm.controls["password"].valid) {
+    } else if (!this._loginForm.controls["password"].valid) {
       message = "Password must be at least 6 characters.";
       buttons = [{text: "Try again", role: "cancel"}];
     }

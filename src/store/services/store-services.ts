@@ -4,7 +4,7 @@ import { AppState } from "../reducers";
 import { IUser, IReads, IMeter, IDateRange, IComparison } from "../../interfaces";
 import { Observable } from "rxjs/Observable";
 import {
-	ResetProvider,
+	ResetProviders,
 	TriggerAddProviders,
   TriggerGetProviderCountries,
   TriggerGetProviderRegions,
@@ -71,12 +71,12 @@ export class StoreServices {
 		this._store.dispatch(new TriggerRemoveMeter({ meter, user }));
 	}
 
-	public selectMeters() : Observable<IMeter[]> {
-		return this._store.select(state => state.meters.data)
+	public selectMeters(): Observable<IMeter[]> {
+		return this._store.select(state => state.meters.data);
 	}
 
   public selectUser(): Observable<IUser> {
-    return this._store.select(state => state.user)
+    return this._store.select(state => state.user);
   }
 
 	public addUser(user: IUser) {
@@ -166,8 +166,8 @@ export class StoreServices {
     this._store.dispatch(new TriggerGetProviderPlans(path));
   }
 
-  public resetProvider() {
-	  this._store.dispatch(new ResetProvider());
+  public resetProviders() {
+	  this._store.dispatch(new ResetProviders());
   }
 
   public validateMeter(meterNumber: string) {
