@@ -37,19 +37,7 @@ export class ResetPasswordPage {
     }
     else {
       this._storeServices.resetPassword(this._resetPasswordForm.value.email);
-        let alert = this._alertCtrl.create({
-          message: "Please check your email for a password reset link.",
-          buttons: [
-            {
-              text: "Ok",
-              role: "cancel",
-              handler: () => {
-                this._navCtrl.pop();
-              }
-            }
-          ]
-        });
-        alert.present();
-      }
+      this._navCtrl.pop();
+    }
   }
 }

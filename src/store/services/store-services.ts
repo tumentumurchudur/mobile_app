@@ -195,7 +195,7 @@ export class StoreServices {
 	}
 
 	public resetPassword(emailAdd: string) {
-	  return this._store.dispatch(new ResetPassword(emailAdd));
+    this._store.dispatch(new ResetPassword(emailAdd));
   }
 
 }

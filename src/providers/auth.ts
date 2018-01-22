@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { AngularFireAuth } from "angularfire2/auth"; //Add FirebaseApp
-import {  AlertController } from "ionic-angular";
+import {  AlertController, NavController } from "ionic-angular";
 import { IUser, IFbToken } from "../interfaces";
 import { googleConfig } from "../configs";
 import { Observable } from "rxjs/Observable";
@@ -87,7 +87,28 @@ export class AuthProvider {
   }
 
   public resetPassword(emailAddr: string): Promise<any> {
-    return this._af.auth.sendPasswordResetEmail(emailAddr).then(success => success)
+    return this._af.auth.sendPasswordResetEmail(emailAddr).then((success) => {
+      const alert = this._alertCtrl.create({
+        message: "Please check your email for a password reset link.",
+        buttons: [
+          {
+            text: "Ok",
+            role: "cancel",
+            handler: () => {
+            }
+          }
+        ]
+      });
+      alert.present();
+    }, (error) => {
+        let errorMessage: string = error.message;
+        let errorAlert = this._alertCtrl.create({
+          message: errorMessage,
+          buttons: ["Ok"]
+        });
+        errorAlert.present();
+      }
+    )
       .catch(error => {
         this._displayAndHandleErrors(error);
         return new Error(error);

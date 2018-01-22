@@ -47,10 +47,10 @@ export class LogoutUser implements Action {
 
 export class ResetPassword implements Action {
   public readonly type = RESET_PASSWORD;
-  public payload: string;
+  public payload: any = null;
 
-  constructor(private _payload: string) {
-    this._payload = _payload;
+  constructor(private _payload: any) {
+    this.payload = _payload;
   }
 }
 

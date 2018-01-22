@@ -1,9 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Effect, Actions } from "@ngrx/effects";
-
 import { AuthProvider } from "../../providers/auth";
-import { TRIGGER_PREP_FOR_LOGOUT, LogoutUser, TRIGGER_USER_CHECK } from "../actions";
-import {RESET_PASSWORD} from "../actions/user-actions";
+import { TRIGGER_PREP_FOR_LOGOUT, LogoutUser, RESET_PASSWORD, TRIGGER_USER_CHECK } from "../actions";
 
 @Injectable()
 export class UserEffects {
@@ -19,12 +17,13 @@ export class UserEffects {
   public resetPassword$ = this._actions$
     .ofType(RESET_PASSWORD)
     .map((action: any) => action.payload)
-    .switchMap((emailAdd) => {
+    .switchMap((emailAdd: string) => {
       return this._auth.resetPassword(emailAdd);
     });
 
   constructor(
     private readonly _actions$: Actions,
     private readonly _auth: AuthProvider
+
   ) { }
 }
