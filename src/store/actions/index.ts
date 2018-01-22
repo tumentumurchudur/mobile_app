@@ -4,7 +4,9 @@ export {
   LOGOUT_USER,
   TRIGGER_PREP_FOR_LOGOUT,
   TRIGGER_USER_CHECK,
+  RESET_PASSWORD,
 
+  ResetPassword,
   AddUser,
   UpdateUser,
   LogoutUser,

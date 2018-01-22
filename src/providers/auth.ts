@@ -82,6 +82,7 @@ export class AuthProvider {
    return this._af.auth.signInWithCredential(credential).then(response => response)
      .catch( error => {
        this._displayAndHandleErrors(error);
+       return new Error(error);
      });
   }
 

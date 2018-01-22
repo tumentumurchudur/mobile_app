@@ -27,7 +27,7 @@ export class ResetPasswordPage {
 
   private _resetPassword() {
     if (this._resetPasswordForm.invalid) {
-      let alert = this._alertCtrl.create({
+      const alert = this._alertCtrl.create({
         message: "Please enter a valid email address.",
         buttons: ["Ok"]
       });

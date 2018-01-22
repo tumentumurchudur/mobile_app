@@ -12,6 +12,7 @@ import {
   TriggerGetProviderPlans,
 	AddUser,
 	UpdateUser,
+  ResetPassword,
 	TriggerAddMeter,
 	TriggerRemoveMeter,
 	TriggerLoadMeters,
@@ -192,5 +193,9 @@ export class StoreServices {
 	public selectComparisonLoading() {
 		return this._store.select(state => state.comparison.loading);
 	}
+
+	public resetPassword(emailAdd: string) {
+	  return this._store.dispatch(new ResetPassword(emailAdd));
+  }
 
 }

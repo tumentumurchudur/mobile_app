@@ -4,6 +4,7 @@ import { IUser } from '../../interfaces';
 export const ADD_USER: string = "ADD USER";
 export const UPDATE_USER: string = "UPDATE USER";
 export const LOGOUT_USER: string = "LOGOUT USER";
+export const RESET_PASSWORD: string = "RESET PASSWORD";
 export const TRIGGER_PREP_FOR_LOGOUT: string = "TRIGGER PREP FOR LOGOUT";
 export const TRIGGER_USER_CHECK: string = "TRIGGER USER CHECK";
 
@@ -41,6 +42,15 @@ export class TriggerPrepForLogout implements Action {
 
 export class LogoutUser implements Action {
   public readonly type = LOGOUT_USER;
-  public payload: any;
+  public payload: string;
+}
+
+export class ResetPassword implements Action {
+  public readonly type = RESET_PASSWORD;
+  public payload: string;
+
+  constructor(private _payload: string) {
+    this._payload = _payload;
+  }
 }
 
