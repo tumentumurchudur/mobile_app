@@ -13,12 +13,7 @@ import "rxjs/add/operator/catch";
 @Injectable()
 export class DatabaseProvider {
   private _db: firebase.database.Database;
-  private _usersRef: firebase.database.Reference;
-  private _metersRef: firebase.database.Reference;
-  private _orgsRef: firebase.database.Reference;
-  private _readsRef: firebase.database.Reference;
-  private _providersRef: firebase.database.Reference;
-  private _ncmpRanksRef: firebase.database.Reference;
+  private _refs = new Map<string, firebase.database.Reference>();
 
   constructor(
     private _authProvider: AuthProvider,
@@ -30,10 +25,13 @@ export class DatabaseProvider {
   }
 
   private dbRef(path: string): firebase.database.Reference {
-    if (!this._usersRef) {
-      return firebase.database().ref(path);
+    if (!this._refs.has(path)) {
+      const ref = firebase.database().ref(path);
+      this._refs.set(path, ref);
+
+      return ref;
     }
-    return this._usersRef;
+    return this._refs.get(path);
   }
 
   /**
@@ -402,11 +400,11 @@ export class DatabaseProvider {
   }
 
   public getProviderTypes(): Observable<any> {
-      return this._getShallowList(this._httpClient, `${this._providersRef}`);
+      return this._getShallowList(this._httpClient, `${this.dbRef(databasePaths.providers)}`);
   }
 
   public getProviderRequestInfo(path: string): Observable<any> {
-    return this._getShallowList(this._httpClient, `${this._providersRef}/${path}`);
+    return this._getShallowList(this._httpClient, `${this.dbRef(databasePaths.providers)}/${path}`);
   }
 
   public getNeighborhoodGroup(meter: IMeter): Observable<any> {
