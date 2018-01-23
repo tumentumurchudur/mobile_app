@@ -182,19 +182,20 @@ a {
 
 .menu-inner {
   box-shadow: none !important;
+  background: none !important;
 }
 
 
 .side-menu-header {
   padding-top: 12.5%;
   .toolbar-background {
-    background-color: $side-menu-color !important;
+    background: none !important;
   }
 }
 
 .side-menu-title {
   padding: 0 0 0 7vw !important;
-  background-color: $side-menu-color;
+  background: none;
   .toolbar-title {
     font-family: $bryant-alternate;
     font-size: 5.5vh;
@@ -208,7 +209,11 @@ ion-backdrop {
 }
 
 ion-app {
-  background-color: $side-menu-color !important;
+  //background-color: $side-menu-color !important;
+  background-image: url('../assets/loginBackground.png');
+  background-position: 50% 55%;
+  background-size: cover;
+  display: flex;
 }
 
 mark {

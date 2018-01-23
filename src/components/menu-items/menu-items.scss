@@ -8,22 +8,26 @@ menu-items {
   }
 
   .menu-content {
-    background-color: $side-menu-color;
+    background: none;
+    .scroll-content {
+      overflow-y: hidden !important;
+      background: none;
+    }
   }
 
   // Side Menu
   .menu-items {
     padding-top: 25vw;
-    background-color: $side-menu-color;
+    background: none;
     .item-md {
-      background-color: $side-menu-color;
+      background: none;
       padding-left: 14vw;
     }
     .item-inner {
       margin-left: 5px !important;
     }
     button {
-      background-color: $side-menu-color;
+      background: none;
       color: $background-color;
       ion-icon {
         opacity: .8;
