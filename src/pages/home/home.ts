@@ -42,8 +42,6 @@ export class HomePage implements OnInit, OnDestroy {
     for (const subscription of this._subscriptions) {
       subscription.unsubscribe();
     }
-
-    // this._storeServices.log
   }
 
   constructor(
@@ -53,7 +51,6 @@ export class HomePage implements OnInit, OnDestroy {
     private _storeServices: StoreServices
   ) {
     this._sideMenuStatus$ = this._storeServices.sideMenuStatus();
-
   }
 
   private _openSiseMenu(): void {
