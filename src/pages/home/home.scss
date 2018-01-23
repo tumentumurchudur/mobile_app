@@ -1,7 +1,8 @@
 @import "../../styles/variables";
 
 .side-menu-open {
-
+  transform: translateX(220px) scale(.85, .85) !important;
+  transition: all .4s 0s;
 }
 
 page-home {

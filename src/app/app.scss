@@ -212,11 +212,6 @@ a {
   background-color: $side-menu-color;
 }
 
-.menu-content-open {
-  transform: translateX(220px) scale(.85, .85) !important;
-  transition: all .4s 0s;
-}
-
 ion-app {
   background-color: $side-menu-color !important;
 }

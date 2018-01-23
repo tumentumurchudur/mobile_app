@@ -1,4 +1,4 @@
-<div style="width: 100%; height: 100%;" [class.side-menu-open]="_sideMenuOpen">
+<div style="width: 100%; height: 100%;" [ngClass]="{'side-menu-open': (_sideMenuStatus$ | async)}">
   <ion-content>
     <utility-spending [user]="_user"></utility-spending>
   </ion-content>
