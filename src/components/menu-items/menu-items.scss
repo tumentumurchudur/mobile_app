@@ -11,24 +11,6 @@ menu-items {
     background-color: $side-menu-color;
   }
 
-  .side-menu-header {
-    padding-top: 12.5%;
-    .toolbar-background {
-      background-color: $side-menu-color !important;
-    }
-  }
-
-  .side-menu-title {
-    padding: 0 0 0 7vw !important;
-    background-color: $side-menu-color;
-    .toolbar-title {
-      font-family: $bryant-alternate;
-      font-size: 5.5vh;
-      color: $vutiliti-blue !important;
-      text-align: left !important;
-    }
-  }
-
   // Side Menu
   .menu-items {
     padding-top: 25vw;
