@@ -18,7 +18,7 @@ describe("app/providers/database", () => {
           }});
         }
       };
-      const ref = spyOn(dbProvider as any, "usersRef").and.returnValue(userRef);
+      const ref = spyOn(dbProvider as any, "dbRef").and.returnValue(userRef);
 
       dbProvider.getOrgPathForUser("id").subscribe(data => {
         expect(data).toEqual("100");
@@ -37,7 +37,7 @@ describe("app/providers/database", () => {
           }});
         }
       };
-      const ref = spyOn(dbProvider as any, "usersRef").and.returnValue(userRef);
+      const ref = spyOn(dbProvider as any, "dbRef").and.returnValue(userRef);
 
       dbProvider.getOrgPathForUser("id").subscribe(data => {
         expect(data).toEqual("bar");
