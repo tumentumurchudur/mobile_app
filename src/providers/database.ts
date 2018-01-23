@@ -27,15 +27,6 @@ export class DatabaseProvider {
     if (!firebase.apps.length) {
         firebase.initializeApp(fireBaseConfig);
     }
-
-    // this._db = firebase.database();
-
-    // this._usersRef = this._db.ref(databasePaths.users);
-    // this._metersRef = this._db.ref(databasePaths.meters);
-    // this._orgsRef = this._db.ref(databasePaths.orgs);
-    // this._readsRef = this._db.ref(databasePaths.reads);
-    // this._providersRef = this._db.ref(databasePaths.providers);
-    // this._ncmpRanksRef = this._db.ref(databasePaths.ranks);
   }
 
   private dbRef(path: string): firebase.database.Reference {
