@@ -185,31 +185,11 @@ a {
   background: none !important;
 }
 
-
-.side-menu-header {
-  padding-top: 12.5%;
-  .toolbar-background {
-    background: none !important;
-  }
-}
-
-.side-menu-title {
-  padding: 0 0 0 7vw !important;
-  background: none;
-  .toolbar-title {
-    font-family: $bryant-alternate;
-    font-size: 5.5vh;
-    color: $vutiliti-blue !important;
-    text-align: left !important;
-  }
-}
-
 ion-backdrop {
   opacity: 0 !important;
 }
 
 ion-app {
-  //background-color: $side-menu-color !important;
   background-image: url('../assets/loginBackground.png');
   background-position: 50% 55%;
   background-size: cover;
