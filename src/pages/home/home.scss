@@ -30,16 +30,14 @@ page-home {
     font-family: $bryant-alternate, sans-serif;
     font-size: 4.75vh;
     text-align: center;
-    padding-right: 18vw;
   }
 
   .toolbar-title-ios {
     padding: 0 12px 4px 12px;
   }
 
-  mark {
-    color: $navbar-color;
-    background: none;
+  .toolbar-title-md {
+    padding: 0 12vw 0px 2vw;
   }
 
   .navbar-button {

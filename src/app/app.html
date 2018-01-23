@@ -1,29 +1,25 @@
 <ion-nav #mycontent [root]="rootPage"></ion-nav>
 <!--Side Menu-->
 <ion-menu type="push" [content]="mycontent">
-  <ion-header no-border>
-    <ion-navbar class="ion-navbar" color="light" [hideBackButton]="true">
-      <ion-buttons left>
-      </ion-buttons>
-      <ion-title class="side-menu-title">Vutiliti</ion-title>
+  <ion-header class="side-menu-header" no-border>
+    <ion-navbar class="side-menu-navbar" color="light" [hideBackButton]="true">
+      <ion-title class="side-menu-title"><mark>vu</mark>tiliti</ion-title>
     </ion-navbar>
   </ion-header>
   <ion-content class="menu-content">
     <ion-list class="menu-items">
-      <button ion-item>
-        <ion-icon name="person" item-start></ion-icon>
-        Account
-      </button>
-      <ion-item-divider></ion-item-divider>
+      <!--<button ion-item>-->
+        <!--<ion-icon name="person" item-start></ion-icon>-->
+        <!--Account-->
+      <!--</button>-->
       <button ion-item>
         <ion-icon name="md-add" item-start></ion-icon>
         Add Meter
       </button>
-      <button ion-item>
-        <ion-icon name="options" item-start></ion-icon>
-        Settings
-      </button>
-      <ion-item-divider></ion-item-divider>
+      <!--<button ion-item>-->
+        <!--<ion-icon name="options" item-start></ion-icon>-->
+        <!--Settings-->
+      <!--</button>-->
       <button ion-item>
         <ion-icon name="log-out" item-start></ion-icon>
         Log Out

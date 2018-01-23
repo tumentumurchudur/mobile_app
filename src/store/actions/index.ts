@@ -98,4 +98,9 @@ export {
   RESET_COMPARISON_TIMEOUT,
   BEGIN_COMPARISON_READS,
   CHECK_COMPARISON_READS
-} from "./comparison-actions"
+} from "./comparison-actions";
+
+export {
+  SideMenuOpen,
+  SIDE_MENU_OPEN
+} from "./ui-controls-actions";

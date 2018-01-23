@@ -24,7 +24,8 @@ import {
 	LoadReadsByMeters,
 	LoadReadsByDateRange,
 	LoadingComparisonReads,
-	ResetComparisonTimeout
+	ResetComparisonTimeout,
+  SideMenuOpen
 } from "../actions";
 
 
@@ -192,5 +193,13 @@ export class StoreServices {
 	public selectComparisonLoading() {
 		return this._store.select(state => state.comparison.loading);
 	}
+
+	public sideMenuOpen(sideMenuStatus: boolean) {
+	  return this._store.dispatch(new SideMenuOpen(sideMenuStatus));
+  }
+
+	public sideMenuStatus(): Observable<boolean> {
+	  return this._store.select(state => state.uiControls.sideMenuOpen);
+  }
 
 }
