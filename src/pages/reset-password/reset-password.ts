@@ -1,12 +1,8 @@
 import { Component } from "@angular/core";
-<<<<<<< HEAD
 import {NavController, AlertController, IonicPage} from "ionic-angular";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import { EmailValidator } from "../../validators/email-validator";
 import { AuthProvider } from "../../providers"
-=======
-import { IonicPage, NavController, NavParams } from "ionic-angular";
->>>>>>> master
 
 @IonicPage({
   name: "ResetPasswordPage"
