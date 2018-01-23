@@ -40,7 +40,7 @@ export class CostHelper {
 		const rates = [];
 
 		if (tiers) {
-			for (let key of Object.keys(tiers)) {
+			for (const key of Object.keys(tiers)) {
 				const limit = parseInt(key);
 				const rate = tiers[key];
 
@@ -81,21 +81,20 @@ export class CostHelper {
 	 * @param meters
 	 */
 	public static calculateCostAndUsageForMeters(meters: IMeter[]): IMeter[] {
-		for (let i = 0; i < meters.length; i++) {
-			const deltas = ChartHelper.getDeltas(meters[i]._reads);
-			const cost = deltas.length ? CostHelper.calculateCostFromDeltas(meters[i], deltas) : {};
-			const { billingTotalDays, billingCurrentDays } = CostHelper.calculateBillingCycles(meters[i]._billing_start);
+		for (const meter of meters) {
+			const deltas = ChartHelper.getDeltas(meter._reads);
+			const cost = deltas.length ? CostHelper.calculateCostFromDeltas(meter, deltas) : {};
+			const { billingTotalDays, billingCurrentDays } = CostHelper.calculateBillingCycles(meter._billing_start);
 
-			meters[i]._actualUsageCost = cost.totalCost || 0;
-			meters[i]._usage = cost.totalDelta || 0;
+			meter._actualUsageCost = cost.totalCost || 0;
+			meter._usage = cost.totalDelta || 0;
 
 			// # of days since billing start date
-			meters[i]._billing_since_start = billingCurrentDays || 0;
+			meter._billing_since_start = billingCurrentDays || 0;
 
 			// # of days in billing cycle.
-			meters[i]._billing_total = billingTotalDays || 0;
+			meter._billing_total = billingTotalDays || 0;
 		}
-
 		return meters;
 	}
 

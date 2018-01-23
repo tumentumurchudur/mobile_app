@@ -73,7 +73,7 @@ export class UtilitySpendingComponent implements OnInit {
   private _getGoalLineColors(meter: IMeter, index: number): string[] {
     const percentToGoal = 1 - (meter._actualUsageCost / this._getDailyGoalCost(meter));
 
-    let colors = this._getMeterConfig(meter, 'arcChartColors');
+    const colors = this._getMeterConfig(meter, "arcChartColors");
 
     if (meter._actualUsageCost > this._getDailyGoalCost(meter)) {
       colors[colors.length - 1] = "#C22A17";
@@ -86,6 +86,7 @@ export class UtilitySpendingComponent implements OnInit {
       this._arcChartCostState[index] = archChartConfigs.states.NORMAL;
     }
     this._arcChartColors[index] = colors;
+
     return colors;
   }
 
@@ -181,10 +182,13 @@ export class UtilitySpendingComponent implements OnInit {
   private _onTimeTravelClick(direction: string, meter: IMeter, index: number, page: string): void {
     this._selectedDateRanges[index] = ChartHelper.getDateRange(direction, this._selectedDateRanges[index]);
 
+    // Sets meter as the current card, so animation can be activated.
+    this._currentMeterIndex = index;
+
     if (page === "timeTravel") {
       this._storeServices.loadReadsByDateRange(meter, this._selectedDateRanges[index]);
     } else {
-      this._storeServices.loadNeighborhoodReads(meter,this._selectedDateRanges[index]);
+      this._storeServices.loadNeighborhoodReads(meter, this._selectedDateRanges[index]);
     }
   }
 
@@ -193,7 +197,7 @@ export class UtilitySpendingComponent implements OnInit {
     const data = reads.find(read => {
       return read.guid === guid &&
         read.startDate.toString() === startDate.toString() &&
-        read.endDate.toString() === endDate.toString()
+        read.endDate.toString() === endDate.toString();
     });
 
     if (data) {
@@ -207,7 +211,7 @@ export class UtilitySpendingComponent implements OnInit {
     const data = comparisonReads.find(read => {
       return read.guid === meter._guid &&
         read.startDate.toString() === startDate.toString() &&
-        read.endDate.toString() === endDate.toString()
+        read.endDate.toString() === endDate.toString();
     });
 
     this._ranks[index] = data ? data.rank : null;
@@ -236,7 +240,7 @@ export class UtilitySpendingComponent implements OnInit {
     const data = comparisonReads.find(read => {
       return read.guid === meter._guid &&
         read.startDate.toString() === startDate.toString() &&
-        read.endDate.toString() === endDate.toString()
+        read.endDate.toString() === endDate.toString();
     });
 
     return data ? data.timedOut : false;

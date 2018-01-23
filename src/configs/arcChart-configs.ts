@@ -4,4 +4,4 @@ export const archChartConfigs = {
     WARNING: "warning",
     ALERT: "alert"
   }
-}
+};

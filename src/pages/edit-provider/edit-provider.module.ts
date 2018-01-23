@@ -1,6 +1,6 @@
-import { NgModule } from '@angular/core';
-import { IonicPageModule } from 'ionic-angular';
-import { EditProviderPage } from './edit-provider';
+import { NgModule } from "@angular/core";
+import { IonicPageModule } from "ionic-angular";
+import { EditProviderPage } from "./edit-provider";
 
 @NgModule({
   declarations: [

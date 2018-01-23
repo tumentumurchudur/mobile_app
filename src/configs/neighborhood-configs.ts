@@ -5,4 +5,4 @@ export const neighborhoodConfigs = {
 
   NEIGHBORHOOD_COMP_AVG_GUID: "-NBHC-AVERAGE",
   NEIGHBORHOOD_COMP_EFF_GUID: "-NBHC-EFFICIENT"
-}
+};

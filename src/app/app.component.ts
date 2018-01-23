@@ -8,7 +8,6 @@ import { StoreServices } from "../store/services/store-services";
   templateUrl: "app.html"
 })
 export class MyApp {
-
   rootPage:any = "LoginPage";
 
   constructor(platform: Platform,

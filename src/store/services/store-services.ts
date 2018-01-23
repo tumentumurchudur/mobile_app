@@ -72,12 +72,12 @@ export class StoreServices {
 		this._store.dispatch(new TriggerRemoveMeter({ meter, user }));
 	}
 
-	public selectMeters() : Observable<IMeter[]> {
-		return this._store.select(state => state.meters.data)
+	public selectMeters(): Observable<IMeter[]> {
+		return this._store.select(state => state.meters.data);
 	}
 
   public selectUser(): Observable<IUser> {
-    return this._store.select(state => state.user)
+    return this._store.select(state => state.user);
   }
 
 	public addUser(user: IUser) {

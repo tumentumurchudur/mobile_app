@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { AngularFireAuth } from "angularfire2/auth"; //Add FirebaseApp
+import { AngularFireAuth } from "angularfire2/auth";
 import {  AlertController } from "ionic-angular";
 import { IUser, IFbToken } from "../interfaces";
 import { googleConfig } from "../configs";
@@ -46,7 +46,7 @@ export class AuthProvider {
       const googleCredential: IFbToken = firebase.auth.GoogleAuthProvider.credential(response.idToken);
 
       return this._signInWithCredential(googleCredential);
-    })
+    });
   }
 
   private _googleSilentLogin(): Promise<IFbToken> {
@@ -55,7 +55,7 @@ export class AuthProvider {
       "offline": true
     }).then((response) => {
         return firebase.auth.GoogleAuthProvider.credential(response.idToken);
-     })
+     });
   }
 
   public loginWithFacebook(): Promise<IUser> {
@@ -73,7 +73,7 @@ export class AuthProvider {
   private _getFacebookToken(credential): Promise<IFbToken> {
      return this._facebook.login(["email"]).then((response) => {
         return firebase.auth.FacebookAuthProvider.credential(response.authResponse.accessToken);
-     })
+     });
   }
 
   private _signInWithCredential(credential: IFbToken): Promise<any> {
@@ -107,7 +107,7 @@ export class AuthProvider {
       .then((credential: IFbToken) => {
         this._storage.set("userInfo", credential);
 
-        return this._af.auth.signInWithCredential(credential)
+        return this._af.auth.signInWithCredential(credential);
       })
       .catch(error => {
         // bubble up this error, so we can catch in the consumer.
@@ -162,11 +162,13 @@ export class AuthProvider {
           title = "Could Not Complete Login";
           message = "Unfortunately, we could not find your account. If you feel this is an error, try using a different social provider. Otherwise, create an account.";
           buttons = [
-            {text: "Cancel", role: "cancel", handler: () => {
+            {
+              text: "Cancel", role: "cancel", handler: () => {
               this.logOutUser();
             }},
-            {text: "Sign Up", role: "cancel", handler: () => {
-            }}
+            {
+              text: "Sign Up", role: "cancel", handler: () => { return null; }
+            }
           ];
           break;
         case "auth/wrong-password":
@@ -206,7 +208,7 @@ export class AuthProvider {
   public logOutUser(): void {
     this._storage.remove("userInfo");
     this._af.auth.signOut().then(() => {
-      //clears ALL storage. WARNING: HOT!
+      // clears ALL storage. WARNING: HOT!
       this._storage.clear();
     });
   }

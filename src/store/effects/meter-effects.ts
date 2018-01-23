@@ -42,11 +42,11 @@ export class MeterEffects {
   private _presentToast(meterName: string, event: string) {
     let message = `Adding ${meterName}...`;
 
-    if (event === "completed"){
+    if (event === "completed") {
       message = `${meterName} was successfully added.`;
     }
 
-    if (event === "removed"){
+    if (event === "removed") {
       message = `${meterName} was successfully removed.`;
     }
 
@@ -57,7 +57,7 @@ export class MeterEffects {
       position: "top"
     });
 
-    //removes any existing toasts
+    // removes any existing toasts
     toast.dismissAll();
     toast.present();
   }

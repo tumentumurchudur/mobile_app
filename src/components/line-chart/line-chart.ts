@@ -34,7 +34,7 @@ export class LineChartComponent implements OnChanges {
 
     if (!this.loading && this.data && this.data.length) {
       this._draw();
-      this._hideZeroTicks();
+      this._styleTicks();
     }
   }
 
@@ -85,9 +85,7 @@ export class LineChartComponent implements OnChanges {
           if (!isDataPointAveraged) {
             // Adds a placeholder if data point is not averaged.
             dottedLineData.push({ date: this.data[i].date, line1: null, line2: null, line3: null });
-          }
-          // Data point is averaged
-          else {
+          } else { // Data point is averaged
             // Check if prev value is averaged. If it is not averaged, then add it to
             // dottedLineData array, so a line can be drawn from it to current averaged data point.
             if (i > 0 && !this._isDataPointAveraged(this.data[i - 1].line1)) {
@@ -192,11 +190,48 @@ export class LineChartComponent implements OnChanges {
     }
   }
 
-  private _hideZeroTicks() {
+  private _styleTicks() {
+    const width = this.width;
+
     d3.select(this.element).select("svg").selectAll(".tick")
       .each(function(d, i) {
+          // Hide value 0 on the x-axis.
           if (d === 0) {
             this.remove();
+          }
+
+          const transform = d3.select(this).attr("transform");
+
+          if (!transform) {
+            return;
+          }
+
+          // Avoid labels from getting cutoff.
+          const arr = transform.split("(");
+          const values = arr[1] ? arr[1].split(",") : [];
+          const xTranslate = values[0] || null;
+
+          if (xTranslate === null) {
+            return;
+          }
+
+          // positioned too far on the right.
+          const moveLeft = xTranslate > width * .95;
+
+          // positioned too far on the left.
+          const moveRight = xTranslate < 10;
+
+          const elText = d3.select(this).selectAll("text");
+
+          // label is too long to fit.
+          const isTextLong = elText.text().length >= 3;
+          const pixelsPerChar = 3.2;
+
+          if (isTextLong && (moveRight || moveLeft)) {
+            // Calculate # of pixel to move in which direction.
+            const distance = elText.text().length * pixelsPerChar * (moveRight ? 1 : -1);
+
+            elText.attr("x", distance);
           }
       });
   }
@@ -205,7 +240,7 @@ export class LineChartComponent implements OnChanges {
     return d3.line()
       .x(d => x(d.date))
       .y(d => y(d[colName]))
-      .defined(d => d[colName] !== null)
+      .defined(d => d[colName] !== null);
   }
 
   private _addPath(svg: any, lineFunc: (data: any) => any, lineData: ILineItem[], color: string, className: string) {
@@ -257,10 +292,10 @@ export class LineChartComponent implements OnChanges {
       .x(d => xScale(d.date))
       .y0(height)
       .y1(d => yScale(d[field] || 0))(data);
-  };
+  }
 
   private _clear() {
-    const svg = d3.select(this.element).select("svg")
+    const svg = d3.select(this.element).select("svg");
 
     svg.selectAll("*").remove();
   }

@@ -5,4 +5,4 @@ export const meterConfigs = {
     WATER: "water",
     SOLAR: "solar"
   }
-}
+};
