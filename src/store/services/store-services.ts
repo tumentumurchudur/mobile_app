@@ -12,6 +12,7 @@ import {
   TriggerGetProviderPlans,
 	AddUser,
 	UpdateUser,
+  TriggerPrepForLogout,
 	TriggerAddMeter,
 	TriggerRemoveMeter,
 	TriggerLoadMeters,
@@ -82,6 +83,10 @@ export class StoreServices {
 	public addUser(user: IUser) {
 		this._store.dispatch(new AddUser(user));
 	}
+
+	public logOutUser() {
+	  this._store.dispatch(new TriggerPrepForLogout());
+  }
 
 	public updateUser(user: IUser) {
 		this._store.dispatch(new UpdateUser(user));

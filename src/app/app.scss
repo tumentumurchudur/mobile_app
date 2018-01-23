@@ -180,62 +180,20 @@ a {
   text-transform: capitalize;
 }
 
-// Side Menu
-.menu-items {
-  background-color: $side-menu-color;
-  .item-md {
-    background-color: $side-menu-color;
-    padding-left: 20px;
-  }
-  .item-inner {
-    margin-left: 5px !important;
-  }
-  button {
-    background-color: $side-menu-color;
-    color: $navbar-color;
-    ion-icon {
-      opacity: .5;
-      color: $vutiliti-blue;
-    }
-  }
+.menu-inner {
+  box-shadow: none !important;
 }
 
-.list-md .item-block .item-inner {
-  border-bottom: none !important;
-}
-
-.list-ios > .item-block:last-child, .list-ios > .item-wrapper:last-child .item-block {
-  border-bottom: none !important;
-}
-
-.menu-content {
-  background-color: $side-menu-color;
+ion-backdrop {
+  opacity: 0 !important;
 }
 
 ion-app {
   background-color: $side-menu-color !important;
 }
 
-.side-menu-header {
-  .toolbar-background {
-    background-color: $side-menu-color !important;
-
-  }
-}
-
-.side-menu-title {
-  padding: 0 0 0 8px !important;
-  background-color: $side-menu-color;
-  .toolbar-title {
-    font-family: $bryant-alternate;
-    font-size: 30px;
-    color: $vutiliti-blue !important;
-    text-align: left !important;
-  }
-}
-
 mark {
-  color: $navbar-color;
+  color: $background-color;
   background: none;
 }
 

@@ -2,7 +2,13 @@
 
 .side-menu-open {
   transform: translateX(220px) scale(.85, .85) !important;
-  transition: all .4s 0s;
+  transition: all .3s 0s;
+}
+
+.home-page-contianer {
+  height: 100%;
+  width: 100%;
+  transition: all .3s 0s;
 }
 
 page-home {

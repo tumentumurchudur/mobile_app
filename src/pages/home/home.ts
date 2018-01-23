@@ -18,7 +18,6 @@ import { StoreServices } from "../../store/services/store-services";
 export class HomePage implements OnInit, OnDestroy {
   private _user: IUser;
   private _subscriptions: Subscription[] = [];
-  private _sideMenuOpen: boolean = false;
   private _sideMenuStatus$: Observable<any>;
 
   ngOnInit() {
@@ -30,10 +29,21 @@ export class HomePage implements OnInit, OnDestroy {
     this._subscriptions.push(subscription);
   }
 
+  ionViewWillEnter(){
+    this._menuCtrl.swipeEnable(true);
+  }
+
+  ionViewWillLeave() {
+    this._menuCtrl.swipeEnable(false);
+  }
+
   ngOnDestroy() {
+    console.log("destroyed");
     for (const subscription of this._subscriptions) {
       subscription.unsubscribe();
     }
+
+    // this._storeServices.log
   }
 
   constructor(
@@ -46,7 +56,7 @@ export class HomePage implements OnInit, OnDestroy {
 
   }
 
-  changeMainView(): void {
+  private _openSiseMenu(): void {
     this._storeServices.sideMenuOpen(true);
     this._menuCtrl.open();
   }
