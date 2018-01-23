@@ -28,14 +28,21 @@ export class DatabaseProvider {
         firebase.initializeApp(fireBaseConfig);
     }
 
-    this._db = firebase.database();
+    // this._db = firebase.database();
 
-    this._usersRef = this._db.ref(databasePaths.users);
-    this._metersRef = this._db.ref(databasePaths.meters);
-    this._orgsRef = this._db.ref(databasePaths.orgs);
-    this._readsRef = this._db.ref(databasePaths.reads);
-    this._providersRef = this._db.ref(databasePaths.providers);
-    this._ncmpRanksRef = this._db.ref(databasePaths.ranks);
+    // this._usersRef = this._db.ref(databasePaths.users);
+    // this._metersRef = this._db.ref(databasePaths.meters);
+    // this._orgsRef = this._db.ref(databasePaths.orgs);
+    // this._readsRef = this._db.ref(databasePaths.reads);
+    // this._providersRef = this._db.ref(databasePaths.providers);
+    // this._ncmpRanksRef = this._db.ref(databasePaths.ranks);
+  }
+
+  private usersRef(): firebase.database.Reference {
+    if (!this._usersRef) {
+      return firebase.database().ref(databasePaths.users);
+    }
+    return this._usersRef;
   }
 
   /**
@@ -47,7 +54,7 @@ export class DatabaseProvider {
    */
   public getOrgPathForUser(uid: string): Observable<string> {
     return Observable.create(observer => {
-      return this._usersRef.child(uid).once("value").then(snapshot => {
+      return this.usersRef().child(uid).once("value").then(snapshot => {
         const { orgs = null } = snapshot.val();
 
         if (orgs && !Array.isArray(orgs)) {
