@@ -98,25 +98,25 @@ export class LoginPage {
       if (!this._loginForm.valid) {
         this._showError();
         return;
-      } else {
-        if (this._isNewUser) {
+      }
+      if (this._isNewUser) {
           this.navCtrl.push("SignUpPage");
           return;
-        }
-
-        this._auth.loginWithEmail(user)
-          .then(userData => {
-            const user: IUser = this._createUser(userData);
-
-            this._loginForm.reset();
-            this._loginForm.controls["email"].clearValidators();
-            this._loginForm.controls["password"].clearValidators();
-
-            this._storeServices.addUser(user);
-
-            this.navCtrl.push("HomePage");
-          });
       }
+
+      this._auth.loginWithEmail(user)
+        .then(userData => {
+          const user: IUser = this._createUser(userData);
+
+          this._loginForm.reset();
+          this._loginForm.controls["email"].clearValidators();
+          this._loginForm.controls["password"].clearValidators();
+
+          this._storeServices.addUser(user);
+
+          this.navCtrl.push("HomePage");
+        });
+
     }
   }
 

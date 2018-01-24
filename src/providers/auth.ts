@@ -82,13 +82,28 @@ export class AuthProvider {
    return this._af.auth.signInWithCredential(credential).then(response => response)
      .catch( error => {
        this._displayAndHandleErrors(error);
+       return new Error(error);
      });
   }
 
   public resetPassword(emailAddr: string): Promise<any> {
-    return this._af.auth.sendPasswordResetEmail(emailAddr).then(success => success)
+    return this._af.auth.sendPasswordResetEmail(emailAddr).then(() => {
+      const alert = this._alertCtrl.create({
+        message: "Please check your email for a password reset link.",
+        buttons: [
+          {
+            text: "Ok",
+            role: "cancel",
+            handler: () => {
+            }
+          }
+        ]
+      });
+      alert.present();
+    })
       .catch(error => {
         this._displayAndHandleErrors(error);
+        return new Error(error);
       })
   }
 

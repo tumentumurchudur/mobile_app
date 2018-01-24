@@ -13,6 +13,7 @@ import {
 	AddUser,
 	UpdateUser,
   TriggerPrepForLogout,
+  ResetPassword,
 	TriggerAddMeter,
 	TriggerRemoveMeter,
 	TriggerLoadMeters,
@@ -209,7 +210,11 @@ export class StoreServices {
   }
 
 	public selectSideMenuStatus(): Observable<boolean> {
-	  return this._store.select(state => state.uiControls.sideMenuOpen);
+    return this._store.select(state => state.uiControls.sideMenuOpen);
+  }
+
+  public resetPassword(emailAdd: string) {
+    this._store.dispatch(new ResetPassword(emailAdd));
   }
 
 }

@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from "@angular/core";
 import { Subscription } from "rxjs/Subscription";
 import {Observable} from "rxjs/Observable";
 
-import { IonicPage, NavController, MenuController } from "ionic-angular";
+import { IonicPage, MenuController } from "ionic-angular";
 import { IUser } from "../../interfaces";
 import { Store } from "@ngrx/store";
 import { AppState } from "../../store/reducers";
@@ -45,7 +45,6 @@ export class HomePage implements OnInit, OnDestroy {
 
   constructor(
     private _store: Store<AppState>,
-    public nav: NavController,
     private _menuCtrl: MenuController,
     private _storeServices: StoreServices
   ) {

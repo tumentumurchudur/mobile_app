@@ -461,7 +461,7 @@ export class DatabaseProvider {
 
   public deleteMeter(meter: IMeter, user: IUser): Observable<IMeter> {
     return Observable.create(observer => {
-      const path = `${user.orgPath}/Building1/_meters/_${meter._utilityType}/${meter._name}`;
+      const path = `Vutiliti/VutilitiCP/Residential/${user.uid}/Building1/_meters/_${meter._utilityType}/${meter._name}`;
 
       this._orgsRef.child(path).remove().then(() => {
         observer.next(meter);

@@ -2,7 +2,8 @@ import { Component } from "@angular/core";
 import {NavController, AlertController, IonicPage} from "ionic-angular";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import { EmailValidator } from "../../validators/email-validator";
-import { AuthProvider } from "../../providers"
+import { AuthProvider } from "../../providers";
+import { StoreServices } from "../../store/services/store-services";
 
 @IonicPage({
   name: "ResetPasswordPage"
@@ -16,6 +17,7 @@ export class ResetPasswordPage {
 
   constructor(
     private _formBuilder: FormBuilder,
+    private _storeServices: StoreServices,
     private _auth: AuthProvider,
     private _navCtrl: NavController,
     private _alertCtrl: AlertController
@@ -27,35 +29,15 @@ export class ResetPasswordPage {
 
   private _resetPassword() {
     if (this._resetPasswordForm.invalid) {
-      let alert = this._alertCtrl.create({
+      const alert = this._alertCtrl.create({
         message: "Please enter a valid email address.",
         buttons: ["Ok"]
       });
       alert.present();
     }
     else {
-      this._auth.resetPassword(this._resetPasswordForm.value.email).then((user) => {
-        let alert = this._alertCtrl.create({
-          message: "Please check your email for a password reset link.",
-          buttons: [
-            {
-              text: "Ok",
-              role: "cancel",
-              handler: () => {
-                this._navCtrl.pop();
-              }
-            }
-          ]
-        });
-        alert.present();
-      }, (error) => {
-        let errorMessage: string = error.message;
-        let errorAlert = this._alertCtrl.create({
-          message: errorMessage,
-          buttons: ["Ok"]
-        });
-        errorAlert.present();
-      });
+      this._storeServices.resetPassword(this._resetPasswordForm.value.email);
+      this._navCtrl.pop();
     }
   }
 }
