@@ -33,13 +33,13 @@ a {
 }
 
 // Standardized button height
-.button-md{
+.button-md {
   text-transform: none;
   height: 5vh;
   font-size: 2.5vh;
 }
 
-.button-ios{
+.button-ios {
   text-transform: none;
   height: 5vh;
   font-size: 2.5vh;
@@ -84,6 +84,7 @@ a {
   box-shadow: inset 0 -1px 0 0 $primary !important;
 }
 
+// Toast Styles
 .meter-toast {
   .toast-wrapper{
     background: none;
@@ -93,6 +94,7 @@ a {
   }
 }
 
+// Alert Styles
 .timespan-alert.alert-md {
   padding: 50px;
 
@@ -169,6 +171,7 @@ a {
   }
 }
 
+// TimeSpan Styles
 .timespan-selected {
   background-color: $vu-white !important;
   opacity: .5;
@@ -178,4 +181,53 @@ a {
   justify-content: center !important;
   text-transform: capitalize;
 }
+
+// Side Menu
+.menu-items {
+  background-color: #EDEFF2;
+  .item-md {
+    background-color: #EDEFF2;
+  }
+  button {
+    background-color: #EDEFF2;
+  }
+}
+
+.list-md .item-block .item-inner {
+  border-bottom: none !important;
+}
+
+.menu-content {
+  background-color: #EDEFF2;
+}
+
+ion-item-divider {
+  min-height: 0px;
+  height: 0px;
+  margin: 15px 0;
+}
+
+ion-backdrop {
+  background-color: #EDEFF2;
+}
+
+.menu-inner {
+  box-shadow: 0 0 15px rgba(237, 239, 242, 1) !important;
+}
+
+.menu-content-open {
+  transform: translateX(220px) scale(.85, .85) !important;
+  opacity: .5;
+  transition: all .4s 0s;
+  box-shadow: -15px -15px 40px #2d2d2d;
+}
+
+ion-app {
+  background-color: #EDEFF2 !important;
+}
+
+.side-menu-title .toolbar-title {
+  color: #29ACE0 !important;
+}
+
 

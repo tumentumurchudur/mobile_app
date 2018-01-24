@@ -87,31 +87,31 @@ export class LoginPage {
     user.email = this._loginForm.value.email.toLowerCase().trim();
     user.password =  this._loginForm.value.password;
 
-    if (this._isNewUser) {
-      this.navCtrl.push("SignUpPage");
-      return;
-    }
-
     if (this._loginForm.dirty) {
       this._loginForm.controls["email"].markAsTouched();
       this._loginForm.controls["password"].markAsTouched();
       if (!this._loginForm.valid) {
         this._showError();
         return;
-      } else {
-        this._auth.loginWithEmail(user)
-          .then(userData => {
-            const user: IUser = this._createUser(userData);
-
-            this._loginForm.reset();
-            this._loginForm.controls["email"].clearValidators();
-            this._loginForm.controls["password"].clearValidators();
-
-            this._storeServices.addUser(user);
-
-            this.navCtrl.push("HomePage");
-          });
       }
+      if (this._isNewUser) {
+          this.navCtrl.push("SignUpPage");
+          return;
+      }
+
+      this._auth.loginWithEmail(user)
+        .then(userData => {
+          const user: IUser = this._createUser(userData);
+
+          this._loginForm.reset();
+          this._loginForm.controls["email"].clearValidators();
+          this._loginForm.controls["password"].clearValidators();
+
+          this._storeServices.addUser(user);
+
+          this.navCtrl.push("HomePage");
+        });
+
     }
   }
 
@@ -178,11 +178,6 @@ export class LoginPage {
       buttons
     })
     .present();
-  }
-
-  protected _keyboardSubmit() {
-    this._keyboard.close();
-    this._onLoginClick(this._user);
   }
 
 }
