@@ -47,7 +47,7 @@ export class LogoutUser implements Action {
 
 export class ResetPassword implements Action {
   public readonly type = RESET_PASSWORD;
-  public payload: any = null;
+  public payload: string = null;
 
   constructor(private _payload: any) {
     this.payload = _payload;

@@ -87,7 +87,7 @@ export class AuthProvider {
   }
 
   public resetPassword(emailAddr: string): Promise<any> {
-    return this._af.auth.sendPasswordResetEmail(emailAddr).then((success) => {
+    return this._af.auth.sendPasswordResetEmail(emailAddr).then(() => {
       const alert = this._alertCtrl.create({
         message: "Please check your email for a password reset link.",
         buttons: [
@@ -100,15 +100,7 @@ export class AuthProvider {
         ]
       });
       alert.present();
-    }, (error) => {
-        let errorMessage: string = error.message;
-        let errorAlert = this._alertCtrl.create({
-          message: errorMessage,
-          buttons: ["Ok"]
-        });
-        errorAlert.present();
-      }
-    )
+    })
       .catch(error => {
         this._displayAndHandleErrors(error);
         return new Error(error);
