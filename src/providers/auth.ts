@@ -221,6 +221,7 @@ export class AuthProvider {
   }
 
   public logOutUser(): void {
+    this._storage.remove("userInfo");
     this._af.auth.signOut().then(() => {
       // clears ALL storage. WARNING: HOT!
       this._storage.clear();

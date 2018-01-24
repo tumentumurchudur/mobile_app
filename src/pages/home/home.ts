@@ -1,10 +1,12 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { Subscription } from "rxjs/Subscription";
+import {Observable} from "rxjs/Observable";
 
-import { IonicPage, NavController } from "ionic-angular";
+import { IonicPage, MenuController } from "ionic-angular";
 import { IUser } from "../../interfaces";
 import { Store } from "@ngrx/store";
 import { AppState } from "../../store/reducers";
+import { StoreServices } from "../../store/services/store-services";
 
 @IonicPage({
   name: "HomePage"
@@ -16,6 +18,7 @@ import { AppState } from "../../store/reducers";
 export class HomePage implements OnInit, OnDestroy {
   private _user: IUser;
   private _subscriptions: Subscription[] = [];
+  private _selectSideMenuStatus$: Observable<any>;
 
   ngOnInit() {
     const subscription: Subscription = this._store.select(state => state.user)
@@ -26,6 +29,14 @@ export class HomePage implements OnInit, OnDestroy {
     this._subscriptions.push(subscription);
   }
 
+  ionViewWillEnter(){
+    this._menuCtrl.swipeEnable(true);
+  }
+
+  ionViewWillLeave() {
+    this._menuCtrl.swipeEnable(false);
+  }
+
   ngOnDestroy() {
     for (const subscription of this._subscriptions) {
       subscription.unsubscribe();
@@ -34,11 +45,15 @@ export class HomePage implements OnInit, OnDestroy {
 
   constructor(
     private _store: Store<AppState>,
-    public nav: NavController
-  ) { }
+    private _menuCtrl: MenuController,
+    private _storeServices: StoreServices
+  ) {
+    this._selectSideMenuStatus$ = this._storeServices.selectSideMenuStatus();
+  }
 
-  protected changeMainView(newView: string): void {
-    this.nav.push(newView);
+  private _openSideMenu(): void {
+    this._storeServices.sideMenuOpen();
+    this._menuCtrl.open();
   }
 
 }

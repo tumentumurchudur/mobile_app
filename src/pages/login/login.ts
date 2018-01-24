@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { IonicPage, NavController, AlertController } from "ionic-angular";
+import { IonicPage, NavController, AlertController, MenuController } from "ionic-angular";
 import { FormBuilder, FormGroup, Validators} from "@angular/forms";
 import { Storage } from "@ionic/storage";
 import { EmailValidator } from "../../validators/email-validator";
@@ -33,7 +33,8 @@ export class LoginPage {
     private _formBuilder: FormBuilder,
     private _storage: Storage,
     private _splashScreen: SplashScreen,
-    private _keyboard: Keyboard
+    private _keyboard: Keyboard,
+    private _menuCtrl: MenuController
   ) {
     this._loginForm = _formBuilder.group({
       email: ["", Validators.compose([Validators.required, EmailValidator.isValid])],
@@ -44,6 +45,10 @@ export class LoginPage {
 
   ngOnInit() {
     this._loginReturningUser();
+  }
+
+  ionViewWillEnter() {
+    this._menuCtrl.swipeEnable(false);
   }
 
   private _loginReturningUser(): void {

@@ -1,5 +1,16 @@
 @import "../../styles/variables";
 
+.side-menu-open {
+  transform: translateX(220px) scale(.85, .85) !important;
+  transition: all .3s 0s;
+}
+
+.home-page-contianer {
+  height: 100%;
+  width: 100%;
+  transition: all .3s 0s;
+}
+
 page-home {
   .content-md, .content-ios {
     background-color: $background-color;
@@ -31,9 +42,8 @@ page-home {
     padding: 0 12px 4px 12px;
   }
 
-  mark {
-    color: $navbar-color;
-    background: none;
+  .toolbar-title-md {
+    padding: 0 12vw 0px 2vw;
   }
 
   .navbar-button {

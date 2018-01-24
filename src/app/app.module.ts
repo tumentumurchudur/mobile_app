@@ -25,10 +25,12 @@ import { StoreServices } from "../store/services";
 import { CostHelper } from "../helpers";
 
 import { MyApp } from "./app.component";
+import { MenuItemsComponent } from "../components/menu-items/menu-items";
 
 @NgModule({
   declarations: [
-    MyApp
+    MyApp,
+    MenuItemsComponent
   ],
   imports: [
     BrowserModule,
@@ -60,7 +62,8 @@ import { MyApp } from "./app.component";
   ],
   bootstrap: [IonicApp],
   entryComponents: [
-    MyApp
+    MyApp,
+    MenuItemsComponent
   ],
   providers: [
     StatusBar,

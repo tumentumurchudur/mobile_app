@@ -1,18 +1,15 @@
-<ion-content>
-  <utility-spending [user]="_user"></utility-spending>
-</ion-content>
-<ion-footer no-border>
-  <ion-navbar class="navbar" color="dark" hideBackButton="true">
-    <ion-buttons left>
-      <button ion-button color="button" (tap)="changeMainView('ProfilePage')">
-        <img class="cog" src="assets/greyCogFill.png">
-      </button>
-    </ion-buttons>
-    <ion-title><mark>vu</mark>tiliti</ion-title>
-    <ion-buttons end>
-      <button ion-button color="navbar-button" class="navbar-button" icon-only (tap)="changeMainView('AddMeterPage')">
-        <ion-icon class="navbar-button" name="md-add"></ion-icon>
-      </button>
-    </ion-buttons>
-  </ion-navbar>
-</ion-footer>
+<div class="home-page-contianer" [ngClass]="{'side-menu-open': (_selectSideMenuStatus$ | async)}">
+  <ion-content>
+    <utility-spending [user]="_user"></utility-spending>
+  </ion-content>
+  <ion-footer no-border>
+    <ion-navbar class="navbar" color="dark" hideBackButton="true">
+      <ion-buttons left>
+        <button ion-button color="navbar-button" (tap)="_openSideMenu()">
+          <ion-icon class="navbar-button" name="menu"></ion-icon>
+        </button>
+      </ion-buttons>
+      <ion-title><mark>vu</mark>tiliti</ion-title>
+    </ion-navbar>
+  </ion-footer>
+</div>

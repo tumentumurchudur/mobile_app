@@ -1,0 +1,60 @@
+menu-items {
+  .list-md .item-block .item-inner {
+    border-bottom: none !important;
+  }
+
+  .list-ios > .item-block:last-child, .list-ios > .item-wrapper:last-child .item-block {
+    border-bottom: none !important;
+  }
+
+  .menu-content {
+    background: none;
+    .scroll-content {
+      overflow-y: hidden !important;
+      background: none;
+    }
+  }
+
+  .side-menu-header {
+    padding-top: 6vh;
+    .toolbar-background {
+      background: none !important;
+    }
+  }
+
+  .side-menu-title {
+    padding: 0 0 0 7vw !important;
+    background: none;
+    .toolbar-title {
+      font-family: $bryant-alternate;
+      font-size: 5.5vh;
+      color: $vutiliti-blue !important;
+      text-align: left !important;
+    }
+  }
+
+  // Side Menu
+  .menu-items {
+    padding-top: 14vh;
+    background: none;
+    .item-md {
+      background: none;
+      padding-left: 14vw;
+    }
+    .item-ios {
+      padding-left: 10vw;
+    }
+    .item-inner {
+      margin-left: 5px !important;
+    }
+    button {
+      background: none;
+      color: $background-color;
+      ion-icon {
+        opacity: .8;
+        color: $vutiliti-blue;
+      }
+    }
+  }
+
+}

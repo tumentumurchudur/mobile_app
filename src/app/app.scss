@@ -1,5 +1,5 @@
-// http://ionicframework.com/docs/theming/
-
+// http://ionicframework.com/docs/theming
+@import "../styles/variables";
 
 // App Global Sass
 // --------------------------------------------------
@@ -15,8 +15,6 @@
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
 $primary: #29ACE0;
-$background: #143948;
-$accent: #3A545C;
 $status-warning-color: #FFCD52;
 $status-bad-color: #C22A17;
 $text-input-highlight-color-valid: #29ACE0;
@@ -182,52 +180,38 @@ a {
   text-transform: capitalize;
 }
 
-// Side Menu
-.menu-items {
-  background-color: #EDEFF2;
-  .item-md {
-    background-color: #EDEFF2;
-  }
-  button {
-    background-color: #EDEFF2;
-  }
+.menu-inner {
+  box-shadow: none !important;
+  background: transparent !important;
 }
 
-.list-md .item-block .item-inner {
-  border-bottom: none !important;
+.list-ios .item-block:first-child {
+  border-top: none;
 }
 
-.menu-content {
-  background-color: #EDEFF2;
+.list-ios .item-block .item-inner {
+  border-bottom: none;
 }
-
-ion-item-divider {
-  min-height: 0px;
-  height: 0px;
-  margin: 15px 0;
+.list-ios > .item-block:last-child, .list-ios > .item-wrapper:last-child .item-block {
+  border-bottom: none;
 }
 
 ion-backdrop {
-  background-color: #EDEFF2;
-}
-
-.menu-inner {
-  box-shadow: 0 0 15px rgba(237, 239, 242, 1) !important;
-}
-
-.menu-content-open {
-  transform: translateX(220px) scale(.85, .85) !important;
-  opacity: .5;
-  transition: all .4s 0s;
-  box-shadow: -15px -15px 40px #2d2d2d;
+  opacity: 0 !important;
 }
 
 ion-app {
-  background-color: #EDEFF2 !important;
+  background-color: transparent;
+  background-image: url('../assets/loginBackground.png') !important;
+  background-position: 50% 55%;
+  background-size: cover;
+  display: flex;
 }
 
-.side-menu-title .toolbar-title {
-  color: #29ACE0 !important;
+mark {
+  color: $background-color;
+  background: none;
 }
+
 
 

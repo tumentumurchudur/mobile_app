@@ -22,7 +22,6 @@ $app-direction: ltr;
 // To view all the possible Ionic variables, see:
 // http://ionicframework.com/docs/theming/overriding-ionic-variables/
 
-
 $menu-width: 220px;
 
 
@@ -37,7 +36,7 @@ $menu-width: 220px;
 // The "primary" color is the only required color in the map.
 
 $colors: (
-  primary:    #29ACE0,
+  primary:    #2AACE0,
   secondary:  #32db64,
   danger:     #f53d3d,
   light:      #EDEFF2,
@@ -49,6 +48,8 @@ $colors: (
 // App iOS Variables
 // --------------------------------------------------
 // iOS only Sass variables can go here
+$content-ios-transition-background: transparent;
+
 
 
 
