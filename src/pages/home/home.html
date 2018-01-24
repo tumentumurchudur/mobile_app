@@ -1,11 +1,11 @@
-<div class="home-page-contianer" [ngClass]="{'side-menu-open': (_sideMenuStatus$ | async)}">
+<div class="home-page-contianer" [ngClass]="{'side-menu-open': (_selectSideMenuStatus$ | async)}">
   <ion-content>
     <utility-spending [user]="_user"></utility-spending>
   </ion-content>
   <ion-footer no-border>
     <ion-navbar class="navbar" color="dark" hideBackButton="true">
       <ion-buttons left>
-        <button ion-button color="navbar-button" (tap)="_openSiseMenu()">
+        <button ion-button color="navbar-button" (tap)="_openSideMenu()">
           <ion-icon class="navbar-button" name="menu"></ion-icon>
         </button>
       </ion-buttons>

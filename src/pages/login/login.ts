@@ -54,7 +54,6 @@ export class LoginPage {
   private _loginReturningUser(): void {
     this._storage.get("userInfo")
       .then((userInfo: IFbToken) => {
-      console.log(userInfo);
         if (!userInfo || !userInfo.providerId) {
           throw new Error("User is not available in local storage.");
         }

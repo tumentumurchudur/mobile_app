@@ -28,11 +28,11 @@ export class MyApp {
   }
 
   private _closeMenu(){
-    this._storeServices.sideMenuOpen(false);
+    this._storeServices.sideMenuClose();
   }
 
   private _openMenu(){
-    this._storeServices.sideMenuOpen(true);
+    this._storeServices.sideMenuOpen();
   }
 
 

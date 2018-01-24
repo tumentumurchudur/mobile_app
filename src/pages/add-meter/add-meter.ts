@@ -6,9 +6,4 @@ import { IonicPage } from "ionic-angular";
   selector: "page-add-meter",
   templateUrl: "add-meter.html"
 })
-export class AddMeterPage {
-
-  constructor() {
-  }
-
-}
+export class AddMeterPage {}

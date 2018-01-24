@@ -26,6 +26,7 @@ import {
 	LoadReadsByDateRange,
 	LoadingComparisonReads,
 	ResetComparisonTimeout,
+  SideMenuClose,
   SideMenuOpen
 } from "../actions";
 
@@ -199,11 +200,15 @@ export class StoreServices {
 		return this._store.select(state => state.comparison.loading);
 	}
 
-	public sideMenuOpen(sideMenuStatus: boolean) {
-	  return this._store.dispatch(new SideMenuOpen(sideMenuStatus));
+	public sideMenuOpen() {
+	  return this._store.dispatch(new SideMenuOpen());
   }
 
-	public sideMenuStatus(): Observable<boolean> {
+  public sideMenuClose() {
+    return this._store.dispatch(new SideMenuClose());
+  }
+
+	public selectSideMenuStatus(): Observable<boolean> {
 	  return this._store.select(state => state.uiControls.sideMenuOpen);
   }
 

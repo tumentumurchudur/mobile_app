@@ -101,7 +101,9 @@ export {
 } from "./comparison-actions";
 
 export {
+  SideMenuClose,
   SideMenuOpen,
+  SIDE_MENU_CLOSE,
   SIDE_MENU_OPEN
 } from "./ui-controls-actions";
 

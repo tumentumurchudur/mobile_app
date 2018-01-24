@@ -11,7 +11,6 @@ export class UserEffects {
   public logOutUser$ = this._actions$
     .ofType(TRIGGER_PREP_FOR_LOGOUT)
     .map(() => {
-      console.log('loggin Out');
       return this._auth.logOutUser();
     });
 
