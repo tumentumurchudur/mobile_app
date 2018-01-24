@@ -182,15 +182,24 @@ a {
 
 .menu-inner {
   box-shadow: none !important;
-  background: none !important;
+  background: transparent !important;
 }
+
+.list-ios .item-block:first-child {
+  border-top: none;
+}
+
+.list-ios .item-block .item-inner {
+  border-bottom: none;
+} 
 
 ion-backdrop {
   opacity: 0 !important;
 }
 
 ion-app {
-  background-image: url('../assets/loginBackground.png');
+  background-color: transparent;
+  background-image: url('../assets/loginBackground.png') !important;
   background-position: 50% 55%;
   background-size: cover;
   display: flex;

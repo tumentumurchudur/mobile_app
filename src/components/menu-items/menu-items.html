@@ -5,7 +5,7 @@
 </ion-header>
 <ion-content class="menu-content">
   <ion-list class="menu-items">
-    <button menuClose ion-item *ngFor="let item of _menuItem" (click)="_openPage(item)">
+    <button menuClose ion-item detail-none *ngFor="let item of _menuItem" (click)="_openPage(item)">
       <ion-icon name="{{item.icon}}" item-start></ion-icon>
       {{item.title}}
     </button>
