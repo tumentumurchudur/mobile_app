@@ -9,14 +9,15 @@ import { userReducer } from "./user-reducer";
 import { readsReducer } from "./reads-reducer";
 import { comparisonReducer } from "./comparison-reducer";
 import { providerReducer } from "./provider-reducer";
+import { uiControlsReducer } from "./ui-controls-reducer";
 
 export interface AppState {
-	meters: { data: IMeter[] | null, loading: boolean };
-	reads: { data: IReads[] | null, loading: boolean };
-	comparison: { data: IComparison[] | null, loading: boolean, neighborhoodGroup: any };
-	user: IUser | null;
-  providers: {  provider: IProvider, providerTypes: string[] };
-
+	meters: { data: IMeter[] | null, loading: boolean },
+	reads: { data: IReads[] | null, loading: boolean },
+	comparison: { data: IComparison[] | null, loading: boolean, neighborhoodGroup: any },
+	user: IUser | null,
+  providers: {  provider: IProvider, providerTypes: string[] },
+  uiControls: { sideMenuOpen: boolean }
 }
 
 export const reducers: ActionReducerMap<AppState> = {
@@ -24,7 +25,8 @@ export const reducers: ActionReducerMap<AppState> = {
 	user: userReducer,
 	reads: readsReducer,
 	comparison: comparisonReducer,
-  providers: providerReducer
+  providers: providerReducer,
+  uiControls: uiControlsReducer
 };
 
 // TODO: We may use this in the future.

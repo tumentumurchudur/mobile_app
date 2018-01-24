@@ -20,24 +20,23 @@ page-login {
   }
 
   .logo-container {
-    height: 30vh;
-    margin-top: 7vh;
+    height: 35vh;
 
     .login-img {
       position: absolute;
-      top: 0;
+      top: 15%;
       right: 0;
       left: 0;
       margin: auto;
       opacity: .1;
-      width: 40vw;
+      width: 60%;
     }
 
     .app-title {
       text-align: center;
       font-size: 6.25vh;
       color: $vu-white;
-      margin-top: 6vh;
+      margin-top: 28%;
 
       .app-name-spark {
         font-family: $bryant-regular, sans-serif;
@@ -101,7 +100,7 @@ page-login {
   .or-with {
     color: $vu-white !important;
     height: 3vh;
-    margin: 2vh 0;
+    margin: 3vh 0;
     font-family: $bryant-regular, sans-serif;
 
     .line {
@@ -118,6 +117,7 @@ page-login {
 
   .bottom-row {
     margin: 0;
+    padding: 0;
     display: flex;
     justify-content: space-around;
 

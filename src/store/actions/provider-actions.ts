@@ -17,7 +17,6 @@ export const UPDATE_PROVIDER_REGIONS: string = "UPDATE PROVIDER REGIONS";
 export class TriggerAddProviders implements Action {
   public readonly type = TRIGGER_ADD_PROVIDERS;
   public payload: any = null;
-
 }
 
 export class TriggerGetProviderCountries implements Action {

@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { IonicPage, NavController, AlertController } from "ionic-angular";
+import { IonicPage, NavController, AlertController, MenuController } from "ionic-angular";
 import { FormBuilder, FormGroup, Validators} from "@angular/forms";
 import { Storage } from "@ionic/storage";
 import { EmailValidator } from "../../validators/email-validator";
@@ -33,7 +33,8 @@ export class LoginPage {
     private _formBuilder: FormBuilder,
     private _storage: Storage,
     private _splashScreen: SplashScreen,
-    private _keyboard: Keyboard
+    private _keyboard: Keyboard,
+    private _menuCtrl: MenuController
   ) {
     this._loginForm = _formBuilder.group({
       email: ["", Validators.compose([Validators.required, EmailValidator.isValid])],
@@ -44,6 +45,10 @@ export class LoginPage {
 
   ngOnInit() {
     this._loginReturningUser();
+  }
+
+  ionViewWillEnter() {
+    this._menuCtrl.swipeEnable(false);
   }
 
   private _loginReturningUser(): void {
@@ -87,31 +92,31 @@ export class LoginPage {
     user.email = this._loginForm.value.email.toLowerCase().trim();
     user.password =  this._loginForm.value.password;
 
-    if (this._isNewUser) {
-      this.navCtrl.push("SignUpPage");
-      return;
-    }
-
     if (this._loginForm.dirty) {
       this._loginForm.controls["email"].markAsTouched();
       this._loginForm.controls["password"].markAsTouched();
       if (!this._loginForm.valid) {
         this._showError();
         return;
-      } else {
-        this._auth.loginWithEmail(user)
-          .then(userData => {
-            const user: IUser = this._createUser(userData);
-
-            this._loginForm.reset();
-            this._loginForm.controls["email"].clearValidators();
-            this._loginForm.controls["password"].clearValidators();
-
-            this._storeServices.addUser(user);
-
-            this.navCtrl.push("HomePage");
-          });
       }
+      if (this._isNewUser) {
+          this.navCtrl.push("SignUpPage");
+          return;
+      }
+
+      this._auth.loginWithEmail(user)
+        .then(userData => {
+          const user: IUser = this._createUser(userData);
+
+          this._loginForm.reset();
+          this._loginForm.controls["email"].clearValidators();
+          this._loginForm.controls["password"].clearValidators();
+
+          this._storeServices.addUser(user);
+
+          this.navCtrl.push("HomePage");
+        });
+
     }
   }
 
@@ -178,11 +183,6 @@ export class LoginPage {
       buttons
     })
     .present();
-  }
-
-  protected _keyboardSubmit() {
-    this._keyboard.close();
-    this._onLoginClick(this._user);
   }
 
 }

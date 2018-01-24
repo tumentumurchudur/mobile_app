@@ -1,3 +1,5 @@
+@import "../../styles/variables";
+
 page-add-meter {
   .toolbar-content {
     display: flex;
@@ -14,7 +16,7 @@ page-add-meter {
   }
 
   div.toolbar-title {
-    color: #999EA8 !important;
+    color: $navbar-text !important;
     padding-right: 5vh;
     font-size: 20px;
   }

@@ -1,0 +1,13 @@
+<ion-header class="side-menu-header" no-border>
+  <ion-navbar class="side-menu-navbar" color="light" [hideBackButton]="true">
+    <ion-title class="side-menu-title"><mark>vu</mark>tiliti</ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content class="menu-content">
+  <ion-list class="menu-items">
+    <button menuClose ion-item detail-none *ngFor="let item of _menuItems" (click)="_openPage(item)">
+      <ion-icon name="{{item.icon}}" item-start></ion-icon>
+      {{item.title}}
+    </button>
+  </ion-list>
+</ion-content>

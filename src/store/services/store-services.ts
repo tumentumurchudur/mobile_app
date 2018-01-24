@@ -12,6 +12,8 @@ import {
   TriggerGetProviderPlans,
 	AddUser,
 	UpdateUser,
+  TriggerPrepForLogout,
+  ResetPassword,
 	TriggerAddMeter,
 	TriggerRemoveMeter,
 	TriggerLoadMeters,
@@ -24,7 +26,9 @@ import {
 	LoadReadsByMeters,
 	LoadReadsByDateRange,
 	LoadingComparisonReads,
-	ResetComparisonTimeout
+	ResetComparisonTimeout,
+  SideMenuClose,
+  SideMenuOpen
 } from "../actions";
 
 
@@ -81,6 +85,10 @@ export class StoreServices {
 	public addUser(user: IUser) {
 		this._store.dispatch(new AddUser(user));
 	}
+
+	public logOutUser() {
+	  this._store.dispatch(new TriggerPrepForLogout());
+  }
 
 	public updateUser(user: IUser) {
 		this._store.dispatch(new UpdateUser(user));
@@ -192,5 +200,21 @@ export class StoreServices {
 	public selectComparisonLoading() {
 		return this._store.select(state => state.comparison.loading);
 	}
+
+	public sideMenuOpen() {
+	  return this._store.dispatch(new SideMenuOpen());
+  }
+
+  public sideMenuClose() {
+    return this._store.dispatch(new SideMenuClose());
+  }
+
+	public selectSideMenuStatus(): Observable<boolean> {
+    return this._store.select(state => state.uiControls.sideMenuOpen);
+  }
+
+  public resetPassword(emailAdd: string) {
+    this._store.dispatch(new ResetPassword(emailAdd));
+  }
 
 }

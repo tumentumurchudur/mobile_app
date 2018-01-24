@@ -82,17 +82,29 @@ export class AuthProvider {
    return this._af.auth.signInWithCredential(credential).then(response => response)
      .catch( error => {
        this._displayAndHandleErrors(error);
+       return new Error(error);
      });
   }
 
-  public resetPassword(emailAddr: string): Observable<IUser> {
-    return Observable.create(observer => {
-      this._af.auth.sendPasswordResetEmail(emailAddr).then(success => {
-          observer.next(success);
-        }).catch(error => {
-          observer.error(error);
-        });
-    });
+  public resetPassword(emailAddr: string): Promise<any> {
+    return this._af.auth.sendPasswordResetEmail(emailAddr).then(() => {
+      const alert = this._alertCtrl.create({
+        message: "Please check your email for a password reset link.",
+        buttons: [
+          {
+            text: "Ok",
+            role: "cancel",
+            handler: () => {
+            }
+          }
+        ]
+      });
+      alert.present();
+    })
+      .catch(error => {
+        this._displayAndHandleErrors(error);
+        return new Error(error);
+      })
   }
 
   public getTokenId(): Observable<any> {
@@ -209,6 +221,7 @@ export class AuthProvider {
   }
 
   public logOutUser(): void {
+    this._storage.remove("userInfo");
     this._af.auth.signOut().then(() => {
       // clears ALL storage. WARNING: HOT!
       this._storage.clear();
