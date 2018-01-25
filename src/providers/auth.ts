@@ -77,9 +77,11 @@ export class AuthProvider {
   }
 
   private _signInWithCredential(credential: IFbToken): Promise<any> {
-   this._storage.set("userInfo", credential);
+   return this._af.auth.signInWithCredential(credential).then(response => {
+     const userStuff = Object.assign({}, response, { providerData:credential });
 
-   return this._af.auth.signInWithCredential(credential).then(response => response)
+     return userStuff;
+   })
      .catch( error => {
        this._displayAndHandleErrors(error);
        return new Error(error);
@@ -120,8 +122,6 @@ export class AuthProvider {
   public loginUserFromStorage(userInfo: IFbToken): Promise<any> {
     return this._getUserCredentials(userInfo)
       .then((credential: IFbToken) => {
-        this._storage.set("userInfo", credential);
-
         return this._af.auth.signInWithCredential(credential);
       })
       .catch(error => {

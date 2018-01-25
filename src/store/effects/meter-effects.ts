@@ -89,6 +89,8 @@ export class MeterEffects {
       const [ cachedData, user = null ] = values;
       const { meters = [], lastUpdatedDate = null } = cachedData;
 
+      console.log('userInLoadMeters', user);
+
       // Check if retention policy is expired.
       let cachePolicyExpired = false;
       if (lastUpdatedDate) {
@@ -126,7 +128,8 @@ export class MeterEffects {
     .switchMap((values: any[]) => {
       const [ orgPath, user ] = values;
       const updatedUser = Object.assign({}, user, { orgPath });
-
+      console.log('user', updatedUser);
+      this._storage.set('userData', updatedUser);
       return Observable.combineLatest([
         this._db.getMetersForOrg(orgPath),
         Observable.of(updatedUser)

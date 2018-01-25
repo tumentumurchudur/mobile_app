@@ -21,7 +21,8 @@ export class LoginPage {
   private _user: IUser = {
     email: null,
     password: null,
-    uid: null
+    uid: null,
+    providerData: null
   };
   private _isNewUser = false;
 
@@ -37,8 +38,8 @@ export class LoginPage {
     private _menuCtrl: MenuController
   ) {
     this._loginForm = _formBuilder.group({
-      email: ["", Validators.compose([Validators.required, EmailValidator.isValid])],
-      password: ["", Validators.compose([Validators.required, Validators.minLength(6)])]
+      email: ["spark@vutiliti.co", Validators.compose([Validators.required, EmailValidator.isValid])],
+      password: ["spark123", Validators.compose([Validators.required, Validators.minLength(6)])]
     });
 
   }
@@ -52,19 +53,12 @@ export class LoginPage {
   }
 
   private _loginReturningUser(): void {
-    this._storage.get("userInfo")
-      .then((userInfo: IFbToken) => {
-        if (!userInfo || !userInfo.providerId) {
-          throw new Error("User is not available in local storage.");
-        }
+    this._storage.get("userData")
+      .then((userData: IUser) => {
 
-        return this._auth.loginUserFromStorage(userInfo);
-      })
-      .then(userData => {
         if (!userData || !userData.email || !userData.uid) {
           throw new Error("userData is not valid.");
         }
-
         const user: IUser = this._createUser(userData);
         this.navCtrl.push("HomePage");
 
@@ -157,7 +151,8 @@ export class LoginPage {
       email: user.email,
       uid: user.uid,
       password: null,
-      orgPath: null
+      orgPath: user.orgPath,
+      providerData: user.providerData
     };
   }
 
