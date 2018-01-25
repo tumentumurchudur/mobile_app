@@ -359,7 +359,7 @@ export class DatabaseProvider {
       if (meter._name !== meter._oldMeterName) {
         const oldMeterPath = `Vutiliti/VutilitiCP/Residential/${user.uid}/Building1/_meters/_${meter._utilityType}/${meter._oldMeterName}`;
 
-        this._orgsRef.child(oldMeterPath).remove();
+        this.dbRef(databasePaths.orgs).child(oldMeterPath).remove();
         // TODO: Implement addMeter() into this function once orgPath is saved to localStorage
         this.dbRef(databasePaths.orgs).child(path).set(settings).then(() => {
           observer.next(Object.assign({}, meter, settings));

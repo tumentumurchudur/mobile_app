@@ -77,11 +77,13 @@ export {
   LoadReadsByDateRange,
   LoadingReads,
   LoadReadsByMeters,
+  ResetReadsTimeout,
 
   ADD_READS,
   LOAD_READS_BY_DATE,
   LOADING_READS,
-  LOAD_READS_BY_METERS
+  LOAD_READS_BY_METERS,
+  RESET_READS_TIMEOUT
 } from "./reads-actions";
 
 export {
