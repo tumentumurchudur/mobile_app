@@ -60,7 +60,7 @@ export class UtilitySpendingComponent implements OnInit {
     // TODO: This should be more dynamic based on meters.length.
     for (let i = 0; i < MAX_NUM_OF_CHARTS; i++) {
       this._currentNavigationItems[i] = this._navigationItems.ARC_CHART;
-      this._selectedDateRanges[i] = { timeSpan: timeSpanConfigs.MONTH };
+      this._selectedDateRanges[i] = { timeSpan: timeSpanConfigs.DAY };
     }
   }
 

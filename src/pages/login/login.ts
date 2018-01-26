@@ -38,8 +38,8 @@ export class LoginPage {
     private _menuCtrl: MenuController
   ) {
     this._loginForm = _formBuilder.group({
-      email: ["spark@vutiliti.co", Validators.compose([Validators.required, EmailValidator.isValid])],
-      password: ["spark123", Validators.compose([Validators.required, Validators.minLength(6)])]
+      email: ["", Validators.compose([Validators.required, EmailValidator.isValid])],
+      password: ["", Validators.compose([Validators.required, Validators.minLength(6)])]
     });
 
   }
@@ -59,13 +59,12 @@ export class LoginPage {
         if (!userData || !userData.email || !userData.uid) {
           throw new Error("userData is not valid.");
         }
-        const user: IUser = this._createUser(userData);
-        this.navCtrl.push("HomePage");
-
+        this.navCtrl.push("HomePage").then(() => {
+          this._splashScreen.hide();
+        });
         // Update the store with current user.
-        this._storeServices.addUser(user);
+        this._storeServices.addUser(userData);
 
-        this._splashScreen.hide();
       })
       .catch(error => {
         console.log(error);
@@ -98,18 +97,7 @@ export class LoginPage {
           return;
       }
 
-      this._auth.loginWithEmail(user)
-        .then(userData => {
-          const user: IUser = this._createUser(userData);
-
-          this._loginForm.reset();
-          this._loginForm.controls["email"].clearValidators();
-          this._loginForm.controls["password"].clearValidators();
-
-          this._storeServices.addUser(user);
-
-          this.navCtrl.push("HomePage");
-        });
+      this._storeServices.emailLogin(user);
 
     }
   }

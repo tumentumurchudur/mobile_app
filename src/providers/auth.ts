@@ -122,7 +122,7 @@ export class AuthProvider {
   public loginUserFromStorage(userInfo: IFbToken): Promise<any> {
     return this._getUserCredentials(userInfo)
       .then((credential: IFbToken) => {
-        return this._af.auth.signInWithCredential(credential);
+        return this._signInWithCredential(credential);
       })
       .catch(error => {
         // bubble up this error, so we can catch in the consumer.
