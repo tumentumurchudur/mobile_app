@@ -77,10 +77,16 @@ export class AuthProvider {
   }
 
   private _signInWithCredential(credential: IFbToken): Promise<any> {
-   return this._af.auth.signInWithCredential(credential).then(response => {
-     const userStuff = Object.assign({}, response, { providerData:credential });
-
-     return userStuff;
+   return this._af.auth.signInWithCredential(credential).then(userData => {
+     const user: IUser = {
+       email: userData.email,
+       uid: userData.uid,
+       password: null,
+       orgPath: null,
+       providerData: credential,
+       authenticated: true
+     };
+     return user;
    })
      .catch( error => {
        this._displayAndHandleErrors(error);

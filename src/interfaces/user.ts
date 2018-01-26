@@ -6,5 +6,6 @@ export interface IUser {
   password: string | null;
   uid: string | null;
   orgPath?: string | null;
-  providerData?: Partial<IFbToken> | null;
+  providerData?: IFbToken | null;
+  authenticated: boolean;
 }

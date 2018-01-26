@@ -30,7 +30,7 @@ import {
   SideMenuClose,
   SideMenuOpen
 } from "../actions";
-import {TriggerEmailLogin} from "../actions/user-actions";
+import {TriggerEmailLogin, TriggerSocialLogin} from "../actions/user-actions";
 
 
 @Injectable()
@@ -84,7 +84,11 @@ export class StoreServices {
   }
 
   public socialLogin(type: string) {
-    this._store.dispatch(new TriggerEmailLogin(type));
+    this._store.dispatch(new TriggerSocialLogin(type));
+  }
+
+  public selectAuthenticated(): Observable<boolean>{
+	  return this._store.select(state => state.user.authenticated);
   }
 
   public selectUser(): Observable<IUser> {

@@ -89,8 +89,6 @@ export class MeterEffects {
       const [ cachedData, user = null ] = values;
       const { meters = [], lastUpdatedDate = null } = cachedData;
 
-      console.log('userInLoadMeters', user);
-
       // Check if retention policy is expired.
       let cachePolicyExpired = false;
       if (lastUpdatedDate) {
@@ -98,15 +96,17 @@ export class MeterEffects {
 
         cachePolicyExpired = moment(lastUpdatedDate).add(cacheDuration, "m").toDate() < new Date();
       }
-
+      console.log("user is authenticated", user.authenticated);
       // Load data from database.
       if (!meters.length || !lastUpdatedDate || cachePolicyExpired) {
+
         return new LoadMeters(user);
       }
 
       // Load data from cache.
       return new AddMeters(meters);
     });
+
 
   /**
    * Handles load from database action.
@@ -127,8 +127,7 @@ export class MeterEffects {
     })
     .switchMap((values: any[]) => {
       const [ orgPath, user ] = values;
-      const updatedUser = Object.assign({}, user, { orgPath });
-      console.log('user', updatedUser);
+      const updatedUser = Object.assign({}, user, { orgPath }, {authenticated: false});
       this._storage.set('userData', updatedUser);
       return Observable.combineLatest([
         this._db.getMetersForOrg(orgPath),

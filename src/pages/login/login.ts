@@ -8,6 +8,10 @@ import { Keyboard } from "@ionic-native/keyboard";
 import { IUser, IFbToken } from "../../interfaces";
 import { AuthProvider } from "../../providers";
 import { StoreServices } from "../../store/services";
+import {Observable} from "rxjs/Observable";
+import { ISubscription } from "rxjs/Subscription";
+import "rxjs/add/operator/takeUntil";
+
 
 @IonicPage({
   name: "LoginPage"
@@ -22,9 +26,12 @@ export class LoginPage {
     email: null,
     password: null,
     uid: null,
-    providerData: null
+    providerData: null,
+    authenticated: false
   };
   private _isNewUser = false;
+  private _subscription: ISubscription;
+  private _userAuthenticated$: Observable<boolean>;
 
   constructor(
     private _storeServices: StoreServices,
@@ -38,9 +45,10 @@ export class LoginPage {
     private _menuCtrl: MenuController
   ) {
     this._loginForm = _formBuilder.group({
-      email: ["", Validators.compose([Validators.required, EmailValidator.isValid])],
-      password: ["", Validators.compose([Validators.required, Validators.minLength(6)])]
+      email: ["spark@vutiliti.co", Validators.compose([Validators.required, EmailValidator.isValid])],
+      password: ["spark123", Validators.compose([Validators.required, Validators.minLength(6)])]
     });
+    this._userAuthenticated$ = this._storeServices.selectAuthenticated();
 
   }
 
@@ -52,18 +60,25 @@ export class LoginPage {
     this._menuCtrl.swipeEnable(false);
   }
 
+  ionViewWillLeave() {
+    if (this._subscription) {
+      this._subscription.unsubscribe();
+    }
+  }
+
   private _loginReturningUser(): void {
     this._storage.get("userData")
       .then((userData: IUser) => {
-
+      console.log('returning User userData', userData);
+        // Update the store with current user.
         if (!userData || !userData.email || !userData.uid) {
           throw new Error("userData is not valid.");
         }
+        this._storeServices.addUser(userData);
+
         this.navCtrl.push("HomePage").then(() => {
           this._splashScreen.hide();
         });
-        // Update the store with current user.
-        this._storeServices.addUser(userData);
 
       })
       .catch(error => {
@@ -98,50 +113,38 @@ export class LoginPage {
       }
 
       this._storeServices.emailLogin(user);
+      this._subscription = this._userAuthenticated$.subscribe((val) => {
+        if (val) {
+          this._loginForm.reset();
+          this._loginForm.controls["email"].clearValidators();
+          this._loginForm.controls["password"].clearValidators();
 
+          this.navCtrl.push("HomePage");
+        }
+      });
     }
   }
 
   private _onFacebookClick(): void {
-    this._auth.loginWithFacebook()
-      .then(userData => {
-        const user: IUser = this._createUser(userData);
-
-        this._storeServices.addUser(user);
-
+    this._storeServices.socialLogin("facebook");
+    this._subscription = this._userAuthenticated$.subscribe((val) => {
+      if (val) {
         this.navCtrl.push("HomePage");
-      })
-      .catch(error => {
-        console.log("Facebook login failed: ", error);
-      });
+      }
+    });
   }
 
   private _onGoogleClick(): void {
-    this._auth.loginWithGoogle()
-      .then(userData => {
-        const user: IUser = this._createUser(userData);
-
-        this._storeServices.addUser(user);
-
+    this._storeServices.socialLogin("google");
+    this._subscription = this._userAuthenticated$.subscribe((val) => {
+      if (val) {
         this.navCtrl.push("HomePage");
-      })
-      .catch(error => {
-        console.log("Google login failed:", error);
-      });
+      }
+    });
   }
 
   private _onResetPasswordClick(): void {
     this.navCtrl.push("ResetPasswordPage");
-  }
-
-  private _createUser(user: IUser): IUser {
-    return {
-      email: user.email,
-      uid: user.uid,
-      password: null,
-      orgPath: user.orgPath,
-      providerData: user.providerData
-    };
   }
 
   private _showError() {

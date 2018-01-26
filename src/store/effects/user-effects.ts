@@ -29,11 +29,11 @@ export class UserEffects {
     .switchMap((user: IUser) => {
       return Observable.fromPromise(
       this._auth.loginWithEmail(user)
-    )
+      )
     })
     .map((user: any) => {
       return new LoginSuccess(user);
-    })
+    });
 
   /**
    * Handles TRIGGER_SOCIAL_LOGIN action and
@@ -48,6 +48,9 @@ export class UserEffects {
         return this._auth.loginWithGoogle();
       }
         return this._auth.loginWithFacebook();
+    })
+    .map((user: IUser) => {
+      return new LoginSuccess(user);
     });
 
   /**
@@ -58,16 +61,7 @@ export class UserEffects {
   public loginSuccess$ = this._actions$
     .ofType(LOGIN_SUCCESS)
     .map((action: any) => action.payload)
-    .map((userData: IUser) => {
-      const { email, uid, orgPath, providerData } = userData;
-
-     const user: IUser = {
-        email: email,
-        uid: uid,
-        password: null,
-        orgPath: orgPath,
-        providerData: providerData
-      };
+    .map((user: any) => {
 
       return new AddUser(user);
     });

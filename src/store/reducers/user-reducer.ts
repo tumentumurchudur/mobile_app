@@ -15,7 +15,8 @@ const userDefault: IUser = {
 	uid: null,
 	orgPath: null,
 	password: null,
-  providerData: null
+  providerData: null,
+  authenticated: false
 };
 
 export function userReducer(state: IUser = userDefault, action): IUser {
