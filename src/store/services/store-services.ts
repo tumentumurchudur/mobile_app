@@ -27,6 +27,7 @@ import {
 	LoadReadsByDateRange,
 	LoadingComparisonReads,
 	ResetComparisonTimeout,
+	ResetReadsTimeout,
   SideMenuClose,
   SideMenuOpen
 } from "../actions";
@@ -117,6 +118,7 @@ export class StoreServices {
 	}
 
 	public loadReadsByDateRange(meter: IMeter, dateRange: IDateRange) {
+		this._store.dispatch(new ResetReadsTimeout({ guid: meter._guid, dateRange }));
 		this._store.dispatch(new LoadingReads());
 		this._store.dispatch(new LoadReadsByDateRange({ meter, dateRange }));
 	}

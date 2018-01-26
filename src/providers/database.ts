@@ -13,12 +13,7 @@ import "rxjs/add/operator/catch";
 @Injectable()
 export class DatabaseProvider {
   private _db: firebase.database.Database;
-  private _usersRef: firebase.database.Reference;
-  private _metersRef: firebase.database.Reference;
-  private _orgsRef: firebase.database.Reference;
-  private _readsRef: firebase.database.Reference;
-  private _providersRef: firebase.database.Reference;
-  private _ncmpRanksRef: firebase.database.Reference;
+  private _refs = new Map<string, firebase.database.Reference>();
 
   constructor(
     private _authProvider: AuthProvider,
@@ -27,15 +22,16 @@ export class DatabaseProvider {
     if (!firebase.apps.length) {
         firebase.initializeApp(fireBaseConfig);
     }
+  }
 
-    this._db = firebase.database();
+  private dbRef(path: string): firebase.database.Reference {
+    if (!this._refs.has(path)) {
+      const ref = firebase.database().ref(path);
+      this._refs.set(path, ref);
 
-    this._usersRef = this._db.ref(databasePaths.users);
-    this._metersRef = this._db.ref(databasePaths.meters);
-    this._orgsRef = this._db.ref(databasePaths.orgs);
-    this._readsRef = this._db.ref(databasePaths.reads);
-    this._providersRef = this._db.ref(databasePaths.providers);
-    this._ncmpRanksRef = this._db.ref(databasePaths.ranks);
+      return ref;
+    }
+    return this._refs.get(path);
   }
 
   /**
@@ -47,7 +43,7 @@ export class DatabaseProvider {
    */
   public getOrgPathForUser(uid: string): Observable<string> {
     return Observable.create(observer => {
-      return this._usersRef.child(uid).once("value").then(snapshot => {
+      return this.dbRef(databasePaths.users).child(uid).once("value").then(snapshot => {
         const { orgs = null } = snapshot.val();
 
         if (orgs && !Array.isArray(orgs)) {
@@ -72,7 +68,7 @@ export class DatabaseProvider {
    */
   public getMetersForOrg(orgPath: string): Observable<IMeter[]> {
     return Observable.create(observer => {
-      return this._orgsRef.child(orgPath).once("value").then(snapshot => {
+      return this.dbRef(databasePaths.orgs).child(orgPath).once("value").then(snapshot => {
         let meters: IMeter[] = [];
 
         snapshot.forEach(child => {
@@ -175,7 +171,7 @@ export class DatabaseProvider {
    */
   private _getProviderForMeter(providerPath: string): Observable<any> {
     return Observable.create(observer => {
-      return this._providersRef.child(providerPath).once("value").then(snapshot => {
+      return this.dbRef(databasePaths.providers).child(providerPath).once("value").then(snapshot => {
         const providerData = snapshot.val();
 
         observer.next(providerData);
@@ -205,7 +201,7 @@ export class DatabaseProvider {
     const endAt = today.getTime().toString();
 
     return Observable.create(observer => {
-      return this._readsRef
+      return this.dbRef(databasePaths.reads)
         .child(meterGuid)
         .child("reads")
         .orderByKey()
@@ -232,7 +228,7 @@ export class DatabaseProvider {
 
   public getSummaries(meterGuid: string, timeSpan: string) {
     return Observable.create(observer => {
-      return this._readsRef
+      return this.dbRef(databasePaths.reads)
       .child(meterGuid)
       .child(`read_summaries/${timeSpan}`)
       .orderByKey()
@@ -263,7 +259,7 @@ export class DatabaseProvider {
     const endAt = endDate.getTime().toString();
 
     return Observable.create(observer => {
-      return this._readsRef
+      return this.dbRef(databasePaths.reads)
         .child(meterGuid)
         .child("reads")
         .orderByKey()
@@ -294,7 +290,7 @@ export class DatabaseProvider {
     const endAt = endDate.getTime().toString();
 
     return Observable.create(observer => {
-      return this._readsRef
+      return this.dbRef(databasePaths.reads)
         .child(guid)
         .child("read_summaries/hours")
         .orderByKey()
@@ -334,7 +330,7 @@ export class DatabaseProvider {
 
       updates[path] = settings;
 
-      this._orgsRef.child(path).set(settings).then(() => {
+      this.dbRef(databasePaths.orgs).child(path).set(settings).then(() => {
         observer.next(Object.assign({}, meter, settings));
       }, error => {
         observer.error(error);
@@ -363,16 +359,16 @@ export class DatabaseProvider {
       if (meter._name !== meter._oldMeterName) {
         const oldMeterPath = `Vutiliti/VutilitiCP/Residential/${user.uid}/Building1/_meters/_${meter._utilityType}/${meter._oldMeterName}`;
 
-        this._orgsRef.child(oldMeterPath).remove();
+        this.dbRef(databasePaths.orgs).child(oldMeterPath).remove();
         // TODO: Implement addMeter() into this function once orgPath is saved to localStorage
-        this._orgsRef.child(path).set(settings).then(() => {
+        this.dbRef(databasePaths.orgs).child(path).set(settings).then(() => {
           observer.next(Object.assign({}, meter, settings));
         })
           .catch(error => {
             observer.error(error);
            });
       } else {
-          this._orgsRef.child(path).update(settings).then(() => {
+          this.dbRef(databasePaths.orgs).child(path).update(settings).then(() => {
             observer.next(Object.assign({}, meter, settings));
           })
             .catch(error => {
@@ -384,7 +380,7 @@ export class DatabaseProvider {
 
   public findMeterById(meterId: string): Observable<any> {
     return Observable.create(observer => {
-      this._metersRef.orderByChild("meter_id").equalTo(meterId).once("value").then((snapshot) => {
+      this.dbRef(databasePaths.meters).orderByChild("meter_id").equalTo(meterId).once("value").then((snapshot) => {
         const meterGuidObj = snapshot.val();
 
         if (meterGuidObj) {
@@ -405,11 +401,11 @@ export class DatabaseProvider {
   }
 
   public getProviderTypes(): Observable<any> {
-      return this._getShallowList(this._httpClient, `${this._providersRef}`);
+      return this._getShallowList(this._httpClient, `${this.dbRef(databasePaths.providers)}`);
   }
 
   public getProviderRequestInfo(path: string): Observable<any> {
-    return this._getShallowList(this._httpClient, `${this._providersRef}/${path}`);
+    return this._getShallowList(this._httpClient, `${this.dbRef(databasePaths.providers)}/${path}`);
   }
 
   public getNeighborhoodGroup(meter: IMeter): Observable<any> {
@@ -431,7 +427,7 @@ export class DatabaseProvider {
     const endAt = endDate.getTime().toString();
 
     return Observable.create(observer => {
-      this._ncmpRanksRef
+      this.dbRef(databasePaths.ranks)
         .child(`${meter._guid}/hours`)
         .orderByKey()
         .startAt(startAt)
@@ -464,7 +460,7 @@ export class DatabaseProvider {
     return Observable.create(observer => {
       const path = `Vutiliti/VutilitiCP/Residential/${user.uid}/Building1/_meters/_${meter._utilityType}/${meter._name}`;
 
-      this._orgsRef.child(path).remove().then(() => {
+      this.dbRef(databasePaths.orgs).child(path).remove().then(() => {
         observer.next(meter);
       })
       .catch(error => {

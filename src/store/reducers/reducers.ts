@@ -12,12 +12,12 @@ import { providerReducer } from "./provider-reducer";
 import { uiControlsReducer } from "./ui-controls-reducer";
 
 export interface AppState {
-	meters: { data: IMeter[] | null, loading: boolean },
-	reads: { data: IReads[] | null, loading: boolean },
-	comparison: { data: IComparison[] | null, loading: boolean, neighborhoodGroup: any },
-	user: IUser | null,
-  providers: {  provider: IProvider, providerTypes: string[] },
-  uiControls: { sideMenuOpen: boolean }
+	meters: { data: IMeter[] | null, loading: boolean };
+	reads: { data: IReads[] | null, loading: boolean };
+	comparison: { data: IComparison[] | null, loading: boolean, neighborhoodGroup: any };
+	user: IUser | null;
+  providers: { provider: IProvider, providerTypes: string[] };
+  uiControls: { sideMenuOpen: boolean };
 }
 
 export const reducers: ActionReducerMap<AppState> = {
