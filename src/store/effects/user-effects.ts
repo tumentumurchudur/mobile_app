@@ -7,10 +7,8 @@ import {
   TRIGGER_EMAIL_LOGIN,
   LOGIN_SUCCESS,
   TRIGGER_PREP_FOR_LOGOUT,
-  LogoutUser,
   LoginSuccess,
   RESET_PASSWORD,
-  TRIGGER_USER_CHECK
 } from "../actions";
 import { IUser } from "../../interfaces/index";
 import {Observable} from "rxjs/Observable";

@@ -5,13 +5,11 @@ import { Storage } from "@ionic/storage";
 import { EmailValidator } from "../../validators/email-validator";
 import { SplashScreen } from "@ionic-native/splash-screen";
 import { Keyboard } from "@ionic-native/keyboard";
-import { IUser, IFbToken } from "../../interfaces";
+import { IUser } from "../../interfaces";
 import { AuthProvider } from "../../providers";
 import { StoreServices } from "../../store/services";
 import {Observable} from "rxjs/Observable";
 import { ISubscription } from "rxjs/Subscription";
-import "rxjs/add/operator/takeUntil";
-
 
 @IonicPage({
   name: "LoginPage"
@@ -45,8 +43,8 @@ export class LoginPage {
     private _menuCtrl: MenuController
   ) {
     this._loginForm = _formBuilder.group({
-      email: ["spark@vutiliti.co", Validators.compose([Validators.required, EmailValidator.isValid])],
-      password: ["spark123", Validators.compose([Validators.required, Validators.minLength(6)])]
+      email: ["", Validators.compose([Validators.required, EmailValidator.isValid])],
+      password: ["", Validators.compose([Validators.required, Validators.minLength(6)])]
     });
     this._userAuthenticated$ = this._storeServices.selectAuthenticated();
 
@@ -69,7 +67,6 @@ export class LoginPage {
   private _loginReturningUser(): void {
     this._storage.get("userData")
       .then((userData: IUser) => {
-      console.log('returning User userData', userData);
         // Update the store with current user.
         if (!userData || !userData.email || !userData.uid) {
           throw new Error("userData is not valid.");
@@ -79,7 +76,6 @@ export class LoginPage {
         this.navCtrl.push("HomePage").then(() => {
           this._splashScreen.hide();
         });
-
       })
       .catch(error => {
         console.log(error);

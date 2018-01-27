@@ -98,14 +98,12 @@ export class MeterEffects {
       }
       // Load data from database.
       if (!meters.length || !lastUpdatedDate || cachePolicyExpired) {
-
         return new LoadMeters(user);
       }
 
       // Load data from cache.
       return new AddMeters(meters);
     });
-
 
   /**
    * Handles load from database action.

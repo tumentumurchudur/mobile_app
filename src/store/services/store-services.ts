@@ -12,6 +12,8 @@ import {
   TriggerGetProviderPlans,
 	AddUser,
 	UpdateUser,
+  TriggerEmailLogin,
+  TriggerSocialLogin,
   TriggerPrepForLogout,
   ResetPassword,
 	TriggerAddMeter,
@@ -30,7 +32,6 @@ import {
   SideMenuClose,
   SideMenuOpen
 } from "../actions";
-import {TriggerEmailLogin, TriggerSocialLogin} from "../actions/user-actions";
 
 
 @Injectable()
