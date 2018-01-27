@@ -96,7 +96,6 @@ export class MeterEffects {
 
         cachePolicyExpired = moment(lastUpdatedDate).add(cacheDuration, "m").toDate() < new Date();
       }
-      console.log("user is authenticated", user.authenticated);
       // Load data from database.
       if (!meters.length || !lastUpdatedDate || cachePolicyExpired) {
 

@@ -39,7 +39,7 @@ export class UserEffects {
    * Handles TRIGGER_SOCIAL_LOGIN action and
    * logs in a user with their email and password.
    */
-  @Effect({ dispatch: false })
+  @Effect()
   public socailLogin$ = this._actions$
     .ofType(TRIGGER_SOCIAL_LOGIN)
     .map((action: any) => action.payload)
@@ -62,7 +62,6 @@ export class UserEffects {
     .ofType(LOGIN_SUCCESS)
     .map((action: any) => action.payload)
     .map((user: any) => {
-
       return new AddUser(user);
     });
 
