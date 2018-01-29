@@ -30,7 +30,7 @@ export class UserEffects {
       )
     })
     .map((user: any) => {
-      if(!user.email || !user.uid){
+      if(!user.email || !user.uid) {
         return;
       }
       return new LoginSuccess(user);
@@ -51,7 +51,7 @@ export class UserEffects {
         return this._auth.loginWithFacebook();
     })
     .map((user: IUser) => {
-      if(!user.email || !user.uid){
+      if(!user.email || !user.uid) {
         return;
       }
       return new LoginSuccess(user);
