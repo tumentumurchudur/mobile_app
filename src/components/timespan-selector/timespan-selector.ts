@@ -7,7 +7,7 @@ import { timeSpanConfigs } from "../../configs";
   templateUrl: "timespan-selector.html"
 })
 export class TimeSpanSelectorComponent {
-  @Input() selectedTimeSpan: string = timeSpanConfigs.MONTH;
+  @Input() selectedTimeSpan: string = timeSpanConfigs.DAY;
   @Input() disableNextButton: boolean = false;
   @Input() disablePrevButton: boolean = false;
 

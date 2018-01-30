@@ -77,9 +77,17 @@ export class AuthProvider {
   }
 
   private _signInWithCredential(credential: IFbToken): Promise<any> {
-   this._storage.set("userInfo", credential);
-
-   return this._af.auth.signInWithCredential(credential).then(response => response)
+   return this._af.auth.signInWithCredential(credential).then(userData => {
+     const user: IUser = {
+       email: userData.email,
+       uid: userData.uid,
+       password: null,
+       orgPath: null,
+       providerData: credential,
+       authenticated: true
+     };
+     return user;
+   })
      .catch( error => {
        this._displayAndHandleErrors(error);
        return new Error(error);
@@ -120,9 +128,7 @@ export class AuthProvider {
   public loginUserFromStorage(userInfo: IFbToken): Promise<any> {
     return this._getUserCredentials(userInfo)
       .then((credential: IFbToken) => {
-        this._storage.set("userInfo", credential);
-
-        return this._af.auth.signInWithCredential(credential);
+        return this._signInWithCredential(credential);
       })
       .catch(error => {
         // bubble up this error, so we can catch in the consumer.

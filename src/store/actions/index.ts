@@ -5,13 +5,19 @@ export {
   TRIGGER_PREP_FOR_LOGOUT,
   TRIGGER_USER_CHECK,
   RESET_PASSWORD,
+  TRIGGER_EMAIL_LOGIN,
+  TRIGGER_SOCIAL_LOGIN,
+  LOGIN_SUCCESS,
 
   ResetPassword,
   AddUser,
   UpdateUser,
   LogoutUser,
   TriggerPrepForLogout ,
-  TriggerUserCheck
+  TriggerUserCheck,
+  TriggerEmailLogin,
+  TriggerSocialLogin,
+  LoginSuccess
 } from "./user-actions";
 
 export {

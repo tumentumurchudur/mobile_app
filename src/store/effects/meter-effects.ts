@@ -96,7 +96,6 @@ export class MeterEffects {
 
         cachePolicyExpired = moment(lastUpdatedDate).add(cacheDuration, "m").toDate() < new Date();
       }
-
       // Load data from database.
       if (!meters.length || !lastUpdatedDate || cachePolicyExpired) {
         return new LoadMeters(user);
@@ -125,8 +124,8 @@ export class MeterEffects {
     })
     .switchMap((values: any[]) => {
       const [ orgPath, user ] = values;
-      const updatedUser = Object.assign({}, user, { orgPath });
-
+      const updatedUser = Object.assign({}, user, { orgPath }, {authenticated: false});
+      this._storage.set('userData', updatedUser);
       return Observable.combineLatest([
         this._db.getMetersForOrg(orgPath),
         Observable.of(updatedUser)

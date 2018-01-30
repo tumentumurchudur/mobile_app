@@ -12,6 +12,8 @@ import {
   TriggerGetProviderPlans,
 	AddUser,
 	UpdateUser,
+  TriggerEmailLogin,
+  TriggerSocialLogin,
   TriggerPrepForLogout,
   ResetPassword,
 	TriggerAddMeter,
@@ -78,6 +80,18 @@ export class StoreServices {
 	public selectMeters(): Observable<IMeter[]> {
 		return this._store.select(state => state.meters.data);
 	}
+
+	public emailLogin(user: IUser) {
+    this._store.dispatch(new TriggerEmailLogin(user));
+  }
+
+  public socialLogin(type: string) {
+    this._store.dispatch(new TriggerSocialLogin(type));
+  }
+
+  public selectAuthenticated(): Observable<boolean>{
+	  return this._store.select(state => state.user.authenticated);
+  }
 
   public selectUser(): Observable<IUser> {
     return this._store.select(state => state.user);
