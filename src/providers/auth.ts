@@ -101,9 +101,7 @@ export class AuthProvider {
         buttons: [
           {
             text: "Ok",
-            role: "cancel",
-            handler: () => {
-            }
+            role: "cancel"
           }
         ]
       });
@@ -112,7 +110,7 @@ export class AuthProvider {
       .catch(error => {
         this._displayAndHandleErrors(error);
         return new Error(error);
-      })
+      });
   }
 
   public getTokenId(): Observable<any> {

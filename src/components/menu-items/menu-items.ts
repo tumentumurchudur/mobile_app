@@ -20,11 +20,11 @@ export class MenuItemsComponent {
     ];
   }
 
-  private _closeMenu(){
+  private _closeMenu() {
     this._storeServices.sideMenuClose();
   }
 
-  private _openMenu(){
+  private _openMenu() {
     this._storeServices.sideMenuOpen();
   }
 

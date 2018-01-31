@@ -29,7 +29,7 @@ export class HomePage implements OnInit, OnDestroy {
     this._subscriptions.push(subscription);
   }
 
-  ionViewWillEnter(){
+  ionViewWillEnter() {
     this._menuCtrl.swipeEnable(true);
   }
 

@@ -8,7 +8,7 @@ import { StoreServices } from "../store/services/store-services";
   templateUrl: "app.html"
 })
 export class MyApp {
-  rootPage:any = "LoginPage";
+  rootPage: any = "LoginPage";
 
   constructor(platform: Platform,
               statusBar: StatusBar,
@@ -27,11 +27,11 @@ export class MyApp {
     });
   }
 
-  private _closeMenu(){
+  private _closeMenu() {
     this._storeServices.sideMenuClose();
   }
 
-  private _openMenu(){
+  private _openMenu() {
     this._storeServices.sideMenuOpen();
   }
 
