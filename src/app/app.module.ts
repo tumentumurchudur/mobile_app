@@ -54,7 +54,10 @@ import { MenuItemsComponent } from "../components/menu-items/menu-items";
       maxAge: 25 //  Retains last 25 states
     }),
     EffectsModule.forRoot([MeterEffects, ComparisonEffects, ReadsEffects, ProviderEffects, UserEffects]),
-    IonicStorageModule.forRoot(),
+    IonicStorageModule.forRoot({
+      name: '__vudb',
+         driverOrder: ['sqlite', 'websql', 'indexeddb']
+    }),
     AngularFireModule.initializeApp(fireBaseConfig),
     AngularFireAuthModule,
     BrowserAnimationsModule,

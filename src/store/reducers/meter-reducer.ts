@@ -26,7 +26,9 @@ export function meterReducer(state = { data: [], loading: false}, action): any {
 			});
 
 			return Object.assign({}, state, { data: meters });
-    case ActionTypes.TRIGGER_UPDATE_METER_READS:
+		case ActionTypes.REMOVE_ALL_METERS:
+		return Object.assign({}, state, { data: [], loading: false });
+    	case ActionTypes.TRIGGER_UPDATE_METER_READS:
 		case ActionTypes.TRIGGER_UPDATE_METER_SETTINGS:
 		  return Object.assign({}, state, { loading: true });
 		case ActionTypes.UPDATE_METER:
