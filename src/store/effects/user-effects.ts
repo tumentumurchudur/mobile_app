@@ -9,9 +9,11 @@ import {
   TRIGGER_PREP_FOR_LOGOUT,
   LoginSuccess,
   RESET_PASSWORD,
+  RemoveAllMeters
 } from "../actions";
 import { IUser } from "../../interfaces/index";
 import {Observable} from "rxjs/Observable";
+import { LoginFail, LOGIN_FAIL } from '../actions/user-actions';
 
 @Injectable()
 export class UserEffects {
@@ -31,7 +33,7 @@ export class UserEffects {
     })
     .map((user: any) => {
       if(!user.email || !user.uid) {
-        return;
+        return new LoginFail();
       }
       return new LoginSuccess(user);
     });
@@ -52,7 +54,7 @@ export class UserEffects {
     })
     .map((user: IUser) => {
       if(!user.email || !user.uid) {
-        return;
+        return new LoginFail();
       }
       return new LoginSuccess(user);
     });
@@ -69,16 +71,30 @@ export class UserEffects {
       return new AddUser(user);
     });
 
+   /**
+   * Handles LOGIN_FAIL action.
+   */
+  @Effect({ dispatch: false })
+  public loginFail$ = this._actions$
+    .ofType(LOGIN_FAIL)
+    .map(() => {
+      return;
+    });
+
 
   /**
    * Handles TRIGGER_PREP_FOR_LOGOUT action and
    * logs out user and removes local Storage.
    */
-  @Effect({ dispatch: false })
+  @Effect()
   public logOutUser$ = this._actions$
     .ofType(TRIGGER_PREP_FOR_LOGOUT)
-    .map(() => {
-      return this._auth.logOutUser();
+    .flatMap(() => {
+      return [
+       this._auth.logOutUser(),
+
+       new RemoveAllMeters()
+     ]
     });
 
   /**

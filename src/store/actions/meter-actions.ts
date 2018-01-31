@@ -8,6 +8,7 @@ export const ADD_METERS: string = "[Meter] ADD_METERS";
 export const ADD_METER: string = "[Meter] ADD_METER";
 export const ADD_METER_GUID: string = "[Meter] ADD METER GUID";
 export const REMOVE_METER: string = "[Meter] REMOVE METER";
+export const REMOVE_ALL_METERS: string = "[Meter] REMOVE ALL METERS";
 
 export const UPDATE_METER: string = "[Meter] UPDATE METER";
 export const TRIGGER_ADD_METER: string = "[Meter] TRIGGER ADD METER";
@@ -59,6 +60,12 @@ export class RemoveMeter implements Action {
 	constructor(private _payload: IMeter) {
 		this.payload = _payload;
 	}
+}
+
+export class RemoveAllMeters implements Action {
+	public readonly type = REMOVE_ALL_METERS;
+	public payload: any = null;
+
 }
 
 export class UpdateMeter implements Action {

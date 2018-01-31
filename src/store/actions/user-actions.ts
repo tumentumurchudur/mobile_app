@@ -5,6 +5,7 @@ export const ADD_USER: string = "ADD USER";
 export const TRIGGER_EMAIL_LOGIN: string = "TRIGGER EMAIL LOGIN USER";
 export const TRIGGER_SOCIAL_LOGIN: string = "TRIGGER SOCIAL LOGIN USER";
 export const LOGIN_SUCCESS: string = "LOGIN SUCCESS";
+export const LOGIN_FAIL: string = "LOGIN FAIL";
 export const UPDATE_USER: string = "UPDATE USER";
 export const LOGOUT_USER: string = "LOGOUT USER";
 export const RESET_PASSWORD: string = "RESET PASSWORD";
@@ -37,6 +38,12 @@ export class LoginSuccess implements Action {
   constructor(private _payload: IUser) {
     this.payload = _payload;
   }
+}
+
+export class LoginFail implements Action {
+  public readonly type = LOGIN_FAIL;
+  public payload: any | null;
+
 }
 
 export class AddUser implements Action {
