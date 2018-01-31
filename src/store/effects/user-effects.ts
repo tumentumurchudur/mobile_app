@@ -8,12 +8,14 @@ import {
   LOGIN_SUCCESS,
   TRIGGER_PREP_FOR_LOGOUT,
   LoginSuccess,
+  LoginFail,
+  LOGIN_FAIL,
   RESET_PASSWORD,
   RemoveAllMeters
 } from "../actions";
 import { IUser } from "../../interfaces/index";
 import {Observable} from "rxjs/Observable";
-import { LoginFail, LOGIN_FAIL } from '../actions/user-actions';
+import "rxjs/add/operator/map";
 
 @Injectable()
 export class UserEffects {
@@ -29,10 +31,10 @@ export class UserEffects {
     .switchMap((user: IUser) => {
       return Observable.fromPromise(
       this._auth.loginWithEmail(user)
-      )
+      );
     })
     .map((user: any) => {
-      if(!user.email || !user.uid) {
+      if (!user.email || !user.uid) {
         return new LoginFail();
       }
       return new LoginSuccess(user);
@@ -53,7 +55,7 @@ export class UserEffects {
         return this._auth.loginWithFacebook();
     })
     .map((user: IUser) => {
-      if(!user.email || !user.uid) {
+      if (!user.email || !user.uid) {
         return new LoginFail();
       }
       return new LoginSuccess(user);
@@ -71,7 +73,7 @@ export class UserEffects {
       return new AddUser(user);
     });
 
-   /**
+  /**
    * Handles LOGIN_FAIL action.
    */
   @Effect({ dispatch: false })
@@ -81,7 +83,6 @@ export class UserEffects {
       return;
     });
 
-
   /**
    * Handles TRIGGER_PREP_FOR_LOGOUT action and
    * logs out user and removes local Storage.
@@ -89,12 +90,12 @@ export class UserEffects {
   @Effect()
   public logOutUser$ = this._actions$
     .ofType(TRIGGER_PREP_FOR_LOGOUT)
-    .flatMap(() => {
-      return [
-       this._auth.logOutUser(),
-
-       new RemoveAllMeters()
-     ]
+    .map(() => {
+      return this._auth.logOutUser();
+    })
+    .map(() => {
+      const meters = [];
+      return new RemoveAllMeters(meters);
     });
 
   /**

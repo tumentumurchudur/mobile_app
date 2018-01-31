@@ -64,8 +64,11 @@ export class RemoveMeter implements Action {
 
 export class RemoveAllMeters implements Action {
 	public readonly type = REMOVE_ALL_METERS;
-	public payload: any = null;
+	public payload: IMeter[] = null;
 
+		constructor(private _payload: IMeter[]) {
+		this.payload = _payload;
+	}
 }
 
 export class UpdateMeter implements Action {
