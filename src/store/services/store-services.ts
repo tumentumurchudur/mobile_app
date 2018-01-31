@@ -89,7 +89,7 @@ export class StoreServices {
     this._store.dispatch(new TriggerSocialLogin(type));
   }
 
-  public selectAuthenticated(): Observable<boolean>{
+  public selectAuthenticated(): Observable<boolean> {
 	  return this._store.select(state => state.user.authenticated);
   }
 

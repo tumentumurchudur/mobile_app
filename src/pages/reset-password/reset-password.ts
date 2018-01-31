@@ -32,10 +32,9 @@ export class ResetPasswordPage {
         buttons: ["Ok"]
       });
       alert.present();
+      return;
     }
-    else {
-      this._storeServices.resetPassword(this._resetPasswordForm.value.email);
-      this._navCtrl.pop();
-    }
+    this._storeServices.resetPassword(this._resetPasswordForm.value.email);
+    this._navCtrl.pop();
   }
 }

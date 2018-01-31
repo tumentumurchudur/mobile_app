@@ -1,5 +1,5 @@
 import { ActionReducerMap } from "@ngrx/store";
-import * as ActionTypes from '../actions';
+import * as ActionTypes from "../actions";
 
 export interface UiControlsState {
   uiControls: {
@@ -9,10 +9,10 @@ export interface UiControlsState {
 
 export const uiControlsReducerMap: ActionReducerMap<UiControlsState> = {
   uiControls: uiControlsReducer
-}
+};
 
 export function uiControlsReducer(state = { sideMenuOpen: false }, action): any {
-  switch(action.type) {
+  switch (action.type) {
     case ActionTypes.SIDE_MENU_OPEN:
       return Object.assign({}, state, {sideMenuOpen: true});
     case ActionTypes.SIDE_MENU_CLOSE:

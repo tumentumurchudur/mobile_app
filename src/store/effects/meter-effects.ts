@@ -125,7 +125,7 @@ export class MeterEffects {
     .switchMap((values: any[]) => {
       const [ orgPath, user ] = values;
       const updatedUser = Object.assign({}, user, { orgPath }, {authenticated: false});
-      this._storage.set('userData', updatedUser);
+      this._storage.set("userData", updatedUser);
       return Observable.combineLatest([
         this._db.getMetersForOrg(orgPath),
         Observable.of(updatedUser)
