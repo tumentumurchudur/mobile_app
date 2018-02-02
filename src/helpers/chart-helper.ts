@@ -3,6 +3,7 @@ import { IRead, ILineItem, IDateRange } from "../interfaces";
 import { timeSpanConfigs } from "../configs";
 import * as moment from "moment";
 
+
 export class ChartHelper {
   public static getDeltas(data: IRead[]): ILineItem[] {
     const chartData = [];
@@ -75,7 +76,7 @@ export class ChartHelper {
       case timeSpanConfigs.DAY:
         while (startDate < endDate && startDate <= new Date()) {
           const startHour = startDate;
-          const endHour = moment(startDate).add(1, "h").toDate();
+          const endHour = moment(startDate).add(30, "m").toDate();
           const dataPoint = this._getTotalsByDateRange(startHour, endHour, data);
 
           if (dataPoint.line1 <= 0) {
@@ -83,14 +84,14 @@ export class ChartHelper {
           }
           dataPoints.push(dataPoint);
 
-          startDate = moment(startDate).add(1, "h").toDate();
+          startDate = moment(startDate).add(30, "m").toDate();
         }
         this._fillEmptyHoles(dataPoints, emptyPoints);
         break;
       case timeSpanConfigs.YEAR:
         while (startDate < endDate && startDate <= new Date()) {
-          const startMonth = moment(startDate).startOf("month").toDate();
-          const endMonth = moment(startDate).endOf("month").toDate();
+          const startMonth = moment(startDate).startOf("week").toDate();
+          const endMonth = moment(startDate).endOf("week").toDate();
           const dataPoint = this._getTotalsByDateRange(startMonth, endMonth, data);
 
           if (dataPoint.line1 <= 0) {
@@ -98,14 +99,14 @@ export class ChartHelper {
           }
           dataPoints.push(dataPoint);
 
-          startDate = moment(startDate).add(1, "M").toDate();
+          startDate = moment(startDate).add(2, "w").toDate();
         }
         this._fillEmptyHoles(dataPoints, emptyPoints);
         break;
       case timeSpanConfigs.HOUR:
         while (startDate < endDate && startDate <= new Date()) {
           const startHour = startDate;
-          const endHour = moment(startDate).add(15, "m").toDate();
+          const endHour = moment(startDate).add(5, "m").toDate();
           const dataPoint = this._getTotalsByDateRange(startHour, endHour, data);
 
           if (dataPoint.line1 <= 0) {
@@ -113,13 +114,14 @@ export class ChartHelper {
           }
           dataPoints.push(dataPoint);
 
-          startDate = moment(startDate).add(15, "m").toDate();
+          startDate = moment(startDate).add(5, "m").toDate();
         }
         this._fillEmptyHoles(dataPoints, emptyPoints);
         break;
       default:
         break;
     }
+
     return dataPoints;
   }
 

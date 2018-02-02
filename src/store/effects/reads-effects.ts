@@ -136,6 +136,13 @@ export class ReadsEffects {
       const [ meter, dateRange, reads = [] ] = data;
       const { startDate, endDate } = dateRange;
 
+      // if (reads.length) {
+      //   this._storage.set('data', reads);
+      // }
+      //
+      // console.log('reads', reads);
+      // console.log('meter', meter);
+
       // Get reads data from the store if available.
       const storeData = reads.find(read => {
         return read.guid === meter._guid &&
@@ -148,6 +155,7 @@ export class ReadsEffects {
       return Observable.combineLatest([
         Observable.of(meter),
         Observable.of(dateRange),
+        Observable.of(reads),
         // if data is available in the store, pass it down. Otherwise, get it from Firebase.
         isDataAvail ? Observable.of(storeData) : this._db.getReadsByDateRange(meter._guid, dateRange),
         Observable.of(isDataAvail)
@@ -157,7 +165,7 @@ export class ReadsEffects {
       .catch(error => Observable.of([meter, dateRange, [], false, true]));
     })
     .map((values: any[]) => {
-      const [ meter, dateRange, data, isDataAvail = false, timedOut = false ] = values;
+      const [ meter, dateRange, reads, data, isDataAvail = false, timedOut = false ] = values;
       const { startDate, endDate } = dateRange;
 
       if (isDataAvail) {
@@ -194,6 +202,14 @@ export class ReadsEffects {
         cost,
         timedOut
       } as IReads;
+
+      console.log("payload", payload);
+      console.log("reads", reads);
+      console.log("reads concat", reads.concat(payload));
+
+       const readsData = reads.concat(payload);
+
+      this._storage.set(`readsData`, readsData);
 
       return new AddReads(payload);
     });
