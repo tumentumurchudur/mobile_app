@@ -59,7 +59,7 @@ export class HomePage implements OnInit, OnDestroy {
 
         read.deltas.forEach(delta => {
           delta.date = new Date(delta.date);
-        })
+        });
       });
 
       this._storeServices.addReads(lineReads);

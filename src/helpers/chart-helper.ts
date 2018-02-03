@@ -52,11 +52,41 @@ export class ChartHelper {
     const emptyPoints = [];
 
     switch (timeSpan) {
+      case timeSpanConfigs.HOUR:
+        while (startDate < endDate && startDate <= new Date()) {
+          const startHour = startDate;
+          const endHour = moment(startDate).add(5, "m").toDate();
+          const dataPoint = this._getTotalsByDateRange(startHour, endHour, data);
+
+          if (dataPoint.line1 <= 0) {
+            emptyPoints.push(dataPoints.length);
+          }
+          dataPoints.push(dataPoint);
+
+          startDate = moment(startDate).add(5, "m").toDate();
+        }
+        this._fillEmptyHoles(dataPoints, emptyPoints);
+        break;
+      case timeSpanConfigs.DAY:
+        while (startDate < endDate && startDate <= new Date()) {
+          const startHalfHour = startDate;
+          const endHalfHour = moment(startDate).add(30, "m").toDate();
+          const dataPoint = this._getTotalsByDateRange(startHalfHour, endHalfHour, data);
+
+          if (dataPoint.line1 <= 0) {
+            emptyPoints.push(dataPoints.length);
+          }
+          dataPoints.push(dataPoint);
+
+          startDate = moment(startDate).add(30, "m").toDate();
+        }
+        this._fillEmptyHoles(dataPoints, emptyPoints);
+        break;
       case timeSpanConfigs.WEEK:
         while (startDate < endDate && startDate <= new Date()) {
           const startSixHour = startDate;
           const endSixHour = moment(startDate).add(6, "h").toDate();
-          const dataPoint = this._getTotalsByDateRange(startSixHour, endSixHour, data)
+          const dataPoint = this._getTotalsByDateRange(startSixHour, endSixHour, data);
 
           // Check if data point is empty
           if (dataPoint.line1 <= 0) {
@@ -72,7 +102,6 @@ export class ChartHelper {
         // Iterate over array that tracked empty data points and fill in missing values.
         this._fillEmptyHoles(dataPoints, emptyPoints);
         break;
-
       case timeSpanConfigs.MONTH:
         while (startDate < endDate && startDate <= new Date()) {
           const startDay = moment(startDate).startOf("day").toDate();
@@ -93,21 +122,6 @@ export class ChartHelper {
         // Iterate over array that tracked empty data points and fill in missing values.
         this._fillEmptyHoles(dataPoints, emptyPoints);
         break;
-      case timeSpanConfigs.DAY:
-        while (startDate < endDate && startDate <= new Date()) {
-          const startHalfHour = startDate;
-          const endHalfHour = moment(startDate).add(30, "m").toDate();
-          const dataPoint = this._getTotalsByDateRange(startHalfHour, endHalfHour, data);
-
-          if (dataPoint.line1 <= 0) {
-            emptyPoints.push(dataPoints.length);
-          }
-          dataPoints.push(dataPoint);
-
-          startDate = moment(startDate).add(30, "m").toDate();
-        }
-        this._fillEmptyHoles(dataPoints, emptyPoints);
-        break;
       case timeSpanConfigs.YEAR:
         while (startDate < endDate && startDate <= new Date()) {
           const startWeek = moment(startDate).startOf("week").toDate();
@@ -120,21 +134,6 @@ export class ChartHelper {
           dataPoints.push(dataPoint);
 
           startDate = moment(startDate).add(1, "w").toDate();
-        }
-        this._fillEmptyHoles(dataPoints, emptyPoints);
-        break;
-      case timeSpanConfigs.HOUR:
-        while (startDate < endDate && startDate <= new Date()) {
-          const startHour = startDate;
-          const endHour = moment(startDate).add(5, "m").toDate();
-          const dataPoint = this._getTotalsByDateRange(startHour, endHour, data);
-
-          if (dataPoint.line1 <= 0) {
-            emptyPoints.push(dataPoints.length);
-          }
-          dataPoints.push(dataPoint);
-
-          startDate = moment(startDate).add(5, "m").toDate();
         }
         this._fillEmptyHoles(dataPoints, emptyPoints);
         break;
