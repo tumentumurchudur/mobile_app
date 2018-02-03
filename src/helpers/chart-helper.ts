@@ -56,7 +56,7 @@ export class ChartHelper {
         while (startDate < endDate && startDate <= new Date()) {
           const startFiveMin = startDate;
           const endFiveMin = moment(startDate).add(5, "m").toDate();
-          const dataPoint = this._getTotalsByDateRange(startFiveMin, endFiveMin, data);
+          const dataPoint: ILineItem = this._getTotalsByDateRange(startFiveMin, endFiveMin, data);
 
           if (dataPoint.line1 <= 0) {
             emptyPoints.push(dataPoints.length);
@@ -71,7 +71,7 @@ export class ChartHelper {
         while (startDate < endDate && startDate <= new Date()) {
           const startHalfHour = startDate;
           const endHalfHour = moment(startDate).add(30, "m").toDate();
-          const dataPoint = this._getTotalsByDateRange(startHalfHour, endHalfHour, data);
+          const dataPoint: ILineItem = this._getTotalsByDateRange(startHalfHour, endHalfHour, data);
 
           if (dataPoint.line1 <= 0) {
             emptyPoints.push(dataPoints.length);
@@ -86,7 +86,7 @@ export class ChartHelper {
         while (startDate < endDate && startDate <= new Date()) {
           const startSixHour = startDate;
           const endSixHour = moment(startDate).add(6, "h").toDate();
-          const dataPoint = this._getTotalsByDateRange(startSixHour, endSixHour, data);
+          const dataPoint: ILineItem = this._getTotalsByDateRange(startSixHour, endSixHour, data);
 
           // Check if data point is empty
           if (dataPoint.line1 <= 0) {
@@ -126,7 +126,7 @@ export class ChartHelper {
         while (startDate < endDate && startDate <= new Date()) {
           const startWeek = moment(startDate).startOf("week").toDate();
           const endWeek = moment(startDate).endOf("week").toDate();
-          const dataPoint = this._getTotalsByDateRange(startWeek, endWeek, data);
+          const dataPoint: ILineItem = this._getTotalsByDateRange(startWeek, endWeek, data);
 
           if (dataPoint.line1 <= 0) {
             emptyPoints.push(dataPoints.length);
@@ -140,7 +140,6 @@ export class ChartHelper {
       default:
         break;
     }
-
     return dataPoints;
   }
 

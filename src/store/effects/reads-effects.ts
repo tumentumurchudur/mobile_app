@@ -197,7 +197,7 @@ export class ReadsEffects {
       } as IReads;
 
        const readsData = reads.concat(payload);
-
+      // TODO: Move to Meta-Reducer in next PR but works here
       this._storage.set("readsData", readsData);
 
       return new AddReads(payload);
