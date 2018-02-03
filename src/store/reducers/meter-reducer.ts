@@ -40,9 +40,6 @@ export function meterReducer(state = { data: [], loading: false}, action): any {
 			const filteredMeters = state.data.filter(meter => meter._guid !== _guid);
 			const allMeters = sortByKey(Object.assign([], filteredMeters.concat(action.payload)), "_name");
 
-			console.log('filtered Meters', filteredMeters);
-			console.log('allMeters', allMeters);
-
 			return Object.assign({}, state, { data: allMeters, loading: false });
 		default:
 			return state;

@@ -33,7 +33,6 @@ export class LoginPage {
 
   constructor(
     private _storeServices: StoreServices,
-    private _auth: AuthProvider,
     public navCtrl: NavController,
     private _alertCtrl: AlertController,
     private _formBuilder: FormBuilder,

@@ -1,6 +1,8 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { Subscription } from "rxjs/Subscription";
 import {Observable} from "rxjs/Observable";
+import { Storage } from "@ionic/storage";
+
 
 import { IonicPage, MenuController } from "ionic-angular";
 import { IUser } from "../../interfaces";
@@ -27,6 +29,8 @@ export class HomePage implements OnInit, OnDestroy {
       });
 
     this._subscriptions.push(subscription);
+
+    this._checkForLineReads();
   }
 
   ionViewWillEnter() {
@@ -43,10 +47,30 @@ export class HomePage implements OnInit, OnDestroy {
     }
   }
 
+  private _checkForLineReads() {
+    this._storage.get("readsData").then((lineReads) => {
+      if (!lineReads) {
+        return;
+      }
+
+      lineReads.forEach((read) => {
+        read.startDate = new Date(read.startDate);
+        read.endDate = new Date(read.endDate);
+
+        read.deltas.forEach(delta => {
+          delta.date = new Date(delta.date);
+        })
+      });
+
+      this._storeServices.addReads(lineReads);
+    });
+  }
+
   constructor(
     private _store: Store<AppState>,
     private _menuCtrl: MenuController,
-    private _storeServices: StoreServices
+    private _storeServices: StoreServices,
+    private _storage: Storage
   ) {
     this._selectSideMenuStatus$ = this._storeServices.selectSideMenuStatus();
   }

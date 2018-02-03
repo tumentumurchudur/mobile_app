@@ -136,15 +136,9 @@ export class ReadsEffects {
       const [ meter, dateRange, reads = [] ] = data;
       const { startDate, endDate } = dateRange;
 
-      // if (reads.length) {
-      //   this._storage.set('data', reads);
-      // }
-      //
-      // console.log('reads', reads);
-      // console.log('meter', meter);
-
       // Get reads data from the store if available.
       const storeData = reads.find(read => {
+
         return read.guid === meter._guid &&
           read.startDate.toString() === startDate.toString() &&
           read.endDate.toString() === endDate.toString();
@@ -203,13 +197,9 @@ export class ReadsEffects {
         timedOut
       } as IReads;
 
-      console.log("payload", payload);
-      console.log("reads", reads);
-      console.log("reads concat", reads.concat(payload));
-
        const readsData = reads.concat(payload);
 
-      this._storage.set(`readsData`, readsData);
+      this._storage.set("readsData", readsData);
 
       return new AddReads(payload);
     });
