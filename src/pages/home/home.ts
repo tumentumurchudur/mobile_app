@@ -3,7 +3,6 @@ import { Subscription } from "rxjs/Subscription";
 import {Observable} from "rxjs/Observable";
 import { Storage } from "@ionic/storage";
 
-
 import { IonicPage, MenuController } from "ionic-angular";
 import { IUser } from "../../interfaces";
 import { Store } from "@ngrx/store";
@@ -30,6 +29,7 @@ export class HomePage implements OnInit, OnDestroy {
 
     this._subscriptions.push(subscription);
 
+    // Checks for reads in local storage for the lineChart to consume
     this._checkForLineReads();
   }
 

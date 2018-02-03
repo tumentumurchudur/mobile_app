@@ -138,7 +138,6 @@ export class ReadsEffects {
 
       // Get reads data from the store if available.
       const storeData = reads.find(read => {
-
         return read.guid === meter._guid &&
           read.startDate.toString() === startDate.toString() &&
           read.endDate.toString() === endDate.toString();

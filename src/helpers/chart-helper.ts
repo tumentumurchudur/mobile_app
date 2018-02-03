@@ -54,9 +54,9 @@ export class ChartHelper {
     switch (timeSpan) {
       case timeSpanConfigs.HOUR:
         while (startDate < endDate && startDate <= new Date()) {
-          const startHour = startDate;
-          const endHour = moment(startDate).add(5, "m").toDate();
-          const dataPoint = this._getTotalsByDateRange(startHour, endHour, data);
+          const startFiveMin = startDate;
+          const endFiveMin = moment(startDate).add(5, "m").toDate();
+          const dataPoint = this._getTotalsByDateRange(startFiveMin, endFiveMin, data);
 
           if (dataPoint.line1 <= 0) {
             emptyPoints.push(dataPoints.length);
