@@ -16,7 +16,7 @@ import { IReads, IDateRange } from "../../interfaces";
 import { environment } from "../../environments";
 import { timeSpanConfigs } from "../../configs";
 
-import { CostHelper, ChartHelper } from "../../helpers";
+import { CostHelper, ChartHelper, StorageHelper } from "../../helpers";
 import {
   TRIGGER_UPDATE_METER_READS,
   LOAD_READS_BY_METERS,
@@ -168,8 +168,8 @@ export class ReadsEffects {
         return [
           new AddReads(null),
 
-          new SaveReads(null)
-        ]
+          new SaveReads({read: null, dateRange})
+        ];
       }
 
       if (timedOut) {
@@ -185,8 +185,8 @@ export class ReadsEffects {
         return [
           new AddReads(payload),
 
-          new SaveReads(null)
-        ]
+          new SaveReads({read: null, dateRange})
+        ];
       }
 
       const rawDeltas = data.length ? ChartHelper.getDeltas(data) : [];
@@ -209,13 +209,12 @@ export class ReadsEffects {
 
        const readsData = reads.concat(payload);
       // TODO: Move to Meta-Reducer in next PR but works here
-
       return [
         new AddReads(payload),
 
-        new SaveReads({reads: payload, dateRange})
+        new SaveReads({read: payload, dateRange})
 
-      ]
+      ];
     });
 
   /**
@@ -229,24 +228,28 @@ export class ReadsEffects {
     .switchMap((newRead: any) => {
       return Observable.combineLatest([
         Observable.fromPromise(
-          // Check if meter data is stored locally by uid as key.
+          // Check if reads data is stored locally.
           this._storage.get("readsData").then(readsData => {
-            return readsData || {};
+            return readsData || [];
           })
         ),
         Observable.of(newRead)
       ]);
     })
     .map((values: any[]) => {
-      const [ readsData, newRead ] = values;
-      const { reads, dateRange } = newRead;
+      const [ readsData = [], newRead ] = values;
+      const { read, dateRange } = newRead;
 
-      console.log('newRead', newRead);
-      console.log('readsData', readsData);
+      // TODO: Check for timeSpan and determine from timeSpan if requested data fits within retention policy
 
-
-      // this._storage.set("readsData", readsData);
-
+      if (!read) {
+        return;
+      }
+      StorageHelper.retentionPolicy(read, dateRange, readsData).then(storageObj => {
+        if (storageObj !== readsData) {
+          this._storage.set("readsData", storageObj);
+        }
+      });
 
     });
 

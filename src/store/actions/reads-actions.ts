@@ -34,9 +34,9 @@ export class LoadingReads implements Action {
 
 export class SaveReads implements Action {
   public readonly type = SAVE_READS;
-  public payload: { reads: IReads, dateRange: IDateRange };
+  public payload: { read: IReads, dateRange: IDateRange };
 
-  constructor(private _payload: { reads: IReads, dateRange: IDateRange }) {
+  constructor(private _payload: { read: IReads, dateRange: IDateRange }) {
     this.payload = _payload;
   }
 }
