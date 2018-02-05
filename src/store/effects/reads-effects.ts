@@ -14,16 +14,19 @@ import "rxjs/add/operator/timeout";
 import { DatabaseProvider } from "../../providers";
 import { IReads, IDateRange } from "../../interfaces";
 import { environment } from "../../environments";
+import { timeSpanConfigs } from "../../configs";
 
 import { CostHelper, ChartHelper } from "../../helpers";
 import {
   TRIGGER_UPDATE_METER_READS,
   LOAD_READS_BY_METERS,
   LOAD_READS_BY_DATE,
+  SAVE_READS,
 
   AddMeters,
   UpdateMeter,
-  AddReads
+  AddReads,
+  SaveReads
 } from "../actions";
 
 @Injectable()
@@ -157,12 +160,16 @@ export class ReadsEffects {
       .timeout(environment.apiTimeout) // Times out if nothing comes back.
       .catch(error => Observable.of([meter, dateRange, [], false, true]));
     })
-    .map((values: any[]) => {
+    .flatMap((values: any[]) => {
       const [ meter, dateRange, reads, data, isDataAvail = false, timedOut = false ] = values;
       const { startDate, endDate } = dateRange;
 
       if (isDataAvail) {
-        return new AddReads(null);
+        return [
+          new AddReads(null),
+
+          new SaveReads(null)
+        ]
       }
 
       if (timedOut) {
@@ -175,7 +182,11 @@ export class ReadsEffects {
           timedOut
         } as IReads;
 
-        return new AddReads(payload);
+        return [
+          new AddReads(payload),
+
+          new SaveReads(null)
+        ]
       }
 
       const rawDeltas = data.length ? ChartHelper.getDeltas(data) : [];
@@ -198,12 +209,49 @@ export class ReadsEffects {
 
        const readsData = reads.concat(payload);
       // TODO: Move to Meta-Reducer in next PR but works here
-      this._storage.set("readsData", readsData);
 
-      return new AddReads(payload);
+      return [
+        new AddReads(payload),
+
+        new SaveReads({reads: payload, dateRange})
+
+      ]
     });
 
-    constructor(
+  /**
+   * Handles SAVE_READS action and
+   * checks if reads should be saved to local storage based on retention policy.
+   */
+  @Effect({dispatch: false})
+  public saveReads$ = this._actions$
+    .ofType(SAVE_READS)
+    .map((action: any) => action.payload)
+    .switchMap((newRead: any) => {
+      return Observable.combineLatest([
+        Observable.fromPromise(
+          // Check if meter data is stored locally by uid as key.
+          this._storage.get("readsData").then(readsData => {
+            return readsData || {};
+          })
+        ),
+        Observable.of(newRead)
+      ]);
+    })
+    .map((values: any[]) => {
+      const [ readsData, newRead ] = values;
+      const { reads, dateRange } = newRead;
+
+      console.log('newRead', newRead);
+      console.log('readsData', readsData);
+
+
+      // this._storage.set("readsData", readsData);
+
+
+    });
+
+
+  constructor(
       private readonly _actions$: Actions,
       private readonly _db: DatabaseProvider,
       private readonly _storeServices: StoreServices,

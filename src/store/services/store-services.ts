@@ -132,6 +132,7 @@ export class StoreServices {
 	}
 
 	public loadReadsByDateRange(meter: IMeter, dateRange: IDateRange) {
+	  console.log('dateRange', dateRange);
 		this._store.dispatch(new ResetReadsTimeout({ guid: meter._guid, dateRange }));
 		this._store.dispatch(new LoadingReads());
 		this._store.dispatch(new LoadReadsByDateRange({ meter, dateRange }));

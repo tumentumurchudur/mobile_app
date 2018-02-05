@@ -6,6 +6,7 @@ export const ADD_READS: string = "[Reads] ADD READS";
 export const LOAD_READS_BY_METERS: string = "[Reads] LOAD READS BY METERS";
 export const LOAD_READS_BY_DATE: string = "[Reads] LOAD READS BY DATE";
 export const LOADING_READS: string = "[Reads] LOADING READS";
+export const SAVE_READS: string = "[Reads] SAVE READS";
 export const RESET_READS_TIMEOUT: string = "[Reads] RESET READS TIMEOUT";
 
 export class AddReads implements Action {
@@ -29,6 +30,15 @@ export class LoadReadsByDateRange implements Action {
 export class LoadingReads implements Action {
 	public readonly type = LOADING_READS;
 	public payload = null;
+}
+
+export class SaveReads implements Action {
+  public readonly type = SAVE_READS;
+  public payload: { reads: IReads, dateRange: IDateRange };
+
+  constructor(private _payload: { reads: IReads, dateRange: IDateRange }) {
+    this.payload = _payload;
+  }
 }
 
 export class LoadReadsByMeters implements Action {
