@@ -166,8 +166,7 @@ export class ReadsEffects {
       if (isDataAvail) {
         return [
           new AddReads(null),
-
-          // TODO: Write a new action to handle retention policy check against localStorage
+          
           new SaveReads({read: data, dateRange: dateRange, isDataNew: false})
         ];
       }
