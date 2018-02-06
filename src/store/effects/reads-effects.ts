@@ -237,7 +237,7 @@ export class ReadsEffects {
       const { read, dateRange, isDataNew } = newRead;
 
       if (!isDataNew && !StorageHelper.retentionPolicyCheck(dateRange)) {
-        if (readsData.indexOf(read)) {
+        if (readsData.indexOf(read) >= 0) {
           this._storage.set("readsData", readsData.splice(readsData.indexOf(read)));
         }
       }
