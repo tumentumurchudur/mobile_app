@@ -41,6 +41,8 @@ export class UtilitySpendingComponent implements OnInit {
   private _ranks: number[] = [];
   private _arcChartColors: string[] = [];
   private _arcChartCostState: string[] = [];
+  private _currentTimeTravelState: string[] = [];
+  private _currentComparisonState: string[] = [];
 
   constructor(
     private _storeServices: StoreServices
@@ -145,6 +147,13 @@ export class UtilitySpendingComponent implements OnInit {
         this._setDefaultDateRange(index);
       }
 
+      // Check if time travel chart has already been visited before.
+      const currentKey = this._getCurrentStateKey(meter, this._selectedDateRanges[index]);
+      if (this._currentTimeTravelState[index] === currentKey) {
+        return;
+      }
+      this._currentTimeTravelState[index] = currentKey;
+
       // Initiate request to load data from database for given guid, start and end dates.
       this._storeServices.loadReadsByDateRange(meter, this._selectedDateRanges[index]);
     } else if (this._currentNavigationItems[index] === this._navigationItems.COMPARISON) {
@@ -154,6 +163,13 @@ export class UtilitySpendingComponent implements OnInit {
       if (!startDate || !endDate) {
         this._setDefaultDateRange(index);
       }
+
+      // Check if comparison chart has already been visited before.
+      const currentKey = this._getCurrentStateKey(meter, this._selectedDateRanges[index]);
+      if (this._currentComparisonState[index] === currentKey) {
+        return;
+      }
+      this._currentComparisonState[index] = currentKey;
 
       // Trigger a request to load neighborhood reads from API.
       this._storeServices.loadNeighborhoodReads(meter, this._selectedDateRanges[index]);
@@ -179,6 +195,12 @@ export class UtilitySpendingComponent implements OnInit {
     return this._selectedDateRanges[index].endDate > new Date();
   }
 
+  private _getCurrentStateKey(meter: IMeter, dateRange: IDateRange): string {
+    const { startDate, endDate, timeSpan } = dateRange;
+
+    return `${meter._guid}-${startDate}-${endDate}-${timeSpan}`.toLowerCase();
+  }
+
   private _onTimeTravelClick(direction: string, meter: IMeter, index: number, page: string): void {
     this._selectedDateRanges[index] = ChartHelper.getDateRange(direction, this._selectedDateRanges[index]);
 
@@ -186,8 +208,10 @@ export class UtilitySpendingComponent implements OnInit {
     this._currentMeterIndex = index;
 
     if (page === "timeTravel") {
+      this._currentTimeTravelState[index] = this._getCurrentStateKey(meter, this._selectedDateRanges[index]);
       this._storeServices.loadReadsByDateRange(meter, this._selectedDateRanges[index]);
     } else {
+      this._currentComparisonState[index] = this._getCurrentStateKey(meter, this._selectedDateRanges[index]);
       this._storeServices.loadNeighborhoodReads(meter, this._selectedDateRanges[index]);
     }
   }
