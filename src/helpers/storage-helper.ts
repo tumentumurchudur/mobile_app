@@ -21,8 +21,4 @@ export class StorageHelper {
           return false;
       }
   }
-
-  public static retentionPolicyCheck(dateRange: IDateRange): boolean {
-    return this.isWithinRetentionPolicy(dateRange);
-  }
 }

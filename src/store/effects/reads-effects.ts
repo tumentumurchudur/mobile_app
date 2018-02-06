@@ -236,13 +236,13 @@ export class ReadsEffects {
       const [ , newRead ] = values;
       const { read, dateRange, isDataNew } = newRead;
 
-      if (!isDataNew && !StorageHelper.retentionPolicyCheck(dateRange)) {
+      if (!isDataNew && !StorageHelper.isWithinRetentionPolicy(dateRange)) {
         if (readsData.indexOf(read) >= 0) {
           this._storage.set("readsData", readsData.splice(readsData.indexOf(read)));
         }
       }
 
-      if (isDataNew && StorageHelper.retentionPolicyCheck(dateRange)) {
+      if (isDataNew && StorageHelper.isWithinRetentionPolicy(dateRange)) {
         this._storage.set("readsData", readsData.concat(read));
       }
     });
