@@ -3,44 +3,26 @@ import { timeSpanConfigs, timeSpanRetentionQty } from "../configs";
 import * as moment from "moment";
 
 export class StorageHelper {
-  public static retentionPolicy( read: IReads, dateRange: IDateRange, storageObj: IReads[]): Promise<IReads[]> {
-    return new Promise((resolve, reject) => {
+  public static isWithinRetentionPolicy(dateRange: IDateRange): boolean {
       const startDate = moment(dateRange.startDate);
 
       switch (dateRange.timeSpan) {
         case timeSpanConfigs.MONTH:
-          if (moment().diff(startDate, "months") < timeSpanRetentionQty.MONTH) {
-            storageObj = storageObj.concat(read);
-            resolve(storageObj);
-          }
-          break;
+          return moment().diff(startDate, "months") < timeSpanRetentionQty.MONTH;
         case timeSpanConfigs.WEEK:
-          if (moment().diff(startDate, "weeks") < timeSpanRetentionQty.WEEK) {
-            storageObj = storageObj.concat(read);
-            resolve(storageObj);
-          }
-          break;
+          return moment().diff(startDate, "weeks") < timeSpanRetentionQty.WEEK;
         case timeSpanConfigs.DAY:
-          if (moment().diff(startDate, "days") < timeSpanRetentionQty.DAY) {
-            storageObj = storageObj.concat(read);
-            resolve(storageObj);
-          }
-          break;
+          return moment().diff(startDate, "days") < timeSpanRetentionQty.DAY;
         case timeSpanConfigs.HOUR:
-          if (moment().diff(startDate, "hours") < timeSpanRetentionQty.HOUR) {
-            storageObj = storageObj.concat(read);
-            resolve(storageObj);
-          }
-          break;
+          return moment().diff(startDate, "hours") < timeSpanRetentionQty.HOUR;
         case timeSpanConfigs.YEAR:
-          if (moment().diff(startDate, "years") < timeSpanRetentionQty.YEAR) {
-            storageObj = storageObj.concat(read);
-            resolve(storageObj);
-          }
-          break;
+          return moment().diff(startDate, "years") < timeSpanRetentionQty.YEAR;
         default:
-          reject("Not a proper date range");
+          return false;
       }
-    });
+  }
+
+  public static retentionPolicyCheck(dateRange: IDateRange): boolean {
+    return this.isWithinRetentionPolicy(dateRange);
   }
 }

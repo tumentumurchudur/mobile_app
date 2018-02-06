@@ -12,9 +12,8 @@ import "rxjs/add/operator/debounceTime";
 import "rxjs/add/operator/timeout";
 
 import { DatabaseProvider } from "../../providers";
-import { IReads, IDateRange } from "../../interfaces";
+import { IReads } from "../../interfaces";
 import { environment } from "../../environments";
-import { timeSpanConfigs } from "../../configs";
 
 import { CostHelper, ChartHelper, StorageHelper } from "../../helpers";
 import {
@@ -161,14 +160,15 @@ export class ReadsEffects {
       .catch(error => Observable.of([meter, dateRange, [], false, true]));
     })
     .flatMap((values: any[]) => {
-      const [ meter, dateRange, reads, data, isDataAvail = false, timedOut = false ] = values;
+      const [ meter, dateRange, storeData, data, isDataAvail = false, timedOut = false ] = values;
       const { startDate, endDate } = dateRange;
 
       if (isDataAvail) {
         return [
           new AddReads(null),
 
-          new SaveReads({read: null, dateRange})
+          // TODO: Write a new action to handle retention policy check against localStorage
+          new SaveReads({read: data, dateRange: dateRange, isDataNew: false})
         ];
       }
 
@@ -185,7 +185,7 @@ export class ReadsEffects {
         return [
           new AddReads(payload),
 
-          new SaveReads({read: null, dateRange})
+          new SaveReads({read: null, dateRange: dateRange, isDataNew: true})
         ];
       }
 
@@ -207,13 +207,10 @@ export class ReadsEffects {
         timedOut
       } as IReads;
 
-       const readsData = reads.concat(payload);
-      // TODO: Move to Meta-Reducer in next PR but works here
       return [
         new AddReads(payload),
 
-        new SaveReads({read: payload, dateRange})
-
+        new SaveReads({read: payload, dateRange: dateRange, isDataNew: true})
       ];
     });
 
@@ -229,30 +226,26 @@ export class ReadsEffects {
       return Observable.combineLatest([
         Observable.fromPromise(
           // Check if reads data is stored locally.
-          this._storage.get("readsData").then(readsData => {
-            return readsData || [];
-          })
+          this._storage.get("readsData")
         ),
         Observable.of(newRead)
       ]);
     })
     .map((values: any[]) => {
-      const [ readsData = [], newRead ] = values;
-      const { read, dateRange } = newRead;
+      const readsData = values[0] || [];
+      const [ , newRead ] = values;
+      const { read, dateRange, isDataNew } = newRead;
 
-      // TODO: Check for timeSpan and determine from timeSpan if requested data fits within retention policy
-
-      if (!read) {
-        return;
-      }
-      StorageHelper.retentionPolicy(read, dateRange, readsData).then(storageObj => {
-        if (storageObj !== readsData) {
-          this._storage.set("readsData", storageObj);
+      if (!isDataNew && !StorageHelper.retentionPolicyCheck(dateRange)) {
+        if (readsData.indexOf(read)) {
+          this._storage.set("readsData", readsData.splice(readsData.indexOf(read)));
         }
-      });
+      }
 
+      if (isDataNew && StorageHelper.retentionPolicyCheck(dateRange)) {
+        this._storage.set("readsData", readsData.concat(read));
+      }
     });
-
 
   constructor(
       private readonly _actions$: Actions,
