@@ -231,34 +231,20 @@ export class ReadsEffects {
       const readsData = values[0] || [];
       const [ , newRead ] = values;
       const { read, dateRange, isDataNew } = newRead;
-      console.log('readsData', readsData);
 
-      if (!isDataNew && StorageHelper.isWithinRetentionPolicy(dateRange)) {
-        const oldRead = {
-          cost: read.cost,
-          deltas: read.deltas,
-          endDate: read.endDate.toISOString(),
-          _guid: read.guid,
-          startDate: read.startDate.toISOString(),
-          timedOut: read.timedOut
-        };
-
-        console.log('oldRead', oldRead);
-        const readInData = readsData.find(read => {
-          return read._guid === oldRead._guid &&
-            read.startDate.toString() === oldRead.toString() &&
-            read.endDate.toString() === oldRead.toString();
+      if (!isDataNew && !StorageHelper.isWithinRetentionPolicy(dateRange)) {
+        // Grabs index of read to be deleted
+        const readInData = readsData.findIndex(localReads => {
+          // Use Date.Parse() so we can compare Epochs for accuracy
+          return read.guid === localReads.guid && 
+          Date.parse(localReads.startDate) === Date.parse(read.startDate) &&
+          Date.parse(localReads.startDate) === Date.parse(read.startDate)
         });
-        console.log('readInData', readInData);
-          // read.startDate = read.startDate.toString();
-          // read.endDate = read.endDate.toString();
-          // console.log('readStartDate', read.startDate.toISOString());
-          // console.log('readEndDate', read.endDate.toISOString());
-          console.log('oldRead', oldRead);
-
-
-
-          // this._storage.set("readsData", readsData.splice(readsData.indexOf(read), 1));
+        // if the read is not there it comes back as -1
+        if (readInData >= 0) {
+          // splices out index and updates local storage
+          this._storage.set("readsData", readsData.splice(readInData, 1));
+        }
       }
 
       if (isDataNew && StorageHelper.isWithinRetentionPolicy(dateRange)) {
