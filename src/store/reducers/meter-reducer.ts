@@ -35,7 +35,6 @@ export function meterReducer(state = { data: [], loading: false}, action): any {
 		  if (!action.payload) {
 				return state;
 			}
-
 			const { _guid } = action.payload;
 			const filteredMeters = state.data.filter(meter => meter._guid !== _guid);
 			const allMeters = sortByKey(Object.assign([], filteredMeters.concat(action.payload)), "_name");

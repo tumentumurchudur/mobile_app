@@ -5,3 +5,11 @@ export const timeSpanConfigs = {
   MONTH: "months",
   YEAR: "years"
 };
+
+export const timeSpanRetentionQty = {
+  HOUR: 24,
+  DAY: 7,
+  WEEK: 5,
+  MONTH: 12,
+  YEAR: 2
+};
