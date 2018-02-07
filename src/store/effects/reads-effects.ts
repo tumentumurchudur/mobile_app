@@ -12,18 +12,20 @@ import "rxjs/add/operator/debounceTime";
 import "rxjs/add/operator/timeout";
 
 import { DatabaseProvider } from "../../providers";
-import { IReads, IDateRange } from "../../interfaces";
+import { IReads } from "../../interfaces";
 import { environment } from "../../environments";
 
-import { CostHelper, ChartHelper } from "../../helpers";
+import { CostHelper, ChartHelper, StorageHelper } from "../../helpers";
 import {
   TRIGGER_UPDATE_METER_READS,
   LOAD_READS_BY_METERS,
   LOAD_READS_BY_DATE,
+  SAVE_READS,
 
   AddMeters,
   UpdateMeter,
-  AddReads
+  AddReads,
+  SaveReads
 } from "../actions";
 
 @Injectable()
@@ -157,12 +159,15 @@ export class ReadsEffects {
       .timeout(environment.apiTimeout) // Times out if nothing comes back.
       .catch(error => Observable.of([meter, dateRange, [], false, true]));
     })
-    .map((values: any[]) => {
-      const [ meter, dateRange, reads, data, isDataAvail = false, timedOut = false ] = values;
+    .flatMap((values: any[]) => {
+      const [ meter, dateRange, storeData, data, isDataAvail = false, timedOut = false ] = values;
       const { startDate, endDate } = dateRange;
 
       if (isDataAvail) {
-        return new AddReads(null);
+        return [
+          new AddReads(null),
+          new SaveReads({read: data, dateRange: dateRange, isDataNew: false})
+        ];
       }
 
       if (timedOut) {
@@ -175,7 +180,10 @@ export class ReadsEffects {
           timedOut
         } as IReads;
 
-        return new AddReads(payload);
+        return [
+          new AddReads(payload),
+          new SaveReads({read: null, dateRange: dateRange, isDataNew: true})
+        ];
       }
 
       const rawDeltas = data.length ? ChartHelper.getDeltas(data) : [];
@@ -196,14 +204,55 @@ export class ReadsEffects {
         timedOut
       } as IReads;
 
-       const readsData = reads.concat(payload);
-      // TODO: Move to Meta-Reducer in next PR but works here
-      this._storage.set("readsData", readsData);
-
-      return new AddReads(payload);
+      return [
+        new AddReads(payload),
+        new SaveReads({read: payload, dateRange: dateRange, isDataNew: true})
+      ];
     });
 
-    constructor(
+  /**
+   * Handles SAVE_READS action and
+   * checks if reads should be saved to local storage based on retention policy.
+   */
+  @Effect({dispatch: false})
+  public saveReads$ = this._actions$
+    .ofType(SAVE_READS)
+    .map((action: any) => action.payload)
+    .switchMap((newRead: any) => {
+      return Observable.combineLatest([
+        Observable.fromPromise(
+          // Check if reads data is stored locally.
+          this._storage.get("readsData")
+        ),
+        Observable.of(newRead)
+      ]);
+    })
+    .map((values: any[]) => {
+      const readsData = values[0] || [];
+      const [ , newRead ] = values;
+      const { read, dateRange, isDataNew } = newRead;
+
+      if (!isDataNew && !StorageHelper.isWithinRetentionPolicy(dateRange)) {
+        // Grabs index of read to be deleted
+        const readIndex = readsData.findIndex(localReads => {
+          // Use Date.Parse() so we can compare Epochs for accuracy
+          return read.guid === localReads.guid && 
+          Date.parse(localReads.startDate) === Date.parse(read.startDate) &&
+          Date.parse(localReads.startDate) === Date.parse(read.startDate)
+        });
+        // if the read is not there it comes back as -1
+        if (readIndex >= 0) {
+          // splices out index and updates local storage
+          this._storage.set("readsData", readsData.splice(readIndex, 1));
+        }
+      }
+
+      if (isDataNew && StorageHelper.isWithinRetentionPolicy(dateRange)) {
+        this._storage.set("readsData", readsData.concat(read));
+      }
+    });
+
+  constructor(
       private readonly _actions$: Actions,
       private readonly _db: DatabaseProvider,
       private readonly _storeServices: StoreServices,
