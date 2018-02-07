@@ -3,7 +3,6 @@ import { IRead, ILineItem, IDateRange } from "../interfaces";
 import { timeSpanConfigs } from "../configs";
 import * as moment from "moment";
 
-
 export class ChartHelper {
   public static getDeltas(data: IRead[]): ILineItem[] {
     const chartData = [];
