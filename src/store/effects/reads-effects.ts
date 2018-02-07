@@ -166,8 +166,6 @@ export class ReadsEffects {
       if (isDataAvail) {
         return [
           new AddReads(null),
-
-          // TODO: Write a new action to handle retention policy check against localStorage
           new SaveReads({read: data, dateRange: dateRange, isDataNew: false})
         ];
       }
@@ -184,7 +182,6 @@ export class ReadsEffects {
 
         return [
           new AddReads(payload),
-
           new SaveReads({read: null, dateRange: dateRange, isDataNew: true})
         ];
       }
@@ -209,7 +206,6 @@ export class ReadsEffects {
 
       return [
         new AddReads(payload),
-
         new SaveReads({read: payload, dateRange: dateRange, isDataNew: true})
       ];
     });
@@ -235,11 +231,34 @@ export class ReadsEffects {
       const readsData = values[0] || [];
       const [ , newRead ] = values;
       const { read, dateRange, isDataNew } = newRead;
+      console.log('readsData', readsData);
 
-      if (!isDataNew && !StorageHelper.isWithinRetentionPolicy(dateRange)) {
-        if (readsData.indexOf(read) >= 0) {
-          this._storage.set("readsData", readsData.splice(readsData.indexOf(read)));
-        }
+      if (!isDataNew && StorageHelper.isWithinRetentionPolicy(dateRange)) {
+        const oldRead = {
+          cost: read.cost,
+          deltas: read.deltas,
+          endDate: read.endDate.toISOString(),
+          _guid: read.guid,
+          startDate: read.startDate.toISOString(),
+          timedOut: read.timedOut
+        };
+
+        console.log('oldRead', oldRead);
+        const readInData = readsData.find(read => {
+          return read._guid === oldRead._guid &&
+            read.startDate.toString() === oldRead.toString() &&
+            read.endDate.toString() === oldRead.toString();
+        });
+        console.log('readInData', readInData);
+          // read.startDate = read.startDate.toString();
+          // read.endDate = read.endDate.toString();
+          // console.log('readStartDate', read.startDate.toISOString());
+          // console.log('readEndDate', read.endDate.toISOString());
+          console.log('oldRead', oldRead);
+
+
+
+          // this._storage.set("readsData", readsData.splice(readsData.indexOf(read), 1));
       }
 
       if (isDataNew && StorageHelper.isWithinRetentionPolicy(dateRange)) {
