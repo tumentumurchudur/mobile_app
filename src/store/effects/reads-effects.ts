@@ -234,16 +234,16 @@ export class ReadsEffects {
 
       if (!isDataNew && !StorageHelper.isWithinRetentionPolicy(dateRange)) {
         // Grabs index of read to be deleted
-        const readInData = readsData.findIndex(localReads => {
+        const readIndex = readsData.findIndex(localReads => {
           // Use Date.Parse() so we can compare Epochs for accuracy
           return read.guid === localReads.guid && 
           Date.parse(localReads.startDate) === Date.parse(read.startDate) &&
           Date.parse(localReads.startDate) === Date.parse(read.startDate)
         });
         // if the read is not there it comes back as -1
-        if (readInData >= 0) {
+        if (readIndex >= 0) {
           // splices out index and updates local storage
-          this._storage.set("readsData", readsData.splice(readInData, 1));
+          this._storage.set("readsData", readsData.splice(readIndex, 1));
         }
       }
 
