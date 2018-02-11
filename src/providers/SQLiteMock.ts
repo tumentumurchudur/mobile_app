@@ -5,8 +5,8 @@ declare var SQL;
 export class SQLiteMock {
   public create(config: SQLiteDatabaseConfig): Promise<SQLiteObject> {
     return new Promise((resolve, reject) => {
-      var db = new SQL.Database();
-
+      const db = new SQL.Database();
+      
       resolve(new SQLiteObject(db));
     });
   }
