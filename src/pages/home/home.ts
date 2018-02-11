@@ -78,7 +78,7 @@ export class HomePage implements OnInit, OnDestroy {
         for (let i = 0 ; i < data.rows.length ; i++) {
           const text = data.rows.item(i)[this._currentLocale];
           const key = data.rows.item(i).key;
-          
+
           // TODO: Move it to store.
           localeMap.set(key, text);
         }

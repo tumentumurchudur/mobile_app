@@ -236,9 +236,9 @@ export class ReadsEffects {
         // Grabs index of read to be deleted
         const readIndex = readsData.findIndex(localReads => {
           // Use Date.Parse() so we can compare Epochs for accuracy
-          return read.guid === localReads.guid && 
-          Date.parse(localReads.startDate) === Date.parse(read.startDate) &&
-          Date.parse(localReads.startDate) === Date.parse(read.startDate)
+          return read.guid === localReads.guid &&
+            Date.parse(localReads.startDate) === Date.parse(read.startDate) &&
+            Date.parse(localReads.startDate) === Date.parse(read.startDate);
         });
         // if the read is not there it comes back as -1
         if (readIndex >= 0) {

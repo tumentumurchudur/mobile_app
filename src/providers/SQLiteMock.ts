@@ -6,7 +6,7 @@ export class SQLiteMock {
   public create(config: SQLiteDatabaseConfig): Promise<SQLiteObject> {
     return new Promise((resolve, reject) => {
       const db = new SQL.Database();
-      
+
       resolve(new SQLiteObject(db));
     });
   }
@@ -17,7 +17,7 @@ class SQLiteObject {
 
   constructor(_objectInstance: any) {
     this._objectInstance = _objectInstance;
-  };
+  }
 
   executeSql(statement: string, params: any): Promise<any> {
     return new Promise((resolve, reject) => {
@@ -45,5 +45,5 @@ class SQLiteObject {
         reject(e);
       }
     });
-  };
+  }
 }
