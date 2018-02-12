@@ -1,7 +1,8 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { Subscription } from "rxjs/Subscription";
-import {Observable} from "rxjs/Observable";
+import { Observable } from "rxjs/Observable";
 import { Storage } from "@ionic/storage";
+import { SQLite, SQLiteObject } from "@ionic-native/sqlite";
 
 import { IonicPage, MenuController } from "ionic-angular";
 import { IUser } from "../../interfaces";
@@ -20,6 +21,8 @@ export class HomePage implements OnInit, OnDestroy {
   private _user: IUser;
   private _subscriptions: Subscription[] = [];
   private _selectSideMenuStatus$: Observable<any>;
+  private _db: SQLiteObject;
+  private _currentLocale: string = "en_us";
 
   ngOnInit() {
     const subscription: Subscription = this._store.select(state => state.user)
@@ -31,6 +34,9 @@ export class HomePage implements OnInit, OnDestroy {
 
     // Checks for reads in local storage for the lineChart to consume
     this._checkForLineReads();
+
+    // Check sql table and create one if not created.
+    this._createDatabase();
   }
 
   ionViewWillEnter() {
@@ -45,6 +51,42 @@ export class HomePage implements OnInit, OnDestroy {
     for (const subscription of this._subscriptions) {
       subscription.unsubscribe();
     }
+  }
+
+  private _createDatabase() {
+    this._sqlite.create({
+      name: "vutiliti_db.db",
+      location: "default"
+    })
+    .then((db: SQLiteObject) => {
+      this._db = db;
+
+      return db.executeSql("CREATE TABLE IF NOT EXISTS localization(id INTEGER PRIMARY KEY, platform INTEGER, key TEXT, en_us TEXT, es_mx TEXT)", {});
+    })
+    .then(() => {
+      // TODO: Call api for localization data.
+      return this._db.executeSql("INSERT INTO Localization(id, platform, key, en_us, es_mx) VALUES(1, 1, 'text_1', 'Hello', 'Hola')", []);
+    })
+    .then(() => {
+      return this._db.executeSql("SELECT * FROM Localization", []);
+    })
+    .then(data => {
+      // map of key and translation text.
+      const localeMap = new Map<string, string>();
+
+      if (data.rows.length) {
+        for (let i = 0 ; i < data.rows.length ; i++) {
+          const text = data.rows.item(i)[this._currentLocale];
+          const key = data.rows.item(i).key;
+
+          // TODO: Move it to store.
+          localeMap.set(key, text);
+        }
+      }
+    })
+    .catch(error => {
+      // TODO: Handle errors.
+    });
   }
 
   private _checkForLineReads() {
@@ -70,7 +112,8 @@ export class HomePage implements OnInit, OnDestroy {
     private _store: Store<AppState>,
     private _menuCtrl: MenuController,
     private _storeServices: StoreServices,
-    private _storage: Storage
+    private _storage: Storage,
+    private _sqlite: SQLite
   ) {
     this._selectSideMenuStatus$ = this._storeServices.selectSideMenuStatus();
   }

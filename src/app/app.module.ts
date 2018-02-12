@@ -6,6 +6,7 @@ import { IonicApp, IonicErrorHandler, IonicModule } from "ionic-angular";
 import { SplashScreen } from "@ionic-native/splash-screen";
 import { StatusBar } from "@ionic-native/status-bar";
 import { Keyboard } from "@ionic-native/keyboard";
+import { SQLite } from "@ionic-native/sqlite";
 
 import { AngularFireModule } from "angularfire2";
 import { HttpClientModule } from "@angular/common/http";
@@ -23,6 +24,7 @@ import { IonicStorageModule } from "@ionic/storage";
 import { MeterEffects, ComparisonEffects, ReadsEffects, ProviderEffects, UserEffects } from "../store/effects";
 import { StoreServices } from "../store/services";
 import { CostHelper } from "../helpers";
+import { SQLiteMock } from "../providers";
 
 import { MyApp } from "./app.component";
 import { MenuItemsComponent } from "../components/menu-items/menu-items";
@@ -72,13 +74,14 @@ import { MenuItemsComponent } from "../components/menu-items/menu-items";
     StatusBar,
     SplashScreen,
     Keyboard,
-    {provide: ErrorHandler, useClass: IonicErrorHandler},
     AuthProvider,
     Facebook,
     GooglePlus,
     DatabaseProvider,
     StoreServices,
-    CostHelper
+    CostHelper,
+    { provide: ErrorHandler, useClass: IonicErrorHandler },
+    { provide: SQLite, useClass: SQLiteMock }
   ]
 })
 export class AppModule {}
